@@ -1,14 +1,26 @@
-"""The Sage — Forecasting, correlation analysis, macro outlook."""
+"""The Sage — Forecasting, correlation analysis, macro outlook.
 
+Analyzes cross-asset correlations, regime context, and funding data
+to produce probability-weighted scenarios and macro outlook.
+"""
+
+import json
+import logging
 from typing import Any
 
 from wolfpack.agents.base import Agent, AgentOutput
+
+logger = logging.getLogger(__name__)
 
 
 class SageAgent(Agent):
     @property
     def name(self) -> str:
         return "The Sage"
+
+    @property
+    def agent_key(self) -> str:
+        return "sage"
 
     @property
     def role(self) -> str:
@@ -19,33 +31,119 @@ class SageAgent(Agent):
         return """You are The Sage, the strategic forecaster for the WolfPack intelligence system.
 
 Your role:
-- Analyze cross-asset correlations (BTC dominance, ETH/BTC ratio, DeFi TVL, stablecoin flows)
-- Produce weekly forecasts with probability-weighted scenarios
-- Assess macro conditions: Fed policy, DXY, equity markets, risk appetite
+- Analyze cross-asset correlations (BTC/ETH beta, tail correlation, diversification)
+- Produce probability-weighted scenarios (bull/bear/base case)
+- Assess macro conditions from regime detection and funding data
 - Identify regime transitions before they complete
-- Track on-chain metrics: exchange flows, whale accumulation, staking trends
-- Evaluate carry opportunities across exchanges (funding rate arbitrage)
+- Evaluate carry opportunities from funding rate differentials
+- Flag correlation regime changes (crisis lock, decorrelation events)
 
-Output format:
-- weekly_outlook: bullish/bearish/neutral with rationale
-- scenario_matrix: [{scenario, probability, key_levels, triggers}]
-- correlations: notable cross-asset relationships
-- macro_context: relevant macro factors
-- on_chain_signals: significant on-chain data points
-- carry_opportunities: funding rate / basis trade opportunities
+You receive quantitative module outputs. Use them to build a forward-looking view.
 
-Think in probabilities, not certainties. Always present alternative scenarios. Challenge consensus views."""
+Output a JSON object with:
+{
+    "weekly_outlook": "bullish" | "bearish" | "neutral",
+    "outlook_rationale": "1-2 sentence rationale",
+    "scenario_matrix": [
+        {"scenario": "description", "probability": 0-100, "key_levels": {"support": price, "resistance": price}, "triggers": ["trigger1"]}
+    ],
+    "correlation_assessment": "description of cross-asset dynamics",
+    "macro_context": "relevant macro factors inferred from data",
+    "carry_opportunities": ["opportunity description", ...],
+    "regime_transition_risk": "low" | "moderate" | "high",
+    "conviction": 0-100,
+    "summary": "2-3 sentence strategic summary"
+}
+
+Think in probabilities, not certainties. Always present at least 2 scenarios. Challenge consensus views."""
 
     async def analyze(self, market_data: dict[str, Any], exchange: str) -> AgentOutput:
-        # Phase 1: Cross-asset data collection
-        # Phase 2: LLM scenario generation
+        symbol = market_data.get("symbol", "BTC")
+
+        context: dict[str, Any] = {
+            "symbol": symbol,
+            "exchange": exchange,
+        }
+
+        # Correlation data (BTC/ETH)
+        if market_data.get("correlation"):
+            corr = market_data["correlation"]
+            context["correlation"] = corr if isinstance(corr, dict) else corr.model_dump()
+
+        # Regime context
+        if market_data.get("regime"):
+            regime = market_data["regime"]
+            context["regime"] = regime if isinstance(regime, dict) else regime.model_dump()
+
+        # Funding data
+        if market_data.get("funding"):
+            funding = market_data["funding"]
+            context["funding"] = funding if isinstance(funding, dict) else funding.model_dump()
+
+        # Volatility context
+        if market_data.get("volatility"):
+            vol = market_data["volatility"]
+            context["volatility"] = vol if isinstance(vol, dict) else vol.model_dump()
+
+        # Liquidity context
+        if market_data.get("liquidity"):
+            liq = market_data["liquidity"]
+            context["liquidity"] = liq if isinstance(liq, dict) else liq.model_dump()
+
+        # Latest price for scenario levels
+        if market_data.get("latest_price"):
+            context["latest_price"] = market_data["latest_price"]
+
+        prompt = f"""Produce a strategic forecast for {symbol} on {exchange} from these quantitative signals:
+
+{json.dumps(context, indent=2, default=str)}
+
+Respond with ONLY a JSON object matching the format specified in your system prompt."""
+
+        llm_response = await self._call_llm(prompt)
+        parsed = self._parse_llm_json(llm_response)
+
+        summary = parsed.get("summary", "Strategic forecast complete")
+        confidence = float(parsed.get("conviction", 35)) / 100.0
+
+        signals: list[dict[str, Any]] = []
+
+        if parsed.get("weekly_outlook"):
+            signals.append({
+                "type": "outlook",
+                "direction": parsed["weekly_outlook"],
+                "rationale": parsed.get("outlook_rationale", ""),
+            })
+
+        for scenario in parsed.get("scenario_matrix", []):
+            signals.append({
+                "type": "scenario",
+                "description": scenario.get("scenario", ""),
+                "probability": scenario.get("probability", 0),
+                "triggers": scenario.get("triggers", []),
+            })
+
+        if parsed.get("regime_transition_risk"):
+            signals.append({
+                "type": "regime_risk",
+                "level": parsed["regime_transition_risk"],
+            })
+
+        if parsed.get("correlation_assessment"):
+            signals.append({
+                "type": "correlation",
+                "assessment": parsed["correlation_assessment"],
+            })
+
+        for opp in parsed.get("carry_opportunities", []):
+            signals.append({"type": "carry", "description": opp})
 
         return AgentOutput(
-            agent_name=self.name,
+            agent_name=self.agent_key,
             exchange=exchange,
             timestamp=self._now(),
-            summary="Forecasting pending cross-asset data integration",
-            signals=[],
-            confidence=0.0,
-            raw_data=None,
+            summary=summary,
+            signals=signals,
+            confidence=confidence,
+            raw_data={"context": context, "llm_response": llm_response},
         )

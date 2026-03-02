@@ -18,6 +18,7 @@ const NAV_LINKS = [
   { href: "/", label: "Dashboard" },
   { href: "/intelligence", label: "Intelligence" },
   { href: "/trading", label: "Trading" },
+  { href: "/portfolio", label: "Portfolio" },
   { href: "/pools", label: "LP Pools" },
 ];
 

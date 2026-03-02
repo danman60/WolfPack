@@ -97,6 +97,90 @@ export function useRunIntelligence() {
   });
 }
 
+// Approve a recommendation
+export function useApproveRecommendation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, exchange }: { id: string; exchange: string }) => {
+      const res = await fetch(`/intel/recommendations/${id}/approve?exchange=${exchange}`, {
+        method: "POST",
+      });
+      if (!res.ok) throw new Error(`Approve failed: ${res.status}`);
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["recommendations"] });
+      queryClient.invalidateQueries({ queryKey: ["portfolio"] });
+    },
+  });
+}
+
+// Reject a recommendation
+export function useRejectRecommendation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const res = await fetch(`/intel/recommendations/${id}/reject`, {
+        method: "POST",
+      });
+      if (!res.ok) throw new Error(`Reject failed: ${res.status}`);
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["recommendations"] });
+    },
+  });
+}
+
+// Fetch portfolio state from intel service
+export function usePortfolio() {
+  return useQuery({
+    queryKey: ["portfolio"],
+    queryFn: async () => {
+      const res = await fetch("/intel/portfolio");
+      if (!res.ok) return null;
+      return res.json();
+    },
+    refetchInterval: 15_000,
+    retry: false,
+  });
+}
+
+// Fetch portfolio snapshot history
+export function usePortfolioHistory(limit: number = 100) {
+  return useQuery({
+    queryKey: ["portfolio-history", limit],
+    queryFn: async () => {
+      const res = await fetch(`/intel/portfolio/history?limit=${limit}`);
+      if (!res.ok) return { snapshots: [] };
+      return res.json();
+    },
+    refetchInterval: 60_000,
+    retry: false,
+  });
+}
+
+// Close a paper position
+export function useClosePosition() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ symbol, exchange }: { symbol: string; exchange: string }) => {
+      const res = await fetch(`/intel/portfolio/close/${symbol}?exchange=${exchange}`, {
+        method: "POST",
+      });
+      if (!res.ok) throw new Error(`Close failed: ${res.status}`);
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["portfolio"] });
+      queryClient.invalidateQueries({ queryKey: ["portfolio-history"] });
+    },
+  });
+}
+
 // Fetch agent status from intel service
 export function useAgentStatus() {
   return useQuery({

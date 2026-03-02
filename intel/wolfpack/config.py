@@ -19,7 +19,12 @@ class Settings(BaseSettings):
 
     # Exchange API
     hyperliquid_wallet: str = ""
+    hyperliquid_private_key: str = ""  # For order signing
     dydx_address: str = ""
+
+    # Telegram notifications
+    telegram_bot_token: str = ""
+    telegram_chat_id: str = ""
 
     # Service
     tick_interval_seconds: int = 300   # 5 minutes

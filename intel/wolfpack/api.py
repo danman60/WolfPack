@@ -1,9 +1,11 @@
 """FastAPI application — exposes intelligence endpoints to the frontend."""
 
+import asyncio
 import logging
 from datetime import datetime, timezone
+from typing import Any
 
-from fastapi import FastAPI, BackgroundTasks
+from fastapi import BackgroundTasks, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from wolfpack.config import settings
@@ -73,6 +75,7 @@ async def latest_intelligence():
     """Return latest intelligence outputs from Supabase."""
     try:
         from wolfpack.db import get_latest_agent_outputs
+
         outputs = get_latest_agent_outputs()
         result: dict = {"quant": None, "snoop": None, "sage": None, "brief": None, "timestamp": None}
         for row in outputs:
@@ -96,6 +99,7 @@ async def latest_recommendations(status: str = "pending", limit: int = 10):
     """Return latest trade recommendations."""
     try:
         from wolfpack.db import get_latest_recommendations
+
         return {"recommendations": get_latest_recommendations(status=status, limit=limit)}
     except Exception as e:
         logger.error(f"Failed to fetch recommendations: {e}")
@@ -118,6 +122,233 @@ async def module_status():
     return {"modules": {m: {"status": "not_started", "last_run": None} for m in modules}}
 
 
+@app.post("/recommendations/{rec_id}/approve")
+async def approve_recommendation(rec_id: str, exchange: str = "hyperliquid"):
+    """Approve a trade recommendation for paper trading execution."""
+    try:
+        from wolfpack.db import get_db
+
+        db = get_db()
+
+        # Update status to approved
+        result = (
+            db.table("wp_trade_recommendations")
+            .update({"status": "approved", "resolved_at": datetime.now(timezone.utc).isoformat()})
+            .eq("id", rec_id)
+            .execute()
+        )
+
+        if not result.data:
+            return {"status": "error", "message": "Recommendation not found"}
+
+        rec = result.data[0]
+
+        # Execute as paper trade if paper trading engine is available
+        if _paper_engine is not None and rec.get("entry_price"):
+            pos = _paper_engine.open_position(
+                symbol=rec["symbol"],
+                direction=rec["direction"],
+                current_price=rec["entry_price"],
+                size_pct=rec.get("size_pct") or 5.0,
+                recommendation_id=rec_id,
+            )
+            if pos:
+                # Update status to executed
+                db.table("wp_trade_recommendations").update(
+                    {"status": "executed"}
+                ).eq("id", rec_id).execute()
+
+                # Store portfolio snapshot
+                _paper_engine.store_snapshot(exchange)
+                return {"status": "executed", "position": pos.model_dump()}
+
+        return {"status": "approved", "recommendation": rec}
+
+    except Exception as e:
+        logger.error(f"Failed to approve recommendation: {e}")
+        return {"status": "error", "message": str(e)}
+
+
+@app.post("/recommendations/{rec_id}/reject")
+async def reject_recommendation(rec_id: str):
+    """Reject a trade recommendation."""
+    try:
+        from wolfpack.db import get_db
+
+        db = get_db()
+        result = (
+            db.table("wp_trade_recommendations")
+            .update({"status": "rejected", "resolved_at": datetime.now(timezone.utc).isoformat()})
+            .eq("id", rec_id)
+            .execute()
+        )
+        if not result.data:
+            return {"status": "error", "message": "Recommendation not found"}
+        return {"status": "rejected"}
+    except Exception as e:
+        logger.error(f"Failed to reject recommendation: {e}")
+        return {"status": "error", "message": str(e)}
+
+
+@app.get("/portfolio")
+async def portfolio_status():
+    """Return current paper trading portfolio state."""
+    if _paper_engine is None:
+        return {"status": "inactive", "message": "Paper trading not initialized"}
+
+    portfolio = _paper_engine.portfolio
+    return {
+        "status": "active",
+        "equity": round(portfolio.equity, 2),
+        "starting_equity": portfolio.starting_equity,
+        "realized_pnl": round(portfolio.realized_pnl, 2),
+        "unrealized_pnl": round(portfolio.unrealized_pnl, 2),
+        "free_collateral": round(portfolio.free_collateral, 2),
+        "positions": [p.model_dump() for p in portfolio.positions],
+        "closed_trades": portfolio.closed_trades,
+        "winning_trades": portfolio.winning_trades,
+        "win_rate": round(portfolio.winning_trades / portfolio.closed_trades, 3) if portfolio.closed_trades > 0 else 0,
+    }
+
+
+@app.get("/portfolio/history")
+async def portfolio_history(limit: int = 100):
+    """Return portfolio snapshot history for equity curve."""
+    try:
+        from wolfpack.db import get_db
+
+        db = get_db()
+        result = (
+            db.table("wp_portfolio_snapshots")
+            .select("*")
+            .order("created_at", desc=True)
+            .limit(limit)
+            .execute()
+        )
+        snapshots = result.data or []
+        snapshots.reverse()  # Chronological order
+        return {"snapshots": snapshots}
+    except Exception as e:
+        logger.error(f"Failed to fetch portfolio history: {e}")
+        return {"snapshots": []}
+
+
+@app.post("/portfolio/close/{symbol}")
+async def close_position(symbol: str, exchange: str = "hyperliquid"):
+    """Close a paper trading position."""
+    if _paper_engine is None:
+        return {"status": "error", "message": "Paper trading not initialized"}
+
+    realized_pnl = _paper_engine.close_position(symbol.upper())
+    _paper_engine.store_snapshot(exchange)
+    return {"status": "closed", "symbol": symbol.upper(), "realized_pnl": round(realized_pnl, 2)}
+
+
+# ── Trade Execution Endpoints ──
+
+
+@app.post("/trades/execute")
+async def execute_trade(
+    symbol: str,
+    direction: str,
+    size: float,
+    price: float,
+    order_type: str = "limit",
+    reduce_only: bool = False,
+):
+    """Execute a real trade on Hyperliquid (requires private key in .env)."""
+    trader = _get_trader()
+    if trader is None:
+        return {"status": "error", "message": "HYPERLIQUID_PRIVATE_KEY not configured"}
+
+    try:
+        result = await trader.place_order(
+            symbol=symbol.upper(),
+            is_buy=(direction.lower() == "long"),
+            size=size,
+            price=price,
+            reduce_only=reduce_only,
+            order_type=order_type,  # type: ignore[arg-type]
+        )
+        return {"status": "submitted", "result": result}
+    except Exception as e:
+        logger.error(f"Trade execution failed: {e}")
+        return {"status": "error", "message": str(e)}
+
+
+@app.get("/trades/positions")
+async def get_positions():
+    """Fetch current positions from Hyperliquid."""
+    trader = _get_trader()
+    if trader is None:
+        return {"status": "error", "positions": [], "message": "HYPERLIQUID_PRIVATE_KEY not configured"}
+
+    try:
+        positions = await trader.get_positions()
+        return {"status": "ok", "positions": positions}
+    except Exception as e:
+        logger.error(f"Failed to fetch positions: {e}")
+        return {"status": "error", "positions": [], "message": str(e)}
+
+
+@app.get("/trades/orders")
+async def get_open_orders():
+    """Fetch open orders from Hyperliquid."""
+    trader = _get_trader()
+    if trader is None:
+        return {"status": "error", "orders": [], "message": "HYPERLIQUID_PRIVATE_KEY not configured"}
+
+    try:
+        orders = await trader.get_open_orders()
+        return {"status": "ok", "orders": orders}
+    except Exception as e:
+        logger.error(f"Failed to fetch orders: {e}")
+        return {"status": "error", "orders": [], "message": str(e)}
+
+
+@app.post("/trades/cancel")
+async def cancel_order(symbol: str, order_id: int):
+    """Cancel an open order on Hyperliquid."""
+    trader = _get_trader()
+    if trader is None:
+        return {"status": "error", "message": "HYPERLIQUID_PRIVATE_KEY not configured"}
+
+    try:
+        result = await trader.cancel_order(symbol.upper(), order_id)
+        return {"status": "cancelled", "result": result}
+    except Exception as e:
+        logger.error(f"Cancel failed: {e}")
+        return {"status": "error", "message": str(e)}
+
+
+# ── Singletons ──
+
+# Paper trading engine (lazy-initialized on first intelligence run)
+_paper_engine: Any = None
+_trader_instance: Any = None
+
+
+def _get_trader() -> Any:
+    """Get or create the Hyperliquid trader singleton."""
+    global _trader_instance
+    if _trader_instance is None:
+        if not settings.hyperliquid_private_key:
+            return None
+        from wolfpack.exchanges.hyperliquid_trading import HyperliquidTrader
+        _trader_instance = HyperliquidTrader(settings.hyperliquid_private_key)
+    return _trader_instance
+
+
+def _get_paper_engine() -> Any:
+    """Get or create the paper trading engine singleton."""
+    global _paper_engine
+    if _paper_engine is None:
+        from wolfpack.paper_trading import PaperTradingEngine
+
+        _paper_engine = PaperTradingEngine(starting_equity=10000.0)
+    return _paper_engine
+
+
 @app.post("/intelligence/run")
 async def run_intelligence(
     background_tasks: BackgroundTasks,
@@ -125,37 +356,56 @@ async def run_intelligence(
     symbol: str = "BTC",
 ):
     """Trigger a full intelligence cycle for the specified exchange and symbol."""
-    if "quant" in _running:
-        return {"status": "already_running", "exchange": exchange}
+    if _running:
+        return {"status": "already_running", "agents": list(_running)}
 
-    background_tasks.add_task(_run_quant_cycle, exchange, symbol)
+    background_tasks.add_task(_run_full_cycle, exchange, symbol)
     return {"status": "started", "exchange": exchange, "symbol": symbol}
 
 
-async def _run_quant_cycle(exchange: str, symbol: str) -> None:
-    """Execute a full Quant intelligence cycle: fetch data → modules → LLM → Supabase."""
-    _running.add("quant")
+async def _run_full_cycle(exchange: str, symbol: str) -> None:
+    """Execute a full intelligence cycle: fetch data -> modules -> all 4 agents -> Supabase.
+
+    Pipeline:
+    1. Fetch market data (candles, orderbook, funding)
+    2. Run quant modules (regime, liquidity, funding, volatility, correlation)
+    3. Run Quant + Snoop + Sage agents (can run in parallel - they read modules, not each other)
+    4. Run Brief agent (consumes the other 3 agents' outputs)
+    5. Extract trade recommendations from Brief and store to Supabase
+    """
     try:
-        from wolfpack.exchanges import get_exchange
-        from wolfpack.modules.regime import RegimeDetector
-        from wolfpack.modules.liquidity import LiquidityIntel
-        from wolfpack.modules.funding import FundingIntel
-        from wolfpack.modules.volatility import VolatilitySignal
+        from wolfpack.agents.brief import BriefAgent
         from wolfpack.agents.quant import QuantAgent
-        from wolfpack.db import store_agent_output, store_module_output
+        from wolfpack.agents.sage import SageAgent
+        from wolfpack.agents.snoop import SnoopAgent
+        from wolfpack.db import store_agent_output, store_module_output, store_recommendation
+        from wolfpack.exchanges import get_exchange
+        from wolfpack.modules.correlation import CorrelationIntel
+        from wolfpack.modules.funding import FundingIntel
+        from wolfpack.modules.liquidity import LiquidityIntel
+        from wolfpack.modules.regime import RegimeDetector
+        from wolfpack.modules.volatility import VolatilitySignal
 
         adapter = get_exchange(exchange)  # type: ignore[arg-type]
 
-        # Fetch data in parallel-ish (sequential for now, can asyncio.gather later)
-        logger.info(f"Fetching {symbol} data from {exchange}...")
+        # ── Step 1: Fetch market data ──
+        logger.info(f"[cycle] Fetching {symbol} data from {exchange}...")
         candles_1h = await adapter.get_candles(symbol, interval="1h", limit=300)
         orderbook = await adapter.get_orderbook(symbol, depth=20)
         funding_rates = await adapter.get_funding_rates()
 
-        # Run modules
-        logger.info("Running quantitative modules...")
+        # Also fetch ETH candles for correlation analysis
+        eth_candles: list = []
+        if symbol != "ETH":
+            try:
+                eth_candles = await adapter.get_candles("ETH", interval="1h", limit=300)
+            except Exception as e:
+                logger.warning(f"[cycle] Could not fetch ETH candles for correlation: {e}")
 
-        # Regime detection (takes Candle objects directly, supports multi-TF)
+        # ── Step 2: Run quantitative modules ──
+        logger.info("[cycle] Running quantitative modules...")
+
+        # Regime detection
         regime_detector = RegimeDetector()
         regime_output = regime_detector.detect(candles_1h, asset=symbol)
         store_module_output("regime_detection", exchange, regime_output.model_dump(), symbol)
@@ -187,33 +437,177 @@ async def _run_quant_cycle(exchange: str, symbol: str) -> None:
         vol_output = vol_signal.analyze(asset=symbol, closes=closes)
         store_module_output("volatility", exchange, vol_output.model_dump(), symbol)
 
-        # Run Quant agent
-        logger.info("Running Quant agent LLM analysis...")
-        quant = QuantAgent()
-        market_data = {
+        # Correlation (BTC/ETH)
+        correlation_output = None
+        if eth_candles and len(eth_candles) >= 20:
+            try:
+                corr_intel = CorrelationIntel()
+                btc_closes = [c.close for c in candles_1h]
+                eth_closes = [c.close for c in eth_candles]
+                correlation_output = corr_intel.analyze(btc_closes, eth_closes)
+                store_module_output("correlation", exchange, correlation_output.model_dump(), symbol)
+            except Exception as e:
+                logger.warning(f"[cycle] Correlation analysis failed: {e}")
+
+        # Get latest price for context
+        latest_price: float | None = None
+        if candles_1h:
+            latest_price = candles_1h[-1].close
+
+        # ── Step 3: Run Quant, Snoop, Sage agents in parallel ──
+        logger.info("[cycle] Running intelligence agents (Quant, Snoop, Sage)...")
+
+        # Build shared market data dict
+        market_data_base: dict[str, Any] = {
             "symbol": symbol,
-            "candles": candles_1h,
             "regime": regime_output,
             "liquidity": liquidity_output,
             "volatility": vol_output,
             "funding": funding_output.model_dump() if funding_output else None,
+            "latest_price": latest_price,
         }
-        agent_output = await quant.analyze(market_data, exchange)
 
-        # Store to Supabase
-        store_agent_output(
-            agent_name=agent_output.agent_name,
-            exchange_id=exchange,
-            summary=agent_output.summary,
-            signals=agent_output.signals,
-            confidence=agent_output.confidence,
-            raw_data=agent_output.raw_data,
+        # Quant gets candles too
+        quant_data = {**market_data_base, "candles": candles_1h}
+
+        # Sage gets correlation
+        sage_data = {**market_data_base}
+        if correlation_output:
+            sage_data["correlation"] = correlation_output
+
+        quant = QuantAgent()
+        snoop = SnoopAgent()
+        sage = SageAgent()
+
+        _running.update({"quant", "snoop", "sage"})
+
+        quant_out, snoop_out, sage_out = await asyncio.gather(
+            _run_agent(quant, quant_data, exchange, store_agent_output),
+            _run_agent(snoop, market_data_base, exchange, store_agent_output),
+            _run_agent(sage, sage_data, exchange, store_agent_output),
+            return_exceptions=True,
         )
 
+        _running.discard("quant")
+        _running.discard("snoop")
+        _running.discard("sage")
         _last_runs["quant"] = datetime.now(timezone.utc)
-        logger.info(f"Quant cycle complete for {symbol} on {exchange}")
+        _last_runs["snoop"] = datetime.now(timezone.utc)
+        _last_runs["sage"] = datetime.now(timezone.utc)
+
+        # Log any agent failures but continue
+        agent_outputs: dict[str, Any] = {}
+        for name, result in [("quant", quant_out), ("snoop", snoop_out), ("sage", sage_out)]:
+            if isinstance(result, Exception):
+                logger.error(f"[cycle] {name} agent failed: {result}")
+            elif isinstance(result, dict):
+                agent_outputs[name] = result
+            else:
+                agent_outputs[name] = result
+
+        # ── Step 4: Run Brief agent (consumes other agent outputs) ──
+        logger.info("[cycle] Running Brief agent (synthesis)...")
+        _running.add("brief")
+
+        brief_data: dict[str, Any] = {
+            "symbol": symbol,
+            "latest_price": latest_price,
+            "regime": regime_output,
+            "circuit_breaker": None,
+        }
+        if "quant" in agent_outputs:
+            out = agent_outputs["quant"]
+            brief_data["quant_output"] = out.model_dump() if hasattr(out, "model_dump") else out
+        if "snoop" in agent_outputs:
+            out = agent_outputs["snoop"]
+            brief_data["snoop_output"] = out.model_dump() if hasattr(out, "model_dump") else out
+        if "sage" in agent_outputs:
+            out = agent_outputs["sage"]
+            brief_data["sage_output"] = out.model_dump() if hasattr(out, "model_dump") else out
+
+        brief = BriefAgent()
+        try:
+            brief_out = await brief.analyze(brief_data, exchange)
+
+            store_agent_output(
+                agent_name=brief_out.agent_name,
+                exchange_id=exchange,
+                summary=brief_out.summary,
+                signals=brief_out.signals,
+                confidence=brief_out.confidence,
+                raw_data=brief_out.raw_data,
+            )
+
+            # ── Step 5: Extract and store trade recommendations ──
+            recs = brief_out.raw_data.get("recommendations", []) if brief_out.raw_data else []
+            for rec in recs:
+                conviction = rec.get("conviction", 0)
+                if conviction < 40:
+                    continue  # Skip low-conviction recs
+                try:
+                    store_recommendation(
+                        exchange_id=exchange,
+                        symbol=rec.get("symbol", symbol),
+                        direction=rec.get("direction", "wait"),
+                        conviction=conviction,
+                        rationale=rec.get("rationale", ""),
+                        entry_price=rec.get("entry_price"),
+                        stop_loss=rec.get("stop_loss"),
+                        take_profit=rec.get("take_profit"),
+                        size_pct=rec.get("size_pct"),
+                    )
+                    # Telegram notification for high-conviction recs
+                    if conviction >= 70:
+                        try:
+                            from wolfpack.notifications import notify_recommendation
+                            await notify_recommendation(
+                                symbol=rec.get("symbol", symbol),
+                                direction=rec.get("direction", "wait"),
+                                conviction=conviction,
+                                rationale=rec.get("rationale", ""),
+                                entry_price=rec.get("entry_price"),
+                                stop_loss=rec.get("stop_loss"),
+                                take_profit=rec.get("take_profit"),
+                            )
+                        except Exception:
+                            pass  # Don't fail cycle on notification error
+                except Exception as e:
+                    logger.error(f"[cycle] Failed to store recommendation: {e}")
+
+            _last_runs["brief"] = datetime.now(timezone.utc)
+
+            # ── Step 6: Update paper trading portfolio ──
+            engine = _get_paper_engine()
+            if latest_price and engine.portfolio.positions:
+                engine.update_prices({symbol: latest_price})
+                engine.store_snapshot(exchange)
+                logger.info(f"[cycle] Paper portfolio snapshot stored (equity: ${engine.portfolio.equity:.2f})")
+
+            logger.info(f"[cycle] Full intelligence cycle complete for {symbol} on {exchange}")
+
+        except Exception as e:
+            logger.error(f"[cycle] Brief agent failed: {e}", exc_info=True)
+        finally:
+            _running.discard("brief")
 
     except Exception as e:
-        logger.error(f"Quant cycle failed: {e}", exc_info=True)
+        logger.error(f"[cycle] Intelligence cycle failed: {e}", exc_info=True)
     finally:
         _running.discard("quant")
+        _running.discard("snoop")
+        _running.discard("sage")
+        _running.discard("brief")
+
+
+async def _run_agent(agent: Any, market_data: dict, exchange: str, store_fn: Any) -> Any:
+    """Run a single agent and store its output. Returns the AgentOutput."""
+    output = await agent.analyze(market_data, exchange)
+    store_fn(
+        agent_name=output.agent_name,
+        exchange_id=exchange,
+        summary=output.summary,
+        signals=output.signals,
+        confidence=output.confidence,
+        raw_data=output.raw_data,
+    )
+    return output

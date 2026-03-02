@@ -8,7 +8,6 @@ import logging
 from typing import Any
 
 from wolfpack.agents.base import Agent, AgentOutput
-from wolfpack.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -96,7 +95,7 @@ Be precise with numbers. Qualify uncertainty. Never fabricate data that wasn't p
                 context["latest_volume"] = last.get("volume", 0)
 
         # Call LLM for interpretation
-        llm_analysis = await self._call_llm(context)
+        llm_analysis = await self._interpret(context)
 
         # Parse LLM response
         try:
@@ -131,69 +130,15 @@ Be precise with numbers. Qualify uncertainty. Never fabricate data that wasn't p
             raw_data={"context": context, "llm_response": llm_analysis},
         )
 
-    async def _call_llm(self, context: dict) -> str:
-        """Call LLM (Anthropic Claude or DeepSeek) to interpret quantitative signals."""
+    async def _interpret(self, context: dict) -> str:
+        """Call LLM to interpret quantitative signals."""
         prompt = f"""Analyze the following quantitative signals for {context.get('symbol', 'BTC')} on {context.get('exchange', 'hyperliquid')}:
 
 {json.dumps(context, indent=2, default=str)}
 
 Respond with ONLY a JSON object matching the format specified in your system prompt."""
 
-        if settings.anthropic_api_key:
-            return await self._call_anthropic(prompt)
-        elif settings.deepseek_api_key:
-            return await self._call_deepseek(prompt)
-        else:
-            logger.warning("No LLM API key configured — returning raw signals only")
-            return json.dumps({
-                "regime_assessment": f"Regime: {context.get('regime', {}).get('regime', 'unknown')}",
-                "trend_direction": "neutral",
-                "trend_strength": 50,
-                "key_levels": {"support": [], "resistance": []},
-                "risk_level": "moderate",
-                "opportunities": [],
-                "warnings": ["No LLM API key configured"],
-                "conviction": 30,
-                "summary": "Quantitative signals computed but no LLM available for interpretation.",
-            })
-
-    async def _call_anthropic(self, prompt: str) -> str:
-        import anthropic
-
-        client = anthropic.AsyncAnthropic(api_key=settings.anthropic_api_key)
-        try:
-            response = await client.messages.create(
-                model="claude-sonnet-4-20250514",
-                max_tokens=1024,
-                system=self.system_prompt,
-                messages=[{"role": "user", "content": prompt}],
-            )
-            return response.content[0].text
-        except Exception as e:
-            logger.error(f"Anthropic API error: {e}")
-            raise
-
-    async def _call_deepseek(self, prompt: str) -> str:
-        from openai import AsyncOpenAI
-
-        client = AsyncOpenAI(
-            api_key=settings.deepseek_api_key,
-            base_url=settings.deepseek_base_url,
-        )
-        try:
-            response = await client.chat.completions.create(
-                model="deepseek-chat",
-                messages=[
-                    {"role": "system", "content": self.system_prompt},
-                    {"role": "user", "content": prompt},
-                ],
-                max_tokens=1024,
-                temperature=0.3,
-            )
-            return response.choices[0].message.content or ""
-        except Exception as e:
-            logger.error(f"DeepSeek API error: {e}")
-            raise
+        return await self._call_llm(prompt)
 
     def _compute_signals(self, candles: list) -> list[dict[str, Any]]:
         """Compute technical indicators from candle data."""

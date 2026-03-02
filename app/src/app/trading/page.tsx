@@ -1,11 +1,21 @@
 "use client";
 
 import { useExchange } from "@/lib/exchange";
-import { useRecommendations } from "@/lib/hooks/useIntelligence";
+import {
+  useRecommendations,
+  useApproveRecommendation,
+  useRejectRecommendation,
+  usePortfolio,
+} from "@/lib/hooks/useIntelligence";
 
 export default function TradingPage() {
   const { config } = useExchange();
   const { data: recommendations } = useRecommendations("pending");
+  const { data: portfolio } = usePortfolio();
+  const approveMutation = useApproveRecommendation();
+  const rejectMutation = useRejectRecommendation();
+
+  const isActive = portfolio?.status === "active";
 
   return (
     <div className="space-y-6">
@@ -60,18 +70,48 @@ export default function TradingPage() {
                 <span>50x</span>
               </div>
             </div>
-            <button className="w-full bg-[var(--wolf-blue)] text-white py-3 rounded-md font-semibold hover:brightness-110 transition disabled:opacity-50" disabled>
+            <button
+              className="w-full bg-[var(--wolf-blue)] text-white py-3 rounded-md font-semibold hover:brightness-110 transition disabled:opacity-50"
+              disabled
+            >
               Connect Wallet to Trade
             </button>
           </div>
         </div>
 
-        {/* Chart Area */}
-        <div className="lg:col-span-2 bg-surface-elevated border border-[var(--border)] rounded-lg p-6">
-          <h2 className="text-lg font-semibold text-white mb-4">Price Chart</h2>
-          <div className="h-80 flex items-center justify-center text-gray-500 text-sm border border-dashed border-[var(--border)] rounded-md">
-            Chart component — will integrate TradingView or recharts
+        {/* Chart Area + Portfolio Summary */}
+        <div className="lg:col-span-2 space-y-6">
+          <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-6">
+            <h2 className="text-lg font-semibold text-white mb-4">Price Chart</h2>
+            <div className="h-80 flex items-center justify-center text-gray-500 text-sm border border-dashed border-[var(--border)] rounded-md">
+              Chart component — will integrate TradingView or recharts
+            </div>
           </div>
+
+          {/* Paper Portfolio Summary */}
+          {isActive && (
+            <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 bg-[var(--wolf-emerald)] rounded-full" />
+                  <span className="text-sm text-gray-400">
+                    Paper Portfolio: <span className="text-white font-semibold">${portfolio.equity.toLocaleString()}</span>
+                  </span>
+                </div>
+                <div className="flex items-center gap-4 text-xs">
+                  <span className={portfolio.unrealized_pnl >= 0 ? "text-[var(--wolf-emerald)]" : "text-[var(--wolf-red)]"}>
+                    Unrealized: {portfolio.unrealized_pnl >= 0 ? "+" : ""}${portfolio.unrealized_pnl.toFixed(2)}
+                  </span>
+                  <span className={portfolio.realized_pnl >= 0 ? "text-[var(--wolf-emerald)]" : "text-[var(--wolf-red)]"}>
+                    Realized: {portfolio.realized_pnl >= 0 ? "+" : ""}${portfolio.realized_pnl.toFixed(2)}
+                  </span>
+                  <span className="text-gray-500">
+                    {portfolio.positions?.length ?? 0} positions
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -100,6 +140,13 @@ export default function TradingPage() {
                     <p className="text-xs text-gray-400 mt-0.5 max-w-md line-clamp-1">
                       {rec.rationale as string}
                     </p>
+                    {Boolean(rec.entry_price || rec.stop_loss || rec.take_profit) && (
+                      <p className="text-xs text-gray-500 mt-0.5 font-mono">
+                        {rec.entry_price ? `Entry: $${Number(rec.entry_price).toLocaleString()}` : ""}
+                        {rec.stop_loss ? ` | SL: $${Number(rec.stop_loss).toLocaleString()}` : ""}
+                        {rec.take_profit ? ` | TP: $${Number(rec.take_profit).toLocaleString()}` : ""}
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
@@ -107,12 +154,31 @@ export default function TradingPage() {
                     <div className="text-xs text-gray-500">Conviction</div>
                     <div className="text-sm font-bold text-white">{rec.conviction as number}%</div>
                   </div>
+                  {Boolean(rec.size_pct) && (
+                    <div className="text-right">
+                      <div className="text-xs text-gray-500">Size</div>
+                      <div className="text-sm text-gray-300">{rec.size_pct as number}%</div>
+                    </div>
+                  )}
                   <div className="flex gap-2">
-                    <button className="px-3 py-1.5 bg-[var(--wolf-emerald)]/20 text-[var(--wolf-emerald)] rounded text-xs font-semibold hover:bg-[var(--wolf-emerald)]/30 transition">
-                      Approve
+                    <button
+                      onClick={() =>
+                        approveMutation.mutate({
+                          id: rec.id as string,
+                          exchange: config.id,
+                        })
+                      }
+                      disabled={approveMutation.isPending}
+                      className="px-3 py-1.5 bg-[var(--wolf-emerald)]/20 text-[var(--wolf-emerald)] rounded text-xs font-semibold hover:bg-[var(--wolf-emerald)]/30 transition disabled:opacity-50"
+                    >
+                      {approveMutation.isPending ? "..." : "Approve"}
                     </button>
-                    <button className="px-3 py-1.5 bg-[var(--wolf-red)]/20 text-[var(--wolf-red)] rounded text-xs font-semibold hover:bg-[var(--wolf-red)]/30 transition">
-                      Reject
+                    <button
+                      onClick={() => rejectMutation.mutate(rec.id as string)}
+                      disabled={rejectMutation.isPending}
+                      className="px-3 py-1.5 bg-[var(--wolf-red)]/20 text-[var(--wolf-red)] rounded text-xs font-semibold hover:bg-[var(--wolf-red)]/30 transition disabled:opacity-50"
+                    >
+                      {rejectMutation.isPending ? "..." : "Reject"}
                     </button>
                   </div>
                 </div>

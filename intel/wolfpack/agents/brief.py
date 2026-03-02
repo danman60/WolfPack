@@ -1,14 +1,26 @@
-"""The Brief — Decision synthesis, trade recommendations, portfolio management."""
+"""The Brief — Decision synthesis, trade recommendations, portfolio management.
 
+Consumes outputs from Quant, Snoop, and Sage agents to produce
+actionable trade recommendations with entry/exit levels and sizing.
+"""
+
+import json
+import logging
 from typing import Any
 
 from wolfpack.agents.base import Agent, AgentOutput
+
+logger = logging.getLogger(__name__)
 
 
 class BriefAgent(Agent):
     @property
     def name(self) -> str:
         return "The Brief"
+
+    @property
+    def agent_key(self) -> str:
+        return "brief"
 
     @property
     def role(self) -> str:
@@ -31,27 +43,125 @@ Your role:
 - Flag conflicting signals between agents
 - Produce a daily brief summarizing key opportunities and risks
 
-Output format:
-- recommendations: [{asset, direction, conviction, entry, stop_loss, take_profit, size_pct, rationale}]
-- portfolio_adjustments: suggested position changes
-- risk_assessment: overall portfolio risk level
-- signal_convergence: where agents agree/disagree
-- priority_actions: what to do RIGHT NOW
-- daily_narrative: 2-3 sentence market summary
+Output a JSON object with:
+{
+    "recommendations": [
+        {
+            "symbol": "BTC",
+            "direction": "long" | "short",
+            "conviction": 0-100,
+            "entry_price": price or null,
+            "stop_loss": price or null,
+            "take_profit": price or null,
+            "size_pct": 1-25,
+            "rationale": "1-2 sentence rationale"
+        }
+    ],
+    "portfolio_risk": "low" | "moderate" | "elevated" | "extreme",
+    "signal_convergence": {
+        "agreements": ["where agents agree"],
+        "conflicts": ["where agents disagree"]
+    },
+    "priority_actions": ["immediate action items"],
+    "daily_narrative": "2-3 sentence market summary",
+    "conviction": 0-100,
+    "summary": "2-3 sentence actionable summary"
+}
 
 Be decisive but honest about uncertainty. When agents conflict, explain why and default to caution.
-Never recommend more than 50% portfolio exposure. Always include stop-losses."""
+Never recommend more than 25% portfolio exposure per trade. Always include stop-losses.
+Only recommend trades when conviction >= 60. Below that, recommend WAIT."""
 
     async def analyze(self, market_data: dict[str, Any], exchange: str) -> AgentOutput:
-        # Phase 1: Collect outputs from Quant, Snoop, Sage
-        # Phase 2: LLM synthesis into actionable recommendations
+        symbol = market_data.get("symbol", "BTC")
+
+        # Collect agent outputs
+        context: dict[str, Any] = {
+            "symbol": symbol,
+            "exchange": exchange,
+        }
+
+        if market_data.get("quant_output"):
+            qo = market_data["quant_output"]
+            context["quant_analysis"] = {
+                "summary": qo.get("summary") if isinstance(qo, dict) else qo.summary,
+                "signals": qo.get("signals") if isinstance(qo, dict) else qo.signals,
+                "confidence": qo.get("confidence") if isinstance(qo, dict) else qo.confidence,
+            }
+
+        if market_data.get("snoop_output"):
+            so = market_data["snoop_output"]
+            context["snoop_analysis"] = {
+                "summary": so.get("summary") if isinstance(so, dict) else so.summary,
+                "signals": so.get("signals") if isinstance(so, dict) else so.signals,
+                "confidence": so.get("confidence") if isinstance(so, dict) else so.confidence,
+            }
+
+        if market_data.get("sage_output"):
+            sgo = market_data["sage_output"]
+            context["sage_analysis"] = {
+                "summary": sgo.get("summary") if isinstance(sgo, dict) else sgo.summary,
+                "signals": sgo.get("signals") if isinstance(sgo, dict) else sgo.signals,
+                "confidence": sgo.get("confidence") if isinstance(sgo, dict) else sgo.confidence,
+            }
+
+        # Pass through raw data for context
+        if market_data.get("latest_price"):
+            context["latest_price"] = market_data["latest_price"]
+        if market_data.get("regime"):
+            regime = market_data["regime"]
+            context["regime"] = regime if isinstance(regime, dict) else regime.model_dump()
+        if market_data.get("circuit_breaker"):
+            context["circuit_breaker"] = market_data["circuit_breaker"]
+
+        prompt = f"""Synthesize the following intelligence for {symbol} on {exchange} into trade recommendations:
+
+{json.dumps(context, indent=2, default=str)}
+
+Respond with ONLY a JSON object matching the format specified in your system prompt."""
+
+        llm_response = await self._call_llm(prompt)
+        parsed = self._parse_llm_json(llm_response)
+
+        summary = parsed.get("summary", "Decision synthesis complete")
+        confidence = float(parsed.get("conviction", 30)) / 100.0
+
+        signals: list[dict[str, Any]] = []
+
+        # Extract recommendations as signals
+        recommendations = parsed.get("recommendations", [])
+        for rec in recommendations:
+            signals.append({
+                "type": "recommendation",
+                "symbol": rec.get("symbol", symbol),
+                "direction": rec.get("direction", "wait"),
+                "conviction": rec.get("conviction", 0),
+                "entry_price": rec.get("entry_price"),
+                "stop_loss": rec.get("stop_loss"),
+                "take_profit": rec.get("take_profit"),
+                "size_pct": rec.get("size_pct", 0),
+                "rationale": rec.get("rationale", ""),
+            })
+
+        if parsed.get("portfolio_risk"):
+            signals.append({"type": "portfolio_risk", "level": parsed["portfolio_risk"]})
+
+        if parsed.get("signal_convergence"):
+            signals.append({"type": "convergence", **parsed["signal_convergence"]})
+
+        for action in parsed.get("priority_actions", []):
+            signals.append({"type": "priority_action", "description": action})
 
         return AgentOutput(
-            agent_name=self.name,
+            agent_name=self.agent_key,
             exchange=exchange,
             timestamp=self._now(),
-            summary="Decision synthesis pending agent integration",
-            signals=[],
-            confidence=0.0,
-            raw_data=None,
+            summary=summary,
+            signals=signals,
+            confidence=confidence,
+            raw_data={
+                "context": context,
+                "llm_response": llm_response,
+                "recommendations": recommendations,
+            },
         )
