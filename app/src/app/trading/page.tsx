@@ -1,16 +1,18 @@
 "use client";
 
 import { useExchange } from "@/lib/exchange";
+import { useRecommendations } from "@/lib/hooks/useIntelligence";
 
 export default function TradingPage() {
   const { config } = useExchange();
+  const { data: recommendations } = useRecommendations("pending");
 
   return (
     <div className="space-y-6">
       <div className="border-b border-[var(--border)] pb-4">
         <h1 className="text-2xl font-bold text-white">Trading</h1>
         <p className="text-gray-400 text-sm mt-1">
-          Manual & AI-assisted trading on {config.name}
+          Manual &amp; AI-assisted trading on {config.name}
         </p>
       </div>
 
@@ -76,11 +78,52 @@ export default function TradingPage() {
       {/* AI Recommendations */}
       <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-6">
         <h2 className="text-lg font-semibold text-white mb-4">AI Recommendations</h2>
-        <div className="text-center py-8 text-gray-500 text-sm">
-          Intelligence service will surface trade recommendations here.
-          <br />
-          Each recommendation can be approved or rejected before execution.
-        </div>
+        {recommendations && recommendations.length > 0 ? (
+          <div className="space-y-3">
+            {recommendations.map((rec: Record<string, unknown>) => (
+              <div
+                key={rec.id as string}
+                className="border border-[var(--border)] rounded-lg p-4 flex items-center justify-between"
+              >
+                <div className="flex items-center gap-4">
+                  <span
+                    className={`px-3 py-1 rounded text-xs font-bold uppercase ${
+                      rec.direction === "long"
+                        ? "bg-[var(--wolf-emerald)]/20 text-[var(--wolf-emerald)]"
+                        : "bg-[var(--wolf-red)]/20 text-[var(--wolf-red)]"
+                    }`}
+                  >
+                    {rec.direction as string}
+                  </span>
+                  <div>
+                    <span className="text-white font-mono font-semibold">{rec.symbol as string}</span>
+                    <p className="text-xs text-gray-400 mt-0.5 max-w-md line-clamp-1">
+                      {rec.rationale as string}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="text-right">
+                    <div className="text-xs text-gray-500">Conviction</div>
+                    <div className="text-sm font-bold text-white">{rec.conviction as number}%</div>
+                  </div>
+                  <div className="flex gap-2">
+                    <button className="px-3 py-1.5 bg-[var(--wolf-emerald)]/20 text-[var(--wolf-emerald)] rounded text-xs font-semibold hover:bg-[var(--wolf-emerald)]/30 transition">
+                      Approve
+                    </button>
+                    <button className="px-3 py-1.5 bg-[var(--wolf-red)]/20 text-[var(--wolf-red)] rounded text-xs font-semibold hover:bg-[var(--wolf-red)]/30 transition">
+                      Reject
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-8 text-gray-500 text-sm">
+            No pending recommendations. Run intelligence to generate trade signals.
+          </div>
+        )}
       </div>
     </div>
   );

@@ -138,7 +138,8 @@ export class HyperliquidAdapter implements ExchangeAdapter {
     });
     const data = await res.json();
     return (data.assetPositions ?? []).map((p: Record<string, Record<string, unknown>>) => {
-      const pos = p.position ?? {};
+      const pos = p.position ?? ({} as Record<string, unknown>);
+      const lev = pos.leverage as Record<string, unknown> | undefined;
       return {
         id: `${pos.coin}-${this.walletAddress}`,
         symbol: pos.coin as string,
@@ -149,7 +150,7 @@ export class HyperliquidAdapter implements ExchangeAdapter {
         liquidationPrice: pos.liquidationPx ? Number(pos.liquidationPx) : null,
         unrealizedPnl: Number(pos.unrealizedPnl ?? 0),
         realizedPnl: Number(pos.returnOnEquity ?? 0),
-        leverage: Number(pos.leverage?.value ?? 1),
+        leverage: Number(lev?.value ?? 1),
         margin: Number(pos.marginUsed ?? 0),
         timestamp: Date.now(),
       };

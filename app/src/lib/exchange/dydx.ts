@@ -44,7 +44,7 @@ export class DydxAdapter implements ExchangeAdapter {
     const res = await fetch(`${BASE_URL}/perpetualMarkets`);
     const data = await res.json();
     const markets = data.markets ?? {};
-    return Object.values(markets).map((m: Record<string, unknown>) => ({
+    return (Object.values(markets) as Record<string, unknown>[]).map((m) => ({
       symbol: m.ticker as string,
       baseAsset: (m.ticker as string).replace("-USD", ""),
       quoteAsset: "USD",

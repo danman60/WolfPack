@@ -1,18 +1,28 @@
 "use client";
 
 import { useExchange } from "@/lib/exchange";
+import { useAgentOutputs, useAgentStatus, useRecommendations } from "@/lib/hooks/useIntelligence";
 
 export default function Dashboard() {
-  const { activeExchange, config } = useExchange();
+  const { config } = useExchange();
+  const { data: agentOutputs } = useAgentOutputs();
+  const { data: agentStatus } = useAgentStatus();
+  const { data: recommendations } = useRecommendations("pending");
+
+  const agents = agentStatus?.agents ?? [];
 
   return (
     <div className="space-y-6">
       {/* Portfolio Summary */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <StatCard label="Portfolio Value" value="—" suffix="USD" color="emerald" />
-        <StatCard label="Unrealized P&L" value="—" suffix="USD" color="blue" />
-        <StatCard label="Open Positions" value="—" color="purple" />
-        <StatCard label="Win Rate" value="—" suffix="%" color="amber" />
+        <StatCard label="Portfolio Value" value="\u2014" suffix="USD" color="emerald" />
+        <StatCard label="Unrealized P&L" value="\u2014" suffix="USD" color="blue" />
+        <StatCard label="Open Positions" value="\u2014" color="purple" />
+        <StatCard
+          label="Pending Recs"
+          value={recommendations?.length?.toString() ?? "\u2014"}
+          color="amber"
+        />
       </div>
 
       {/* Active Exchange Banner */}
@@ -31,27 +41,73 @@ export default function Dashboard() {
         {/* Latest Intelligence */}
         <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-6">
           <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-            🐺 Intelligence Brief
+            Intelligence Brief
           </h2>
           <div className="space-y-3">
-            <AgentStatus name="The Quant" status="idle" lastRun="—" />
-            <AgentStatus name="The Snoop" status="idle" lastRun="—" />
-            <AgentStatus name="The Sage" status="idle" lastRun="—" />
-            <AgentStatus name="The Brief" status="idle" lastRun="—" />
+            {agents.length > 0
+              ? agents.map((a: { name: string; key: string; status: string; last_run: string | null }) => (
+                  <AgentStatus
+                    key={a.key}
+                    name={a.name}
+                    status={a.status === "running" ? "active" : agentOutputs?.[a.key] ? "active" : "idle"}
+                    lastRun={
+                      agentOutputs?.[a.key]?.created_at
+                        ? new Date(agentOutputs[a.key].created_at).toLocaleTimeString()
+                        : "\u2014"
+                    }
+                  />
+                ))
+              : (
+                <>
+                  <AgentStatus name="The Quant" status={agentOutputs?.quant ? "active" : "idle"} lastRun={agentOutputs?.quant ? new Date(agentOutputs.quant.created_at).toLocaleTimeString() : "\u2014"} />
+                  <AgentStatus name="The Snoop" status="idle" lastRun="\u2014" />
+                  <AgentStatus name="The Sage" status="idle" lastRun="\u2014" />
+                  <AgentStatus name="The Brief" status="idle" lastRun="\u2014" />
+                </>
+              )}
           </div>
-          <p className="text-xs text-gray-500 mt-4">
-            Connect the intelligence service to activate agents.
-          </p>
+          {agentOutputs?.quant?.summary && (
+            <div className="mt-4 pt-3 border-t border-[var(--border)]">
+              <p className="text-xs text-gray-400 line-clamp-3">{agentOutputs.quant.summary}</p>
+            </div>
+          )}
         </div>
 
-        {/* Open Positions */}
+        {/* Pending Recommendations */}
         <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-6">
           <h2 className="text-lg font-semibold text-white mb-4">
-            Open Positions ({config.name})
+            Trade Recommendations
           </h2>
-          <div className="text-center py-8 text-gray-500 text-sm">
-            Connect wallet to view positions
-          </div>
+          {recommendations && recommendations.length > 0 ? (
+            <div className="space-y-3">
+              {recommendations.slice(0, 5).map((rec: Record<string, unknown>) => (
+                <div
+                  key={rec.id as string}
+                  className="flex items-center justify-between py-2 border-b border-[var(--border)] last:border-0"
+                >
+                  <div className="flex items-center gap-3">
+                    <span
+                      className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                        rec.direction === "long"
+                          ? "bg-[var(--wolf-emerald)]/20 text-[var(--wolf-emerald)]"
+                          : "bg-[var(--wolf-red)]/20 text-[var(--wolf-red)]"
+                      }`}
+                    >
+                      {rec.direction as string}
+                    </span>
+                    <span className="text-sm text-white font-mono">{rec.symbol as string}</span>
+                  </div>
+                  <span className="text-xs text-gray-400">
+                    {rec.conviction as number}% conviction
+                  </span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-gray-500 text-sm">
+              No pending recommendations. Run intelligence to generate signals.
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -93,10 +149,10 @@ function AgentStatus({
   lastRun,
 }: {
   name: string;
-  status: "active" | "idle" | "error";
+  status: string;
   lastRun: string;
 }) {
-  const statusColors = {
+  const statusColors: Record<string, string> = {
     active: "bg-[var(--wolf-emerald)]",
     idle: "bg-gray-600",
     error: "bg-[var(--wolf-red)]",
@@ -105,7 +161,7 @@ function AgentStatus({
   return (
     <div className="flex items-center justify-between py-2 border-b border-[var(--border)] last:border-0">
       <div className="flex items-center gap-3">
-        <div className={`w-2 h-2 rounded-full ${statusColors[status]}`} />
+        <div className={`w-2 h-2 rounded-full ${statusColors[status] ?? "bg-gray-600"}`} />
         <span className="text-sm text-gray-300">{name}</span>
       </div>
       <span className="text-xs text-gray-500">{lastRun}</span>
