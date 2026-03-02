@@ -1,8 +1,9 @@
--- WolfPack Initial Schema
+-- WolfPack Initial Schema (wp_ prefix)
 -- Multi-exchange crypto intelligence & trading platform
+-- Deployed to CCandSS Supabase project
 
 -- Exchange configuration per user session
-CREATE TABLE IF NOT EXISTS exchange_configs (
+CREATE TABLE IF NOT EXISTS wp_exchange_configs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     exchange_id TEXT NOT NULL CHECK (exchange_id IN ('hyperliquid', 'dydx')),
     wallet_address TEXT,
@@ -13,7 +14,7 @@ CREATE TABLE IF NOT EXISTS exchange_configs (
 );
 
 -- Intelligence agent outputs
-CREATE TABLE IF NOT EXISTS agent_outputs (
+CREATE TABLE IF NOT EXISTS wp_agent_outputs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     agent_name TEXT NOT NULL CHECK (agent_name IN ('quant', 'snoop', 'sage', 'brief')),
     exchange_id TEXT NOT NULL,
@@ -24,11 +25,11 @@ CREATE TABLE IF NOT EXISTS agent_outputs (
     created_at TIMESTAMPTZ DEFAULT now()
 );
 
-CREATE INDEX idx_agent_outputs_agent ON agent_outputs (agent_name, created_at DESC);
-CREATE INDEX idx_agent_outputs_exchange ON agent_outputs (exchange_id, created_at DESC);
+CREATE INDEX idx_wp_agent_outputs_agent ON wp_agent_outputs (agent_name, created_at DESC);
+CREATE INDEX idx_wp_agent_outputs_exchange ON wp_agent_outputs (exchange_id, created_at DESC);
 
 -- Quantitative module outputs
-CREATE TABLE IF NOT EXISTS module_outputs (
+CREATE TABLE IF NOT EXISTS wp_module_outputs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     module_name TEXT NOT NULL,
     exchange_id TEXT NOT NULL,
@@ -37,10 +38,10 @@ CREATE TABLE IF NOT EXISTS module_outputs (
     created_at TIMESTAMPTZ DEFAULT now()
 );
 
-CREATE INDEX idx_module_outputs_module ON module_outputs (module_name, created_at DESC);
+CREATE INDEX idx_wp_module_outputs_module ON wp_module_outputs (module_name, created_at DESC);
 
 -- Trade recommendations (from The Brief agent)
-CREATE TABLE IF NOT EXISTS trade_recommendations (
+CREATE TABLE IF NOT EXISTS wp_trade_recommendations (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     exchange_id TEXT NOT NULL,
     symbol TEXT NOT NULL,
@@ -52,15 +53,15 @@ CREATE TABLE IF NOT EXISTS trade_recommendations (
     size_pct REAL,
     rationale TEXT,
     status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected', 'executed', 'expired')),
-    agent_output_id UUID REFERENCES agent_outputs(id),
+    agent_output_id UUID REFERENCES wp_agent_outputs(id),
     created_at TIMESTAMPTZ DEFAULT now(),
     resolved_at TIMESTAMPTZ
 );
 
-CREATE INDEX idx_recommendations_status ON trade_recommendations (status, created_at DESC);
+CREATE INDEX idx_wp_recommendations_status ON wp_trade_recommendations (status, created_at DESC);
 
 -- Portfolio snapshots (periodic equity tracking)
-CREATE TABLE IF NOT EXISTS portfolio_snapshots (
+CREATE TABLE IF NOT EXISTS wp_portfolio_snapshots (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     exchange_id TEXT NOT NULL,
     equity REAL NOT NULL,
@@ -71,10 +72,10 @@ CREATE TABLE IF NOT EXISTS portfolio_snapshots (
     created_at TIMESTAMPTZ DEFAULT now()
 );
 
-CREATE INDEX idx_portfolio_exchange ON portfolio_snapshots (exchange_id, created_at DESC);
+CREATE INDEX idx_wp_portfolio_exchange ON wp_portfolio_snapshots (exchange_id, created_at DESC);
 
 -- LP pool positions (Uniswap V3)
-CREATE TABLE IF NOT EXISTS lp_positions (
+CREATE TABLE IF NOT EXISTS wp_lp_positions (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     token_id TEXT NOT NULL UNIQUE,
     pool_address TEXT NOT NULL,
@@ -93,10 +94,10 @@ CREATE TABLE IF NOT EXISTS lp_positions (
     updated_at TIMESTAMPTZ DEFAULT now()
 );
 
-CREATE INDEX idx_lp_wallet ON lp_positions (wallet_address, status);
+CREATE INDEX idx_wp_lp_wallet ON wp_lp_positions (wallet_address, status);
 
 -- Circuit breaker state
-CREATE TABLE IF NOT EXISTS circuit_breaker_state (
+CREATE TABLE IF NOT EXISTS wp_circuit_breaker_state (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     state TEXT NOT NULL CHECK (state IN ('green', 'yellow', 'red')),
     triggers JSONB NOT NULL DEFAULT '[]',
@@ -114,10 +115,10 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER exchange_configs_updated_at
-    BEFORE UPDATE ON exchange_configs
+CREATE TRIGGER wp_exchange_configs_updated_at
+    BEFORE UPDATE ON wp_exchange_configs
     FOR EACH ROW EXECUTE FUNCTION update_updated_at();
 
-CREATE TRIGGER lp_positions_updated_at
-    BEFORE UPDATE ON lp_positions
+CREATE TRIGGER wp_lp_positions_updated_at
+    BEFORE UPDATE ON wp_lp_positions
     FOR EACH ROW EXECUTE FUNCTION update_updated_at();
