@@ -61,7 +61,7 @@ class ExchangeAdapter(ABC):
 
     @abstractmethod
     async def get_candles(
-        self, symbol: str, interval: str = "1h", limit: int = 100
+        self, symbol: str, interval: str = "1h", limit: int = 100, start_time: int | None = None
     ) -> list[Candle]: ...
 
     @abstractmethod

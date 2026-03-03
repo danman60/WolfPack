@@ -80,7 +80,7 @@ async def get_candles(
         limit = (batch_end - batch_start) // step + 2  # +2 for boundary safety
 
         try:
-            batch = await adapter.get_candles(symbol, interval, limit=min(limit, 5000))
+            batch = await adapter.get_candles(symbol, interval, limit=min(limit, 5000), start_time=batch_start)
             # Filter to only candles in our range
             for c in batch:
                 if start_time <= c.timestamp <= end_time and c.timestamp in missing_ts:

@@ -99,9 +99,10 @@ class HyperliquidExchange(ExchangeAdapter):
         return markets
 
     async def get_candles(
-        self, symbol: str, interval: str = "1h", limit: int = 100
+        self, symbol: str, interval: str = "1h", limit: int = 100, start_time: int | None = None
     ) -> list[Candle]:
-        start_time = _now_ms() - limit * _interval_ms(interval)
+        if start_time is None:
+            start_time = _now_ms() - limit * _interval_ms(interval)
         data = await self._post({
             "type": "candleSnapshot",
             "req": {"coin": symbol, "interval": interval, "startTime": start_time},

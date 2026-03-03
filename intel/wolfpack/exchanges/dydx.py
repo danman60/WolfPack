@@ -100,17 +100,21 @@ class DydxExchange(ExchangeAdapter):
         return result
 
     async def get_candles(
-        self, symbol: str, interval: str = "1h", limit: int = 100
+        self, symbol: str, interval: str = "1h", limit: int = 100, start_time: int | None = None
     ) -> list[Candle]:
-        cache_key = f"candles:{symbol}:{interval}:{limit}"
+        cache_key = f"candles:{symbol}:{interval}:{limit}:{start_time}"
         cached = _cache_get(cache_key)
         if cached is not None:
             return cached  # type: ignore
 
         resolution = INTERVAL_MAP.get(interval, "1HOUR")
+        params: dict[str, str | int] = {"resolution": resolution, "limit": limit}
+        if start_time is not None:
+            from datetime import datetime, timezone
+            params["fromISO"] = datetime.fromtimestamp(start_time / 1000, tz=timezone.utc).isoformat()
         data = await self._get(
             f"/candles/perpetualMarkets/{symbol}",
-            params={"resolution": resolution, "limit": limit},
+            params=params,
         )
         result = [
             Candle(

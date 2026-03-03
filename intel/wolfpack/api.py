@@ -5,7 +5,7 @@ import logging
 from datetime import datetime, timezone
 from typing import Any
 
-from fastapi import BackgroundTasks, FastAPI
+from fastapi import BackgroundTasks, Body, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from wolfpack.config import settings
@@ -760,7 +760,7 @@ async def list_strategies():
 
 
 @app.post("/backtest/run")
-async def start_backtest(config: dict, background_tasks: BackgroundTasks):
+async def start_backtest(background_tasks: BackgroundTasks, config: dict = Body(...)):
     """Start a backtest run in the background. Returns run_id for polling."""
     from wolfpack.db import store_backtest_run
     from wolfpack.models.backtest_models import BacktestConfig
@@ -825,7 +825,7 @@ async def remove_backtest_run(run_id: str):
 
 
 @app.post("/backtest/compare")
-async def compare_backtests(run_ids: list[str]):
+async def compare_backtests(run_ids: list[str] = Body(...)):
     """Compare metrics for multiple backtest runs side by side."""
     from wolfpack.db import get_backtest_run
 
