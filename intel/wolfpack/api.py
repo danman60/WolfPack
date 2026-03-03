@@ -816,6 +816,10 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
             "symbol": symbol,
             "latest_price": latest_price,
             "regime": regime_output,
+            "liquidity": liquidity_output,
+            "volatility": vol_output,
+            "funding": funding_output.model_dump() if funding_output else None,
+            "correlation": correlation_output.model_dump() if correlation_output else None,
             "circuit_breaker": cb_output.model_dump(),
             "execution_timing": exec_output.model_dump(),
         }
@@ -852,7 +856,7 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
 
             for rec in recs:
                 conviction = rec.get("conviction", 0)
-                if conviction < 40:
+                if conviction < 55:
                     continue  # Skip low-conviction recs
                 try:
                     store_recommendation(

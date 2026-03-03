@@ -105,9 +105,23 @@ Output a JSON object with:
     "summary": "2-3 sentence actionable summary"
 }
 
+You also receive quantitative module outputs:
+- **Liquidity**: spread, depth, slippage estimate, trade_allowed flag, liquidity_health rating
+- **Volatility**: realized vol, vol regime (low/normal/high/extreme), z-score, percentile
+- **Funding**: annualized rate, carry direction, crowding signal
+- **Correlation**: BTC/ETH rolling correlation, tail correlation, regime
+
+HARD GATES — do NOT recommend entry when ANY of these are true:
+1. Liquidity module says trade_allowed=false or liquidity_health is "poor" or "critical"
+2. Funding rate is extreme (annualized > 50%) against the trade direction
+3. Volatility regime is "emergency" or vol z-score > 3.0
+If a hard gate fires, set direction to "wait" and explain which gate blocked the trade.
+
 Be decisive but honest about uncertainty. When agents conflict, explain why and default to caution.
 Never recommend more than 25% portfolio exposure per trade. Always include stop-losses.
-Only recommend trades when conviction >= 60. Below that, recommend WAIT."""
+Only recommend trades when conviction >= 60. Below that, recommend WAIT.
+
+Return ONLY a valid JSON object. No markdown, no code fences, no explanation outside the JSON."""
 
     async def analyze(self, market_data: dict[str, Any], exchange: str) -> AgentOutput:
         symbol = market_data.get("symbol", "BTC")
@@ -150,6 +164,18 @@ Only recommend trades when conviction >= 60. Below that, recommend WAIT."""
             context["regime"] = regime if isinstance(regime, dict) else regime.model_dump()
         if market_data.get("circuit_breaker"):
             context["circuit_breaker"] = market_data["circuit_breaker"]
+        if market_data.get("liquidity"):
+            liq = market_data["liquidity"]
+            context["liquidity"] = liq if isinstance(liq, dict) else liq.model_dump()
+        if market_data.get("volatility"):
+            vol = market_data["volatility"]
+            context["volatility"] = vol if isinstance(vol, dict) else vol.model_dump()
+        if market_data.get("funding"):
+            funding = market_data["funding"]
+            context["funding"] = funding if isinstance(funding, dict) else funding
+        if market_data.get("correlation"):
+            corr = market_data["correlation"]
+            context["correlation"] = corr if isinstance(corr, dict) else corr
 
         prompt = f"""Synthesize the following intelligence for {symbol} on {exchange} into trade recommendations:
 

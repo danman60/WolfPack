@@ -49,6 +49,11 @@ class QuantAgent(Agent):
         return "Technical Analysis & Regime Detection"
 
     @property
+    def model_override(self) -> str | None:
+        from wolfpack.config import settings
+        return settings.deepseek_reasoner_model
+
+    @property
     def system_prompt(self) -> str:
         return """You are The Quant, a quantitative trading analyst for the WolfPack intelligence system.
 
@@ -74,7 +79,9 @@ Output a JSON object with:
     "summary": "2-3 sentence actionable summary"
 }
 
-Be precise with numbers. Qualify uncertainty. Never fabricate data that wasn't provided to you."""
+Be precise with numbers. Qualify uncertainty. Never fabricate data that wasn't provided to you.
+
+Return ONLY a valid JSON object. No markdown, no code fences, no explanation outside the JSON."""
 
     async def analyze(self, market_data: dict[str, Any], exchange: str) -> AgentOutput:
         """Run quantitative analysis: compute signals then interpret via LLM."""

@@ -55,6 +55,11 @@ class Agent(ABC):
         """System prompt defining the agent's personality and analysis style."""
         ...
 
+    @property
+    def model_override(self) -> str | None:
+        """Override DeepSeek model for this agent. Return None to use default."""
+        return None
+
     @abstractmethod
     async def analyze(self, market_data: dict[str, Any], exchange: str) -> AgentOutput:
         """Run analysis on the provided market data."""
@@ -78,11 +83,15 @@ class Agent(ABC):
 
         Anthropic: uses tool_use to guarantee valid JSON matching schema.
         DeepSeek: uses response_format=json_object.
+        DeepSeek-Reasoner (R1): uses text response + JSON extraction (no json_object support).
         Falls back to text parsing on error.
         """
         if settings.anthropic_api_key:
             return await self._call_anthropic_structured(prompt, schema)
         elif settings.deepseek_api_key:
+            model = self.model_override or settings.deepseek_model
+            if model == settings.deepseek_reasoner_model:
+                return await self._call_deepseek_reasoner(prompt)
             return await self._call_deepseek_structured(prompt)
         else:
             logger.warning(f"{self.name}: No LLM API key configured")
@@ -147,16 +156,20 @@ class Agent(ABC):
             api_key=settings.deepseek_api_key,
             base_url=settings.deepseek_base_url,
         )
+        model = self.model_override or settings.deepseek_model
         try:
-            response = await client.chat.completions.create(
-                model="deepseek-chat",
-                messages=[
+            kwargs: dict[str, Any] = {
+                "model": model,
+                "messages": [
                     {"role": "system", "content": self.system_prompt},
                     {"role": "user", "content": prompt},
                 ],
-                max_tokens=1024,
-                temperature=0.3,
-            )
+                "max_tokens": 1024,
+            }
+            # R1 (deepseek-reasoner) does not support temperature
+            if model != settings.deepseek_reasoner_model:
+                kwargs["temperature"] = 0.3
+            response = await client.chat.completions.create(**kwargs)
             return response.choices[0].message.content or ""
         except Exception as e:
             logger.error(f"{self.name} DeepSeek error: {e}")
@@ -170,9 +183,10 @@ class Agent(ABC):
             api_key=settings.deepseek_api_key,
             base_url=settings.deepseek_base_url,
         )
+        model = self.model_override or settings.deepseek_model
         try:
             response = await client.chat.completions.create(
-                model="deepseek-chat",
+                model=model,
                 messages=[
                     {"role": "system", "content": self.system_prompt},
                     {"role": "user", "content": prompt},
@@ -182,7 +196,7 @@ class Agent(ABC):
                 response_format={"type": "json_object"},
             )
             text = response.choices[0].message.content or "{}"
-            return json.loads(text)
+            return self._parse_llm_json(text)
         except Exception as e:
             logger.error(f"{self.name} DeepSeek structured error: {e}")
             try:
@@ -191,16 +205,50 @@ class Agent(ABC):
             except Exception:
                 raise e
 
-    def _parse_llm_json(self, text: str) -> dict:
-        """Try to parse JSON from LLM response, with fallback."""
+    async def _call_deepseek_reasoner(self, prompt: str) -> dict:
+        """Call DeepSeek-Reasoner (R1) — no json_object mode, no temperature.
+
+        R1 returns text (possibly with markdown fences). We extract JSON via _parse_llm_json.
+        """
+        from openai import AsyncOpenAI
+
+        client = AsyncOpenAI(
+            api_key=settings.deepseek_api_key,
+            base_url=settings.deepseek_base_url,
+        )
         try:
-            return json.loads(text)
+            response = await client.chat.completions.create(
+                model=settings.deepseek_reasoner_model,
+                messages=[
+                    {"role": "system", "content": self.system_prompt},
+                    {"role": "user", "content": prompt},
+                ],
+                max_tokens=2048,
+            )
+            text = response.choices[0].message.content or "{}"
+            return self._parse_llm_json(text)
+        except Exception as e:
+            logger.error(f"{self.name} DeepSeek-Reasoner error: {e}")
+            raise
+
+    def _parse_llm_json(self, text: str) -> dict:
+        """Try to parse JSON from LLM response, with fallback.
+
+        Handles markdown code fences (```json ... ```) that DeepSeek sometimes wraps around output.
+        """
+        # Strip markdown code fences if present
+        import re
+        stripped = re.sub(r"^```(?:json)?\s*\n?", "", text.strip(), count=1)
+        stripped = re.sub(r"\n?```\s*$", "", stripped.strip(), count=1)
+
+        try:
+            return json.loads(stripped)
         except (json.JSONDecodeError, TypeError):
-            start = text.find("{")
-            end = text.rfind("}") + 1
+            start = stripped.find("{")
+            end = stripped.rfind("}") + 1
             if start >= 0 and end > start:
                 try:
-                    return json.loads(text[start:end])
+                    return json.loads(stripped[start:end])
                 except json.JSONDecodeError:
                     pass
             return {"summary": text, "conviction": 30}

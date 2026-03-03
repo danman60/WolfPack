@@ -16,6 +16,8 @@ class Settings(BaseSettings):
     # DeepSeek (financial-tuned model)
     deepseek_api_key: str = ""
     deepseek_base_url: str = "https://api.deepseek.com"
+    deepseek_model: str = "deepseek-chat"
+    deepseek_reasoner_model: str = "deepseek-reasoner"
 
     # Exchange API
     hyperliquid_wallet: str = ""

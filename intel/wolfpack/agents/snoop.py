@@ -68,7 +68,9 @@ Output a JSON object with:
     "summary": "2-3 sentence sentiment summary"
 }
 
-Be skeptical of hype. Distinguish signal from noise."""
+Be skeptical of hype. Distinguish signal from noise.
+
+Return ONLY a valid JSON object. No markdown, no code fences, no explanation outside the JSON."""
 
     async def analyze(self, market_data: dict[str, Any], exchange: str) -> AgentOutput:
         symbol = market_data.get("symbol", "BTC")
