@@ -117,3 +117,148 @@ def get_latest_recommendations(status: str = "pending", limit: int = 10) -> list
         .execute()
     )
     return result.data or []
+
+
+# ---------------------------------------------------------------------------
+# Backtest helpers
+# ---------------------------------------------------------------------------
+
+
+def store_backtest_run(config: dict) -> dict:
+    """Insert a new backtest run row (status=running). Returns row with id."""
+    db = get_db()
+    row = {"config": config, "status": "running", "progress_pct": 0}
+    result = db.table("wp_backtest_runs").insert(row).execute()
+    return result.data[0] if result.data else row
+
+
+def update_backtest_result(
+    run_id: str,
+    metrics: dict | None = None,
+    equity_curve: list | None = None,
+    monthly_returns: list | None = None,
+    trade_count: int = 0,
+    duration_seconds: float = 0,
+    status: str = "completed",
+    error: str | None = None,
+    progress_pct: float = 100,
+) -> dict:
+    """Update a backtest run with results."""
+    db = get_db()
+    update: dict = {"status": status, "progress_pct": progress_pct}
+    if metrics is not None:
+        update["metrics"] = metrics
+    if equity_curve is not None:
+        update["equity_curve"] = equity_curve
+    if monthly_returns is not None:
+        update["monthly_returns"] = monthly_returns
+    if trade_count:
+        update["trade_count"] = trade_count
+    if duration_seconds:
+        update["duration_seconds"] = duration_seconds
+    if error:
+        update["error"] = error
+    if status in ("completed", "failed"):
+        update["completed_at"] = "now()"
+    result = db.table("wp_backtest_runs").update(update).eq("id", run_id).execute()
+    return result.data[0] if result.data else update
+
+
+def update_backtest_progress(run_id: str, progress_pct: float) -> None:
+    """Update progress percentage for a running backtest."""
+    db = get_db()
+    db.table("wp_backtest_runs").update({"progress_pct": progress_pct}).eq("id", run_id).execute()
+
+
+def get_backtest_runs(limit: int = 20) -> list[dict]:
+    """Fetch recent backtest runs (summary — no equity curve)."""
+    db = get_db()
+    result = (
+        db.table("wp_backtest_runs")
+        .select("id, config, status, metrics, trade_count, duration_seconds, progress_pct, error, created_at, completed_at")
+        .order("created_at", desc=True)
+        .limit(limit)
+        .execute()
+    )
+    return result.data or []
+
+
+def get_backtest_run(run_id: str) -> dict | None:
+    """Fetch a single backtest run with full data."""
+    db = get_db()
+    result = db.table("wp_backtest_runs").select("*").eq("id", run_id).execute()
+    if not result.data:
+        return None
+    return result.data[0]
+
+
+def delete_backtest_run(run_id: str) -> bool:
+    """Delete a backtest run (cascades to trades)."""
+    db = get_db()
+    result = db.table("wp_backtest_runs").delete().eq("id", run_id).execute()
+    return bool(result.data)
+
+
+def store_backtest_trades(run_id: str, trades: list[dict]) -> int:
+    """Bulk insert backtest trades. Returns count inserted."""
+    if not trades:
+        return 0
+    db = get_db()
+    rows = [{"run_id": run_id, **t} for t in trades]
+    # Insert in batches of 500
+    inserted = 0
+    for i in range(0, len(rows), 500):
+        batch = rows[i : i + 500]
+        result = db.table("wp_backtest_trades").insert(batch).execute()
+        inserted += len(result.data) if result.data else 0
+    return inserted
+
+
+def get_backtest_trades(run_id: str) -> list[dict]:
+    """Fetch all trades for a backtest run."""
+    db = get_db()
+    result = (
+        db.table("wp_backtest_trades")
+        .select("*")
+        .eq("run_id", run_id)
+        .order("entry_time")
+        .execute()
+    )
+    return result.data or []
+
+
+# ---------------------------------------------------------------------------
+# Candle cache helpers
+# ---------------------------------------------------------------------------
+
+
+def store_candles(rows: list[dict]) -> int:
+    """Bulk upsert candles to cache. Returns count."""
+    if not rows:
+        return 0
+    db = get_db()
+    stored = 0
+    for i in range(0, len(rows), 500):
+        batch = rows[i : i + 500]
+        result = db.table("wp_candle_cache").upsert(batch, on_conflict="exchange_id,symbol,interval,timestamp").execute()
+        stored += len(result.data) if result.data else 0
+    return stored
+
+
+def get_cached_candles(
+    exchange: str, symbol: str, interval: str, start_time: int, end_time: int
+) -> list[dict]:
+    """Fetch cached candles for a time range."""
+    db = get_db()
+    result = (
+        db.table("wp_candle_cache")
+        .select("timestamp, open, high, low, close, volume")
+        .eq("exchange_id", exchange)
+        .eq("symbol", symbol)
+        .eq("interval", interval)
+        .gte("timestamp", start_time)
+        .lte("timestamp", end_time)
+        .order("timestamp")
+        .execute()
+    )
+    return result.data or []

@@ -24,6 +24,8 @@ class PaperPosition(BaseModel):
     unrealized_pnl: float
     recommendation_id: str
     opened_at: datetime
+    stop_loss: float | None = None
+    take_profit: float | None = None
 
 
 class PaperPortfolio(BaseModel):
@@ -151,12 +153,65 @@ class PaperTradingEngine:
         logger.info(f"Closed paper {pos.direction} {symbol}: P&L ${realized:.2f}")
         return realized
 
-    def check_stops(self, prices: dict[str, float]) -> list[str]:
-        """Check stop-losses and take-profits, close triggered positions.
-        Returns list of symbols that were closed."""
-        # This would need stop/TP levels stored on the position
-        # For now, this is a placeholder for future enhancement
-        return []
+    def check_stops(self, prices: dict[str, float]) -> list[tuple[str, str]]:
+        """Check stop-losses and take-profits against current prices.
+        Returns list of (symbol, reason) tuples for closed positions."""
+        triggered: list[tuple[str, str]] = []
+        for pos in list(self.portfolio.positions):
+            price = prices.get(pos.symbol)
+            if price is None:
+                continue
+            reason = self._check_stop_trigger(pos, price, price)
+            if reason:
+                pos.current_price = pos.stop_loss if reason == "stop_loss" else pos.take_profit  # type: ignore[assignment]
+                self._update_position_pnl(pos)
+                self.close_position(pos.symbol)
+                triggered.append((pos.symbol, reason))
+        return triggered
+
+    def check_stops_ohlc(self, candles: dict[str, Any]) -> list[tuple[str, str]]:
+        """Check stop-losses and take-profits against OHLC candle data.
+        Uses high/low to catch intra-bar triggers. Exit price = stop/TP level.
+        candles: {symbol: object with .high, .low attributes}
+        Returns list of (symbol, reason) tuples for closed positions."""
+        triggered: list[tuple[str, str]] = []
+        for pos in list(self.portfolio.positions):
+            candle = candles.get(pos.symbol)
+            if candle is None:
+                continue
+            high = candle.high if hasattr(candle, "high") else candle["high"]
+            low = candle.low if hasattr(candle, "low") else candle["low"]
+            reason = self._check_stop_trigger(pos, high, low)
+            if reason:
+                exit_price = pos.stop_loss if reason == "stop_loss" else pos.take_profit  # type: ignore[assignment]
+                pos.current_price = exit_price  # type: ignore[assignment]
+                self._update_position_pnl(pos)
+                self.close_position(pos.symbol)
+                triggered.append((pos.symbol, reason))
+        return triggered
+
+    def _check_stop_trigger(self, pos: PaperPosition, high: float, low: float) -> str | None:
+        """Check if a position's SL/TP was triggered given price range.
+        Returns 'stop_loss', 'take_profit', or None."""
+        if pos.direction == "long":
+            if pos.stop_loss is not None and low <= pos.stop_loss:
+                return "stop_loss"
+            if pos.take_profit is not None and high >= pos.take_profit:
+                return "take_profit"
+        else:  # short
+            if pos.stop_loss is not None and high >= pos.stop_loss:
+                return "stop_loss"
+            if pos.take_profit is not None and low <= pos.take_profit:
+                return "take_profit"
+        return None
+
+    def _update_position_pnl(self, pos: PaperPosition) -> None:
+        """Recalculate unrealized P&L for a single position."""
+        if pos.direction == "long":
+            pnl_pct = (pos.current_price - pos.entry_price) / pos.entry_price
+        else:
+            pnl_pct = (pos.entry_price - pos.current_price) / pos.entry_price
+        pos.unrealized_pnl = pos.size_usd * pnl_pct
 
     def take_snapshot(self, exchange: str) -> dict[str, Any]:
         """Generate a portfolio snapshot dict for Supabase storage."""

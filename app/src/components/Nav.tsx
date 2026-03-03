@@ -9,6 +9,7 @@ const NAV_LINKS = [
   { href: "/intelligence", label: "Intelligence" },
   { href: "/trading", label: "Trading" },
   { href: "/portfolio", label: "Portfolio" },
+  { href: "/backtest", label: "Backtest" },
   { href: "/pools", label: "LP Pools" },
   { href: "/settings", label: "Settings" },
 ];

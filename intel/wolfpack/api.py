@@ -738,6 +738,167 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
         _running.discard("brief")
 
 
+# ── Backtest Endpoints ──
+
+
+@app.get("/backtest/strategies")
+async def list_strategies():
+    """List available backtest strategies with parameter definitions."""
+    from wolfpack.strategies import STRATEGIES
+
+    result = []
+    for key, cls in STRATEGIES.items():
+        s = cls()
+        result.append({
+            "key": key,
+            "name": s.name,
+            "description": s.description,
+            "parameters": s.parameters,
+            "warmup_bars": s.warmup_bars,
+        })
+    return {"strategies": result}
+
+
+@app.post("/backtest/run")
+async def start_backtest(config: dict, background_tasks: BackgroundTasks):
+    """Start a backtest run in the background. Returns run_id for polling."""
+    from wolfpack.db import store_backtest_run
+    from wolfpack.models.backtest_models import BacktestConfig
+
+    try:
+        bt_config = BacktestConfig(**config)
+    except Exception as e:
+        return {"status": "error", "message": f"Invalid config: {e}"}
+
+    run_row = store_backtest_run(bt_config.model_dump())
+    run_id = run_row.get("id")
+
+    background_tasks.add_task(_execute_backtest, run_id, bt_config)
+    return {"status": "started", "run_id": run_id}
+
+
+@app.get("/backtest/runs")
+async def list_backtest_runs(limit: int = 20):
+    """List recent backtest runs (summary)."""
+    from wolfpack.db import get_backtest_runs
+
+    return {"runs": get_backtest_runs(limit=limit)}
+
+
+@app.get("/backtest/runs/{run_id}")
+async def get_backtest_result(run_id: str):
+    """Get full backtest result: metrics + equity curve + trades."""
+    from wolfpack.db import get_backtest_run, get_backtest_trades
+
+    run = get_backtest_run(run_id)
+    if not run:
+        return {"status": "error", "message": "Run not found"}
+
+    trades = get_backtest_trades(run_id) if run.get("status") == "completed" else []
+    return {"run": run, "trades": trades}
+
+
+@app.get("/backtest/runs/{run_id}/status")
+async def get_backtest_status(run_id: str):
+    """Poll status + progress of a running backtest."""
+    from wolfpack.db import get_backtest_run
+
+    run = get_backtest_run(run_id)
+    if not run:
+        return {"status": "error", "message": "Run not found"}
+
+    return {
+        "run_id": run_id,
+        "status": run.get("status"),
+        "progress_pct": run.get("progress_pct", 0),
+        "error": run.get("error"),
+    }
+
+
+@app.delete("/backtest/runs/{run_id}")
+async def remove_backtest_run(run_id: str):
+    """Delete a backtest run and its trades."""
+    from wolfpack.db import delete_backtest_run
+
+    deleted = delete_backtest_run(run_id)
+    return {"status": "deleted" if deleted else "not_found"}
+
+
+@app.post("/backtest/compare")
+async def compare_backtests(run_ids: list[str]):
+    """Compare metrics for multiple backtest runs side by side."""
+    from wolfpack.db import get_backtest_run
+
+    results = []
+    for rid in run_ids:
+        run = get_backtest_run(rid)
+        if run and run.get("status") == "completed":
+            results.append({
+                "run_id": rid,
+                "config": run.get("config"),
+                "metrics": run.get("metrics"),
+                "trade_count": run.get("trade_count"),
+                "duration_seconds": run.get("duration_seconds"),
+            })
+    return {"comparisons": results}
+
+
+async def _execute_backtest(run_id: str, config) -> None:
+    """Background task: fetch candles, run engine, store results."""
+    from wolfpack.backtest_engine import BacktestEngine
+    from wolfpack.candle_cache import get_candles
+    from wolfpack.db import (
+        store_backtest_trades,
+        update_backtest_progress,
+        update_backtest_result,
+    )
+
+    try:
+        # Fetch candles (from cache or exchange)
+        candles = await get_candles(
+            exchange=config.exchange,
+            symbol=config.symbol,
+            interval=config.interval,
+            start_time=config.start_time,
+            end_time=config.end_time,
+        )
+
+        if len(candles) < 100:
+            update_backtest_result(
+                run_id, status="failed", error=f"Insufficient candle data: {len(candles)} bars"
+            )
+            return
+
+        # Progress callback
+        async def on_progress(pct: float):
+            update_backtest_progress(run_id, pct)
+
+        # Run engine
+        engine = BacktestEngine(config)
+        result = await engine.run(candles, progress_cb=on_progress)
+
+        # Store trades
+        trade_dicts = [t.model_dump() for t in result.trades]
+        store_backtest_trades(run_id, trade_dicts)
+
+        # Update run with results
+        update_backtest_result(
+            run_id,
+            metrics=result.metrics.model_dump(),
+            equity_curve=result.equity_curve,
+            monthly_returns=result.monthly_returns,
+            trade_count=len(result.trades),
+            duration_seconds=result.duration_seconds,
+            status="completed",
+        )
+
+        logger.info(f"[backtest] Run {run_id} completed: {len(result.trades)} trades, {result.duration_seconds:.1f}s")
+
+    except Exception as e:
+        logger.error(f"[backtest] Run {run_id} failed: {e}", exc_info=True)
+        update_backtest_result(run_id, status="failed", error=str(e))
+
+
 async def _run_agent(agent: Any, market_data: dict, exchange: str, store_fn: Any) -> Any:
     """Run a single agent and store its output. Returns the AgentOutput."""
     output = await agent.analyze(market_data, exchange)
