@@ -74,6 +74,14 @@ class CircuitBreaker:
         self._reset_daily_counter_if_needed()
         self._trades_today += 1
 
+    def restore_state(self, state: CBState, reason: str = "Restored from DB") -> None:
+        """Restore state from persisted DB row (used on startup)."""
+        if state in ("ACTIVE", "SUSPENDED", "EMERGENCY_STOP"):
+            self._state = state
+            self._reason = reason
+            if state == "SUSPENDED":
+                self._cooldown_start = time.time()  # Restart cooldown from now
+
     def manual_reset(self) -> None:
         """Manually reset from EMERGENCY_STOP back to ACTIVE."""
         self._state = "ACTIVE"

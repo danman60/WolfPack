@@ -262,3 +262,41 @@ def get_cached_candles(
         .execute()
     )
     return result.data or []
+
+
+# ---------------------------------------------------------------------------
+# Circuit breaker state persistence
+# ---------------------------------------------------------------------------
+
+
+def save_cb_state(
+    state: str,
+    triggers: list[str],
+    max_exposure_pct: float,
+    peak_equity: float | None = None,
+) -> dict:
+    """Save current circuit breaker state to DB (insert — keeps history)."""
+    db = get_db()
+    row = {
+        "state": state,
+        "triggers": triggers,
+        "max_exposure_pct": max_exposure_pct,
+        "peak_equity": peak_equity,
+    }
+    result = db.table("wp_circuit_breaker_state").insert(row).execute()
+    return result.data[0] if result.data else row
+
+
+def load_cb_state() -> dict | None:
+    """Load the most recent circuit breaker state from DB."""
+    db = get_db()
+    result = (
+        db.table("wp_circuit_breaker_state")
+        .select("*")
+        .order("created_at", desc=True)
+        .limit(1)
+        .execute()
+    )
+    if not result.data:
+        return None
+    return result.data[0]

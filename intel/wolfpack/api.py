@@ -31,6 +31,39 @@ _last_runs: dict[str, datetime | None] = {
 }
 _running: set[str] = set()
 
+# Track module last-run timestamps
+_module_last_runs: dict[str, datetime | None] = {
+    "regime_detection": None,
+    "liquidity_intel": None,
+    "funding_carry": None,
+    "correlation": None,
+    "volatility": None,
+    "circuit_breakers": None,
+    "execution_timing": None,
+    "backtest": None,
+}
+
+# Circuit breaker singleton (persists across cycles)
+_circuit_breaker: Any = None
+
+
+def _get_circuit_breaker() -> Any:
+    """Get or create the circuit breaker singleton. Restores state from DB on first access."""
+    global _circuit_breaker
+    if _circuit_breaker is None:
+        from wolfpack.modules.circuit_breaker import CircuitBreaker
+        _circuit_breaker = CircuitBreaker()
+        # Restore persisted state (e.g. EMERGENCY_STOP survives restarts)
+        try:
+            from wolfpack.db import load_cb_state
+            saved = load_cb_state()
+            if saved and saved.get("state"):
+                _circuit_breaker.restore_state(saved["state"], reason="Restored from DB on startup")
+                logger.info(f"[circuit-breaker] Restored state: {saved['state']}")
+        except Exception as e:
+            logger.warning(f"[circuit-breaker] Could not restore state from DB: {e}")
+    return _circuit_breaker
+
 
 @app.get("/health")
 async def health():
@@ -108,18 +141,14 @@ async def latest_recommendations(status: str = "pending", limit: int = 10):
 
 @app.get("/modules/status")
 async def module_status():
-    """Return status of all 8 quantitative modules."""
-    modules = [
-        "regime_detection",
-        "liquidity_intel",
-        "funding_carry",
-        "correlation",
-        "volatility",
-        "circuit_breakers",
-        "execution_timing",
-        "backtest",
-    ]
-    return {"modules": {m: {"status": "not_started", "last_run": None} for m in modules}}
+    """Return status of all 8 quantitative modules with real run times."""
+    result = {}
+    for name, last_run in _module_last_runs.items():
+        result[name] = {
+            "status": "completed" if last_run else "not_started",
+            "last_run": last_run.isoformat() if last_run else None,
+        }
+    return {"modules": result}
 
 
 # ── Strategy Mode ──
@@ -171,8 +200,8 @@ def _safety_checklist() -> list[dict]:
         },
         {
             "name": "Circuit breaker active",
-            "passed": True,  # Always active by default
-            "description": "Circuit breaker module must be enabled",
+            "passed": _get_circuit_breaker().state != "EMERGENCY_STOP",
+            "description": "Circuit breaker must not be in EMERGENCY_STOP state",
         },
         {
             "name": "Max position size set",
@@ -219,6 +248,14 @@ async def approve_recommendation(rec_id: str, exchange: str = "hyperliquid"):
             return {"status": "error", "message": "Recommendation not found"}
 
         rec = result.data[0]
+
+        # Check circuit breaker before executing
+        cb = _get_circuit_breaker()
+        if not cb.state == "ACTIVE":
+            return {
+                "status": "blocked",
+                "message": f"Circuit breaker is {cb.state} — new entries not allowed",
+            }
 
         # Execute as paper trade if paper trading engine is available
         if _paper_engine is not None and rec.get("entry_price"):
@@ -520,6 +557,7 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
         from wolfpack.db import store_agent_output, store_module_output, store_recommendation
         from wolfpack.exchanges import get_exchange
         from wolfpack.modules.correlation import CorrelationIntel
+        from wolfpack.modules.execution import ExecutionTiming
         from wolfpack.modules.funding import FundingIntel
         from wolfpack.modules.liquidity import LiquidityIntel
         from wolfpack.modules.regime import RegimeDetector
@@ -544,15 +582,19 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
         # ── Step 2: Run quantitative modules ──
         logger.info("[cycle] Running quantitative modules...")
 
+        now_utc = datetime.now(timezone.utc)
+
         # Regime detection
         regime_detector = RegimeDetector()
         regime_output = regime_detector.detect(candles_1h, asset=symbol)
         store_module_output("regime_detection", exchange, regime_output.model_dump(), symbol)
+        _module_last_runs["regime_detection"] = now_utc
 
         # Liquidity
         liquidity_intel = LiquidityIntel()
         liquidity_output = liquidity_intel.analyze(orderbook)
         store_module_output("liquidity_intel", exchange, liquidity_output.model_dump(), symbol)
+        _module_last_runs["liquidity_intel"] = now_utc
 
         # Funding
         funding_intel = FundingIntel()
@@ -569,12 +611,14 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                 oi_change_24h_pct=0,
             )
             store_module_output("funding_carry", exchange, funding_output.model_dump(), symbol)
+            _module_last_runs["funding_carry"] = now_utc
 
         # Volatility
         closes = [c.close for c in candles_1h]
         vol_signal = VolatilitySignal()
         vol_output = vol_signal.analyze(asset=symbol, closes=closes)
         store_module_output("volatility", exchange, vol_output.model_dump(), symbol)
+        _module_last_runs["volatility"] = now_utc
 
         # Correlation (BTC/ETH)
         correlation_output = None
@@ -585,8 +629,54 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                 eth_closes = [c.close for c in eth_candles]
                 correlation_output = corr_intel.analyze(btc_closes, eth_closes)
                 store_module_output("correlation", exchange, correlation_output.model_dump(), symbol)
+                _module_last_runs["correlation"] = now_utc
             except Exception as e:
                 logger.warning(f"[cycle] Correlation analysis failed: {e}")
+
+        # Execution timing
+        exec_timing = ExecutionTiming()
+        hourly_volumes = [c.volume for c in candles_1h[-24:]] if len(candles_1h) >= 24 else []
+        current_hour = now_utc.hour
+        exec_output = exec_timing.analyze(hourly_volumes, current_hour)
+        store_module_output("execution_timing", exchange, exec_output.model_dump(), symbol)
+        _module_last_runs["execution_timing"] = now_utc
+
+        # Circuit breaker
+        cb = _get_circuit_breaker()
+        engine = _get_paper_engine()
+        portfolio = engine.portfolio
+
+        # Compute drawdown from peak
+        peak_equity = max(portfolio.starting_equity, portfolio.equity)
+        current_dd = ((peak_equity - portfolio.equity) / peak_equity * 100) if peak_equity > 0 else 0
+        daily_pnl_pct = ((portfolio.equity - portfolio.starting_equity) / portfolio.starting_equity * 100)
+        total_exposure = sum(p.size_usd for p in portfolio.positions) / portfolio.equity * 100 if portfolio.equity > 0 else 0
+
+        cb_output = cb.check(
+            daily_pnl_pct=daily_pnl_pct,
+            rolling_24h_pnl_pct=daily_pnl_pct,  # Approximate — same as daily for now
+            current_drawdown_pct=current_dd,
+            total_exposure_pct=total_exposure,
+        )
+        store_module_output("circuit_breakers", exchange, cb_output.model_dump(), symbol)
+        _module_last_runs["circuit_breakers"] = now_utc
+
+        # Persist CB state to DB (survives restarts)
+        try:
+            from wolfpack.db import save_cb_state
+            save_cb_state(
+                state=cb_output.state,
+                triggers=cb_output.violations,
+                max_exposure_pct=cb_output.total_exposure_pct,
+                peak_equity=peak_equity,
+            )
+        except Exception as e:
+            logger.warning(f"[cycle] Failed to persist CB state: {e}")
+
+        if cb_output.state == "EMERGENCY_STOP":
+            logger.critical(f"[cycle] CIRCUIT BREAKER EMERGENCY STOP: {cb_output.reason}")
+        elif cb_output.state == "SUSPENDED":
+            logger.warning(f"[cycle] Circuit breaker SUSPENDED: {cb_output.reason}")
 
         # Get latest price for context
         latest_price: float | None = None
@@ -652,7 +742,8 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
             "symbol": symbol,
             "latest_price": latest_price,
             "regime": regime_output,
-            "circuit_breaker": None,
+            "circuit_breaker": cb_output.model_dump(),
+            "execution_timing": exec_output.model_dump(),
         }
         if "quant" in agent_outputs:
             out = agent_outputs["quant"]
@@ -679,6 +770,12 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
 
             # ── Step 5: Extract and store trade recommendations ──
             recs = brief_out.raw_data.get("recommendations", []) if brief_out.raw_data else []
+
+            # Circuit breaker gate — skip new entry recs if not ACTIVE
+            if not cb_output.allow_new_entry:
+                logger.warning(f"[cycle] Circuit breaker blocking new entries ({cb_output.state}), skipping {len(recs)} recs")
+                recs = []
+
             for rec in recs:
                 conviction = rec.get("conviction", 0)
                 if conviction < 40:
@@ -736,6 +833,45 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
         _running.discard("snoop")
         _running.discard("sage")
         _running.discard("brief")
+
+
+# ── Circuit Breaker Endpoints ──
+
+
+@app.get("/circuit-breaker")
+async def circuit_breaker_status():
+    """Return current circuit breaker state."""
+    cb = _get_circuit_breaker()
+    engine = _get_paper_engine()
+    portfolio = engine.portfolio
+    peak_equity = max(portfolio.starting_equity, portfolio.equity)
+    current_dd = ((peak_equity - portfolio.equity) / peak_equity * 100) if peak_equity > 0 else 0
+    daily_pnl_pct = ((portfolio.equity - portfolio.starting_equity) / portfolio.starting_equity * 100)
+    total_exposure = sum(p.size_usd for p in portfolio.positions) / portfolio.equity * 100 if portfolio.equity > 0 else 0
+    output = cb.check(
+        daily_pnl_pct=daily_pnl_pct,
+        rolling_24h_pnl_pct=daily_pnl_pct,
+        current_drawdown_pct=current_dd,
+        total_exposure_pct=total_exposure,
+    )
+    return output.model_dump()
+
+
+@app.post("/circuit-breaker/reset")
+async def circuit_breaker_reset():
+    """Manually reset circuit breaker from EMERGENCY_STOP to ACTIVE."""
+    cb = _get_circuit_breaker()
+    if cb.state != "EMERGENCY_STOP":
+        return {"status": "error", "message": f"Not in EMERGENCY_STOP (current: {cb.state})"}
+    cb.manual_reset()
+    logger.warning("[circuit-breaker] Manual reset from EMERGENCY_STOP")
+    # Persist reset to DB
+    try:
+        from wolfpack.db import save_cb_state
+        save_cb_state(state="ACTIVE", triggers=[], max_exposure_pct=0)
+    except Exception:
+        pass
+    return {"status": "ok", "state": cb.state}
 
 
 # ── Backtest Endpoints ──
