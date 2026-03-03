@@ -424,6 +424,53 @@ async def close_position(symbol: str, exchange: str = "hyperliquid", _auth: None
     return {"status": "closed", "symbol": symbol.upper(), "realized_pnl": round(realized_pnl, 2)}
 
 
+@app.post("/paper/order")
+async def paper_order(
+    symbol: str,
+    direction: str,
+    size_usd: float,
+    exchange: str = "hyperliquid",
+    _auth: None = Depends(require_auth),
+):
+    """Place a manual paper trade — bypasses recommendation flow."""
+    engine = _get_paper_engine()
+
+    # Get current price
+    try:
+        from wolfpack.exchanges import get_exchange
+
+        adapter = get_exchange(exchange)  # type: ignore[arg-type]
+        candles = await adapter.get_candles(symbol.upper(), interval="1m", limit=1)
+        if not candles:
+            return {"status": "error", "message": f"No price data for {symbol}"}
+        current_price = candles[-1].close
+    except Exception as e:
+        return {"status": "error", "message": f"Failed to fetch price: {e}"}
+
+    # Compute size_pct from USD amount
+    size_pct = (size_usd / engine.portfolio.equity) * 100 if engine.portfolio.equity > 0 else 0
+    if size_pct <= 0 or size_pct > 100:
+        return {"status": "error", "message": f"Invalid size: ${size_usd} is {size_pct:.1f}% of equity"}
+
+    pos = engine.open_position(
+        symbol=symbol.upper(),
+        direction=direction.lower(),
+        current_price=current_price,
+        size_pct=min(size_pct, 25),  # Cap at 25%
+        recommendation_id=f"manual-{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}",
+    )
+
+    if pos:
+        engine.store_snapshot(exchange)
+        return {
+            "status": "executed",
+            "position": pos.model_dump(),
+            "message": f"Paper {direction} {symbol.upper()} ${size_usd} @ {current_price}",
+        }
+
+    return {"status": "error", "message": "Failed to open position — check free collateral"}
+
+
 # ── Trade Execution Endpoints ──
 
 

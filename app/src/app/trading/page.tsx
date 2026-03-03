@@ -76,19 +76,15 @@ export default function TradingPage() {
 
     try {
       const res = await fetch(
-        `/intel/recommendations/paper-order`,
+        `/intel/paper/order?symbol=${selectedSymbol}&direction=${direction}&size_usd=${sizeUsd}&exchange=${activeExchange}`,
         { method: "POST" }
       );
-      // For now, paper orders go through the recommendation flow
-      // Create an "instant" paper trade via the approve flow
-      if (!res.ok) {
-        // Fallback: place via trades/execute endpoint
-        const execRes = await fetch(
-          `/intel/trades/execute?symbol=${selectedSymbol}&direction=${direction}&size=${sizeUsd}&price=${latestPrice}&order_type=market`,
-          { method: "POST" }
-        );
-        const result = await execRes.json();
-        setOrderResult(result.status === "submitted" ? "Order submitted" : result.message || "Paper trade: no live key configured");
+      const result = await res.json();
+      if (result.status === "executed") {
+        setOrderResult(result.message || `Paper ${direction} ${selectedSymbol} placed`);
+        setSizeUsd("");
+      } else {
+        setOrderResult(result.message || "Order failed");
       }
     } catch {
       setOrderResult("Intel service unavailable — start the backend to trade");
