@@ -41,25 +41,25 @@ export default function IntelligencePage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="border-b border-[var(--border)] pb-4 flex items-center justify-between">
+    <div className="space-y-7">
+      <div className="page-header flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Intelligence Brief</h1>
-          <p className="text-gray-400 text-sm mt-1">
+          <h1 className="page-title">Intelligence Brief</h1>
+          <p className="page-subtitle">
             Multi-agent AI analysis for {config.name}
           </p>
         </div>
         <button
           onClick={() => runIntel.mutate({ exchange: activeExchange, symbol: "BTC" })}
           disabled={runIntel.isPending}
-          className="px-4 py-2 bg-[var(--wolf-emerald)] text-black text-sm font-semibold rounded-lg hover:brightness-110 transition disabled:opacity-50"
+          className="px-5 py-2.5 bg-[var(--wolf-emerald)] text-black text-[13px] font-semibold rounded-lg hover:brightness-110 transition-all disabled:opacity-50 shadow-lg shadow-[var(--wolf-emerald)]/10"
         >
           {runIntel.isPending ? "Running..." : "Run Intelligence"}
         </button>
       </div>
 
       {/* Agent Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {AGENTS.map((agent) => {
           const output = agentOutputs?.[agent.key];
           const svc = statusMap.get(agent.key);
@@ -82,14 +82,17 @@ export default function IntelligencePage() {
 
       {/* Quantitative Modules */}
       <div>
-        <h2 className="text-lg font-semibold text-white mb-4">Quantitative Modules</h2>
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-1 h-4 rounded-full bg-[var(--wolf-purple)]" />
+          <h2 className="section-title">Quantitative Modules</h2>
+        </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {MODULES.map((mod) => {
             const output = moduleOutputs?.[mod.key];
             return (
               <div
                 key={mod.key}
-                className="bg-surface-elevated border border-[var(--border)] rounded-lg p-3 text-center"
+                className="wolf-card wolf-card-interactive p-3.5 text-center"
               >
                 <div className="text-xl mb-1">{mod.icon}</div>
                 <div className="text-xs text-gray-400">{mod.name}</div>
@@ -107,8 +110,11 @@ export default function IntelligencePage() {
       </div>
 
       {/* Latest Analysis */}
-      <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-6">
-        <h2 className="text-lg font-semibold text-white mb-3">Latest Analysis</h2>
+      <div className="wolf-card p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-1 h-4 rounded-full bg-[var(--wolf-emerald)]" />
+          <h2 className="section-title">Latest Analysis</h2>
+        </div>
         {agentsLoading ? (
           <div className="text-center py-8 text-gray-500 text-sm">Loading...</div>
         ) : agentOutputs?.quant ? (
@@ -185,11 +191,11 @@ function AgentCard({
   lastRun?: string;
 }) {
   return (
-    <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-5">
+    <div className="wolf-card wolf-card-interactive p-5">
       <div className="flex items-center justify-between mb-3">
         <div>
-          <h3 className="font-semibold text-white">{name}</h3>
-          <p className="text-xs text-[var(--wolf-cyan)]">{role}</p>
+          <h3 className="font-semibold text-white text-[15px] tracking-tight">{name}</h3>
+          <p className="text-[11px] text-[var(--wolf-cyan)] font-medium">{role}</p>
         </div>
         <span
           className={`px-2 py-0.5 rounded text-[10px] font-semibold uppercase ${

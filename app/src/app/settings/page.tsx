@@ -20,17 +20,17 @@ export default function SettingsPage() {
   const { config, availableExchanges } = useExchange();
 
   return (
-    <div className="space-y-6">
-      <div className="border-b border-[var(--border)] pb-4">
-        <h1 className="text-2xl font-bold text-white">Settings</h1>
-        <p className="text-gray-400 text-sm mt-1">
+    <div className="space-y-7">
+      <div className="page-header">
+        <h1 className="page-title">Settings</h1>
+        <p className="page-subtitle">
           Platform configuration &mdash; read-only display, configure via .env files
         </p>
       </div>
 
       {/* Exchange Configuration */}
-      <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-6">
-        <h2 className="text-lg font-semibold text-white mb-4">Exchange Configuration</h2>
+      <div className="wolf-card p-6">
+        <h2 className="section-title mb-4">Exchange Configuration</h2>
         <div className="space-y-3">
           {availableExchanges.map((ex) => (
             <div
@@ -70,8 +70,8 @@ export default function SettingsPage() {
       </div>
 
       {/* Strategy Mode */}
-      <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-6">
-        <h2 className="text-lg font-semibold text-white mb-4">Strategy Mode</h2>
+      <div className="wolf-card p-6">
+        <h2 className="section-title mb-4">Strategy Mode</h2>
         <div className="flex gap-3">
           <div className="flex-1 p-4 rounded-lg border border-[var(--wolf-emerald)] bg-[var(--wolf-emerald-glow)]">
             <div className="flex items-center gap-2 mb-1">
@@ -98,8 +98,8 @@ export default function SettingsPage() {
       </div>
 
       {/* LLM Providers */}
-      <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-6">
-        <h2 className="text-lg font-semibold text-white mb-4">LLM Providers</h2>
+      <div className="wolf-card p-6">
+        <h2 className="section-title mb-4">LLM Providers</h2>
         <div className="space-y-3">
           {LLM_PROVIDERS.map((provider) => (
             <div
@@ -120,8 +120,8 @@ export default function SettingsPage() {
       </div>
 
       {/* Telegram Notifications */}
-      <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-6">
-        <h2 className="text-lg font-semibold text-white mb-4">Telegram Notifications</h2>
+      <div className="wolf-card p-6">
+        <h2 className="section-title mb-4">Telegram Notifications</h2>
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <SettingRow
@@ -160,7 +160,7 @@ export default function SettingsPage() {
       {/* Safety Checklist */}
       <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-white">Live Trading Safety Checklist</h2>
+          <h2 className="section-title">Live Trading Safety Checklist</h2>
           <span className="text-xs text-gray-500">
             {SAFETY_CHECKLIST.filter((s) => s.configured).length}/{SAFETY_CHECKLIST.length} configured
           </span>

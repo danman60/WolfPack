@@ -119,12 +119,12 @@ export default function PoolsPage() {
   const positionCount = positions?.length ?? 0;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       {/* Header */}
-      <div className="border-b border-[var(--border)] pb-4 flex items-center justify-between">
+      <div className="page-header flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">LP Pool Manager</h1>
-          <p className="text-gray-400 text-sm mt-1">
+          <h1 className="page-title">LP Pool Manager</h1>
+          <p className="page-subtitle">
             Browse Uniswap V3 pools and manage liquidity positions
           </p>
         </div>
@@ -133,21 +133,21 @@ export default function PoolsPage() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-4">
-          <p className="text-xs text-gray-500 uppercase tracking-wider">Active Positions</p>
-          <p className="text-2xl font-bold text-[var(--wolf-purple)] mt-1">
+        <div className="wolf-card stat-card stat-card-purple p-5">
+          <p className="text-[11px] text-gray-500 uppercase tracking-wider font-medium">Active Positions</p>
+          <p className="text-2xl font-bold text-[var(--wolf-purple)] mt-2 tracking-tight">
             {isConnected ? positionCount : "--"}
           </p>
         </div>
-        <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-4">
-          <p className="text-xs text-gray-500 uppercase tracking-wider">Top Pools Loaded</p>
-          <p className="text-2xl font-bold text-[var(--wolf-blue)] mt-1">
+        <div className="wolf-card stat-card stat-card-blue p-5">
+          <p className="text-[11px] text-gray-500 uppercase tracking-wider font-medium">Top Pools Loaded</p>
+          <p className="text-2xl font-bold text-[var(--wolf-blue)] mt-2 tracking-tight">
             {pools?.length ?? "--"}
           </p>
         </div>
-        <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-4">
-          <p className="text-xs text-gray-500 uppercase tracking-wider">Filtered Results</p>
-          <p className="text-2xl font-bold text-[var(--wolf-emerald)] mt-1">
+        <div className="wolf-card stat-card stat-card-emerald p-5">
+          <p className="text-[11px] text-gray-500 uppercase tracking-wider font-medium">Filtered Results</p>
+          <p className="text-2xl font-bold text-[var(--wolf-emerald)] mt-2 tracking-tight">
             {displayedPools.length}
           </p>
         </div>
@@ -155,8 +155,11 @@ export default function PoolsPage() {
 
       {/* User Positions (wallet connected) */}
       {isConnected && positions && positions.length > 0 && (
-        <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-6">
-          <h2 className="text-lg font-semibold text-white mb-4">Your Positions</h2>
+        <div className="wolf-card p-6">
+          <div className="flex items-center gap-2 mb-5">
+            <div className="w-1 h-4 rounded-full bg-[var(--wolf-purple)]" />
+            <h2 className="section-title">Your Positions</h2>
+          </div>
           <div className="space-y-3">
             {positions.map((pos) => (
               <PositionCard key={pos.id} position={pos} />
@@ -167,18 +170,21 @@ export default function PoolsPage() {
 
       {/* Wallet prompt when not connected */}
       {!isConnected && (
-        <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-6">
-          <h2 className="text-lg font-semibold text-white mb-2">Your Positions</h2>
-          <div className="text-center py-8 text-gray-500 text-sm">
+        <div className="wolf-card p-6">
+          <h2 className="section-title mb-2">Your Positions</h2>
+          <div className="empty-state">
             Connect your wallet to view your Uniswap V3 LP positions.
           </div>
         </div>
       )}
 
       {/* Pool Browser */}
-      <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-white">Pool Browser</h2>
+      <div className="wolf-card p-6">
+        <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center gap-2">
+            <div className="w-1 h-4 rounded-full bg-[var(--wolf-blue)]" />
+            <h2 className="section-title">Pool Browser</h2>
+          </div>
 
           {/* Fee tier filter */}
           <div className="flex items-center gap-1">

@@ -45,10 +45,10 @@ export default function PortfolioPage() {
     : 0;
 
   return (
-    <div className="space-y-6">
-      <div className="border-b border-[var(--border)] pb-4">
-        <h1 className="text-2xl font-bold text-white">Portfolio</h1>
-        <p className="text-gray-400 text-sm mt-1">
+    <div className="space-y-7">
+      <div className="page-header">
+        <h1 className="page-title">Portfolio</h1>
+        <p className="page-subtitle">
           Paper trading performance on {config.name}
         </p>
       </div>
@@ -97,8 +97,11 @@ export default function PortfolioPage() {
       </div>
 
       {/* Equity Curve */}
-      <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-6">
-        <h2 className="text-lg font-semibold text-white mb-4">Equity Curve</h2>
+      <div className="wolf-card p-6">
+        <div className="flex items-center gap-2 mb-5">
+          <div className="w-1 h-4 rounded-full bg-[var(--wolf-emerald)]" />
+          <h2 className="section-title">Equity Curve</h2>
+        </div>
         {chartData.length > 1 ? (
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={chartData}>
@@ -141,8 +144,8 @@ export default function PortfolioPage() {
       </div>
 
       {/* Open Positions */}
-      <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-6">
-        <h2 className="text-lg font-semibold text-white mb-4">
+      <div className="wolf-card p-6">
+        <h2 className="section-title mb-5">
           Open Positions ({positions.length})
         </h2>
         {positions.length > 0 ? (
@@ -248,10 +251,10 @@ function StatCard({
   };
 
   return (
-    <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-4">
-      <p className="text-xs text-gray-500 uppercase tracking-wider">{label}</p>
+    <div className={`wolf-card stat-card stat-card-${color} p-4`}>
+      <p className="text-[11px] text-gray-500 uppercase tracking-wider font-medium">{label}</p>
       <p
-        className={`text-xl font-bold mt-1 ${colorMap[color] ?? "text-white"}`}
+        className={`text-xl font-bold mt-1.5 tracking-tight ${colorMap[color] ?? "text-white"}`}
       >
         {value}
       </p>

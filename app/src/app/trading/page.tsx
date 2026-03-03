@@ -98,17 +98,17 @@ export default function TradingPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="border-b border-[var(--border)] pb-4">
-        <h1 className="text-2xl font-bold text-white">Trading</h1>
-        <p className="text-gray-400 text-sm mt-1">
+    <div className="space-y-7">
+      <div className="page-header">
+        <h1 className="page-title">Trading</h1>
+        <p className="page-subtitle">
           Manual &amp; AI-assisted trading on {config.name}
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Order Entry */}
-        <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-6">
+        <div className="wolf-card p-6">
           <h2 className="text-lg font-semibold text-white mb-4">Place Order</h2>
           <div className="space-y-4">
             <div>
@@ -235,7 +235,7 @@ export default function TradingPage() {
         {/* Chart Area + Portfolio Summary */}
         <div className="lg:col-span-2 space-y-6">
           {/* Price Chart */}
-          <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-6">
+          <div className="wolf-card p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-white">
                 {selectedSymbol}-USD
@@ -306,7 +306,7 @@ export default function TradingPage() {
 
           {/* Paper Portfolio Summary */}
           {isActive && (
-            <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-4">
+            <div className="wolf-card p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-2 h-2 bg-[var(--wolf-emerald)] rounded-full" />
@@ -332,8 +332,11 @@ export default function TradingPage() {
       </div>
 
       {/* AI Recommendations */}
-      <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-6">
-        <h2 className="text-lg font-semibold text-white mb-4">AI Recommendations</h2>
+      <div className="wolf-card p-6">
+        <div className="flex items-center gap-2 mb-5">
+          <div className="w-1 h-4 rounded-full bg-[var(--wolf-amber)]" />
+          <h2 className="section-title">AI Recommendations</h2>
+        </div>
         {recommendations && recommendations.length > 0 ? (
           <div className="space-y-3">
             {recommendations.map((rec: Record<string, unknown>) => (
