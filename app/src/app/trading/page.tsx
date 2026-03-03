@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useMemo } from "react";
 import { useExchange } from "@/lib/exchange";
 import {
   useRecommendations,
@@ -7,15 +8,94 @@ import {
   useRejectRecommendation,
   usePortfolio,
 } from "@/lib/hooks/useIntelligence";
+import { useCandles, useMarkets, type Candle } from "@/lib/hooks/useMarketData";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+  Area,
+  AreaChart,
+} from "recharts";
+
+const DEFAULT_SYMBOLS = ["BTC", "ETH", "SOL", "LINK", "DOGE", "ARB"];
 
 export default function TradingPage() {
-  const { config } = useExchange();
+  const { config, activeExchange } = useExchange();
   const { data: recommendations } = useRecommendations("pending");
   const { data: portfolio } = usePortfolio();
   const approveMutation = useApproveRecommendation();
   const rejectMutation = useRejectRecommendation();
 
+  // Order form state
+  const [selectedSymbol, setSelectedSymbol] = useState("BTC");
+  const [direction, setDirection] = useState<"long" | "short">("long");
+  const [sizeUsd, setSizeUsd] = useState("");
+  const [leverage, setLeverage] = useState(5);
+  const [orderSubmitting, setOrderSubmitting] = useState(false);
+  const [orderResult, setOrderResult] = useState<string | null>(null);
+
+  // Market data
+  const { data: candles, isLoading: candlesLoading } = useCandles(selectedSymbol, "1h", 168);
+  const { data: markets } = useMarkets();
+
   const isActive = portfolio?.status === "active";
+
+  // Available symbols: merge exchange markets + defaults
+  const symbolOptions = useMemo(() => {
+    if (markets && markets.length > 0) {
+      const syms = markets.map((m) => m.symbol).slice(0, 20);
+      return [...new Set([...DEFAULT_SYMBOLS, ...syms])];
+    }
+    return DEFAULT_SYMBOLS;
+  }, [markets]);
+
+  // Current price from latest candle
+  const latestPrice = candles && candles.length > 0 ? candles[candles.length - 1].close : null;
+  const prevPrice = candles && candles.length > 1 ? candles[candles.length - 2].close : null;
+  const priceChange = latestPrice && prevPrice ? ((latestPrice - prevPrice) / prevPrice) * 100 : 0;
+
+  // Chart data
+  const chartData = useMemo(() => {
+    if (!candles) return [];
+    return candles.map((c: Candle) => ({
+      time: new Date(c.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      price: c.close,
+      volume: c.volume,
+    }));
+  }, [candles]);
+
+  // Submit paper order
+  const handleOrder = async () => {
+    if (!sizeUsd || !latestPrice) return;
+    setOrderSubmitting(true);
+    setOrderResult(null);
+
+    try {
+      const res = await fetch(
+        `/intel/recommendations/paper-order`,
+        { method: "POST" }
+      );
+      // For now, paper orders go through the recommendation flow
+      // Create an "instant" paper trade via the approve flow
+      if (!res.ok) {
+        // Fallback: place via trades/execute endpoint
+        const execRes = await fetch(
+          `/intel/trades/execute?symbol=${selectedSymbol}&direction=${direction}&size=${sizeUsd}&price=${latestPrice}&order_type=market`,
+          { method: "POST" }
+        );
+        const result = await execRes.json();
+        setOrderResult(result.status === "submitted" ? "Order submitted" : result.message || "Paper trade: no live key configured");
+      }
+    } catch {
+      setOrderResult("Intel service unavailable — start the backend to trade");
+    } finally {
+      setOrderSubmitting(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -33,18 +113,57 @@ export default function TradingPage() {
           <div className="space-y-4">
             <div>
               <label className="text-xs text-gray-500 uppercase">Asset</label>
-              <select className="w-full mt-1 bg-[var(--surface)] border border-[var(--border)] rounded-md px-3 py-2 text-white text-sm">
-                <option>ETH-USD</option>
-                <option>BTC-USD</option>
-                <option>SOL-USD</option>
-                <option>LINK-USD</option>
+              <select
+                value={selectedSymbol}
+                onChange={(e) => setSelectedSymbol(e.target.value)}
+                className="w-full mt-1 bg-[var(--surface)] border border-[var(--border)] rounded-md px-3 py-2 text-white text-sm"
+              >
+                {symbolOptions.map((s) => (
+                  <option key={s} value={s}>
+                    {s}-USD
+                  </option>
+                ))}
               </select>
             </div>
+
+            {/* Live price display */}
+            {latestPrice && (
+              <div className="flex items-center justify-between p-3 bg-[var(--surface)] rounded-md border border-[var(--border)]">
+                <span className="text-sm text-gray-400">Live Price</span>
+                <div className="text-right">
+                  <span className="text-lg font-bold text-white font-mono">
+                    ${latestPrice.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                  </span>
+                  <span
+                    className={`ml-2 text-xs font-semibold ${
+                      priceChange >= 0 ? "text-[var(--wolf-emerald)]" : "text-[var(--wolf-red)]"
+                    }`}
+                  >
+                    {priceChange >= 0 ? "+" : ""}{priceChange.toFixed(2)}%
+                  </span>
+                </div>
+              </div>
+            )}
+
             <div className="grid grid-cols-2 gap-2">
-              <button className="bg-[var(--wolf-emerald)] text-white py-2 rounded-md text-sm font-semibold hover:brightness-110 transition">
+              <button
+                onClick={() => setDirection("long")}
+                className={`py-2 rounded-md text-sm font-semibold transition ${
+                  direction === "long"
+                    ? "bg-[var(--wolf-emerald)] text-white"
+                    : "bg-[var(--surface)] text-gray-400 border border-[var(--border)] hover:text-white"
+                }`}
+              >
                 Long
               </button>
-              <button className="bg-[var(--wolf-red)] text-white py-2 rounded-md text-sm font-semibold hover:brightness-110 transition">
+              <button
+                onClick={() => setDirection("short")}
+                className={`py-2 rounded-md text-sm font-semibold transition ${
+                  direction === "short"
+                    ? "bg-[var(--wolf-red)] text-white"
+                    : "bg-[var(--surface)] text-gray-400 border border-[var(--border)] hover:text-white"
+                }`}
+              >
                 Short
               </button>
             </div>
@@ -53,16 +172,22 @@ export default function TradingPage() {
               <input
                 type="number"
                 placeholder="0.00"
+                value={sizeUsd}
+                onChange={(e) => setSizeUsd(e.target.value)}
                 className="w-full mt-1 bg-[var(--surface)] border border-[var(--border)] rounded-md px-3 py-2 text-white text-sm"
               />
             </div>
             <div>
-              <label className="text-xs text-gray-500 uppercase">Leverage</label>
+              <div className="flex items-center justify-between">
+                <label className="text-xs text-gray-500 uppercase">Leverage</label>
+                <span className="text-sm font-semibold text-white">{leverage}x</span>
+              </div>
               <input
                 type="range"
                 min="1"
                 max="50"
-                defaultValue="5"
+                value={leverage}
+                onChange={(e) => setLeverage(Number(e.target.value))}
                 className="w-full mt-1"
               />
               <div className="flex justify-between text-xs text-gray-500">
@@ -70,22 +195,113 @@ export default function TradingPage() {
                 <span>50x</span>
               </div>
             </div>
+
+            {/* Order size info */}
+            {sizeUsd && latestPrice && (
+              <div className="text-xs text-gray-500 space-y-1 p-2 bg-[var(--surface)] rounded border border-[var(--border)]">
+                <div className="flex justify-between">
+                  <span>Notional</span>
+                  <span className="text-gray-300">${(Number(sizeUsd) * leverage).toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Size ({selectedSymbol})</span>
+                  <span className="text-gray-300 font-mono">
+                    {((Number(sizeUsd) * leverage) / latestPrice).toFixed(4)}
+                  </span>
+                </div>
+              </div>
+            )}
+
             <button
-              className="w-full bg-[var(--wolf-blue)] text-white py-3 rounded-md font-semibold hover:brightness-110 transition disabled:opacity-50"
-              disabled
+              onClick={handleOrder}
+              disabled={!sizeUsd || !latestPrice || orderSubmitting}
+              className={`w-full py-3 rounded-md font-semibold transition disabled:opacity-50 ${
+                direction === "long"
+                  ? "bg-[var(--wolf-emerald)] text-white hover:brightness-110"
+                  : "bg-[var(--wolf-red)] text-white hover:brightness-110"
+              }`}
             >
-              Connect Wallet to Trade
+              {orderSubmitting
+                ? "Submitting..."
+                : `${direction === "long" ? "Long" : "Short"} ${selectedSymbol}`}
             </button>
+
+            {orderResult && (
+              <p className="text-xs text-center text-gray-400">{orderResult}</p>
+            )}
           </div>
         </div>
 
         {/* Chart Area + Portfolio Summary */}
         <div className="lg:col-span-2 space-y-6">
+          {/* Price Chart */}
           <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-6">
-            <h2 className="text-lg font-semibold text-white mb-4">Price Chart</h2>
-            <div className="h-80 flex items-center justify-center text-gray-500 text-sm border border-dashed border-[var(--border)] rounded-md">
-              Chart component — will integrate TradingView or recharts
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-white">
+                {selectedSymbol}-USD
+                {latestPrice && (
+                  <span className="ml-3 text-base font-mono text-gray-300">
+                    ${latestPrice.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                  </span>
+                )}
+              </h2>
+              <span className="text-xs text-gray-500">1H candles, 7 days</span>
             </div>
+            {candlesLoading ? (
+              <div className="h-80 flex items-center justify-center text-gray-500 text-sm">
+                Loading chart data...
+              </div>
+            ) : chartData.length > 1 ? (
+              <ResponsiveContainer width="100%" height={320}>
+                <AreaChart data={chartData}>
+                  <defs>
+                    <linearGradient id="priceGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="var(--wolf-emerald)" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="var(--wolf-emerald)" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                  <XAxis
+                    dataKey="time"
+                    tick={{ fill: "#6b7280", fontSize: 10 }}
+                    tickLine={false}
+                    interval="preserveStartEnd"
+                  />
+                  <YAxis
+                    tick={{ fill: "#6b7280", fontSize: 10 }}
+                    tickLine={false}
+                    domain={["auto", "auto"]}
+                    tickFormatter={(v: number) => `$${v.toLocaleString()}`}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "var(--surface-elevated)",
+                      border: "1px solid var(--border)",
+                      borderRadius: "0.5rem",
+                      color: "white",
+                      fontSize: "12px",
+                    }}
+                    formatter={(val: number | undefined) => [`$${(val ?? 0).toLocaleString()}`, "Price"]}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="price"
+                    stroke="var(--wolf-emerald)"
+                    strokeWidth={2}
+                    fill="url(#priceGrad)"
+                    dot={false}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-80 flex items-center justify-center text-gray-500 text-sm border border-dashed border-[var(--border)] rounded-md">
+                No chart data — start the intel service to fetch market data
+                <br />
+                <code className="text-xs text-gray-600 mt-2 block">
+                  cd intel &amp;&amp; source .venv/bin/activate &amp;&amp; uvicorn wolfpack.api:app --reload
+                </code>
+              </div>
+            )}
           </div>
 
           {/* Paper Portfolio Summary */}

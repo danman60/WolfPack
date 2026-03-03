@@ -426,6 +426,68 @@ def _get_paper_engine() -> Any:
     return _paper_engine
 
 
+# ── Market Data Endpoints ──
+
+
+@app.get("/market/candles")
+async def market_candles(
+    symbol: str = "BTC",
+    interval: str = "1h",
+    limit: int = 100,
+    exchange: str = "hyperliquid",
+):
+    """Fetch candlestick data from the exchange adapter."""
+    try:
+        from wolfpack.exchanges import get_exchange
+
+        adapter = get_exchange(exchange)  # type: ignore[arg-type]
+        candles = await adapter.get_candles(symbol, interval=interval, limit=limit)
+        return {
+            "symbol": symbol,
+            "interval": interval,
+            "candles": [c.model_dump() for c in candles],
+        }
+    except Exception as e:
+        logger.error(f"Failed to fetch candles: {e}")
+        return {"symbol": symbol, "interval": interval, "candles": [], "error": str(e)}
+
+
+@app.get("/market/price")
+async def market_price(symbol: str = "BTC", exchange: str = "hyperliquid"):
+    """Fetch latest price for a symbol."""
+    try:
+        from wolfpack.exchanges import get_exchange
+
+        adapter = get_exchange(exchange)  # type: ignore[arg-type]
+        candles = await adapter.get_candles(symbol, interval="1m", limit=1)
+        if candles:
+            return {
+                "symbol": symbol,
+                "price": candles[-1].close,
+                "high_24h": candles[-1].high,
+                "low_24h": candles[-1].low,
+                "timestamp": candles[-1].timestamp,
+            }
+        return {"symbol": symbol, "price": None}
+    except Exception as e:
+        logger.error(f"Failed to fetch price: {e}")
+        return {"symbol": symbol, "price": None, "error": str(e)}
+
+
+@app.get("/market/markets")
+async def market_list(exchange: str = "hyperliquid"):
+    """Fetch available markets from exchange."""
+    try:
+        from wolfpack.exchanges import get_exchange
+
+        adapter = get_exchange(exchange)  # type: ignore[arg-type]
+        markets = await adapter.get_markets()
+        return {"markets": [m.model_dump() for m in markets]}
+    except Exception as e:
+        logger.error(f"Failed to fetch markets: {e}")
+        return {"markets": [], "error": str(e)}
+
+
 @app.post("/intelligence/run")
 async def run_intelligence(
     background_tasks: BackgroundTasks,
