@@ -2,7 +2,6 @@
 
 import { useState, useMemo, useCallback } from "react";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
-// useConnect and useDisconnect are used inside WalletButton component
 import {
   useTopPools,
   usePoolDetail,
@@ -12,7 +11,17 @@ import {
   fmtUsd,
   fmtPct,
   type SubgraphPool,
+  type SubgraphPosition,
 } from "@/lib/hooks/usePools";
+import {
+  useCollectFees,
+  useRemoveLiquidity,
+  useMintPosition,
+  useApproveToken,
+  toTokenUnits,
+  roundTick,
+  priceToTick,
+} from "@/lib/hooks/useLPManagement";
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -149,48 +158,9 @@ export default function PoolsPage() {
         <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-6">
           <h2 className="text-lg font-semibold text-white mb-4">Your Positions</h2>
           <div className="space-y-3">
-            {positions.map((pos) => {
-              const pair = `${pos.pool.token0.symbol}/${pos.pool.token1.symbol}`;
-              const hasLiquidity = Number(pos.liquidity) > 0;
-              return (
-                <div
-                  key={pos.id}
-                  className="flex items-center justify-between py-3 px-4 border border-[var(--border)] rounded-lg"
-                >
-                  <div className="flex items-center gap-4">
-                    <div
-                      className={`w-2 h-2 rounded-full ${
-                        hasLiquidity ? "bg-[var(--wolf-emerald)]" : "bg-gray-600"
-                      }`}
-                    />
-                    <div>
-                      <span className="text-sm text-white font-semibold font-mono">{pair}</span>
-                      <span className="ml-2 text-xs text-gray-400">
-                        {feeTierLabel(pos.pool.feeTier)}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-6 text-right">
-                    <div>
-                      <div className="text-[10px] text-gray-500 uppercase">Tick Range</div>
-                      <div className="text-xs text-gray-300 font-mono">
-                        {pos.tickLower.tickIdx} - {pos.tickUpper.tickIdx}
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-[10px] text-gray-500 uppercase">Status</div>
-                      <div
-                        className={`text-xs font-semibold ${
-                          hasLiquidity ? "text-[var(--wolf-emerald)]" : "text-gray-500"
-                        }`}
-                      >
-                        {hasLiquidity ? "Active" : "Closed"}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+            {positions.map((pos) => (
+              <PositionCard key={pos.id} position={pos} />
+            ))}
           </div>
         </div>
       )}
@@ -440,6 +410,114 @@ function PoolRow({
   );
 }
 
+function PositionCard({ position }: { position: SubgraphPosition }) {
+  const pair = `${position.pool.token0.symbol}/${position.pool.token1.symbol}`;
+  const hasLiquidity = Number(position.liquidity) > 0;
+  const tokenId = BigInt(position.id);
+  const [expanded, setExpanded] = useState(false);
+
+  const collectFees = useCollectFees();
+  const removeLiq = useRemoveLiquidity();
+
+  const feesToken0 = Number(position.collectedFeesToken0);
+  const feesToken1 = Number(position.collectedFeesToken1);
+
+  return (
+    <div className="border border-[var(--border)] rounded-lg overflow-hidden">
+      <div
+        className="flex items-center justify-between py-3 px-4 cursor-pointer hover:bg-[var(--surface-hover)] transition"
+        onClick={() => setExpanded(!expanded)}
+      >
+        <div className="flex items-center gap-4">
+          <div
+            className={`w-2 h-2 rounded-full ${
+              hasLiquidity ? "bg-[var(--wolf-emerald)]" : "bg-gray-600"
+            }`}
+          />
+          <div>
+            <span className="text-sm text-white font-semibold font-mono">{pair}</span>
+            <span className="ml-2 text-xs text-gray-400">
+              {feeTierLabel(position.pool.feeTier)}
+            </span>
+          </div>
+        </div>
+        <div className="flex items-center gap-6 text-right">
+          <div>
+            <div className="text-[10px] text-gray-500 uppercase">Tick Range</div>
+            <div className="text-xs text-gray-300 font-mono">
+              {position.tickLower.tickIdx} - {position.tickUpper.tickIdx}
+            </div>
+          </div>
+          <div>
+            <div className="text-[10px] text-gray-500 uppercase">Status</div>
+            <div
+              className={`text-xs font-semibold ${
+                hasLiquidity ? "text-[var(--wolf-emerald)]" : "text-gray-500"
+              }`}
+            >
+              {hasLiquidity ? "Active" : "Closed"}
+            </div>
+          </div>
+          <span className="text-gray-500 text-xs">{expanded ? "▲" : "▼"}</span>
+        </div>
+      </div>
+
+      {expanded && (
+        <div className="px-4 py-4 border-t border-[var(--border)] bg-[var(--surface)] space-y-4">
+          {/* Position details */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <MiniStat label={`Deposited ${position.pool.token0.symbol}`} value={Number(position.depositedToken0).toFixed(4)} />
+            <MiniStat label={`Deposited ${position.pool.token1.symbol}`} value={Number(position.depositedToken1).toFixed(4)} />
+            <MiniStat label={`Fees ${position.pool.token0.symbol}`} value={feesToken0.toFixed(4)} accent="emerald" />
+            <MiniStat label={`Fees ${position.pool.token1.symbol}`} value={feesToken1.toFixed(4)} accent="emerald" />
+          </div>
+
+          {/* Action buttons */}
+          {hasLiquidity && (
+            <div className="flex items-center gap-3">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  collectFees.collect(tokenId);
+                }}
+                disabled={collectFees.isPending || collectFees.isConfirming}
+                className="px-4 py-2 bg-[var(--wolf-emerald)]/20 text-[var(--wolf-emerald)] rounded-md text-xs font-semibold hover:bg-[var(--wolf-emerald)]/30 transition disabled:opacity-50"
+              >
+                {collectFees.isPending ? "Signing..." : collectFees.isConfirming ? "Confirming..." : "Collect Fees"}
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  removeLiq.removeLiquidity(tokenId, BigInt(position.liquidity));
+                }}
+                disabled={removeLiq.isPending || removeLiq.isConfirming}
+                className="px-4 py-2 bg-[var(--wolf-red)]/20 text-[var(--wolf-red)] rounded-md text-xs font-semibold hover:bg-[var(--wolf-red)]/30 transition disabled:opacity-50"
+              >
+                {removeLiq.isPending ? "Signing..." : removeLiq.isConfirming ? "Confirming..." : "Remove Liquidity"}
+              </button>
+              {collectFees.isSuccess && (
+                <span className="text-xs text-[var(--wolf-emerald)]">Fees collected!</span>
+              )}
+              {removeLiq.isSuccess && (
+                <span className="text-xs text-[var(--wolf-emerald)]">Liquidity removed!</span>
+              )}
+              {(collectFees.error || removeLiq.error) && (
+                <span className="text-xs text-[var(--wolf-red)]">
+                  {(collectFees.error || removeLiq.error)?.message?.slice(0, 60)}
+                </span>
+              )}
+            </div>
+          )}
+
+          <div className="text-xs text-gray-500 font-mono">
+            Token ID: {position.id}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function PoolDetailRow({
   poolId,
   pool,
@@ -448,6 +526,7 @@ function PoolDetailRow({
   pool: SubgraphPool;
 }) {
   const { data: detail, isLoading } = usePoolDetail(poolId);
+  const { isConnected } = useAccount();
 
   return (
     <tr>
@@ -455,7 +534,12 @@ function PoolDetailRow({
         {isLoading && (
           <div className="text-center py-4 text-gray-500 text-sm">Loading pool details...</div>
         )}
-        {detail && <APRCalculator pool={pool} detail={detail} />}
+        {detail && (
+          <div className="space-y-6">
+            <APRCalculator pool={pool} detail={detail} />
+            {isConnected && <AddLiquidityPanel pool={pool} />}
+          </div>
+        )}
         {!isLoading && !detail && (
           <div className="text-center py-4 text-gray-500 text-sm">
             Could not load pool details.
@@ -463,6 +547,129 @@ function PoolDetailRow({
         )}
       </td>
     </tr>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Add Liquidity Panel
+// ---------------------------------------------------------------------------
+
+function AddLiquidityPanel({ pool }: { pool: SubgraphPool }) {
+  const [amount0, setAmount0] = useState("");
+  const [amount1, setAmount1] = useState("");
+  const [priceLower, setPriceLower] = useState("");
+  const [priceUpper, setPriceUpper] = useState("");
+
+  const d0 = Number(pool.token0.decimals);
+  const d1 = Number(pool.token1.decimals);
+
+  const mintPosition = useMintPosition();
+  const approve0 = useApproveToken(pool.token0.id as `0x${string}`);
+  const approve1 = useApproveToken(pool.token1.id as `0x${string}`);
+
+  const handleMint = useCallback(() => {
+    if (!amount0 || !amount1 || !priceLower || !priceUpper) return;
+
+    const tickSpacing = Number(pool.feeTier) === 500 ? 10 : Number(pool.feeTier) === 3000 ? 60 : Number(pool.feeTier) === 10000 ? 200 : 1;
+    const tickLower = roundTick(priceToTick(Number(priceLower), d0, d1), tickSpacing);
+    const tickUpper = roundTick(priceToTick(Number(priceUpper), d0, d1), tickSpacing);
+
+    mintPosition.mint({
+      token0: pool.token0.id as `0x${string}`,
+      token1: pool.token1.id as `0x${string}`,
+      fee: Number(pool.feeTier),
+      tickLower,
+      tickUpper,
+      amount0: toTokenUnits(amount0, d0),
+      amount1: toTokenUnits(amount1, d1),
+    });
+  }, [amount0, amount1, priceLower, priceUpper, pool, d0, d1, mintPosition]);
+
+  return (
+    <div className="border-t border-[var(--border)] pt-4">
+      <h3 className="text-sm font-semibold text-white mb-3">Add Liquidity</h3>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div>
+          <label className="block text-[10px] text-gray-500 uppercase mb-1">
+            {pool.token0.symbol} Amount
+          </label>
+          <input
+            type="text"
+            value={amount0}
+            onChange={(e) => setAmount0(e.target.value)}
+            placeholder="0.0"
+            className="w-full bg-[var(--surface-elevated)] border border-[var(--border)] rounded px-2 py-1.5 text-sm text-white"
+          />
+        </div>
+        <div>
+          <label className="block text-[10px] text-gray-500 uppercase mb-1">
+            {pool.token1.symbol} Amount
+          </label>
+          <input
+            type="text"
+            value={amount1}
+            onChange={(e) => setAmount1(e.target.value)}
+            placeholder="0.0"
+            className="w-full bg-[var(--surface-elevated)] border border-[var(--border)] rounded px-2 py-1.5 text-sm text-white"
+          />
+        </div>
+        <div>
+          <label className="block text-[10px] text-gray-500 uppercase mb-1">
+            Lower Price ({pool.token1.symbol}/{pool.token0.symbol})
+          </label>
+          <input
+            type="text"
+            value={priceLower}
+            onChange={(e) => setPriceLower(e.target.value)}
+            placeholder="0.0"
+            className="w-full bg-[var(--surface-elevated)] border border-[var(--border)] rounded px-2 py-1.5 text-sm text-white"
+          />
+        </div>
+        <div>
+          <label className="block text-[10px] text-gray-500 uppercase mb-1">
+            Upper Price ({pool.token1.symbol}/{pool.token0.symbol})
+          </label>
+          <input
+            type="text"
+            value={priceUpper}
+            onChange={(e) => setPriceUpper(e.target.value)}
+            placeholder="0.0"
+            className="w-full bg-[var(--surface-elevated)] border border-[var(--border)] rounded px-2 py-1.5 text-sm text-white"
+          />
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3 mt-3">
+        <button
+          onClick={() => approve0.approve(toTokenUnits(amount0 || "0", d0))}
+          disabled={!amount0 || approve0.isPending || approve0.isConfirming}
+          className="px-3 py-1.5 bg-[var(--wolf-blue)]/20 text-[var(--wolf-blue)] rounded text-xs font-semibold hover:bg-[var(--wolf-blue)]/30 transition disabled:opacity-50"
+        >
+          {approve0.isPending ? "Signing..." : approve0.isConfirming ? "Confirming..." : `Approve ${pool.token0.symbol}`}
+        </button>
+        <button
+          onClick={() => approve1.approve(toTokenUnits(amount1 || "0", d1))}
+          disabled={!amount1 || approve1.isPending || approve1.isConfirming}
+          className="px-3 py-1.5 bg-[var(--wolf-blue)]/20 text-[var(--wolf-blue)] rounded text-xs font-semibold hover:bg-[var(--wolf-blue)]/30 transition disabled:opacity-50"
+        >
+          {approve1.isPending ? "Signing..." : approve1.isConfirming ? "Confirming..." : `Approve ${pool.token1.symbol}`}
+        </button>
+        <button
+          onClick={handleMint}
+          disabled={!amount0 || !amount1 || !priceLower || !priceUpper || mintPosition.isPending || mintPosition.isConfirming}
+          className="px-4 py-1.5 bg-[var(--wolf-emerald)]/20 text-[var(--wolf-emerald)] rounded text-xs font-semibold hover:bg-[var(--wolf-emerald)]/30 transition disabled:opacity-50"
+        >
+          {mintPosition.isPending ? "Signing..." : mintPosition.isConfirming ? "Confirming..." : "Mint Position"}
+        </button>
+      </div>
+
+      {mintPosition.isSuccess && (
+        <p className="text-xs text-[var(--wolf-emerald)] mt-2">Position minted successfully!</p>
+      )}
+      {mintPosition.error && (
+        <p className="text-xs text-[var(--wolf-red)] mt-2">{mintPosition.error.message?.slice(0, 80)}</p>
+      )}
+    </div>
   );
 }
 

@@ -20,6 +20,7 @@ const NAV_LINKS = [
   { href: "/trading", label: "Trading" },
   { href: "/portfolio", label: "Portfolio" },
   { href: "/pools", label: "LP Pools" },
+  { href: "/settings", label: "Settings" },
 ];
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

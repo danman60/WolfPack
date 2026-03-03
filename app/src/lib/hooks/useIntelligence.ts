@@ -181,6 +181,38 @@ export function useClosePosition() {
   });
 }
 
+// Fetch strategy mode and safety checklist
+export function useStrategyMode() {
+  return useQuery({
+    queryKey: ["strategy-mode"],
+    queryFn: async () => {
+      const res = await fetch("/intel/strategy/mode");
+      if (!res.ok) return null;
+      return res.json();
+    },
+    refetchInterval: 30_000,
+    retry: false,
+  });
+}
+
+// Toggle strategy mode
+export function useSetStrategyMode() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (mode: string) => {
+      const res = await fetch(`/intel/strategy/mode?mode=${mode}`, {
+        method: "POST",
+      });
+      if (!res.ok) throw new Error(`Set mode failed: ${res.status}`);
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["strategy-mode"] });
+    },
+  });
+}
+
 // Fetch agent status from intel service
 export function useAgentStatus() {
   return useQuery({

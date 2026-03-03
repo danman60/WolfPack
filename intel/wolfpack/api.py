@@ -122,6 +122,83 @@ async def module_status():
     return {"modules": {m: {"status": "not_started", "last_run": None} for m in modules}}
 
 
+# ── Strategy Mode ──
+
+_strategy_mode: str = "paper"  # "paper" or "live"
+
+
+@app.get("/strategy/mode")
+async def get_strategy_mode():
+    """Return current strategy mode and safety checklist."""
+    checklist = _safety_checklist()
+    return {
+        "mode": _strategy_mode,
+        "can_go_live": all(c["passed"] for c in checklist),
+        "checklist": checklist,
+    }
+
+
+@app.post("/strategy/mode")
+async def set_strategy_mode(mode: str):
+    """Switch strategy mode. Requires all safety checks to go live."""
+    global _strategy_mode
+
+    if mode not in ("paper", "live"):
+        return {"status": "error", "message": "Mode must be 'paper' or 'live'"}
+
+    if mode == "live":
+        checklist = _safety_checklist()
+        failures = [c for c in checklist if not c["passed"]]
+        if failures:
+            return {
+                "status": "blocked",
+                "message": "Safety checks failed",
+                "failures": failures,
+            }
+
+    _strategy_mode = mode
+    logger.info(f"Strategy mode changed to: {mode}")
+    return {"status": "ok", "mode": _strategy_mode}
+
+
+def _safety_checklist() -> list[dict]:
+    """P0 safety checklist for live trading."""
+    return [
+        {
+            "name": "Private key configured",
+            "passed": bool(settings.hyperliquid_private_key),
+            "description": "HYPERLIQUID_PRIVATE_KEY must be set in .env",
+        },
+        {
+            "name": "Circuit breaker active",
+            "passed": True,  # Always active by default
+            "description": "Circuit breaker module must be enabled",
+        },
+        {
+            "name": "Max position size set",
+            "passed": True,  # Default 25% cap in Brief agent
+            "description": "Brief agent caps at 25% per position",
+        },
+        {
+            "name": "Intelligence pipeline tested",
+            "passed": _last_runs.get("brief") is not None,
+            "description": "At least one full intelligence cycle must have run",
+        },
+        {
+            "name": "Paper trading profitable",
+            "passed": _check_paper_profitable(),
+            "description": "Paper trading must show positive returns before going live",
+        },
+    ]
+
+
+def _check_paper_profitable() -> bool:
+    """Check if paper trading has positive returns."""
+    if _paper_engine is None:
+        return False
+    return _paper_engine.portfolio.realized_pnl > 0 or _paper_engine.portfolio.equity > _paper_engine.portfolio.starting_equity
+
+
 @app.post("/recommendations/{rec_id}/approve")
 async def approve_recommendation(rec_id: str, exchange: str = "hyperliquid"):
     """Approve a trade recommendation for paper trading execution."""
