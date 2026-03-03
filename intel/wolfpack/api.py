@@ -5,8 +5,9 @@ import logging
 from datetime import datetime, timezone
 from typing import Any
 
-from fastapi import BackgroundTasks, Body, FastAPI
+from fastapi import BackgroundTasks, Body, Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from wolfpack.config import settings
 
@@ -21,6 +22,20 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# ── Auth ──
+_bearer_scheme = HTTPBearer(auto_error=False)
+
+
+async def require_auth(
+    creds: HTTPAuthorizationCredentials | None = Depends(_bearer_scheme),
+) -> None:
+    """Verify bearer token on protected endpoints. No-op if API_SECRET_KEY is unset."""
+    if not settings.api_secret_key:
+        return  # Auth disabled — dev mode
+    if creds is None or creds.credentials != settings.api_secret_key:
+        raise HTTPException(status_code=401, detail="Invalid or missing API key")
+
 
 # Track last run times
 _last_runs: dict[str, datetime | None] = {
@@ -45,6 +60,11 @@ _module_last_runs: dict[str, datetime | None] = {
 
 # Circuit breaker singleton (persists across cycles)
 _circuit_breaker: Any = None
+
+# Latest module outputs (updated each intelligence cycle)
+_latest_liquidity: Any = None
+_latest_regime: Any = None
+_latest_volatility: Any = None
 
 
 def _get_circuit_breaker() -> Any:
@@ -168,7 +188,7 @@ async def get_strategy_mode():
 
 
 @app.post("/strategy/mode")
-async def set_strategy_mode(mode: str):
+async def set_strategy_mode(mode: str, _auth: None = Depends(require_auth)):
     """Switch strategy mode. Requires all safety checks to go live."""
     global _strategy_mode
 
@@ -229,7 +249,7 @@ def _check_paper_profitable() -> bool:
 
 
 @app.post("/recommendations/{rec_id}/approve")
-async def approve_recommendation(rec_id: str, exchange: str = "hyperliquid"):
+async def approve_recommendation(rec_id: str, exchange: str = "hyperliquid", _auth: None = Depends(require_auth)):
     """Approve a trade recommendation for paper trading execution."""
     try:
         from wolfpack.db import get_db
@@ -257,16 +277,58 @@ async def approve_recommendation(rec_id: str, exchange: str = "hyperliquid"):
                 "message": f"Circuit breaker is {cb.state} — new entries not allowed",
             }
 
+        # Check liquidity gate
+        if _latest_liquidity and not _latest_liquidity.trade_allowed:
+            return {
+                "status": "blocked",
+                "message": f"Liquidity gate: {_latest_liquidity.reason}",
+                "liquidity_health": _latest_liquidity.liquidity_health,
+            }
+
         # Execute as paper trade if paper trading engine is available
         if _paper_engine is not None and rec.get("entry_price"):
+            # Use real slippage from liquidity module instead of flat assumption
+            slippage_bps = _latest_liquidity.estimated_slippage_bps if _latest_liquidity else 5.0
+            slippage_pct = slippage_bps / 10_000
+            entry_price = rec["entry_price"]
+            if rec["direction"] == "long":
+                entry_price *= (1 + slippage_pct)
+            else:
+                entry_price *= (1 - slippage_pct)
+
+            # Adaptive position sizing — combines vol, regime, conviction, drawdown, liquidity
+            from wolfpack.modules.sizing import SizingEngine
+            sizer = SizingEngine(base_pct=rec.get("size_pct") or 10.0)
+            sizing = sizer.compute(
+                conviction=rec.get("conviction", 50),
+                vol_output=_latest_volatility,
+                regime_output=_latest_regime,
+                liquidity_output=_latest_liquidity,
+            )
+            size_pct = sizing.final_size_pct
+            logger.info(f"[sizing] {rec['symbol']}: {sizing.rationale}")
+
+            if size_pct <= 0:
+                return {
+                    "status": "blocked",
+                    "message": f"Sizing engine returned 0%: {sizing.rationale}",
+                    "sizing": sizing.model_dump(),
+                }
+
             pos = _paper_engine.open_position(
                 symbol=rec["symbol"],
                 direction=rec["direction"],
-                current_price=rec["entry_price"],
-                size_pct=rec.get("size_pct") or 5.0,
+                current_price=round(entry_price, 2),
+                size_pct=size_pct,
                 recommendation_id=rec_id,
             )
             if pos:
+                # Set stop/TP from recommendation
+                if rec.get("stop_loss"):
+                    pos.stop_loss = rec["stop_loss"]
+                if rec.get("take_profit"):
+                    pos.take_profit = rec["take_profit"]
+
                 # Update status to executed
                 db.table("wp_trade_recommendations").update(
                     {"status": "executed"}
@@ -274,7 +336,11 @@ async def approve_recommendation(rec_id: str, exchange: str = "hyperliquid"):
 
                 # Store portfolio snapshot
                 _paper_engine.store_snapshot(exchange)
-                return {"status": "executed", "position": pos.model_dump()}
+                return {
+                    "status": "executed",
+                    "position": pos.model_dump(),
+                    "sizing": sizing.model_dump(),
+                }
 
         return {"status": "approved", "recommendation": rec}
 
@@ -284,7 +350,7 @@ async def approve_recommendation(rec_id: str, exchange: str = "hyperliquid"):
 
 
 @app.post("/recommendations/{rec_id}/reject")
-async def reject_recommendation(rec_id: str):
+async def reject_recommendation(rec_id: str, _auth: None = Depends(require_auth)):
     """Reject a trade recommendation."""
     try:
         from wolfpack.db import get_db
@@ -348,7 +414,7 @@ async def portfolio_history(limit: int = 100):
 
 
 @app.post("/portfolio/close/{symbol}")
-async def close_position(symbol: str, exchange: str = "hyperliquid"):
+async def close_position(symbol: str, exchange: str = "hyperliquid", _auth: None = Depends(require_auth)):
     """Close a paper trading position."""
     if _paper_engine is None:
         return {"status": "error", "message": "Paper trading not initialized"}
@@ -369,6 +435,7 @@ async def execute_trade(
     price: float,
     order_type: str = "limit",
     reduce_only: bool = False,
+    _auth: None = Depends(require_auth),
 ):
     """Execute a real trade on Hyperliquid (requires private key in .env)."""
     trader = _get_trader()
@@ -421,7 +488,7 @@ async def get_open_orders():
 
 
 @app.post("/trades/cancel")
-async def cancel_order(symbol: str, order_id: int):
+async def cancel_order(symbol: str, order_id: int, _auth: None = Depends(require_auth)):
     """Cancel an open order on Hyperliquid."""
     trader = _get_trader()
     if trader is None:
@@ -530,6 +597,7 @@ async def run_intelligence(
     background_tasks: BackgroundTasks,
     exchange: str = "hyperliquid",
     symbol: str = "BTC",
+    _auth: None = Depends(require_auth),
 ):
     """Trigger a full intelligence cycle for the specified exchange and symbol."""
     if _running:
@@ -585,14 +653,18 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
         now_utc = datetime.now(timezone.utc)
 
         # Regime detection
+        global _latest_regime
         regime_detector = RegimeDetector()
         regime_output = regime_detector.detect(candles_1h, asset=symbol)
+        _latest_regime = regime_output
         store_module_output("regime_detection", exchange, regime_output.model_dump(), symbol)
         _module_last_runs["regime_detection"] = now_utc
 
         # Liquidity
+        global _latest_liquidity
         liquidity_intel = LiquidityIntel()
         liquidity_output = liquidity_intel.analyze(orderbook)
+        _latest_liquidity = liquidity_output
         store_module_output("liquidity_intel", exchange, liquidity_output.model_dump(), symbol)
         _module_last_runs["liquidity_intel"] = now_utc
 
@@ -614,9 +686,11 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
             _module_last_runs["funding_carry"] = now_utc
 
         # Volatility
+        global _latest_volatility
         closes = [c.close for c in candles_1h]
         vol_signal = VolatilitySignal()
         vol_output = vol_signal.analyze(asset=symbol, closes=closes)
+        _latest_volatility = vol_output
         store_module_output("volatility", exchange, vol_output.model_dump(), symbol)
         _module_last_runs["volatility"] = now_utc
 
@@ -858,7 +932,7 @@ async def circuit_breaker_status():
 
 
 @app.post("/circuit-breaker/reset")
-async def circuit_breaker_reset():
+async def circuit_breaker_reset(_auth: None = Depends(require_auth)):
     """Manually reset circuit breaker from EMERGENCY_STOP to ACTIVE."""
     cb = _get_circuit_breaker()
     if cb.state != "EMERGENCY_STOP":
@@ -952,7 +1026,7 @@ async def get_backtest_status(run_id: str):
 
 
 @app.delete("/backtest/runs/{run_id}")
-async def remove_backtest_run(run_id: str):
+async def remove_backtest_run(run_id: str, _auth: None = Depends(require_auth)):
     """Delete a backtest run and its trades."""
     from wolfpack.db import delete_backtest_run
 

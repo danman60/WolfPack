@@ -12,6 +12,43 @@ from wolfpack.agents.base import Agent, AgentOutput
 
 logger = logging.getLogger(__name__)
 
+BRIEF_SCHEMA: dict = {
+    "type": "object",
+    "properties": {
+        "recommendations": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "symbol": {"type": "string"},
+                    "direction": {"type": "string", "enum": ["long", "short", "wait"]},
+                    "conviction": {"type": "number", "minimum": 0, "maximum": 100},
+                    "entry_price": {"type": ["number", "null"]},
+                    "stop_loss": {"type": ["number", "null"]},
+                    "take_profit": {"type": ["number", "null"]},
+                    "size_pct": {"type": "number", "minimum": 1, "maximum": 25},
+                    "rationale": {"type": "string"},
+                },
+                "required": ["symbol", "direction", "conviction", "rationale"],
+            },
+        },
+        "portfolio_risk": {"type": "string", "enum": ["low", "moderate", "elevated", "extreme"]},
+        "signal_convergence": {
+            "type": "object",
+            "properties": {
+                "agreements": {"type": "array", "items": {"type": "string"}},
+                "conflicts": {"type": "array", "items": {"type": "string"}},
+            },
+            "required": ["agreements", "conflicts"],
+        },
+        "priority_actions": {"type": "array", "items": {"type": "string"}},
+        "daily_narrative": {"type": "string"},
+        "conviction": {"type": "number", "minimum": 0, "maximum": 100},
+        "summary": {"type": "string"},
+    },
+    "required": ["recommendations", "portfolio_risk", "conviction", "summary"],
+}
+
 
 class BriefAgent(Agent):
     @property
@@ -116,12 +153,9 @@ Only recommend trades when conviction >= 60. Below that, recommend WAIT."""
 
         prompt = f"""Synthesize the following intelligence for {symbol} on {exchange} into trade recommendations:
 
-{json.dumps(context, indent=2, default=str)}
+{json.dumps(context, indent=2, default=str)}"""
 
-Respond with ONLY a JSON object matching the format specified in your system prompt."""
-
-        llm_response = await self._call_llm(prompt)
-        parsed = self._parse_llm_json(llm_response)
+        parsed = await self._call_llm_structured(prompt, BRIEF_SCHEMA)
 
         summary = parsed.get("summary", "Decision synthesis complete")
         confidence = float(parsed.get("conviction", 30)) / 100.0
@@ -161,7 +195,7 @@ Respond with ONLY a JSON object matching the format specified in your system pro
             confidence=confidence,
             raw_data={
                 "context": context,
-                "llm_response": llm_response,
+                "llm_response": parsed,
                 "recommendations": recommendations,
             },
         )

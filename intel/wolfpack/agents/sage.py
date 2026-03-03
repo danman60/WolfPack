@@ -12,6 +12,40 @@ from wolfpack.agents.base import Agent, AgentOutput
 
 logger = logging.getLogger(__name__)
 
+SAGE_SCHEMA: dict = {
+    "type": "object",
+    "properties": {
+        "weekly_outlook": {"type": "string", "enum": ["bullish", "bearish", "neutral"]},
+        "outlook_rationale": {"type": "string"},
+        "scenario_matrix": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "scenario": {"type": "string"},
+                    "probability": {"type": "number", "minimum": 0, "maximum": 100},
+                    "key_levels": {
+                        "type": "object",
+                        "properties": {
+                            "support": {"type": "number"},
+                            "resistance": {"type": "number"},
+                        },
+                    },
+                    "triggers": {"type": "array", "items": {"type": "string"}},
+                },
+                "required": ["scenario", "probability"],
+            },
+        },
+        "correlation_assessment": {"type": "string"},
+        "macro_context": {"type": "string"},
+        "carry_opportunities": {"type": "array", "items": {"type": "string"}},
+        "regime_transition_risk": {"type": "string", "enum": ["low", "moderate", "high"]},
+        "conviction": {"type": "number", "minimum": 0, "maximum": 100},
+        "summary": {"type": "string"},
+    },
+    "required": ["weekly_outlook", "scenario_matrix", "conviction", "summary"],
+}
+
 
 class SageAgent(Agent):
     @property
@@ -96,12 +130,9 @@ Think in probabilities, not certainties. Always present at least 2 scenarios. Ch
 
         prompt = f"""Produce a strategic forecast for {symbol} on {exchange} from these quantitative signals:
 
-{json.dumps(context, indent=2, default=str)}
+{json.dumps(context, indent=2, default=str)}"""
 
-Respond with ONLY a JSON object matching the format specified in your system prompt."""
-
-        llm_response = await self._call_llm(prompt)
-        parsed = self._parse_llm_json(llm_response)
+        parsed = await self._call_llm_structured(prompt, SAGE_SCHEMA)
 
         summary = parsed.get("summary", "Strategic forecast complete")
         confidence = float(parsed.get("conviction", 35)) / 100.0
@@ -145,5 +176,5 @@ Respond with ONLY a JSON object matching the format specified in your system pro
             summary=summary,
             signals=signals,
             confidence=confidence,
-            raw_data={"context": context, "llm_response": llm_response},
+            raw_data={"context": context, "llm_response": parsed},
         )

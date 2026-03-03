@@ -64,7 +64,7 @@ class Agent(ABC):
         return datetime.now(timezone.utc)
 
     async def _call_llm(self, prompt: str) -> str:
-        """Call LLM (Anthropic → DeepSeek fallback) with the agent's system prompt."""
+        """Call LLM (Anthropic -> DeepSeek fallback) with the agent's system prompt."""
         if settings.anthropic_api_key:
             return await self._call_anthropic(prompt)
         elif settings.deepseek_api_key:
@@ -72,6 +72,21 @@ class Agent(ABC):
         else:
             logger.warning(f"{self.name}: No LLM API key configured")
             return json.dumps({"summary": "No LLM API key configured", "conviction": 0})
+
+    async def _call_llm_structured(self, prompt: str, schema: dict) -> dict:
+        """Call LLM with structured output enforcement. Returns parsed dict.
+
+        Anthropic: uses tool_use to guarantee valid JSON matching schema.
+        DeepSeek: uses response_format=json_object.
+        Falls back to text parsing on error.
+        """
+        if settings.anthropic_api_key:
+            return await self._call_anthropic_structured(prompt, schema)
+        elif settings.deepseek_api_key:
+            return await self._call_deepseek_structured(prompt)
+        else:
+            logger.warning(f"{self.name}: No LLM API key configured")
+            return {"summary": "No LLM API key configured", "conviction": 0}
 
     async def _call_anthropic(self, prompt: str) -> str:
         import anthropic
@@ -88,6 +103,42 @@ class Agent(ABC):
         except Exception as e:
             logger.error(f"{self.name} Anthropic error: {e}")
             raise
+
+    async def _call_anthropic_structured(self, prompt: str, schema: dict) -> dict:
+        """Call Anthropic with tool_use for guaranteed structured output."""
+        import anthropic
+
+        client = anthropic.AsyncAnthropic(api_key=settings.anthropic_api_key)
+        tool_name = f"{self.agent_key}_analysis"
+
+        try:
+            response = await client.messages.create(
+                model="claude-sonnet-4-20250514",
+                max_tokens=2048,
+                system=self.system_prompt,
+                messages=[{"role": "user", "content": prompt}],
+                tools=[{
+                    "name": tool_name,
+                    "description": f"Output structured {self.name} analysis",
+                    "input_schema": schema,
+                }],
+                tool_choice={"type": "tool", "name": tool_name},
+            )
+            for block in response.content:
+                if block.type == "tool_use":
+                    return block.input  # type: ignore[return-value]
+            # Fallback: text block
+            for block in response.content:
+                if block.type == "text":
+                    return self._parse_llm_json(block.text)
+            return {"summary": "No structured output returned", "conviction": 0}
+        except Exception as e:
+            logger.error(f"{self.name} Anthropic structured error: {e}")
+            try:
+                raw = await self._call_anthropic(prompt)
+                return self._parse_llm_json(raw)
+            except Exception:
+                raise e
 
     async def _call_deepseek(self, prompt: str) -> str:
         from openai import AsyncOpenAI
@@ -111,12 +162,40 @@ class Agent(ABC):
             logger.error(f"{self.name} DeepSeek error: {e}")
             raise
 
+    async def _call_deepseek_structured(self, prompt: str) -> dict:
+        """Call DeepSeek with JSON mode for structured output."""
+        from openai import AsyncOpenAI
+
+        client = AsyncOpenAI(
+            api_key=settings.deepseek_api_key,
+            base_url=settings.deepseek_base_url,
+        )
+        try:
+            response = await client.chat.completions.create(
+                model="deepseek-chat",
+                messages=[
+                    {"role": "system", "content": self.system_prompt},
+                    {"role": "user", "content": prompt},
+                ],
+                max_tokens=1024,
+                temperature=0.3,
+                response_format={"type": "json_object"},
+            )
+            text = response.choices[0].message.content or "{}"
+            return json.loads(text)
+        except Exception as e:
+            logger.error(f"{self.name} DeepSeek structured error: {e}")
+            try:
+                raw = await self._call_deepseek(prompt)
+                return self._parse_llm_json(raw)
+            except Exception:
+                raise e
+
     def _parse_llm_json(self, text: str) -> dict:
         """Try to parse JSON from LLM response, with fallback."""
         try:
             return json.loads(text)
         except (json.JSONDecodeError, TypeError):
-            # Try to find JSON in the response
             start = text.find("{")
             end = text.rfind("}") + 1
             if start >= 0 and end > start:

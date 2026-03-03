@@ -42,7 +42,8 @@ class BacktestEngine:
     async def run(self, candles: list[Candle], progress_cb=None) -> BacktestResult:
         """Run backtest over candles. Returns full result with metrics."""
         start_time = time.time()
-        cost_pct = (self.config.commission_bps + self.config.slippage_bps) / 10_000
+        commission_pct = self.config.commission_bps / 10_000
+        base_slippage_pct = self.config.slippage_bps / 10_000
         warmup = self.strategy.warmup_bars
         total_bars = len(candles)
 
@@ -74,10 +75,10 @@ class BacktestEngine:
                     # Reverse: close then open
                     self.paper.close_position(self.config.symbol)
                     self._record_trade_close(candle, "signal_change")
-                    self._open_via_engine(rec, candle, cost_pct)
+                    self._open_via_engine(rec, candle, candles, i, commission_pct, base_slippage_pct)
 
                 elif not current_pos and rec["direction"] in ("long", "short"):
-                    self._open_via_engine(rec, candle, cost_pct)
+                    self._open_via_engine(rec, candle, candles, i, commission_pct, base_slippage_pct)
 
             # 5. Snapshot — record equity curve point
             self._record_equity(candle)
@@ -108,8 +109,36 @@ class BacktestEngine:
             duration_seconds=round(duration, 2),
         )
 
-    def _open_via_engine(self, rec: dict, candle: Candle, cost_pct: float):
-        """Open position through PaperTradingEngine — same as approval endpoint."""
+    def _open_via_engine(
+        self,
+        rec: dict,
+        candle: Candle,
+        candles: list[Candle],
+        idx: int,
+        commission_pct: float,
+        base_slippage_pct: float,
+    ):
+        """Open position through PaperTradingEngine — same as approval endpoint.
+
+        Slippage scales with volatility: when candle range exceeds ATR,
+        slippage increases proportionally. More realistic than flat assumption.
+        """
+        # Compute ATR over last 14 bars for dynamic slippage
+        atr_period = min(14, idx)
+        if atr_period > 0:
+            ranges = [(c.high - c.low) for c in candles[idx - atr_period : idx]]
+            atr = sum(ranges) / len(ranges) if ranges else 0
+        else:
+            atr = candle.high - candle.low
+
+        candle_range = candle.high - candle.low
+        mid = candle.close if candle.close > 0 else 1
+
+        # Scale slippage: if candle range > ATR, slippage grows proportionally
+        vol_scalar = (candle_range / atr) if atr > 0 else 1.0
+        dynamic_slippage_pct = base_slippage_pct * max(vol_scalar, 1.0)
+
+        cost_pct = commission_pct + dynamic_slippage_pct
         slippage_mult = 1 + cost_pct if rec["direction"] == "long" else 1 - cost_pct
         entry = candle.close * slippage_mult
         size_pct = min(rec.get("size_pct", self.config.max_position_pct), self.config.max_position_pct)

@@ -2,6 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import { intelFetch } from "@/lib/intel";
 
 // Fetch latest agent outputs (one per agent)
 export function useAgentOutputs() {
@@ -80,7 +81,7 @@ export function useRunIntelligence() {
 
   return useMutation({
     mutationFn: async ({ exchange, symbol }: { exchange: string; symbol: string }) => {
-      const res = await fetch(`/intel/intelligence/run?exchange=${exchange}&symbol=${symbol}`, {
+      const res = await intelFetch(`/intel/intelligence/run?exchange=${exchange}&symbol=${symbol}`, {
         method: "POST",
       });
       if (!res.ok) throw new Error(`Intel service error: ${res.status}`);
@@ -103,7 +104,7 @@ export function useApproveRecommendation() {
 
   return useMutation({
     mutationFn: async ({ id, exchange }: { id: string; exchange: string }) => {
-      const res = await fetch(`/intel/recommendations/${id}/approve?exchange=${exchange}`, {
+      const res = await intelFetch(`/intel/recommendations/${id}/approve?exchange=${exchange}`, {
         method: "POST",
       });
       if (!res.ok) throw new Error(`Approve failed: ${res.status}`);
@@ -122,7 +123,7 @@ export function useRejectRecommendation() {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      const res = await fetch(`/intel/recommendations/${id}/reject`, {
+      const res = await intelFetch(`/intel/recommendations/${id}/reject`, {
         method: "POST",
       });
       if (!res.ok) throw new Error(`Reject failed: ${res.status}`);
@@ -168,7 +169,7 @@ export function useClosePosition() {
 
   return useMutation({
     mutationFn: async ({ symbol, exchange }: { symbol: string; exchange: string }) => {
-      const res = await fetch(`/intel/portfolio/close/${symbol}?exchange=${exchange}`, {
+      const res = await intelFetch(`/intel/portfolio/close/${symbol}?exchange=${exchange}`, {
         method: "POST",
       });
       if (!res.ok) throw new Error(`Close failed: ${res.status}`);
@@ -201,7 +202,7 @@ export function useSetStrategyMode() {
 
   return useMutation({
     mutationFn: async (mode: string) => {
-      const res = await fetch(`/intel/strategy/mode?mode=${mode}`, {
+      const res = await intelFetch(`/intel/strategy/mode?mode=${mode}`, {
         method: "POST",
       });
       if (!res.ok) throw new Error(`Set mode failed: ${res.status}`);

@@ -29,6 +29,7 @@ class Settings(BaseSettings):
     # Service
     tick_interval_seconds: int = 300   # 5 minutes
     log_level: str = "INFO"
+    api_secret_key: str = ""           # Bearer token for protected endpoints
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 

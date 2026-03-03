@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { intelFetch } from "@/lib/intel";
 
 export interface StrategyDef {
   key: string;
@@ -97,7 +98,7 @@ export function useStartBacktest() {
 
   return useMutation({
     mutationFn: async (config: Record<string, unknown>) => {
-      const res = await fetch("/intel/backtest/run", {
+      const res = await intelFetch("/intel/backtest/run", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(config),
@@ -117,7 +118,7 @@ export function useDeleteBacktest() {
 
   return useMutation({
     mutationFn: async (runId: string) => {
-      const res = await fetch(`/intel/backtest/runs/${runId}`, {
+      const res = await intelFetch(`/intel/backtest/runs/${runId}`, {
         method: "DELETE",
       });
       if (!res.ok) throw new Error(`Failed: ${res.status}`);

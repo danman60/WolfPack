@@ -12,6 +12,22 @@ from wolfpack.agents.base import Agent, AgentOutput
 
 logger = logging.getLogger(__name__)
 
+SNOOP_SCHEMA: dict = {
+    "type": "object",
+    "properties": {
+        "sentiment_score": {"type": "number", "minimum": -100, "maximum": 100},
+        "narrative": {"type": "string"},
+        "narrative_momentum": {"type": "string", "enum": ["accelerating", "peaking", "fading", "dormant"]},
+        "crowd_positioning": {"type": "string", "enum": ["crowded_long", "crowded_short", "balanced"]},
+        "contrarian_signal": {"type": "boolean"},
+        "notable_observations": {"type": "array", "items": {"type": "string"}},
+        "risk_flags": {"type": "array", "items": {"type": "string"}},
+        "conviction": {"type": "number", "minimum": 0, "maximum": 100},
+        "summary": {"type": "string"},
+    },
+    "required": ["sentiment_score", "crowd_positioning", "conviction", "summary"],
+}
+
 
 class SnoopAgent(Agent):
     @property
@@ -78,12 +94,9 @@ Be skeptical of hype. Distinguish signal from noise."""
 
         prompt = f"""Infer social sentiment for {symbol} on {exchange} from these quantitative signals:
 
-{json.dumps(context, indent=2, default=str)}
+{json.dumps(context, indent=2, default=str)}"""
 
-Respond with ONLY a JSON object matching the format specified in your system prompt."""
-
-        llm_response = await self._call_llm(prompt)
-        parsed = self._parse_llm_json(llm_response)
+        parsed = await self._call_llm_structured(prompt, SNOOP_SCHEMA)
 
         summary = parsed.get("summary", "Sentiment analysis complete")
         confidence = float(parsed.get("conviction", 40)) / 100.0
@@ -107,5 +120,5 @@ Respond with ONLY a JSON object matching the format specified in your system pro
             summary=summary,
             signals=signals,
             confidence=confidence,
-            raw_data={"context": context, "llm_response": llm_response},
+            raw_data={"context": context, "llm_response": parsed},
         )

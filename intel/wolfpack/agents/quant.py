@@ -11,6 +11,29 @@ from wolfpack.agents.base import Agent, AgentOutput
 
 logger = logging.getLogger(__name__)
 
+QUANT_SCHEMA: dict = {
+    "type": "object",
+    "properties": {
+        "regime_assessment": {"type": "string"},
+        "trend_direction": {"type": "string", "enum": ["bullish", "bearish", "neutral"]},
+        "trend_strength": {"type": "number", "minimum": 0, "maximum": 100},
+        "key_levels": {
+            "type": "object",
+            "properties": {
+                "support": {"type": "array", "items": {"type": "number"}},
+                "resistance": {"type": "array", "items": {"type": "number"}},
+            },
+            "required": ["support", "resistance"],
+        },
+        "risk_level": {"type": "string", "enum": ["low", "moderate", "elevated", "extreme"]},
+        "opportunities": {"type": "array", "items": {"type": "string"}},
+        "warnings": {"type": "array", "items": {"type": "string"}},
+        "conviction": {"type": "number", "minimum": 0, "maximum": 100},
+        "summary": {"type": "string"},
+    },
+    "required": ["trend_direction", "trend_strength", "risk_level", "conviction", "summary"],
+}
+
 
 class QuantAgent(Agent):
     @property
@@ -94,51 +117,37 @@ Be precise with numbers. Qualify uncertainty. Never fabricate data that wasn't p
                 context["latest_price"] = last.get("close", 0)
                 context["latest_volume"] = last.get("volume", 0)
 
-        # Call LLM for interpretation
-        llm_analysis = await self._interpret(context)
+        # Call LLM with structured output
+        prompt = f"""Analyze the following quantitative signals for {symbol} on {exchange}:
 
-        # Parse LLM response
-        try:
-            parsed = json.loads(llm_analysis) if isinstance(llm_analysis, str) else llm_analysis
-            summary = parsed.get("summary", llm_analysis if isinstance(llm_analysis, str) else "Analysis complete")
-            confidence = float(parsed.get("conviction", 50)) / 100.0
-            llm_signals: list[dict[str, Any]] = []
-            if parsed.get("trend_direction"):
-                llm_signals.append({"type": "trend", "direction": parsed["trend_direction"], "strength": parsed.get("trend_strength", 0)})
-            if parsed.get("risk_level"):
-                llm_signals.append({"type": "risk", "level": parsed["risk_level"]})
-            if parsed.get("key_levels"):
-                llm_signals.append({"type": "levels", **parsed["key_levels"]})
-            for opp in parsed.get("opportunities", []):
-                llm_signals.append({"type": "opportunity", "description": opp})
-            for warn in parsed.get("warnings", []):
-                llm_signals.append({"type": "warning", "description": warn})
-        except (json.JSONDecodeError, TypeError, AttributeError):
-            summary = llm_analysis if isinstance(llm_analysis, str) else "Analysis complete"
-            confidence = 0.5
-            llm_signals = signals
+{json.dumps(context, indent=2, default=str)}"""
 
-        all_signals = signals + llm_signals
+        parsed = await self._call_llm_structured(prompt, QUANT_SCHEMA)
+
+        summary = parsed.get("summary", "Analysis complete")
+        confidence = float(parsed.get("conviction", 50)) / 100.0
+
+        llm_signals: list[dict[str, Any]] = []
+        if parsed.get("trend_direction"):
+            llm_signals.append({"type": "trend", "direction": parsed["trend_direction"], "strength": parsed.get("trend_strength", 0)})
+        if parsed.get("risk_level"):
+            llm_signals.append({"type": "risk", "level": parsed["risk_level"]})
+        if parsed.get("key_levels"):
+            llm_signals.append({"type": "levels", **parsed["key_levels"]})
+        for opp in parsed.get("opportunities", []):
+            llm_signals.append({"type": "opportunity", "description": opp})
+        for warn in parsed.get("warnings", []):
+            llm_signals.append({"type": "warning", "description": warn})
 
         return AgentOutput(
             agent_name=self.agent_key,
             exchange=exchange,
             timestamp=self._now(),
             summary=summary,
-            signals=all_signals,
+            signals=signals + llm_signals,
             confidence=confidence,
-            raw_data={"context": context, "llm_response": llm_analysis},
+            raw_data={"context": context, "llm_response": parsed},
         )
-
-    async def _interpret(self, context: dict) -> str:
-        """Call LLM to interpret quantitative signals."""
-        prompt = f"""Analyze the following quantitative signals for {context.get('symbol', 'BTC')} on {context.get('exchange', 'hyperliquid')}:
-
-{json.dumps(context, indent=2, default=str)}
-
-Respond with ONLY a JSON object matching the format specified in your system prompt."""
-
-        return await self._call_llm(prompt)
 
     def _compute_signals(self, candles: list) -> list[dict[str, Any]]:
         """Compute technical indicators from candle data."""
