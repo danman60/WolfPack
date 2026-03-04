@@ -1852,10 +1852,11 @@ async def screen_pools(limit: int = 20):
     from wolfpack.modules.pool_screening import PoolScreeningInput, screen_pool
 
     api_key = settings.subgraph_api_key
-    if not api_key:
-        return {"status": "error", "message": "SUBGRAPH_API_KEY not configured", "pools": []}
-
-    subgraph_url = f"https://gateway.thegraph.com/api/{api_key}/subgraphs/id/5zvR82QoaXYFyDEKLZ9t6v9adgnptxYpKpSbxtgVENFV"
+    if api_key:
+        subgraph_url = f"https://gateway.thegraph.com/api/{api_key}/subgraphs/id/5zvR82QoaXYFyDEKLZ9t6v9adgnptxYpKpSbxtgVENFV"
+    else:
+        # Free public endpoint (rate-limited but no key needed)
+        subgraph_url = "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3"
 
     query = """
     query TopPools($first: Int!) {
