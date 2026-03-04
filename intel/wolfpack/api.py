@@ -373,10 +373,8 @@ async def reject_recommendation(rec_id: str, _auth: None = Depends(require_auth)
 @app.get("/portfolio")
 async def portfolio_status(exchange: str = "hyperliquid"):
     """Return current paper trading portfolio state with live prices."""
-    if _paper_engine is None:
-        return {"status": "inactive", "message": "Paper trading not initialized"}
-
-    portfolio = _paper_engine.portfolio
+    engine = _get_paper_engine()
+    portfolio = engine.portfolio
 
     # Fetch live prices for open positions
     if portfolio.positions:
@@ -393,7 +391,7 @@ async def portfolio_status(exchange: str = "hyperliquid"):
                 except Exception:
                     pass
             if prices:
-                _paper_engine.update_prices(prices)
+                engine.update_prices(prices)
         except Exception as e:
             logger.warning(f"[portfolio] Failed to fetch live prices: {e}")
 
@@ -436,11 +434,9 @@ async def portfolio_history(limit: int = 100):
 @app.post("/portfolio/close/{symbol}")
 async def close_position(symbol: str, exchange: str = "hyperliquid", _auth: None = Depends(require_auth)):
     """Close a paper trading position."""
-    if _paper_engine is None:
-        return {"status": "error", "message": "Paper trading not initialized"}
-
-    realized_pnl = _paper_engine.close_position(symbol.upper())
-    _paper_engine.store_snapshot(exchange)
+    engine = _get_paper_engine()
+    realized_pnl = engine.close_position(symbol.upper())
+    engine.store_snapshot(exchange)
     return {"status": "closed", "symbol": symbol.upper(), "realized_pnl": round(realized_pnl, 2)}
 
 
@@ -594,12 +590,50 @@ def _get_trader() -> Any:
 
 
 def _get_paper_engine() -> Any:
-    """Get or create the paper trading engine singleton."""
+    """Get or create the paper trading engine singleton.
+
+    On first call, attempts to restore from the latest portfolio snapshot
+    in Supabase so state survives VPS restarts.
+    """
     global _paper_engine
     if _paper_engine is None:
-        from wolfpack.paper_trading import PaperTradingEngine
+        from wolfpack.paper_trading import PaperTradingEngine, PaperPosition
 
         _paper_engine = PaperTradingEngine(starting_equity=10000.0)
+
+        # Restore from latest snapshot
+        try:
+            from wolfpack.db import get_db
+            db = get_db()
+            result = (
+                db.table("wp_portfolio_snapshots")
+                .select("*")
+                .order("created_at", desc=True)
+                .limit(1)
+                .execute()
+            )
+            if result.data:
+                snap = result.data[0]
+                p = _paper_engine.portfolio
+                p.equity = snap.get("equity", 10000.0)
+                p.free_collateral = snap.get("free_collateral", 10000.0)
+                p.realized_pnl = snap.get("realized_pnl", 0.0)
+                p.unrealized_pnl = snap.get("unrealized_pnl", 0.0)
+                for pos_data in snap.get("positions", []):
+                    p.positions.append(PaperPosition(
+                        symbol=pos_data["symbol"],
+                        direction=pos_data["direction"],
+                        entry_price=pos_data["entry_price"],
+                        current_price=pos_data.get("current_price", pos_data["entry_price"]),
+                        size_usd=pos_data["size_usd"],
+                        unrealized_pnl=pos_data.get("unrealized_pnl", 0.0),
+                        recommendation_id=pos_data.get("recommendation_id", "restored"),
+                        opened_at=pos_data.get("opened_at", "2026-01-01T00:00:00+00:00"),
+                    ))
+                logger.info(f"[paper] Restored from snapshot: equity=${p.equity}, {len(p.positions)} positions")
+        except Exception as e:
+            logger.warning(f"[paper] Could not restore from snapshot: {e}")
+
     return _paper_engine
 
 
