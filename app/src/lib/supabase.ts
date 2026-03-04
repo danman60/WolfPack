@@ -4,9 +4,12 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  realtime: { params: { eventsPerSecond: 0 } },
-  global: { headers: {} },
+  realtime: {
+    params: { eventsPerSecond: -1 },
+  },
+  auth: {
+    autoRefreshToken: false,
+    persistSession: false,
+    detectSessionInUrl: false,
+  },
 });
-
-// Disable realtime connection — we use React Query polling instead
-supabase.removeAllChannels();
