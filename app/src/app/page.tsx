@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useExchange } from "@/lib/exchange";
 import { useAgentOutputs, useAgentStatus, useRecommendations, usePortfolio, useWatchlist } from "@/lib/hooks/useIntelligence";
+import { WolfHead } from "@/components/WolfHead";
 import { usePrice } from "@/lib/hooks/useMarketData";
 
 export default function Dashboard() {
@@ -86,6 +87,7 @@ export default function Dashboard() {
                   <AgentRow
                     key={a.key}
                     name={a.name}
+                    agentKey={a.key}
                     status={a.status === "running" ? "active" : agentOutputs?.[a.key] ? "active" : "idle"}
                     lastRun={
                       agentOutputs?.[a.key]?.created_at
@@ -274,22 +276,36 @@ function StatCard({
 
 function AgentRow({
   name,
+  agentKey,
   status,
   lastRun,
 }: {
   name: string;
+  agentKey?: string;
   status: string;
   lastRun: string;
 }) {
+  const keyMap: Record<string, "quant" | "snoop" | "sage" | "brief"> = {
+    "The Quant": "quant",
+    "The Snoop": "snoop",
+    "The Sage": "sage",
+    "The Brief": "brief",
+  };
+  const wolfKey = (agentKey as "quant" | "snoop" | "sage" | "brief") || keyMap[name];
+
   return (
     <div className="flex items-center justify-between py-2.5 px-3 -mx-3 rounded-lg hover:bg-[var(--surface-hover)]/50 transition-colors">
       <div className="flex items-center gap-3">
-        <div
-          className={`w-1.5 h-1.5 rounded-full ${
-            status === "active" ? "bg-[var(--wolf-emerald)]" : "bg-gray-600"
-          }`}
-          style={status === "active" ? { boxShadow: "0 0 6px var(--wolf-emerald)" } : undefined}
-        />
+        {wolfKey ? (
+          <WolfHead agent={wolfKey} size={28} />
+        ) : (
+          <div
+            className={`w-1.5 h-1.5 rounded-full ${
+              status === "active" ? "bg-[var(--wolf-emerald)]" : "bg-gray-600"
+            }`}
+            style={status === "active" ? { boxShadow: "0 0 6px var(--wolf-emerald)" } : undefined}
+          />
+        )}
         <span className="text-[13px] text-gray-300">{name}</span>
       </div>
       <span className="text-[11px] text-gray-600 font-mono">{lastRun}</span>

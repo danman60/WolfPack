@@ -7,6 +7,7 @@ import {
   useRunIntelligence,
   useAgentStatus,
 } from "@/lib/hooks/useIntelligence";
+import { WolfHead } from "@/components/WolfHead";
 
 const AGENTS = [
   { key: "quant", name: "The Quant", role: "Technical Analysis", description: "Regime detection, technical indicators, quantitative signals, chart patterns" },
@@ -23,6 +24,8 @@ const MODULES = [
   { key: "volatility", name: "Volatility", icon: "\u{1F4C8}" },
   { key: "circuit_breakers", name: "Circuit Breakers", icon: "\u{1F6E1}" },
   { key: "execution_timing", name: "Execution Timing", icon: "\u{23F1}" },
+  { key: "social_sentiment", name: "Social Sentiment", icon: "\u{1F4E2}" },
+  { key: "whale_tracker", name: "Whale Tracker", icon: "\u{1F40B}" },
   { key: "backtest", name: "Backtest", icon: "\u{1F52C}" },
 ];
 
@@ -68,6 +71,7 @@ export default function IntelligencePage() {
           return (
             <AgentCard
               key={agent.key}
+              agentKey={agent.key}
               name={agent.name}
               role={agent.role}
               description={agent.description}
@@ -189,6 +193,7 @@ export default function IntelligencePage() {
 }
 
 function AgentCard({
+  agentKey,
   name,
   role,
   description,
@@ -197,6 +202,7 @@ function AgentCard({
   confidence,
   lastRun,
 }: {
+  agentKey: string;
   name: string;
   role: string;
   description: string;
@@ -208,9 +214,12 @@ function AgentCard({
   return (
     <div className="wolf-card wolf-card-interactive p-5">
       <div className="flex items-center justify-between mb-3">
-        <div>
-          <h3 className="font-semibold text-white text-[15px] tracking-tight">{name}</h3>
-          <p className="text-[11px] text-[var(--wolf-cyan)] font-medium">{role}</p>
+        <div className="flex items-center gap-3">
+          <WolfHead agent={agentKey as "quant" | "snoop" | "sage" | "brief"} size={40} />
+          <div>
+            <h3 className="font-semibold text-white text-[15px] tracking-tight">{name}</h3>
+            <p className="text-[11px] text-[var(--wolf-cyan)] font-medium">{role}</p>
+          </div>
         </div>
         <span
           className={`px-2 py-0.5 rounded text-[10px] font-semibold uppercase ${

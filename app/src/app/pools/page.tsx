@@ -218,12 +218,25 @@ export default function PoolsPage() {
 
         {/* Error state */}
         {poolsError && (
-          <div className="text-center py-8 text-[var(--wolf-red)] text-sm">
-            Failed to load pools from subgraph. The Graph endpoint may require an API key.
-            <br />
-            <span className="text-gray-500 text-xs mt-1 block">
+          <div className="text-center py-10 space-y-3">
+            <div className="text-[var(--wolf-amber)] text-sm font-semibold">Subgraph API Key Required</div>
+            <p className="text-gray-400 text-sm max-w-md mx-auto">
+              Uniswap V3 pool data requires a free API key from The Graph.
+            </p>
+            <div className="bg-[var(--surface)] border border-[var(--border)] rounded-lg p-4 max-w-sm mx-auto text-left space-y-2">
+              <p className="text-xs text-gray-300 font-semibold">Setup (2 minutes):</p>
+              <ol className="text-xs text-gray-400 space-y-1 list-decimal list-inside">
+                <li>Go to <a href="https://thegraph.com/studio/" target="_blank" rel="noopener" className="text-[var(--wolf-cyan)] underline">thegraph.com/studio</a></li>
+                <li>Create a free account &amp; API key</li>
+                <li>Add to <code className="text-gray-300">.env.local</code>:</li>
+              </ol>
+              <code className="block text-xs text-[var(--wolf-emerald)] bg-black/30 rounded p-2 font-mono">
+                NEXT_PUBLIC_SUBGRAPH_API_KEY=your_key
+              </code>
+            </div>
+            <p className="text-gray-600 text-xs">
               {(poolsError as Error).message}
-            </span>
+            </p>
           </div>
         )}
 

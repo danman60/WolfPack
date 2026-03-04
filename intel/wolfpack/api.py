@@ -287,64 +287,79 @@ async def approve_recommendation(rec_id: str, exchange: str = "hyperliquid", _au
                 "liquidity_health": _latest_liquidity.liquidity_health,
             }
 
-        # Execute as paper trade if paper trading engine is available
-        if _paper_engine is not None and rec.get("entry_price"):
-            # Use real slippage from liquidity module instead of flat assumption
-            slippage_bps = _latest_liquidity.estimated_slippage_bps if _latest_liquidity else 5.0
-            slippage_pct = slippage_bps / 10_000
-            entry_price = rec["entry_price"]
-            if rec["direction"] == "long":
-                entry_price *= (1 + slippage_pct)
-            else:
-                entry_price *= (1 - slippage_pct)
+        # Execute as paper trade
+        engine = _get_paper_engine()
 
-            # Adaptive position sizing — combines vol, regime, conviction, drawdown, liquidity
-            from wolfpack.modules.sizing import SizingEngine
-            sizer = SizingEngine(base_pct=rec.get("size_pct") or 10.0)
-            sizing = sizer.compute(
-                conviction=rec.get("conviction", 50),
-                vol_output=_latest_volatility,
-                regime_output=_latest_regime,
-                liquidity_output=_latest_liquidity,
-            )
-            size_pct = sizing.final_size_pct
-            logger.info(f"[sizing] {rec['symbol']}: {sizing.rationale}")
+        # Resolve entry price — use rec value, fall back to live price
+        entry_price = rec.get("entry_price")
+        if not entry_price:
+            try:
+                from wolfpack.exchanges import get_exchange
+                adapter = get_exchange(exchange)  # type: ignore[arg-type]
+                candles = await adapter.get_candles(rec["symbol"], interval="1m", limit=1)
+                if candles:
+                    entry_price = candles[-1].close
+            except Exception as e:
+                logger.warning(f"[approve] Could not fetch live price for {rec['symbol']}: {e}")
 
-            if size_pct <= 0:
-                return {
-                    "status": "blocked",
-                    "message": f"Sizing engine returned 0%: {sizing.rationale}",
-                    "sizing": sizing.model_dump(),
-                }
+        if not entry_price:
+            return {"status": "error", "message": "No entry price available — run intel first or set entry_price"}
 
-            pos = _paper_engine.open_position(
-                symbol=rec["symbol"],
-                direction=rec["direction"],
-                current_price=round(entry_price, 2),
-                size_pct=size_pct,
-                recommendation_id=rec_id,
-            )
-            if pos:
-                # Set stop/TP from recommendation
-                if rec.get("stop_loss"):
-                    pos.stop_loss = rec["stop_loss"]
-                if rec.get("take_profit"):
-                    pos.take_profit = rec["take_profit"]
+        # Apply slippage
+        slippage_bps = _latest_liquidity.estimated_slippage_bps if _latest_liquidity else 5.0
+        slippage_pct = slippage_bps / 10_000
+        if rec["direction"] == "long":
+            entry_price *= (1 + slippage_pct)
+        else:
+            entry_price *= (1 - slippage_pct)
 
-                # Update status to executed
-                db.table("wp_trade_recommendations").update(
-                    {"status": "executed"}
-                ).eq("id", rec_id).execute()
+        # Adaptive position sizing
+        from wolfpack.modules.sizing import SizingEngine
+        sizer = SizingEngine(base_pct=rec.get("size_pct") or 10.0)
+        sizing = sizer.compute(
+            conviction=rec.get("conviction", 50),
+            vol_output=_latest_volatility,
+            regime_output=_latest_regime,
+            liquidity_output=_latest_liquidity,
+        )
+        size_pct = sizing.final_size_pct
+        logger.info(f"[sizing] {rec['symbol']}: {sizing.rationale}")
 
-                # Store portfolio snapshot
-                _paper_engine.store_snapshot(exchange)
-                return {
-                    "status": "executed",
-                    "position": pos.model_dump(),
-                    "sizing": sizing.model_dump(),
-                }
+        if size_pct <= 0:
+            return {
+                "status": "blocked",
+                "message": f"Sizing engine returned 0%: {sizing.rationale}",
+                "sizing": sizing.model_dump(),
+            }
 
-        return {"status": "approved", "recommendation": rec}
+        pos = engine.open_position(
+            symbol=rec["symbol"],
+            direction=rec["direction"],
+            current_price=round(entry_price, 2),
+            size_pct=size_pct,
+            recommendation_id=rec_id,
+        )
+        if pos:
+            # Set stop/TP from recommendation
+            if rec.get("stop_loss"):
+                pos.stop_loss = rec["stop_loss"]
+            if rec.get("take_profit"):
+                pos.take_profit = rec["take_profit"]
+
+            # Update status to executed
+            db.table("wp_trade_recommendations").update(
+                {"status": "executed"}
+            ).eq("id", rec_id).execute()
+
+            # Store portfolio snapshot
+            engine.store_snapshot(exchange)
+            return {
+                "status": "executed",
+                "position": pos.model_dump(),
+                "sizing": sizing.model_dump(),
+            }
+
+        return {"status": "error", "message": f"Could not open position — may already have {rec['symbol']} open"}
 
     except Exception as e:
         logger.error(f"Failed to approve recommendation: {e}")

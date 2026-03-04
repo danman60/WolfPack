@@ -59,7 +59,9 @@ export function Nav() {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <ExchangeToggle />
+          <div className="hidden md:block">
+            <ExchangeToggle />
+          </div>
           {/* Mobile hamburger */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
@@ -107,6 +109,9 @@ export function Nav() {
               </Link>
             );
           })}
+          <div className="pt-2 border-t border-[var(--border)] mt-2">
+            <ExchangeToggle />
+          </div>
         </div>
       )}
     </header>
