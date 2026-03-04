@@ -371,12 +371,32 @@ async def reject_recommendation(rec_id: str, _auth: None = Depends(require_auth)
 
 
 @app.get("/portfolio")
-async def portfolio_status():
-    """Return current paper trading portfolio state."""
+async def portfolio_status(exchange: str = "hyperliquid"):
+    """Return current paper trading portfolio state with live prices."""
     if _paper_engine is None:
         return {"status": "inactive", "message": "Paper trading not initialized"}
 
     portfolio = _paper_engine.portfolio
+
+    # Fetch live prices for open positions
+    if portfolio.positions:
+        try:
+            from wolfpack.exchanges import get_exchange
+            adapter = get_exchange(exchange)  # type: ignore[arg-type]
+            symbols = list({p.symbol for p in portfolio.positions})
+            prices: dict[str, float] = {}
+            for sym in symbols:
+                try:
+                    candles = await adapter.get_candles(sym, interval="1m", limit=1)
+                    if candles:
+                        prices[sym] = candles[-1].close
+                except Exception:
+                    pass
+            if prices:
+                _paper_engine.update_prices(prices)
+        except Exception as e:
+            logger.warning(f"[portfolio] Failed to fetch live prices: {e}")
+
     return {
         "status": "active",
         "equity": round(portfolio.equity, 2),
