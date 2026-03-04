@@ -181,14 +181,44 @@ export function useRejectRecommendation() {
   });
 }
 
-// Fetch portfolio state from intel service
+// Fetch portfolio state — tries VPS first, falls back to Supabase snapshot
 export function usePortfolio() {
   return useQuery({
     queryKey: ["portfolio"],
     queryFn: async () => {
-      const res = await intelFetch("/intel/portfolio");
-      if (!res.ok) return null;
-      return res.json();
+      // Try VPS intel service first
+      try {
+        const res = await intelFetch("/intel/portfolio");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.status === "active") return data;
+        }
+      } catch {
+        // VPS unreachable — fall through to snapshot
+      }
+
+      // Fallback: load latest snapshot from Supabase
+      const { data, error } = await supabase
+        .from("wp_portfolio_snapshots")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(1);
+
+      if (error || !data?.length) return null;
+
+      const snap = (data as unknown[])[0] as Record<string, unknown>;
+      return {
+        status: "active",
+        equity: snap.equity ?? 10000,
+        starting_equity: 10000,
+        realized_pnl: snap.realized_pnl ?? 0,
+        unrealized_pnl: snap.unrealized_pnl ?? 0,
+        free_collateral: snap.free_collateral ?? 10000,
+        positions: (snap.positions as Record<string, unknown>[]) ?? [],
+        closed_trades: 0,
+        winning_trades: 0,
+        win_rate: 0,
+      };
     },
     refetchInterval: 15_000,
     retry: false,
