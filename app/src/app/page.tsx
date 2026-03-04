@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useExchange } from "@/lib/exchange";
 import { useAgentOutputs, useAgentStatus, useRecommendations, usePortfolio, useWatchlist, useAutoTraderStatus } from "@/lib/hooks/useIntelligence";
 import { WolfHead } from "@/components/WolfHead";
-import { usePrice } from "@/lib/hooks/useMarketData";
+import { usePrice, use24hChange } from "@/lib/hooks/useMarketData";
 
 export default function Dashboard() {
   const { config } = useExchange();
@@ -76,8 +76,8 @@ export default function Dashboard() {
           </div>
           <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-[var(--wolf-emerald)]/15 text-[var(--wolf-emerald)]">Connected</span>
         </div>
-        <PriceTicker label="BTC" price={btcPrice?.price} delay={4} />
-        <PriceTicker label="ETH" price={ethPrice?.price} delay={5} />
+        <PriceTicker label="BTC" price={btcPrice?.price} symbol="BTC" delay={4} />
+        <PriceTicker label="ETH" price={ethPrice?.price} symbol="ETH" delay={5} />
       </div>
 
       {/* Intelligence Summary + Recommendations */}
@@ -236,14 +236,23 @@ export default function Dashboard() {
   );
 }
 
-function PriceTicker({ label, price, delay }: { label: string; price?: number | null; delay: number }) {
+function PriceTicker({ label, price, symbol, delay }: { label: string; price?: number | null; symbol: string; delay: number }) {
+  const change24h = use24hChange(symbol);
+
   return (
     <div className={`wolf-card p-4 flex items-center justify-between animate-in animate-in-${delay}`}>
       <span className="text-[13px] text-gray-500 font-mono">{label}-USD</span>
       {price ? (
-        <span className="text-lg font-bold text-white font-mono tracking-tight">
-          ${price.toLocaleString(undefined, { maximumFractionDigits: 2 })}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-lg font-bold text-white font-mono tracking-tight">
+            ${price.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+          </span>
+          {change24h !== null && (
+            <span className={`text-xs font-semibold ${change24h >= 0 ? "text-[var(--wolf-emerald)]" : "text-[var(--wolf-red)]"}`}>
+              {change24h >= 0 ? "+" : ""}{change24h.toFixed(2)}%
+            </span>
+          )}
+        </div>
       ) : (
         <div className="w-20 h-5 rounded skeleton-shimmer" />
       )}

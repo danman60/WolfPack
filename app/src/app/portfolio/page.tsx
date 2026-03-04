@@ -5,6 +5,7 @@ import {
   usePortfolio,
   usePortfolioHistory,
   useClosePosition,
+  useTradeHistory,
 } from "@/lib/hooks/useIntelligence";
 import {
   LineChart,
@@ -21,6 +22,7 @@ export default function PortfolioPage() {
   const { data: portfolio } = usePortfolio();
   const { data: history } = usePortfolioHistory(200);
   const closeMutation = useClosePosition();
+  const { data: trades } = useTradeHistory(20);
 
   const isActive = portfolio?.status === "active";
   const positions = portfolio?.positions ?? [];
@@ -226,6 +228,70 @@ export default function PortfolioPage() {
             {isActive
               ? "No open positions. Approve a recommendation to start paper trading."
               : "Paper trading engine not active. Run intelligence first."}
+          </div>
+        )}
+      </div>
+
+      {/* Trade History */}
+      <div className="wolf-card p-6">
+        <div className="flex items-center gap-2 mb-5">
+          <div className="w-1 h-4 rounded-full bg-[var(--wolf-amber)]" />
+          <h2 className="section-title">Trade History</h2>
+          <span className="ml-auto text-[11px] text-gray-500 font-mono">
+            {trades?.length ?? 0} closed trades
+          </span>
+        </div>
+        {trades && trades.length > 0 ? (
+          <div className="space-y-2">
+            {trades.map((t) => (
+              <div
+                key={t.id}
+                className="flex items-center justify-between py-3 border-b border-[var(--border)] last:border-0"
+              >
+                <div className="flex items-center gap-4">
+                  <span
+                    className={`px-3 py-1 rounded text-xs font-bold uppercase ${
+                      t.direction === "long"
+                        ? "bg-[var(--wolf-emerald)]/20 text-[var(--wolf-emerald)]"
+                        : "bg-[var(--wolf-red)]/20 text-[var(--wolf-red)]"
+                    }`}
+                  >
+                    {t.direction}
+                  </span>
+                  <div>
+                    <span className="text-white font-mono font-semibold">{t.symbol}</span>
+                    <p className="text-xs text-gray-400 mt-0.5 font-mono">
+                      ${t.entry_price.toLocaleString()} → ${t.exit_price.toLocaleString()}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-6">
+                  <div className="text-right">
+                    <div className="text-xs text-gray-500">Size</div>
+                    <div className="text-sm text-gray-300 font-mono">${t.size_usd.toFixed(0)}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-xs text-gray-500">P&L</div>
+                    <div className={`text-sm font-bold ${t.pnl_usd >= 0 ? "text-[var(--wolf-emerald)]" : "text-[var(--wolf-red)]"}`}>
+                      {t.pnl_usd >= 0 ? "+" : ""}${t.pnl_usd.toFixed(2)}
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-xs text-gray-500">Closed</div>
+                    <div className="text-xs text-gray-400">{new Date(t.closed_at).toLocaleDateString()}</div>
+                  </div>
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-semibold ${
+                    t.source === "auto" ? "bg-[var(--wolf-amber)]/15 text-[var(--wolf-amber)]" : "bg-[var(--surface)] text-gray-400"
+                  }`}>
+                    {t.source}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-8 text-gray-500 text-sm">
+            No closed trades yet. Close a position to see trade history.
           </div>
         )}
       </div>

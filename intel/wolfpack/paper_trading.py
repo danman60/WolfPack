@@ -142,6 +142,9 @@ class PaperTradingEngine:
         if realized > 0:
             self.portfolio.winning_trades += 1
 
+        # Store closed trade to history
+        self._store_closed_trade(pos, realized)
+
         # Recalculate
         self.portfolio.unrealized_pnl = sum(p.unrealized_pnl for p in self.portfolio.positions)
         self.portfolio.equity = (
@@ -152,6 +155,25 @@ class PaperTradingEngine:
 
         logger.info(f"Closed paper {pos.direction} {symbol}: P&L ${realized:.2f}")
         return realized
+
+    def _store_closed_trade(self, pos: PaperPosition, pnl: float) -> None:
+        """Store a closed trade to wp_trade_history."""
+        try:
+            from wolfpack.db import get_db
+            db = get_db()
+            db.table("wp_trade_history").insert({
+                "symbol": pos.symbol,
+                "direction": pos.direction,
+                "entry_price": pos.entry_price,
+                "exit_price": pos.current_price,
+                "size_usd": pos.size_usd,
+                "pnl_usd": round(pnl, 2),
+                "recommendation_id": pos.recommendation_id,
+                "source": "manual",
+                "opened_at": pos.opened_at.isoformat(),
+            }).execute()
+        except Exception as e:
+            logger.warning(f"Failed to store closed trade: {e}")
 
     def check_stops(self, prices: dict[str, float]) -> list[tuple[str, str]]:
         """Check stop-losses and take-profits against current prices.

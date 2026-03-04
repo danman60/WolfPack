@@ -11,6 +11,7 @@ const NAV_LINKS = [
   { href: "/trading", label: "Trading" },
   { href: "/portfolio", label: "Portfolio" },
   { href: "/backtest", label: "Backtest" },
+  { href: "/auto-bot", label: "Auto-Bot" },
   { href: "/pools", label: "LP Pools" },
   { href: "/settings", label: "Settings" },
 ];

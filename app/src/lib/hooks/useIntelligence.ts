@@ -470,6 +470,36 @@ export function useDismissPositionAction() {
   });
 }
 
+// ── Trade History Hook ──
+
+interface TradeHistoryItem {
+  id: string;
+  symbol: string;
+  direction: string;
+  entry_price: number;
+  exit_price: number;
+  size_usd: number;
+  pnl_usd: number;
+  recommendation_id: string | null;
+  source: string;
+  opened_at: string;
+  closed_at: string;
+}
+
+export function useTradeHistory(limit: number = 50) {
+  return useQuery({
+    queryKey: ["trade-history", limit],
+    queryFn: async () => {
+      const res = await intelFetch(`/intel/portfolio/trades?limit=${limit}`);
+      if (!res.ok) return [];
+      const data = await res.json();
+      return (data.trades ?? []) as TradeHistoryItem[];
+    },
+    refetchInterval: 30_000,
+    retry: false,
+  });
+}
+
 // ── Auto-Trader Hooks ──
 
 interface AutoTraderStatus {
@@ -509,6 +539,55 @@ export function useToggleAutoTrader() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["auto-trader-status"] });
+    },
+  });
+}
+
+// Fetch auto-trader trades
+interface AutoTraderTrade {
+  id: string;
+  recommendation_id: string | null;
+  symbol: string;
+  direction: string;
+  entry_price: number;
+  size_usd: number;
+  size_pct: number;
+  conviction: number;
+  status: string;
+  opened_at: string;
+}
+
+export function useAutoTraderTrades(limit: number = 50) {
+  return useQuery({
+    queryKey: ["auto-trader-trades", limit],
+    queryFn: async () => {
+      const res = await intelFetch(`/intel/auto-trader/trades?limit=${limit}`);
+      if (!res.ok) return [];
+      const data = await res.json();
+      return (data.trades ?? []) as AutoTraderTrade[];
+    },
+    refetchInterval: 15_000,
+    retry: false,
+  });
+}
+
+// Configure auto-trader (equity + conviction threshold)
+export function useConfigureAutoTrader() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ equity, conviction_threshold }: { equity?: number; conviction_threshold?: number }) => {
+      const res = await intelFetch("/intel/auto-trader/config", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ equity, conviction_threshold }),
+      });
+      if (!res.ok) throw new Error(`Config failed: ${res.status}`);
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["auto-trader-status"] });
+      queryClient.invalidateQueries({ queryKey: ["auto-trader-trades"] });
     },
   });
 }

@@ -67,6 +67,23 @@ export function usePrice(symbol: string) {
   });
 }
 
+/** Compute 24h % change from hourly candles. */
+export function use24hChange(symbol: string) {
+  const { data: candles } = useCandles(symbol, "1h", 25);
+
+  const change = (() => {
+    if (!candles || candles.length < 2) return null;
+    const now = candles[candles.length - 1].close;
+    // Find candle closest to 24h ago (24 hourly candles back)
+    const idx = Math.max(0, candles.length - 25);
+    const then = candles[idx].close;
+    if (then === 0) return null;
+    return ((now - then) / then) * 100;
+  })();
+
+  return change;
+}
+
 /** Fetch available markets from exchange. */
 export function useMarkets() {
   const { activeExchange } = useExchange();

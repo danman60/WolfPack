@@ -15,18 +15,8 @@ import {
   useSymbolSearch,
   useRunAllIntelligence,
 } from "@/lib/hooks/useIntelligence";
-import { useCandles, useMarkets, type Candle } from "@/lib/hooks/useMarketData";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
-  Area,
-  AreaChart,
-} from "recharts";
+import { useCandles, useMarkets, use24hChange } from "@/lib/hooks/useMarketData";
+import { TradingChart } from "@/components/TradingChart";
 
 const DEFAULT_SYMBOLS = ["BTC", "ETH", "SOL", "LINK", "DOGE", "ARB"];
 
@@ -49,7 +39,9 @@ export default function TradingPage() {
   const [orderResult, setOrderResult] = useState<string | null>(null);
 
   // Market data
-  const { data: candles, isLoading: candlesLoading } = useCandles(selectedSymbol, "1h", 168);
+  const [chartInterval, setChartInterval] = useState("1h");
+  const [chartLimit, setChartLimit] = useState(168);
+  const { data: candles, isLoading: candlesLoading } = useCandles(selectedSymbol, chartInterval, chartLimit);
   const { data: markets } = useMarkets();
 
   // Watchlist
@@ -80,18 +72,8 @@ export default function TradingPage() {
 
   // Current price from latest candle
   const latestPrice = candles && candles.length > 0 ? candles[candles.length - 1].close : null;
-  const prevPrice = candles && candles.length > 1 ? candles[candles.length - 2].close : null;
-  const priceChange = latestPrice && prevPrice ? ((latestPrice - prevPrice) / prevPrice) * 100 : 0;
-
-  // Chart data
-  const chartData = useMemo(() => {
-    if (!candles) return [];
-    return candles.map((c: Candle) => ({
-      time: new Date(c.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      price: c.close,
-      volume: c.volume,
-    }));
-  }, [candles]);
+  const change24h = use24hChange(selectedSymbol);
+  const priceChange = change24h ?? 0;
 
   // Submit paper order — uses intelFetch for auth, sends leveraged size
   const handleOrder = async () => {
@@ -295,74 +277,15 @@ export default function TradingPage() {
         {/* Chart Area + Portfolio Summary */}
         <div className="lg:col-span-2 space-y-6">
           {/* Price Chart */}
-          <div className="wolf-card p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-white">
-                {selectedSymbol}-USD
-                {latestPrice && (
-                  <span className="ml-3 text-base font-mono text-gray-300">
-                    ${latestPrice.toLocaleString(undefined, { maximumFractionDigits: 2 })}
-                  </span>
-                )}
-              </h2>
-              <span className="text-xs text-gray-500">1H candles, 7 days</span>
-            </div>
-            {candlesLoading ? (
-              <div className="h-80 flex items-center justify-center text-gray-500 text-sm">
-                Loading chart data...
-              </div>
-            ) : chartData.length > 1 ? (
-              <ResponsiveContainer width="100%" height={320}>
-                <AreaChart data={chartData}>
-                  <defs>
-                    <linearGradient id="priceGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="var(--wolf-emerald)" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="var(--wolf-emerald)" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                  <XAxis
-                    dataKey="time"
-                    tick={{ fill: "#6b7280", fontSize: 10 }}
-                    tickLine={false}
-                    interval={Math.floor(chartData.length / 8)}
-                  />
-                  <YAxis
-                    tick={{ fill: "#6b7280", fontSize: 10 }}
-                    tickLine={false}
-                    domain={["auto", "auto"]}
-                    tickFormatter={(v: number) => `$${v.toLocaleString()}`}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "var(--surface-elevated)",
-                      border: "1px solid var(--border)",
-                      borderRadius: "0.5rem",
-                      color: "white",
-                      fontSize: "12px",
-                    }}
-                    formatter={(val: number | undefined) => [`$${(val ?? 0).toLocaleString()}`, "Price"]}
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="price"
-                    stroke="var(--wolf-emerald)"
-                    strokeWidth={2}
-                    fill="url(#priceGrad)"
-                    dot={false}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="h-80 flex items-center justify-center text-gray-500 text-sm border border-dashed border-[var(--border)] rounded-md">
-                No chart data — start the intel service to fetch market data
-                <br />
-                <code className="text-xs text-gray-600 mt-2 block">
-                  cd intel &amp;&amp; source .venv/bin/activate &amp;&amp; uvicorn wolfpack.api:app --reload
-                </code>
-              </div>
-            )}
-          </div>
+          <TradingChart
+            symbol={selectedSymbol}
+            candles={candles}
+            isLoading={candlesLoading}
+            onTimeframeChange={(tf, limit) => {
+              setChartInterval(tf);
+              setChartLimit(limit);
+            }}
+          />
 
           {/* Paper Portfolio Summary */}
           {isActive && (

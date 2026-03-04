@@ -535,6 +535,25 @@ async def portfolio_history(limit: int = 100):
         return {"snapshots": []}
 
 
+@app.get("/portfolio/trades")
+async def portfolio_trades(limit: int = 50):
+    """Return closed trade history."""
+    try:
+        from wolfpack.db import get_db
+        db = get_db()
+        result = (
+            db.table("wp_trade_history")
+            .select("*")
+            .order("closed_at", desc=True)
+            .limit(limit)
+            .execute()
+        )
+        return {"trades": result.data or []}
+    except Exception as e:
+        logger.error(f"[portfolio] Failed to fetch trade history: {e}")
+        return {"trades": []}
+
+
 @app.post("/portfolio/close/{symbol}")
 async def close_position(symbol: str, exchange: str = "hyperliquid", _auth: None = Depends(require_auth)):
     """Close a paper trading position."""
@@ -782,6 +801,29 @@ async def auto_trader_toggle(_auth: None = Depends(require_auth)):
     state = "enabled" if trader.enabled else "disabled"
     logger.info(f"[auto-trader] Toggled to {state}")
     return {"status": "ok", "enabled": trader.enabled}
+
+
+@app.post("/auto-trader/config")
+async def auto_trader_config(
+    equity: float | None = Body(None),
+    conviction_threshold: int | None = Body(None),
+    _auth: None = Depends(require_auth),
+):
+    """Update auto-trader configuration at runtime."""
+    trader = _get_auto_trader()
+    trader.restore_from_snapshot()
+    if equity is not None and equity > 0:
+        trader.engine.portfolio.starting_equity = equity
+        # Only reset equity if no open positions
+        if len(trader.engine.portfolio.positions) == 0:
+            trader.engine.portfolio.equity = equity
+            trader.engine.portfolio.free_collateral = equity
+        trader._store_snapshot()
+        logger.info(f"[auto-trader] Updated equity to ${equity}")
+    if conviction_threshold is not None and 50 <= conviction_threshold <= 100:
+        trader.conviction_threshold = conviction_threshold
+        logger.info(f"[auto-trader] Updated conviction threshold to {conviction_threshold}")
+    return trader.get_status()
 
 
 @app.get("/auto-trader/trades")
