@@ -865,6 +865,122 @@ async def market_list(exchange: str = "hyperliquid"):
         return {"markets": [], "error": str(e)}
 
 
+# ── Position Action Endpoints ──
+
+
+@app.get("/position-actions")
+async def list_position_actions(status: str = "pending", limit: int = 50):
+    """List position actions (pending, approved, dismissed, auto_executed)."""
+    try:
+        from wolfpack.db import get_db
+
+        db = get_db()
+        query = db.table("wp_position_actions").select("*").order("created_at", desc=True).limit(limit)
+        if status != "all":
+            query = query.eq("status", status)
+        result = query.execute()
+        return {"actions": result.data or []}
+    except Exception as e:
+        logger.error(f"[position-actions] Failed to list: {e}")
+        return {"actions": [], "error": str(e)}
+
+
+@app.post("/position-actions/{action_id}/approve")
+async def approve_position_action(action_id: str, exchange: str = "hyperliquid", _auth: None = Depends(require_auth)):
+    """Approve and execute a position action."""
+    try:
+        from wolfpack.db import get_db
+
+        db = get_db()
+        result = db.table("wp_position_actions").select("*").eq("id", action_id).execute()
+        if not result.data:
+            return {"status": "error", "message": "Action not found"}
+
+        pa = result.data[0]
+        action = pa["action"]
+        pa_symbol = pa["symbol"]
+        engine = _get_paper_engine()
+        pos = next((p for p in engine.portfolio.positions if p.symbol == pa_symbol), None)
+
+        if not pos:
+            db.table("wp_position_actions").update(
+                {"status": "dismissed", "acted_at": datetime.now(timezone.utc).isoformat()}
+            ).eq("id", action_id).execute()
+            return {"status": "error", "message": f"No open position for {pa_symbol}"}
+
+        if action == "close":
+            pnl = engine.close_position(pa_symbol)
+            engine.store_snapshot(exchange)
+            db.table("wp_position_actions").update(
+                {"status": "approved", "acted_at": datetime.now(timezone.utc).isoformat()}
+            ).eq("id", action_id).execute()
+            return {"status": "executed", "action": "close", "symbol": pa_symbol, "realized_pnl": pnl}
+
+        elif action == "reduce":
+            reduce_pct = pa.get("reduce_pct", 50)
+            original_size = pos.size_usd
+            new_size = original_size * (1 - reduce_pct / 100)
+            # Close full position then reopen at reduced size
+            pnl = engine.close_position(pa_symbol)
+            if new_size > 0:
+                engine.open_position(
+                    symbol=pa_symbol,
+                    direction=pos.direction,
+                    current_price=pos.current_price,
+                    size_pct=(new_size / engine.portfolio.equity * 100) if engine.portfolio.equity > 0 else 0,
+                    recommendation_id=pos.recommendation_id,
+                )
+            engine.store_snapshot(exchange)
+            db.table("wp_position_actions").update(
+                {"status": "approved", "acted_at": datetime.now(timezone.utc).isoformat()}
+            ).eq("id", action_id).execute()
+            return {"status": "executed", "action": "reduce", "symbol": pa_symbol, "realized_pnl": pnl, "reduced_by_pct": reduce_pct}
+
+        elif action == "adjust_stop":
+            new_stop = pa.get("suggested_stop")
+            if new_stop:
+                pos.stop_loss = new_stop
+                engine.store_snapshot(exchange)
+            db.table("wp_position_actions").update(
+                {"status": "approved", "acted_at": datetime.now(timezone.utc).isoformat()}
+            ).eq("id", action_id).execute()
+            return {"status": "executed", "action": "adjust_stop", "symbol": pa_symbol, "new_stop": new_stop}
+
+        elif action == "adjust_tp":
+            new_tp = pa.get("suggested_tp")
+            if new_tp:
+                pos.take_profit = new_tp
+                engine.store_snapshot(exchange)
+            db.table("wp_position_actions").update(
+                {"status": "approved", "acted_at": datetime.now(timezone.utc).isoformat()}
+            ).eq("id", action_id).execute()
+            return {"status": "executed", "action": "adjust_tp", "symbol": pa_symbol, "new_tp": new_tp}
+
+        return {"status": "error", "message": f"Unknown action: {action}"}
+
+    except Exception as e:
+        logger.error(f"[position-actions] Approve error: {e}")
+        return {"status": "error", "message": str(e)}
+
+
+@app.post("/position-actions/{action_id}/dismiss")
+async def dismiss_position_action(action_id: str, _auth: None = Depends(require_auth)):
+    """Dismiss a position action."""
+    try:
+        from wolfpack.db import get_db
+
+        db = get_db()
+        result = db.table("wp_position_actions").update(
+            {"status": "dismissed", "acted_at": datetime.now(timezone.utc).isoformat()}
+        ).eq("id", action_id).execute()
+        if not result.data:
+            return {"status": "error", "message": "Action not found"}
+        return {"status": "dismissed", "id": action_id}
+    except Exception as e:
+        logger.error(f"[position-actions] Dismiss error: {e}")
+        return {"status": "error", "message": str(e)}
+
+
 @app.post("/intelligence/run")
 async def run_intelligence(
     background_tasks: BackgroundTasks,
@@ -878,6 +994,89 @@ async def run_intelligence(
 
     background_tasks.add_task(_run_full_cycle, exchange, symbol)
     return {"status": "started", "exchange": exchange, "symbol": symbol}
+
+
+async def _process_position_actions(
+    actions: list[dict], exchange: str, symbol: str, latest_price: float | None, engine: Any
+) -> None:
+    """Process position_actions from Brief output — store actionable ones, log holds."""
+    if not actions:
+        return
+
+    from wolfpack.db import get_db
+
+    db = get_db()
+
+    for pa in actions:
+        action = pa.get("action", "hold")
+        pa_symbol = pa.get("symbol", symbol)
+
+        if action == "hold":
+            logger.info(f"[position-action] HOLD {pa_symbol}: {pa.get('reason', 'thesis intact')}")
+            try:
+                from wolfpack.notifications import send_telegram
+                await send_telegram(
+                    f"<b>\U0001f43a HOLD {pa_symbol}</b>\n{pa.get('reason', 'Thesis intact')}"
+                )
+            except Exception:
+                pass
+            continue
+
+        # Compute current P&L % for the position
+        current_pnl_pct: float | None = None
+        pos = next((p for p in engine.portfolio.positions if p.symbol == pa_symbol), None)
+        if pos:
+            current = latest_price if pa_symbol == symbol else pos.current_price
+            current_pnl_pct = round(
+                ((current - pos.entry_price) / pos.entry_price)
+                * (1 if pos.direction == "long" else -1) * 100,
+                2,
+            )
+
+        # Store to wp_position_actions
+        try:
+            row = db.table("wp_position_actions").insert({
+                "symbol": pa_symbol,
+                "exchange_id": exchange,
+                "action": action,
+                "reason": pa.get("reason"),
+                "current_pnl_pct": current_pnl_pct,
+                "suggested_stop": pa.get("suggested_stop"),
+                "suggested_tp": pa.get("suggested_tp"),
+                "reduce_pct": pa.get("reduce_pct"),
+                "urgency": pa.get("urgency", "medium"),
+                "status": "pending",
+            }).execute()
+
+            action_id = row.data[0]["id"] if row.data else None
+
+            # Telegram notification with inline buttons
+            try:
+                from wolfpack.notifications import notify_position_action
+                await notify_position_action(
+                    symbol=pa_symbol,
+                    action=action,
+                    reason=pa.get("reason", ""),
+                    urgency=pa.get("urgency", "medium"),
+                    action_id=action_id,
+                )
+            except Exception:
+                pass
+
+            # Auto-trader: auto-execute mechanical actions
+            try:
+                auto_trader = _get_auto_trader()
+                if auto_trader.enabled and action_id:
+                    await auto_trader.process_position_actions(
+                        [{"id": action_id, **pa, "current_pnl_pct": current_pnl_pct}],
+                        latest_prices={symbol: latest_price} if latest_price else {},
+                    )
+            except Exception as e:
+                logger.warning(f"[position-action] Auto-trader error for {pa_symbol}: {e}")
+
+            logger.info(f"[position-action] Stored {action} for {pa_symbol} (id={action_id})")
+        except Exception as e:
+            logger.error(f"[position-action] Failed to store action for {pa_symbol}: {e}")
 
 
 async def _run_full_cycle(exchange: str, symbol: str) -> None:
@@ -1121,6 +1320,46 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
         logger.info("[cycle] Running Brief agent (synthesis)...")
         _running.add("brief")
 
+        # Build portfolio context for position management
+        portfolio_context: dict[str, Any] | None = None
+        if portfolio.positions:
+            now_ts = datetime.now(timezone.utc)
+            pos_list = []
+            for p in portfolio.positions:
+                current = latest_price if p.symbol == symbol else p.current_price
+                pnl_pct = ((current - p.entry_price) / p.entry_price) * (1 if p.direction == "long" else -1) * 100
+                pos_entry: dict[str, Any] = {
+                    "symbol": p.symbol,
+                    "direction": p.direction,
+                    "entry_price": p.entry_price,
+                    "current_price": current,
+                    "size_usd": p.size_usd,
+                    "pnl_pct": round(pnl_pct, 2),
+                    "stop_loss": p.stop_loss,
+                    "take_profit": p.take_profit,
+                }
+                # Hold duration
+                opened = p.opened_at if isinstance(p.opened_at, datetime) else datetime.fromisoformat(str(p.opened_at))
+                if opened.tzinfo is None:
+                    opened = opened.replace(tzinfo=timezone.utc)
+                pos_entry["hold_duration_hours"] = round((now_ts - opened).total_seconds() / 3600, 1)
+                # Distance to stop/tp
+                if p.stop_loss and current:
+                    pos_entry["distance_to_stop_pct"] = round(abs(current - p.stop_loss) / current * 100, 2)
+                if p.take_profit and current:
+                    pos_entry["distance_to_tp_pct"] = round(abs(p.take_profit - current) / current * 100, 2)
+                pos_list.append(pos_entry)
+
+            long_exposure = sum(p.size_usd for p in portfolio.positions if p.direction == "long")
+            short_exposure = sum(p.size_usd for p in portfolio.positions if p.direction == "short")
+            portfolio_context = {
+                "equity": round(portfolio.equity, 2),
+                "positions": pos_list,
+                "gross_exposure_pct": round((long_exposure + short_exposure) / portfolio.equity * 100, 1) if portfolio.equity > 0 else 0,
+                "net_exposure_pct": round((long_exposure - short_exposure) / portfolio.equity * 100, 1) if portfolio.equity > 0 else 0,
+                "free_collateral_pct": round(portfolio.free_collateral / portfolio.equity * 100, 1) if portfolio.equity > 0 else 0,
+            }
+
         brief_data: dict[str, Any] = {
             "symbol": symbol,
             "latest_price": latest_price,
@@ -1132,6 +1371,8 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
             "circuit_breaker": cb_output.model_dump(),
             "execution_timing": exec_output.model_dump(),
         }
+        if portfolio_context:
+            brief_data["portfolio_context"] = portfolio_context
         if "quant" in agent_outputs:
             out = agent_outputs["quant"]
             brief_data["quant_output"] = out.model_dump() if hasattr(out, "model_dump") else out
@@ -1231,6 +1472,13 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                         logger.info(f"[cycle] Auto-trader executed {len(auto_executed)} trades")
             except Exception as e:
                 logger.warning(f"[cycle] Auto-trader error: {e}")
+
+            # ── Step 5c: Process position actions from Brief ──
+            try:
+                pos_actions = brief_out.raw_data.get("position_actions", []) if brief_out.raw_data else []
+                await _process_position_actions(pos_actions, exchange, symbol, latest_price, engine)
+            except Exception as e:
+                logger.warning(f"[cycle] Position action processing error: {e}")
 
             # ── Step 6: Update paper trading portfolio ──
             engine = _get_paper_engine()

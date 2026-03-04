@@ -147,6 +147,44 @@ async def notify_circuit_breaker(state: str, reason: str) -> bool:
     return await send_telegram(msg)
 
 
+async def notify_position_action(
+    symbol: str,
+    action: str,
+    reason: str,
+    urgency: str = "medium",
+    action_id: str | None = None,
+) -> bool:
+    """Send a position action notification with inline Approve/Dismiss buttons."""
+    action_icons = {
+        "close": "\u274c",
+        "reduce": "\u2702\ufe0f",
+        "adjust_stop": "\U0001f6e1\ufe0f",
+        "adjust_tp": "\U0001f3af",
+    }
+    urgency_icons = {"low": "\U0001f7e2", "medium": "\U0001f7e1", "high": "\U0001f534"}
+
+    icon = action_icons.get(action, "\u2699\ufe0f")
+    urg_icon = urgency_icons.get(urgency, "\U0001f7e1")
+
+    msg = (
+        f"<b>{icon} Position Action: {action.upper()} {symbol}</b>\n"
+        f"{urg_icon} Urgency: {urgency.upper()}\n\n"
+        f"{reason}"
+    )
+
+    # Try inline buttons via bot first
+    if _bot_instance and _bot_instance.is_running and action_id:
+        return await _bot_instance.send_position_action_with_buttons(
+            symbol=symbol,
+            action=action,
+            reason=reason,
+            urgency=urgency,
+            action_id=action_id,
+        )
+
+    return await send_telegram(msg)
+
+
 async def notify_daily_summary(
     equity: float,
     unrealized_pnl: float,

@@ -188,6 +188,103 @@ class AutoTrader:
 
         return executed
 
+    async def process_position_actions(
+        self,
+        actions: list[dict],
+        latest_prices: dict[str, float] | None = None,
+    ) -> list[dict]:
+        """Auto-execute mechanical position actions (close, adjust_stop, adjust_tp).
+
+        Skips reduce (too complex — requires close+reopen logic).
+        Returns list of auto-executed action dicts.
+        """
+        if not self.enabled:
+            return []
+
+        self.restore_from_snapshot()
+
+        from wolfpack.db import get_db
+        db = get_db()
+
+        executed: list[dict] = []
+
+        for pa in actions:
+            action = pa.get("action", "hold")
+            pa_symbol = pa.get("symbol", "UNKNOWN")
+            action_id = pa.get("id")
+
+            # Only auto-execute mechanical actions
+            if action not in ("close", "adjust_stop", "adjust_tp"):
+                continue
+
+            pos = next((p for p in self.engine.portfolio.positions if p.symbol == pa_symbol), None)
+            if not pos:
+                continue
+
+            if action == "close":
+                current_price = (latest_prices or {}).get(pa_symbol, pos.current_price)
+                self.engine.update_prices({pa_symbol: current_price})
+                pnl = self.engine.close_position(pa_symbol)
+                executed.append({"action": "close", "symbol": pa_symbol, "realized_pnl": pnl})
+
+                try:
+                    from wolfpack.notifications import send_telegram
+                    pnl_str = f"+${pnl:,.2f}" if pnl >= 0 else f"-${abs(pnl):,.2f}"
+                    await send_telegram(
+                        f"<b>\U0001f916 Auto-bot CLOSED {pos.direction.upper()} {pa_symbol}</b>\n"
+                        f"P&L: <code>{pnl_str}</code>\n"
+                        f"Reason: {pa.get('reason', 'Brief recommended close')}"
+                    )
+                except Exception:
+                    pass
+
+            elif action == "adjust_stop":
+                new_stop = pa.get("suggested_stop")
+                if new_stop:
+                    pos.stop_loss = new_stop
+                    executed.append({"action": "adjust_stop", "symbol": pa_symbol, "new_stop": new_stop})
+
+                    try:
+                        from wolfpack.notifications import send_telegram
+                        await send_telegram(
+                            f"<b>\U0001f916 Auto-bot adjusted stop for {pa_symbol}</b>\n"
+                            f"New stop: <code>${new_stop:,.2f}</code>\n"
+                            f"Reason: {pa.get('reason', 'Brief recommended adjustment')}"
+                        )
+                    except Exception:
+                        pass
+
+            elif action == "adjust_tp":
+                new_tp = pa.get("suggested_tp")
+                if new_tp:
+                    pos.take_profit = new_tp
+                    executed.append({"action": "adjust_tp", "symbol": pa_symbol, "new_tp": new_tp})
+
+                    try:
+                        from wolfpack.notifications import send_telegram
+                        await send_telegram(
+                            f"<b>\U0001f916 Auto-bot adjusted TP for {pa_symbol}</b>\n"
+                            f"New TP: <code>${new_tp:,.2f}</code>\n"
+                            f"Reason: {pa.get('reason', 'Brief recommended adjustment')}"
+                        )
+                    except Exception:
+                        pass
+
+            # Update DB status to auto_executed
+            if action_id:
+                try:
+                    db.table("wp_position_actions").update({
+                        "status": "auto_executed",
+                        "acted_at": datetime.now(timezone.utc).isoformat(),
+                    }).eq("id", action_id).execute()
+                except Exception as e:
+                    logger.warning(f"[auto-trader] Failed to update action status: {e}")
+
+        if executed:
+            self._store_snapshot()
+
+        return executed
+
     def _store_trade(self, trade: dict, rec_id: str | None = None) -> None:
         """Store an auto-trade to Supabase."""
         try:

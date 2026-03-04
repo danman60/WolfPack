@@ -403,6 +403,73 @@ export function useRunAllIntelligence() {
   });
 }
 
+// ── Position Action Hooks ──
+
+interface PositionAction {
+  id: string;
+  symbol: string;
+  exchange_id: string;
+  action: string;
+  reason: string | null;
+  current_pnl_pct: number | null;
+  suggested_stop: number | null;
+  suggested_tp: number | null;
+  reduce_pct: number | null;
+  urgency: string;
+  status: string;
+  created_at: string;
+  acted_at: string | null;
+}
+
+export function usePositionActions(status: string = "pending") {
+  return useQuery({
+    queryKey: ["position-actions", status],
+    queryFn: async () => {
+      const res = await intelFetch(`/intel/position-actions?status=${status}`);
+      if (!res.ok) return [];
+      const data = await res.json();
+      return (data.actions ?? []) as PositionAction[];
+    },
+    refetchInterval: 15_000,
+    retry: false,
+  });
+}
+
+export function useApprovePositionAction() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, exchange }: { id: string; exchange: string }) => {
+      const res = await intelFetch(`/intel/position-actions/${id}/approve?exchange=${exchange}`, {
+        method: "POST",
+      });
+      if (!res.ok) throw new Error(`Approve failed: ${res.status}`);
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["position-actions"] });
+      queryClient.invalidateQueries({ queryKey: ["portfolio"] });
+    },
+  });
+}
+
+export function useDismissPositionAction() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const res = await intelFetch(`/intel/position-actions/${id}/dismiss`, {
+        method: "POST",
+      });
+      if (!res.ok) throw new Error(`Dismiss failed: ${res.status}`);
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["position-actions"] });
+    },
+  });
+}
+
 // ── Auto-Trader Hooks ──
 
 interface AutoTraderStatus {

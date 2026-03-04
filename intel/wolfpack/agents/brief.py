@@ -32,6 +32,22 @@ BRIEF_SCHEMA: dict = {
                 "required": ["symbol", "direction", "conviction", "rationale"],
             },
         },
+        "position_actions": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "symbol": {"type": "string"},
+                    "action": {"type": "string", "enum": ["close", "reduce", "adjust_stop", "adjust_tp", "hold"]},
+                    "reason": {"type": "string"},
+                    "suggested_stop": {"type": ["number", "null"]},
+                    "suggested_tp": {"type": ["number", "null"]},
+                    "reduce_pct": {"type": ["number", "null"]},
+                    "urgency": {"type": "string", "enum": ["low", "medium", "high"]},
+                },
+                "required": ["symbol", "action", "reason"],
+            },
+        },
         "portfolio_risk": {"type": "string", "enum": ["low", "moderate", "elevated", "extreme"]},
         "signal_convergence": {
             "type": "object",
@@ -46,7 +62,7 @@ BRIEF_SCHEMA: dict = {
         "conviction": {"type": "number", "minimum": 0, "maximum": 100},
         "summary": {"type": "string"},
     },
-    "required": ["recommendations", "portfolio_risk", "conviction", "summary"],
+    "required": ["recommendations", "position_actions", "portfolio_risk", "conviction", "summary"],
 }
 
 
@@ -94,6 +110,17 @@ Output a JSON object with:
             "rationale": "1-2 sentence rationale"
         }
     ],
+    "position_actions": [
+        {
+            "symbol": "BTC",
+            "action": "close" | "reduce" | "adjust_stop" | "adjust_tp" | "hold",
+            "reason": "1-2 sentence explanation",
+            "suggested_stop": price or null,
+            "suggested_tp": price or null,
+            "reduce_pct": percent or null,
+            "urgency": "low" | "medium" | "high"
+        }
+    ],
     "portfolio_risk": "low" | "moderate" | "elevated" | "extreme",
     "signal_convergence": {
         "agreements": ["where agents agree"],
@@ -104,6 +131,18 @@ Output a JSON object with:
     "conviction": 0-100,
     "summary": "2-3 sentence actionable summary"
 }
+
+PORTFOLIO POSITION REVIEW:
+When portfolio_context is provided, you MUST review each open position against current market conditions.
+For each open position, output exactly one entry in position_actions with the appropriate action:
+- **close**: Conviction has flipped (e.g. was long, now bearish), stop-loss hit, take-profit reached, or thesis invalidated
+- **reduce**: Partial profit taking (set reduce_pct, e.g. 50 = close half), or reducing risk ahead of an event
+- **adjust_stop**: Trend continuation — tighten stop to lock in gains (set suggested_stop)
+- **adjust_tp**: Extend take-profit target due to strong momentum (set suggested_tp)
+- **hold**: Original thesis intact, no changes needed — include reason explaining why
+
+If there are no open positions, return an empty position_actions array.
+Do NOT produce position_actions entries for symbols that are not in the open positions list.
 
 You also receive quantitative module outputs:
 - **Liquidity**: spread, depth, slippage estimate, trade_allowed flag, liquidity_health rating
@@ -124,10 +163,13 @@ Only recommend trades when conviction >= 60. Below that, recommend WAIT.
 CALIBRATION EXAMPLES:
 
 Example 1 — Strong long recommendation (agents aligned):
-{"recommendations": [{"symbol": "BTC", "direction": "long", "conviction": 80, "entry_price": 95200, "stop_loss": 93500, "take_profit": 100000, "size_pct": 15, "rationale": "All 3 agents bullish: Quant sees strong uptrend (75), Snoop balanced positioning with no contrarian flag, Sage 55% probability of 100k. Risk/reward 2.8:1 with stop at prior support."}], "portfolio_risk": "moderate", "signal_convergence": {"agreements": ["All agents bullish on BTC trend", "Volatility regime normal — no vol-based gate", "Funding neutral — no crowding signal"], "conflicts": []}, "priority_actions": ["Enter BTC long on any pullback to 95k", "Set hard stop at 93.5k — invalidation level"], "daily_narrative": "Strong signal alignment across all intelligence agents. BTC trend confirmed by technicals, no crowding in sentiment, and macro supports risk-on. Best setup in 2 weeks.", "conviction": 80, "summary": "High-conviction long BTC at 95.2k targeting 100k. All agents aligned, no hard gates, risk/reward favorable at 2.8:1. Size at 15% of portfolio."}
+{"recommendations": [{"symbol": "BTC", "direction": "long", "conviction": 80, "entry_price": 95200, "stop_loss": 93500, "take_profit": 100000, "size_pct": 15, "rationale": "All 3 agents bullish: Quant sees strong uptrend (75), Snoop balanced positioning with no contrarian flag, Sage 55% probability of 100k. Risk/reward 2.8:1 with stop at prior support."}], "position_actions": [], "portfolio_risk": "moderate", "signal_convergence": {"agreements": ["All agents bullish on BTC trend", "Volatility regime normal — no vol-based gate", "Funding neutral — no crowding signal"], "conflicts": []}, "priority_actions": ["Enter BTC long on any pullback to 95k", "Set hard stop at 93.5k — invalidation level"], "daily_narrative": "Strong signal alignment across all intelligence agents. BTC trend confirmed by technicals, no crowding in sentiment, and macro supports risk-on. Best setup in 2 weeks.", "conviction": 80, "summary": "High-conviction long BTC at 95.2k targeting 100k. All agents aligned, no hard gates, risk/reward favorable at 2.8:1. Size at 15% of portfolio."}
 
 Example 2 — Hard gate fires (direction: wait):
-{"recommendations": [{"symbol": "ETH", "direction": "wait", "conviction": 35, "entry_price": null, "stop_loss": null, "take_profit": null, "size_pct": 0, "rationale": "HARD GATE: Liquidity health 'poor' (spread 45bps, depth thin). Quant bearish (conviction 42), Sage sees high regime transition risk. Not safe to enter."}], "portfolio_risk": "elevated", "signal_convergence": {"agreements": ["Quant and Sage both see elevated risk"], "conflicts": ["Snoop sees contrarian buy signal from extreme fear, but liquidity gate overrides"]}, "priority_actions": ["Do NOT enter new positions until liquidity improves", "Monitor spread — if it drops below 20bps, reassess", "Tighten stops on existing positions"], "daily_narrative": "Liquidity conditions deteriorated sharply — spreads widened 3x in the last hour. Even though sentiment is at extreme fear (potential contrarian buy), the hard gate correctly blocks entry. Wait for normalization.", "conviction": 35, "summary": "No trade — liquidity hard gate active. Spread at 45bps with thin depth makes execution dangerous. Despite contrarian signal from extreme fear, entry is blocked until liquidity normalizes."}
+{"recommendations": [{"symbol": "ETH", "direction": "wait", "conviction": 35, "entry_price": null, "stop_loss": null, "take_profit": null, "size_pct": 0, "rationale": "HARD GATE: Liquidity health 'poor' (spread 45bps, depth thin). Quant bearish (conviction 42), Sage sees high regime transition risk. Not safe to enter."}], "position_actions": [], "portfolio_risk": "elevated", "signal_convergence": {"agreements": ["Quant and Sage both see elevated risk"], "conflicts": ["Snoop sees contrarian buy signal from extreme fear, but liquidity gate overrides"]}, "priority_actions": ["Do NOT enter new positions until liquidity improves", "Monitor spread — if it drops below 20bps, reassess", "Tighten stops on existing positions"], "daily_narrative": "Liquidity conditions deteriorated sharply — spreads widened 3x in the last hour. Even though sentiment is at extreme fear (potential contrarian buy), the hard gate correctly blocks entry. Wait for normalization.", "conviction": 35, "summary": "No trade — liquidity hard gate active. Spread at 45bps with thin depth makes execution dangerous. Despite contrarian signal from extreme fear, entry is blocked until liquidity normalizes."}
+
+Example 3 — Position management (adjust_stop on profitable long):
+{"recommendations": [], "position_actions": [{"symbol": "BTC", "action": "adjust_stop", "reason": "Trend intact but volatility expanding. Moving stop from 93.5k to 96.5k to lock in 1.4% gain. Quant still bullish (72), no reversal signals.", "suggested_stop": 96500, "suggested_tp": null, "reduce_pct": null, "urgency": "medium"}], "portfolio_risk": "moderate", "signal_convergence": {"agreements": ["Quant and Sage agree trend continues", "Volatility expanding but within normal regime"], "conflicts": []}, "priority_actions": ["Tighten BTC stop to 96.5k"], "daily_narrative": "BTC long position in profit. Trend confirmed across agents, raising stop to protect gains while letting position run.", "conviction": 72, "summary": "No new trades. Adjusting BTC stop higher to 96.5k — trend intact, locking in gains."}
 
 Return ONLY a valid JSON object. No markdown, no code fences, no explanation outside the JSON."""
 
@@ -184,8 +226,10 @@ Return ONLY a valid JSON object. No markdown, no code fences, no explanation out
         if market_data.get("correlation"):
             corr = market_data["correlation"]
             context["correlation"] = corr if isinstance(corr, dict) else corr
+        if market_data.get("portfolio_context"):
+            context["portfolio_context"] = market_data["portfolio_context"]
 
-        prompt = f"""Synthesize the following intelligence for {symbol} on {exchange} into trade recommendations:
+        prompt = f"""Synthesize the following intelligence for {symbol} on {exchange} into trade recommendations and position management actions:
 
 {json.dumps(context, indent=2, default=str)}"""
 
@@ -211,6 +255,17 @@ Return ONLY a valid JSON object. No markdown, no code fences, no explanation out
                 "rationale": rec.get("rationale", ""),
             })
 
+        # Extract position actions as signals
+        position_actions = parsed.get("position_actions", [])
+        for pa in position_actions:
+            signals.append({
+                "type": "position_action",
+                "symbol": pa.get("symbol", symbol),
+                "action": pa.get("action", "hold"),
+                "reason": pa.get("reason", ""),
+                "urgency": pa.get("urgency", "medium"),
+            })
+
         if parsed.get("portfolio_risk"):
             signals.append({"type": "portfolio_risk", "level": parsed["portfolio_risk"]})
 
@@ -231,5 +286,6 @@ Return ONLY a valid JSON object. No markdown, no code fences, no explanation out
                 "context": context,
                 "llm_response": parsed,
                 "recommendations": recommendations,
+                "position_actions": position_actions,
             },
         )

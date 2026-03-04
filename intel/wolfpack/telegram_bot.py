@@ -118,6 +118,57 @@ class WolfPackBot:
             logger.error(f"[telegram-bot] Failed to send recommendation: {e}")
             return False
 
+    async def send_position_action_with_buttons(
+        self,
+        symbol: str,
+        action: str,
+        reason: str,
+        urgency: str = "medium",
+        action_id: str | None = None,
+    ) -> bool:
+        """Send a position action notification with inline Approve/Dismiss buttons."""
+        if not self._app or not settings.telegram_chat_id:
+            return False
+
+        action_icons = {
+            "close": "\u274c",
+            "reduce": "\u2702\ufe0f",
+            "adjust_stop": "\U0001f6e1\ufe0f",
+            "adjust_tp": "\U0001f3af",
+        }
+        urgency_icons = {"low": "\U0001f7e2", "medium": "\U0001f7e1", "high": "\U0001f534"}
+
+        icon = action_icons.get(action, "\u2699\ufe0f")
+        urg_icon = urgency_icons.get(urgency, "\U0001f7e1")
+
+        msg = (
+            f"<b>{icon} Position Action: {action.upper()} {symbol}</b>\n"
+            f"{urg_icon} Urgency: {urgency.upper()}\n\n"
+            f"{reason}"
+        )
+
+        keyboard = None
+        if action_id:
+            keyboard = InlineKeyboardMarkup([
+                [
+                    InlineKeyboardButton("\u2705 Approve", callback_data=f"pa_approve:{action_id}"),
+                    InlineKeyboardButton("\u274c Dismiss", callback_data=f"pa_dismiss:{action_id}"),
+                ]
+            ])
+
+        try:
+            await self._app.bot.send_message(
+                chat_id=settings.telegram_chat_id,
+                text=msg,
+                parse_mode="HTML",
+                reply_markup=keyboard,
+                disable_web_page_preview=True,
+            )
+            return True
+        except Exception as e:
+            logger.error(f"[telegram-bot] Failed to send position action: {e}")
+            return False
+
     # ── Command Handlers ──
 
     async def _cmd_start(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -212,6 +263,10 @@ class WolfPackBot:
             await self._handle_approve(query, rec_id)
         elif action == "reject":
             await self._handle_reject(query, rec_id)
+        elif action == "pa_approve":
+            await self._handle_pa_approve(query, rec_id)
+        elif action == "pa_dismiss":
+            await self._handle_pa_dismiss(query, rec_id)
 
     async def _handle_approve(self, query: Any, rec_id: str) -> None:
         try:
@@ -244,6 +299,53 @@ class WolfPackBot:
             await reject_recommendation(rec_id)
             await query.edit_message_text(
                 f"\u274c <b>REJECTED</b>\n\n{query.message.text}",
+                parse_mode="HTML",
+            )
+        except Exception as e:
+            await query.edit_message_text(f"\u274c Error: {e}\n\n{query.message.text}", parse_mode="HTML")
+
+    async def _handle_pa_approve(self, query: Any, action_id: str) -> None:
+        try:
+            from wolfpack.api import approve_position_action
+
+            result = await approve_position_action(action_id)
+            status = result.get("status", "error")
+
+            if status == "executed":
+                action = result.get("action", "unknown")
+                symbol = result.get("symbol", "?")
+                detail = ""
+                if action == "close":
+                    pnl = result.get("realized_pnl", 0)
+                    pnl_str = f"+${pnl:,.2f}" if pnl >= 0 else f"-${abs(pnl):,.2f}"
+                    detail = f"\nRealized P&L: {pnl_str}"
+                elif action == "adjust_stop":
+                    detail = f"\nNew stop: ${result.get('new_stop', 0):,.2f}"
+                elif action == "adjust_tp":
+                    detail = f"\nNew TP: ${result.get('new_tp', 0):,.2f}"
+                elif action == "reduce":
+                    detail = f"\nReduced by {result.get('reduced_by_pct', 0)}%"
+
+                await query.edit_message_text(
+                    f"\u2705 <b>APPROVED — {action.upper()} {symbol}</b>{detail}\n\n{query.message.text}",
+                    parse_mode="HTML",
+                )
+            else:
+                msg = result.get("message", status)
+                await query.edit_message_text(
+                    f"\u26a0\ufe0f <b>Approve failed:</b> {msg}\n\n{query.message.text}",
+                    parse_mode="HTML",
+                )
+        except Exception as e:
+            await query.edit_message_text(f"\u274c Error: {e}\n\n{query.message.text}", parse_mode="HTML")
+
+    async def _handle_pa_dismiss(self, query: Any, action_id: str) -> None:
+        try:
+            from wolfpack.api import dismiss_position_action
+
+            await dismiss_position_action(action_id)
+            await query.edit_message_text(
+                f"\u274c <b>DISMISSED</b>\n\n{query.message.text}",
                 parse_mode="HTML",
             )
         except Exception as e:
