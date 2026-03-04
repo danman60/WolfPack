@@ -932,7 +932,7 @@ export default function BacktestPage() {
                 <div
                   key={run.id}
                   onClick={() => setSelectedRunId(run.id)}
-                  className={`flex items-center justify-between py-3 px-4 -mx-1 rounded-lg cursor-pointer transition-all ${
+                  className={`group flex items-center justify-between py-3 px-4 -mx-1 rounded-lg cursor-pointer transition-all ${
                     isSelected
                       ? "bg-[var(--surface-active)] border border-[var(--wolf-emerald)]/20 shadow-[0_0_20px_-8px_rgba(52,211,153,0.15)]"
                       : "hover:bg-[var(--surface-hover)]/50 border border-transparent"

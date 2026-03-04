@@ -55,12 +55,14 @@ export interface SubgraphPosition {
 // Constants
 // ---------------------------------------------------------------------------
 
-const SUBGRAPH_URL =
-  "https://gateway.thegraph.com/api/subgraphs/id/5zvR82QoaXYFyDEKLZ9t6v9adgnptxYpKpSbxtgVENFV";
+const SUBGRAPH_API_KEY = process.env.NEXT_PUBLIC_SUBGRAPH_API_KEY || "";
 
-// Fallback if the gateway requires an API key
-const SUBGRAPH_FALLBACK =
-  "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3";
+const SUBGRAPH_URL = SUBGRAPH_API_KEY
+  ? `https://gateway.thegraph.com/api/${SUBGRAPH_API_KEY}/subgraphs/id/5zvR82QoaXYFyDEKLZ9t6v9adgnptxYpKpSbxtgVENFV`
+  : "https://gateway.thegraph.com/api/subgraphs/id/5zvR82QoaXYFyDEKLZ9t6v9adgnptxYpKpSbxtgVENFV";
+
+// Note: The Graph hosted service (api.thegraph.com/subgraphs/name/) was shut down June 2024.
+// A valid NEXT_PUBLIC_SUBGRAPH_API_KEY from https://thegraph.com/studio is required.
 
 // ---------------------------------------------------------------------------
 // Subgraph fetcher with automatic fallback
@@ -70,8 +72,8 @@ async function subgraphFetch<T>(
   query: string,
   variables: Record<string, unknown>
 ): Promise<T> {
-  // Try primary endpoint first
-  for (const url of [SUBGRAPH_URL, SUBGRAPH_FALLBACK]) {
+  // Try primary endpoint
+  for (const url of [SUBGRAPH_URL]) {
     try {
       const res = await fetch(url, {
         method: "POST",
@@ -228,13 +230,17 @@ export function feeTierLabel(raw: string): string {
   return FEE_TIER_MAP[raw] ?? `${(Number(raw) / 10000).toFixed(2)}%`;
 }
 
-/** Calculate fee APR from volume, TVL, and fee tier */
+/** Calculate fee APR from daily volume, TVL, and fee tier.
+ *
+ * IMPORTANT: Pass daily volume, NOT all-time cumulative volumeUSD.
+ * For pool listings without poolDayData, pass 0 to get 0 APR (unknown).
+ */
 export function calcFeeApr(
-  volumeUSD: string | number,
+  dailyVolumeUSD: string | number,
   tvlUSD: string | number,
   feeTier: string | number
 ): number {
-  const vol = Number(volumeUSD);
+  const vol = Number(dailyVolumeUSD);
   const tvl = Number(tvlUSD);
   const fee = Number(feeTier) / 1_000_000; // 3000 -> 0.003
   if (tvl <= 0 || vol <= 0 || fee <= 0) return 0;

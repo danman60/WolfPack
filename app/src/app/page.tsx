@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useExchange } from "@/lib/exchange";
 import { useAgentOutputs, useAgentStatus, useRecommendations, usePortfolio } from "@/lib/hooks/useIntelligence";
 import { usePrice } from "@/lib/hooks/useMarketData";
@@ -60,7 +61,7 @@ export default function Dashboard() {
               Active: <span className="text-white font-semibold">{config.name}</span>
             </span>
           </div>
-          <span className="text-[11px] text-gray-600 font-mono">{config.rpcUrl}</span>
+          <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-[var(--wolf-emerald)]/15 text-[var(--wolf-emerald)]">Connected</span>
         </div>
         <PriceTicker label="BTC" price={btcPrice?.price} delay={4} />
         <PriceTicker label="ETH" price={ethPrice?.price} delay={5} />
@@ -70,9 +71,12 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Intelligence Brief */}
         <div className="wolf-card p-6 animate-in animate-in-4">
-          <div className="flex items-center gap-2 mb-5">
-            <div className="w-1 h-4 rounded-full bg-[var(--wolf-cyan)]" />
-            <h2 className="section-title">Intelligence Brief</h2>
+          <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center gap-2">
+              <div className="w-1 h-4 rounded-full bg-[var(--wolf-cyan)]" />
+              <h2 className="section-title">Intelligence Brief</h2>
+            </div>
+            <Link href="/intelligence" className="text-[11px] text-[var(--wolf-cyan)] hover:underline">View all</Link>
           </div>
           <div className="space-y-1">
             {agents.length > 0
@@ -97,18 +101,27 @@ export default function Dashboard() {
                 </>
               )}
           </div>
-          {agentOutputs?.quant?.summary && (
+          {agentOutputs?.brief?.summary ? (
             <div className="mt-5 pt-4 border-t border-[var(--border)]">
+              <p className="text-[10px] text-[var(--wolf-amber)] font-semibold uppercase mb-1">The Brief</p>
+              <p className="text-[12px] text-gray-400 leading-relaxed line-clamp-3">{agentOutputs.brief.summary}</p>
+            </div>
+          ) : agentOutputs?.quant?.summary ? (
+            <div className="mt-5 pt-4 border-t border-[var(--border)]">
+              <p className="text-[10px] text-[var(--wolf-cyan)] font-semibold uppercase mb-1">The Quant</p>
               <p className="text-[12px] text-gray-400 leading-relaxed line-clamp-3">{agentOutputs.quant.summary}</p>
             </div>
-          )}
+          ) : null}
         </div>
 
         {/* Trade Recommendations */}
         <div className="wolf-card p-6 animate-in animate-in-5">
-          <div className="flex items-center gap-2 mb-5">
-            <div className="w-1 h-4 rounded-full bg-[var(--wolf-amber)]" />
-            <h2 className="section-title">Trade Recommendations</h2>
+          <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center gap-2">
+              <div className="w-1 h-4 rounded-full bg-[var(--wolf-amber)]" />
+              <h2 className="section-title">Trade Recommendations</h2>
+            </div>
+            <Link href="/trading" className="text-[11px] text-[var(--wolf-amber)] hover:underline">Trade</Link>
           </div>
           {recommendations && recommendations.length > 0 ? (
             <div className="space-y-1">

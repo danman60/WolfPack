@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useExchange } from "@/lib/exchange";
+import { intelFetch } from "@/lib/intel";
 import {
   useRecommendations,
   useApproveRecommendation,
@@ -25,6 +27,7 @@ const DEFAULT_SYMBOLS = ["BTC", "ETH", "SOL", "LINK", "DOGE", "ARB"];
 
 export default function TradingPage() {
   const { config, activeExchange } = useExchange();
+  const queryClient = useQueryClient();
   const { data: recommendations } = useRecommendations("pending");
   const { data: portfolio } = usePortfolio();
   const approveMutation = useApproveRecommendation();
@@ -35,6 +38,8 @@ export default function TradingPage() {
   const [direction, setDirection] = useState<"long" | "short">("long");
   const [sizeUsd, setSizeUsd] = useState("");
   const [leverage, setLeverage] = useState(5);
+  const [stopLoss, setStopLoss] = useState("");
+  const [takeProfit, setTakeProfit] = useState("");
   const [orderSubmitting, setOrderSubmitting] = useState(false);
   const [orderResult, setOrderResult] = useState<string | null>(null);
 
@@ -68,21 +73,32 @@ export default function TradingPage() {
     }));
   }, [candles]);
 
-  // Submit paper order
+  // Submit paper order — uses intelFetch for auth, sends leveraged size
   const handleOrder = async () => {
     if (!sizeUsd || !latestPrice) return;
     setOrderSubmitting(true);
     setOrderResult(null);
 
+    const leveragedSize = Number(sizeUsd) * leverage;
+    const params = new URLSearchParams({
+      symbol: selectedSymbol,
+      direction,
+      size_usd: String(leveragedSize),
+      exchange: activeExchange,
+    });
+    if (stopLoss) params.set("stop_loss", stopLoss);
+    if (takeProfit) params.set("take_profit", takeProfit);
+
     try {
-      const res = await fetch(
-        `/intel/paper/order?symbol=${selectedSymbol}&direction=${direction}&size_usd=${sizeUsd}&exchange=${activeExchange}`,
-        { method: "POST" }
-      );
+      const res = await intelFetch(`/intel/paper/order?${params}`, { method: "POST" });
       const result = await res.json();
       if (result.status === "executed") {
         setOrderResult(result.message || `Paper ${direction} ${selectedSymbol} placed`);
         setSizeUsd("");
+        setStopLoss("");
+        setTakeProfit("");
+        queryClient.invalidateQueries({ queryKey: ["portfolio"] });
+        queryClient.invalidateQueries({ queryKey: ["portfolio-history"] });
       } else {
         setOrderResult(result.message || "Order failed");
       }
@@ -192,11 +208,39 @@ export default function TradingPage() {
               </div>
             </div>
 
+            {/* SL / TP */}
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="text-xs text-gray-500 uppercase">Stop Loss</label>
+                <input
+                  type="number"
+                  placeholder="Optional"
+                  value={stopLoss}
+                  onChange={(e) => setStopLoss(e.target.value)}
+                  className="w-full mt-1 bg-[var(--surface)] border border-[var(--border)] rounded-md px-3 py-2 text-white text-sm"
+                />
+              </div>
+              <div>
+                <label className="text-xs text-gray-500 uppercase">Take Profit</label>
+                <input
+                  type="number"
+                  placeholder="Optional"
+                  value={takeProfit}
+                  onChange={(e) => setTakeProfit(e.target.value)}
+                  className="w-full mt-1 bg-[var(--surface)] border border-[var(--border)] rounded-md px-3 py-2 text-white text-sm"
+                />
+              </div>
+            </div>
+
             {/* Order size info */}
             {sizeUsd && latestPrice && (
               <div className="text-xs text-gray-500 space-y-1 p-2 bg-[var(--surface)] rounded border border-[var(--border)]">
                 <div className="flex justify-between">
-                  <span>Notional</span>
+                  <span>Margin</span>
+                  <span className="text-gray-300">${Number(sizeUsd).toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Notional ({leverage}x)</span>
                   <span className="text-gray-300">${(Number(sizeUsd) * leverage).toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
@@ -261,7 +305,7 @@ export default function TradingPage() {
                     dataKey="time"
                     tick={{ fill: "#6b7280", fontSize: 10 }}
                     tickLine={false}
-                    interval="preserveStartEnd"
+                    interval={Math.floor(chartData.length / 8)}
                   />
                   <YAxis
                     tick={{ fill: "#6b7280", fontSize: 10 }}

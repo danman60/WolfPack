@@ -88,12 +88,18 @@ export function useRunIntelligence() {
       return res.json();
     },
     onSuccess: () => {
-      // Refetch after a delay to let the background task complete
-      setTimeout(() => {
+      // Intelligence cycle takes 30-60s. Poll at increasing intervals.
+      const invalidateAll = () => {
         queryClient.invalidateQueries({ queryKey: ["agent-outputs"] });
         queryClient.invalidateQueries({ queryKey: ["module-outputs"] });
         queryClient.invalidateQueries({ queryKey: ["recommendations"] });
-      }, 10_000);
+        queryClient.invalidateQueries({ queryKey: ["agent-status"] });
+        queryClient.invalidateQueries({ queryKey: ["portfolio"] });
+      };
+      setTimeout(invalidateAll, 10_000);
+      setTimeout(invalidateAll, 20_000);
+      setTimeout(invalidateAll, 35_000);
+      setTimeout(invalidateAll, 60_000);
     },
   });
 }
@@ -140,7 +146,7 @@ export function usePortfolio() {
   return useQuery({
     queryKey: ["portfolio"],
     queryFn: async () => {
-      const res = await fetch("/intel/portfolio");
+      const res = await intelFetch("/intel/portfolio");
       if (!res.ok) return null;
       return res.json();
     },
@@ -154,7 +160,7 @@ export function usePortfolioHistory(limit: number = 100) {
   return useQuery({
     queryKey: ["portfolio-history", limit],
     queryFn: async () => {
-      const res = await fetch(`/intel/portfolio/history?limit=${limit}`);
+      const res = await intelFetch(`/intel/portfolio/history?limit=${limit}`);
       if (!res.ok) return { snapshots: [] };
       return res.json();
     },
@@ -187,7 +193,7 @@ export function useStrategyMode() {
   return useQuery({
     queryKey: ["strategy-mode"],
     queryFn: async () => {
-      const res = await fetch("/intel/strategy/mode");
+      const res = await intelFetch("/intel/strategy/mode");
       if (!res.ok) return null;
       return res.json();
     },
@@ -219,7 +225,7 @@ export function useAgentStatus() {
   return useQuery({
     queryKey: ["agent-status"],
     queryFn: async () => {
-      const res = await fetch("/intel/agents/status");
+      const res = await intelFetch("/intel/agents/status");
       if (!res.ok) return null;
       return res.json();
     },

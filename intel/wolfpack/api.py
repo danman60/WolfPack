@@ -450,6 +450,8 @@ async def paper_order(
     direction: str,
     size_usd: float,
     exchange: str = "hyperliquid",
+    stop_loss: float | None = None,
+    take_profit: float | None = None,
     _auth: None = Depends(require_auth),
 ):
     """Place a manual paper trade — bypasses recommendation flow."""
@@ -481,6 +483,10 @@ async def paper_order(
     )
 
     if pos:
+        if stop_loss is not None:
+            pos.stop_loss = stop_loss
+        if take_profit is not None:
+            pos.take_profit = take_profit
         engine.store_snapshot(exchange)
         return {
             "status": "executed",

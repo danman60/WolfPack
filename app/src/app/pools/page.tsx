@@ -376,7 +376,8 @@ function PoolRow({
   isExpanded: boolean;
   onToggle: () => void;
 }) {
-  const apr = calcFeeApr(pool.volumeUSD, pool.totalValueLockedUSD, pool.feeTier);
+  // Pool listing only has all-time cumulative volume — APR requires daily volume from poolDayData
+  const apr = 0; // Accurate APR shown in expanded detail view
   const pair = `${pool.token0.symbol}/${pool.token1.symbol}`;
 
   return (

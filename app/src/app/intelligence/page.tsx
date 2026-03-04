@@ -63,7 +63,7 @@ export default function IntelligencePage() {
         {AGENTS.map((agent) => {
           const output = agentOutputs?.[agent.key];
           const svc = statusMap.get(agent.key);
-          const status = svc?.status === "running" ? "active" : output ? "idle" : "idle";
+          const status = svc?.status === "running" ? "active" : output ? "completed" : "idle";
 
           return (
             <AgentCard
@@ -117,55 +117,70 @@ export default function IntelligencePage() {
         </div>
         {agentsLoading ? (
           <div className="text-center py-8 text-gray-500 text-sm">Loading...</div>
-        ) : agentOutputs?.quant ? (
-          <div className="space-y-4">
-            <div>
-              <h3 className="text-sm font-semibold text-[var(--wolf-cyan)] mb-1">The Quant</h3>
-              <p className="text-sm text-gray-300">{agentOutputs.quant.summary}</p>
-              {agentOutputs.quant.confidence > 0 && (
-                <div className="mt-2 flex items-center gap-2">
-                  <span className="text-xs text-gray-500">Confidence:</span>
-                  <div className="flex-1 max-w-[200px] h-2 bg-[var(--surface)] rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-[var(--wolf-emerald)] rounded-full transition-all"
-                      style={{ width: `${agentOutputs.quant.confidence * 100}%` }}
-                    />
-                  </div>
-                  <span className="text-xs text-gray-400">
-                    {(agentOutputs.quant.confidence * 100).toFixed(0)}%
-                  </span>
-                </div>
-              )}
-              {agentOutputs.quant.signals?.length > 0 && (
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {agentOutputs.quant.signals
-                    .filter((s: Record<string, unknown>) => s.type === "trend" || s.type === "risk" || s.indicator)
-                    .slice(0, 8)
-                    .map((s: Record<string, unknown>, i: number) => (
-                      <span
-                        key={i}
-                        className="px-2 py-1 bg-[var(--surface)] rounded text-[10px] text-gray-400 font-mono"
-                      >
-                        {s.indicator
-                          ? `${s.indicator}: ${typeof s.value === "number" ? (s.value as number).toFixed(2) : s.value}`
-                          : s.type === "trend"
-                          ? `${s.direction} (${s.strength})`
-                          : s.type === "risk"
-                          ? `Risk: ${s.level}`
-                          : JSON.stringify(s)}
+        ) : agentOutputs && Object.keys(agentOutputs).length > 0 ? (
+          <div className="space-y-5">
+            {AGENTS.map((agent) => {
+              const output = agentOutputs[agent.key];
+              if (!output) return null;
+              const agentColors: Record<string, string> = {
+                quant: "var(--wolf-cyan)",
+                snoop: "var(--wolf-purple)",
+                sage: "var(--wolf-blue)",
+                brief: "var(--wolf-amber)",
+              };
+              const color = agentColors[agent.key] || "var(--wolf-cyan)";
+              return (
+                <div key={agent.key} className="border-b border-[var(--border)] last:border-0 pb-4 last:pb-0">
+                  <h3 className="text-sm font-semibold mb-1" style={{ color }}>{agent.name}</h3>
+                  <p className="text-sm text-gray-300">{output.summary}</p>
+                  {output.confidence > 0 && (
+                    <div className="mt-2 flex items-center gap-2">
+                      <span className="text-xs text-gray-500">Confidence:</span>
+                      <div className="flex-1 max-w-[200px] h-2 bg-[var(--surface)] rounded-full overflow-hidden">
+                        <div
+                          className="h-full rounded-full transition-all"
+                          style={{ width: `${output.confidence * 100}%`, backgroundColor: color }}
+                        />
+                      </div>
+                      <span className="text-xs text-gray-400">
+                        {(output.confidence * 100).toFixed(0)}%
                       </span>
-                    ))}
+                    </div>
+                  )}
+                  {output.signals?.length > 0 && (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {output.signals
+                        .filter((s: Record<string, unknown>) => s.type === "trend" || s.type === "risk" || s.type === "recommendation" || s.type === "outlook" || s.type === "sentiment" || s.indicator)
+                        .slice(0, 6)
+                        .map((s: Record<string, unknown>, i: number) => (
+                          <span
+                            key={i}
+                            className="px-2 py-1 bg-[var(--surface)] rounded text-[10px] text-gray-400 font-mono"
+                          >
+                            {s.indicator
+                              ? `${s.indicator}: ${typeof s.value === "number" ? (s.value as number).toFixed(2) : s.value}`
+                              : s.type === "trend"
+                              ? `${s.direction} (${s.strength})`
+                              : s.type === "risk"
+                              ? `Risk: ${s.level}`
+                              : s.type === "recommendation"
+                              ? `${s.direction} ${s.symbol} (${s.conviction}%)`
+                              : s.type === "outlook"
+                              ? `Outlook: ${s.direction}`
+                              : s.type === "sentiment"
+                              ? `Sentiment: ${s.score}`
+                              : JSON.stringify(s)}
+                          </span>
+                        ))}
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
+              );
+            })}
           </div>
         ) : (
           <div className="text-center py-12 text-gray-500 text-sm">
-            No intelligence data yet. Click &quot;Run Intelligence&quot; or start the intel service.
-            <br />
-            <code className="text-xs text-gray-600 mt-2 block">
-              cd intel &amp;&amp; source .venv/bin/activate &amp;&amp; uvicorn wolfpack.api:app --reload
-            </code>
+            No intelligence data yet. Click &quot;Run Intelligence&quot; to start.
           </div>
         )}
       </div>
@@ -185,7 +200,7 @@ function AgentCard({
   name: string;
   role: string;
   description: string;
-  status: "active" | "idle" | "error";
+  status: "active" | "completed" | "idle" | "error";
   summary?: string;
   confidence?: number;
   lastRun?: string;
@@ -200,6 +215,8 @@ function AgentCard({
         <span
           className={`px-2 py-0.5 rounded text-[10px] font-semibold uppercase ${
             status === "active"
+              ? "bg-[var(--wolf-amber)]/20 text-[var(--wolf-amber)]"
+              : status === "completed"
               ? "bg-[var(--wolf-emerald)]/20 text-[var(--wolf-emerald)]"
               : status === "error"
               ? "bg-[var(--wolf-red)]/20 text-[var(--wolf-red)]"

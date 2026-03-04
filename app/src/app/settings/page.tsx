@@ -1,6 +1,7 @@
 "use client";
 
 import { useExchange } from "@/lib/exchange";
+import { useStrategyMode } from "@/lib/hooks/useIntelligence";
 
 const LLM_PROVIDERS = [
   { name: "Anthropic (Claude)", env: "ANTHROPIC_API_KEY", role: "Primary analysis, The Brief synthesis" },
@@ -8,16 +9,11 @@ const LLM_PROVIDERS = [
   { name: "OpenRouter", env: "OPENROUTER_API_KEY", role: "Fallback routing, multi-model access" },
 ];
 
-const SAFETY_CHECKLIST = [
-  { label: "Circuit breaker enabled", description: "Auto-halt trading on drawdown threshold or volatility spike", configured: true },
-  { label: "Max position size", description: "Limit per-trade exposure to defined % of portfolio", configured: true },
-  { label: "Stop-loss on all positions", description: "Automatic stop-loss orders placed with every entry", configured: false },
-  { label: "Daily loss limit", description: "Halt all new trades if daily loss exceeds threshold", configured: true },
-  { label: "Manual approval required", description: "All trade recommendations require human confirmation", configured: true },
-];
-
 export default function SettingsPage() {
   const { config, availableExchanges } = useExchange();
+  const { data: strategyMode } = useStrategyMode();
+
+  const checklist = strategyMode?.checklist ?? [];
 
   return (
     <div className="space-y-7">
@@ -157,44 +153,51 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      {/* Safety Checklist */}
+      {/* Safety Checklist — live from backend */}
       <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="section-title">Live Trading Safety Checklist</h2>
           <span className="text-xs text-gray-500">
-            {SAFETY_CHECKLIST.filter((s) => s.configured).length}/{SAFETY_CHECKLIST.length} configured
+            {checklist.length > 0
+              ? `${checklist.filter((s: { passed: boolean }) => s.passed).length}/${checklist.length} passed`
+              : "Loading..."}
           </span>
         </div>
         <div className="space-y-3">
-          {SAFETY_CHECKLIST.map((item) => (
+          {checklist.length > 0 ? checklist.map((item: { name: string; passed: boolean; description: string }) => (
             <div
-              key={item.label}
+              key={item.name}
               className="flex items-start gap-3 p-3 rounded-lg border border-[var(--border)] bg-[var(--surface)]"
             >
               <div
                 className={`mt-0.5 w-5 h-5 rounded flex items-center justify-center flex-shrink-0 ${
-                  item.configured
+                  item.passed
                     ? "bg-[var(--wolf-emerald)]/20 text-[var(--wolf-emerald)]"
                     : "bg-[var(--wolf-red)]/20 text-[var(--wolf-red)]"
                 }`}
               >
-                <span className="text-xs font-bold">{item.configured ? "\u2713" : "\u2717"}</span>
+                <span className="text-xs font-bold">{item.passed ? "\u2713" : "\u2717"}</span>
               </div>
               <div>
-                <span className={`text-sm font-medium ${item.configured ? "text-white" : "text-gray-400"}`}>
-                  {item.label}
+                <span className={`text-sm font-medium ${item.passed ? "text-white" : "text-gray-400"}`}>
+                  {item.name}
                 </span>
                 <p className="text-xs text-gray-500 mt-0.5">{item.description}</p>
               </div>
             </div>
-          ))}
+          )) : (
+            <div className="text-center py-4 text-gray-500 text-sm">
+              Start the intel service to load safety checklist
+            </div>
+          )}
         </div>
-        <div className="mt-4 p-3 rounded-lg bg-[var(--wolf-amber)]/10 border border-[var(--wolf-amber)]/20">
-          <p className="text-xs text-[var(--wolf-amber)]">
-            All safety checks must pass before live trading can be enabled. Complete the missing items and set{" "}
-            <code className="font-mono">TRADING_MODE=live</code> in your .env file.
-          </p>
-        </div>
+        {strategyMode?.can_go_live === false && checklist.length > 0 && (
+          <div className="mt-4 p-3 rounded-lg bg-[var(--wolf-amber)]/10 border border-[var(--wolf-amber)]/20">
+            <p className="text-xs text-[var(--wolf-amber)]">
+              All safety checks must pass before live trading can be enabled.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
