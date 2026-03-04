@@ -28,6 +28,14 @@ class Settings(BaseSettings):
     telegram_bot_token: str = ""
     telegram_chat_id: str = ""
 
+    # Auto-trader
+    auto_trade_enabled: bool = False
+    auto_trade_equity: float = 5000.0
+    auto_trade_conviction_threshold: int = 75
+
+    # Pool screening
+    subgraph_api_key: str = ""
+
     # Service
     tick_interval_seconds: int = 300   # 5 minutes
     log_level: str = "INFO"

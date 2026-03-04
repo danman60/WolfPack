@@ -11,14 +11,27 @@ Messages:
 """
 
 import logging
+from typing import TYPE_CHECKING
 
 import httpx
 
 from wolfpack.config import settings
 
+if TYPE_CHECKING:
+    from wolfpack.telegram_bot import WolfPackBot
+
 logger = logging.getLogger(__name__)
 
 TELEGRAM_API = "https://api.telegram.org"
+
+# Bot singleton — set by api.py on startup when bot is active
+_bot_instance: "WolfPackBot | None" = None
+
+
+def set_bot(bot: "WolfPackBot") -> None:
+    """Register the active bot instance for inline keyboard support."""
+    global _bot_instance
+    _bot_instance = bot
 
 
 async def send_telegram(message: str) -> bool:
@@ -58,8 +71,27 @@ async def notify_recommendation(
     entry_price: float | None = None,
     stop_loss: float | None = None,
     take_profit: float | None = None,
+    rec_id: str | None = None,
 ) -> bool:
-    """Send a trade recommendation notification."""
+    """Send a trade recommendation notification.
+
+    Uses inline Approve/Reject buttons when bot is active and rec_id is provided.
+    Falls back to plain text notification otherwise.
+    """
+    # Try inline buttons via bot first
+    if _bot_instance and _bot_instance.is_running and rec_id:
+        return await _bot_instance.send_recommendation_with_buttons(
+            symbol=symbol,
+            direction=direction,
+            conviction=conviction,
+            rationale=rationale,
+            entry_price=entry_price,
+            stop_loss=stop_loss,
+            take_profit=take_profit,
+            rec_id=rec_id,
+        )
+
+    # Fallback to plain text
     arrow = "\u2b06\ufe0f" if direction == "long" else "\u2b07\ufe0f"
     msg = (
         f"<b>{arrow} {direction.upper()} {symbol}</b>\n"

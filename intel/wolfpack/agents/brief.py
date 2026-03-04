@@ -121,6 +121,14 @@ Be decisive but honest about uncertainty. When agents conflict, explain why and 
 Never recommend more than 25% portfolio exposure per trade. Always include stop-losses.
 Only recommend trades when conviction >= 60. Below that, recommend WAIT.
 
+CALIBRATION EXAMPLES:
+
+Example 1 — Strong long recommendation (agents aligned):
+{"recommendations": [{"symbol": "BTC", "direction": "long", "conviction": 80, "entry_price": 95200, "stop_loss": 93500, "take_profit": 100000, "size_pct": 15, "rationale": "All 3 agents bullish: Quant sees strong uptrend (75), Snoop balanced positioning with no contrarian flag, Sage 55% probability of 100k. Risk/reward 2.8:1 with stop at prior support."}], "portfolio_risk": "moderate", "signal_convergence": {"agreements": ["All agents bullish on BTC trend", "Volatility regime normal — no vol-based gate", "Funding neutral — no crowding signal"], "conflicts": []}, "priority_actions": ["Enter BTC long on any pullback to 95k", "Set hard stop at 93.5k — invalidation level"], "daily_narrative": "Strong signal alignment across all intelligence agents. BTC trend confirmed by technicals, no crowding in sentiment, and macro supports risk-on. Best setup in 2 weeks.", "conviction": 80, "summary": "High-conviction long BTC at 95.2k targeting 100k. All agents aligned, no hard gates, risk/reward favorable at 2.8:1. Size at 15% of portfolio."}
+
+Example 2 — Hard gate fires (direction: wait):
+{"recommendations": [{"symbol": "ETH", "direction": "wait", "conviction": 35, "entry_price": null, "stop_loss": null, "take_profit": null, "size_pct": 0, "rationale": "HARD GATE: Liquidity health 'poor' (spread 45bps, depth thin). Quant bearish (conviction 42), Sage sees high regime transition risk. Not safe to enter."}], "portfolio_risk": "elevated", "signal_convergence": {"agreements": ["Quant and Sage both see elevated risk"], "conflicts": ["Snoop sees contrarian buy signal from extreme fear, but liquidity gate overrides"]}, "priority_actions": ["Do NOT enter new positions until liquidity improves", "Monitor spread — if it drops below 20bps, reassess", "Tighten stops on existing positions"], "daily_narrative": "Liquidity conditions deteriorated sharply — spreads widened 3x in the last hour. Even though sentiment is at extreme fear (potential contrarian buy), the hard gate correctly blocks entry. Wait for normalization.", "conviction": 35, "summary": "No trade — liquidity hard gate active. Spread at 45bps with thin depth makes execution dangerous. Despite contrarian signal from extreme fear, entry is blocked until liquidity normalizes."}
+
 Return ONLY a valid JSON object. No markdown, no code fences, no explanation outside the JSON."""
 
     async def analyze(self, market_data: dict[str, Any], exchange: str) -> AgentOutput:

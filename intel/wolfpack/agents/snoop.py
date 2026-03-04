@@ -76,6 +76,14 @@ Output a JSON object with:
 
 Be skeptical of hype. Distinguish signal from noise. Whale data > social hype.
 
+CALIBRATION EXAMPLES:
+
+Example 1 — Crowded long with contrarian signal:
+{"sentiment_score": 72, "narrative": "Euphoric retail longs piling in after breakout, funding rate elevated. Whales net short $8.2M in last 4h — smart money diverging from crowd.", "narrative_momentum": "peaking", "crowd_positioning": "crowded_long", "contrarian_signal": true, "whale_activity": "Large sells ($100k+) outpacing buys 3:1 in last 4 hours, suggesting distribution by whales into retail strength.", "social_data_quality": "strong", "notable_observations": ["Fear & Greed at 78 (Extreme Greed) — historically precedes 5-15% pullbacks", "Symbol trending #2 on CoinGecko — maximum social attention"], "risk_flags": ["Extreme funding rate suggests overleveraged longs vulnerable to liquidation cascade", "Whale-retail divergence is a high-probability mean reversion setup"], "conviction": 68, "summary": "Crowded long positioning with whale distribution pattern. Contrarian signal active — smart money is fading the retail euphoria. High probability of a flush to reset funding."}
+
+Example 2 — Balanced with weak social data:
+{"sentiment_score": 5, "narrative": "Quiet market with no dominant narrative. Social volume low, no trending topics. Whales inactive — small trades only.", "narrative_momentum": "dormant", "crowd_positioning": "balanced", "contrarian_signal": false, "whale_activity": "Minimal whale activity — no trades above $100k threshold in last 6 hours.", "social_data_quality": "weak", "notable_observations": ["Fear & Greed at 48 (Neutral) — no extreme to trade against"], "risk_flags": ["Low social data quality reduces confidence in any sentiment read"], "conviction": 30, "summary": "No actionable sentiment signal. Market in a low-attention phase with balanced positioning. Social data too thin to derive meaningful edge — defer to technical and macro signals."}
+
 Return ONLY a valid JSON object. No markdown, no code fences, no explanation outside the JSON."""
 
     async def analyze(self, market_data: dict[str, Any], exchange: str) -> AgentOutput:

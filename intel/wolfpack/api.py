@@ -9,11 +9,46 @@ from fastapi import BackgroundTasks, Body, Depends, FastAPI, HTTPException, Requ
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
+from contextlib import asynccontextmanager
+
 from wolfpack.config import settings
 
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="WolfPack Intel", version="0.1.0")
+# Telegram bot singleton
+_telegram_bot: Any = None
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Startup / shutdown hooks for FastAPI."""
+    global _telegram_bot
+
+    # Start Telegram bot if configured
+    if settings.telegram_bot_token:
+        try:
+            from wolfpack.telegram_bot import WolfPackBot
+            from wolfpack.notifications import set_bot
+
+            _telegram_bot = WolfPackBot()
+            await _telegram_bot.start()
+            set_bot(_telegram_bot)
+            logger.info("[lifespan] Telegram bot started")
+        except Exception as e:
+            logger.warning(f"[lifespan] Telegram bot failed to start: {e}")
+
+    yield
+
+    # Shutdown
+    if _telegram_bot:
+        try:
+            await _telegram_bot.stop()
+            logger.info("[lifespan] Telegram bot stopped")
+        except Exception as e:
+            logger.warning(f"[lifespan] Telegram bot stop error: {e}")
+
+
+app = FastAPI(title="WolfPack Intel", version="0.1.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -90,6 +125,58 @@ def _get_circuit_breaker() -> Any:
 @app.get("/health")
 async def health():
     return {"status": "ok", "service": "wolfpack-intel"}
+
+
+@app.get("/health/deep")
+async def deep_health_check():
+    """Deep health check — data freshness, API keys, CB state, last intel run."""
+    now = datetime.now(timezone.utc)
+    stale_threshold = timedelta(minutes=10)
+    checks: dict[str, Any] = {}
+
+    # Data freshness — check module last-run times
+    stale_modules = []
+    for name, last_run in _module_last_runs.items():
+        if last_run is None:
+            stale_modules.append(f"{name}: never run")
+        elif now - last_run > stale_threshold:
+            age_min = (now - last_run).total_seconds() / 60
+            stale_modules.append(f"{name}: {age_min:.0f}min ago")
+    checks["data_freshness"] = {
+        "ok": len(stale_modules) == 0,
+        "stale_modules": stale_modules,
+    }
+
+    # API key validity
+    checks["api_keys"] = {
+        "deepseek": bool(settings.deepseek_api_key),
+        "supabase": bool(settings.supabase_url and settings.supabase_key),
+        "telegram": bool(settings.telegram_bot_token and settings.telegram_chat_id),
+        "hyperliquid_wallet": bool(settings.hyperliquid_wallet),
+    }
+
+    # Circuit breaker state
+    cb = _get_circuit_breaker()
+    checks["circuit_breaker"] = {
+        "state": cb.state,
+        "ok": cb.state == "ACTIVE",
+    }
+
+    # Last successful intel run
+    brief_last = _last_runs.get("brief")
+    checks["last_intel_run"] = {
+        "timestamp": brief_last.isoformat() if brief_last else None,
+        "minutes_ago": round((now - brief_last).total_seconds() / 60, 1) if brief_last else None,
+    }
+
+    all_ok = (
+        checks["data_freshness"]["ok"]
+        and all(checks["api_keys"].values())
+        and checks["circuit_breaker"]["ok"]
+    )
+    status = "healthy" if all_ok else "degraded"
+
+    return {"status": status, "checks": checks}
 
 
 @app.get("/agents/status")
@@ -654,6 +741,68 @@ def _get_paper_engine() -> Any:
     return _paper_engine
 
 
+# ── Veto Singleton ──
+_veto_instance: Any = None
+
+
+def _get_veto() -> Any:
+    """Get or create the BriefVeto singleton."""
+    global _veto_instance
+    if _veto_instance is None:
+        from wolfpack.veto import BriefVeto
+        _veto_instance = BriefVeto()
+    return _veto_instance
+
+
+# ── Auto-Trader Singleton ──
+_auto_trader: Any = None
+
+
+def _get_auto_trader() -> Any:
+    """Get or create the AutoTrader singleton."""
+    global _auto_trader
+    if _auto_trader is None:
+        from wolfpack.auto_trader import AutoTrader
+        _auto_trader = AutoTrader()
+    return _auto_trader
+
+
+@app.get("/auto-trader/status")
+async def auto_trader_status():
+    """Return auto-trader status."""
+    trader = _get_auto_trader()
+    return trader.get_status()
+
+
+@app.post("/auto-trader/toggle")
+async def auto_trader_toggle(_auth: None = Depends(require_auth)):
+    """Toggle auto-trader on/off."""
+    trader = _get_auto_trader()
+    trader.enabled = not trader.enabled
+    state = "enabled" if trader.enabled else "disabled"
+    logger.info(f"[auto-trader] Toggled to {state}")
+    return {"status": "ok", "enabled": trader.enabled}
+
+
+@app.get("/auto-trader/trades")
+async def auto_trader_trades(limit: int = 50):
+    """Return recent auto-trades."""
+    try:
+        from wolfpack.db import get_db
+        db = get_db()
+        result = (
+            db.table("wp_auto_trades")
+            .select("*")
+            .order("opened_at", desc=True)
+            .limit(limit)
+            .execute()
+        )
+        return {"trades": result.data or []}
+    except Exception as e:
+        logger.error(f"[auto-trader] Failed to fetch trades: {e}")
+        return {"trades": []}
+
+
 # ── Market Data Endpoints ──
 
 
@@ -1014,12 +1163,23 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                 logger.warning(f"[cycle] Circuit breaker blocking new entries ({cb_output.state}), skipping {len(recs)} recs")
                 recs = []
 
+            # Veto layer — filter and adjust recs before storing
+            veto = _get_veto()
+            stored_recs: list[dict] = []
+
             for rec in recs:
-                conviction = rec.get("conviction", 0)
-                if conviction < 55:
-                    continue  # Skip low-conviction recs
+                veto_result = veto.evaluate(
+                    rec,
+                    cb_output=cb_output.model_dump(),
+                    vol_output=vol_output.model_dump() if vol_output else None,
+                )
+                if veto_result.action == "reject":
+                    logger.info(f"[veto] Rejected {rec.get('symbol', symbol)} {rec.get('direction')}: {veto_result.reasons}")
+                    continue
+
+                conviction = veto_result.final_conviction
                 try:
-                    store_recommendation(
+                    stored_row = store_recommendation(
                         exchange_id=exchange,
                         symbol=rec.get("symbol", symbol),
                         direction=rec.get("direction", "wait"),
@@ -1030,10 +1190,16 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                         take_profit=rec.get("take_profit"),
                         size_pct=rec.get("size_pct"),
                     )
+                    stored_recs.append({**rec, "conviction": conviction, "id": stored_row.get("id")})
+
+                    if veto_result.action == "adjust":
+                        logger.info(f"[veto] Adjusted {rec.get('symbol', symbol)}: {veto_result.original_conviction} -> {conviction} ({veto_result.reasons})")
+
                     # Telegram notification for high-conviction recs
                     if conviction >= 70:
                         try:
                             from wolfpack.notifications import notify_recommendation
+                            rec_id = stored_row.get("id")
                             await notify_recommendation(
                                 symbol=rec.get("symbol", symbol),
                                 direction=rec.get("direction", "wait"),
@@ -1042,6 +1208,7 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                                 entry_price=rec.get("entry_price"),
                                 stop_loss=rec.get("stop_loss"),
                                 take_profit=rec.get("take_profit"),
+                                rec_id=rec_id,
                             )
                         except Exception:
                             pass  # Don't fail cycle on notification error
@@ -1049,6 +1216,21 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                     logger.error(f"[cycle] Failed to store recommendation: {e}")
 
             _last_runs["brief"] = datetime.now(timezone.utc)
+
+            # ── Step 5b: Auto-trader processes stored recs ──
+            try:
+                auto_trader = _get_auto_trader()
+                if auto_trader.enabled and stored_recs:
+                    auto_executed = await auto_trader.process_recommendations(
+                        stored_recs,
+                        cb_output=cb_output,
+                        vol_output=vol_output,
+                        latest_prices={symbol: latest_price} if latest_price else None,
+                    )
+                    if auto_executed:
+                        logger.info(f"[cycle] Auto-trader executed {len(auto_executed)} trades")
+            except Exception as e:
+                logger.warning(f"[cycle] Auto-trader error: {e}")
 
             # ── Step 6: Update paper trading portfolio ──
             engine = _get_paper_engine()
@@ -1196,6 +1378,28 @@ async def remove_backtest_run(run_id: str, _auth: None = Depends(require_auth)):
 
     deleted = delete_backtest_run(run_id)
     return {"status": "deleted" if deleted else "not_found"}
+
+
+@app.get("/backtest/runs/{run_id}/graduation")
+async def check_backtest_graduation(run_id: str):
+    """Check if a completed backtest meets graduation criteria for live trading."""
+    from wolfpack.db import get_backtest_run
+    from wolfpack.modules.backtest import check_graduation
+
+    run = get_backtest_run(run_id)
+    if not run:
+        return {"status": "error", "message": "Run not found"}
+    if run.get("status") != "completed":
+        return {"status": "error", "message": f"Run not completed (status: {run.get('status')})"}
+
+    metrics = run.get("metrics", {})
+    result = check_graduation(metrics)
+    return {
+        "run_id": run_id,
+        "graduated": result.passed,
+        "criteria": result.criteria,
+        "failures": result.failures,
+    }
 
 
 @app.post("/backtest/compare")
@@ -1346,6 +1550,105 @@ async def search_symbols(q: str = "", exchange: str = "hyperliquid"):
     except Exception as e:
         logger.error(f"[watchlist] Symbol search failed: {e}")
         return {"results": []}
+
+
+# ── Pool Screening ──
+
+
+@app.get("/pools/screen")
+async def screen_pools(limit: int = 20):
+    """Fetch top pools from The Graph and score them with the pool screening module."""
+    import httpx
+    from wolfpack.modules.pool_screening import PoolScreeningInput, screen_pool
+
+    api_key = settings.subgraph_api_key
+    if not api_key:
+        return {"status": "error", "message": "SUBGRAPH_API_KEY not configured", "pools": []}
+
+    subgraph_url = f"https://gateway.thegraph.com/api/{api_key}/subgraphs/id/5zvR82QoaXYFyDEKLZ9t6v9adgnptxYpKpSbxtgVENFV"
+
+    query = """
+    query TopPools($first: Int!) {
+        pools(
+            first: $first
+            orderBy: totalValueLockedUSD
+            orderDirection: desc
+            where: { volumeUSD_gt: "1000000" }
+        ) {
+            id
+            feeTier
+            totalValueLockedUSD
+            volumeUSD
+            token0 { symbol }
+            token1 { symbol }
+            poolDayData(first: 7, orderBy: date, orderDirection: desc) {
+                volumeUSD
+            }
+        }
+    }
+    """
+
+    try:
+        async with httpx.AsyncClient(timeout=15.0) as client:
+            resp = await client.post(
+                subgraph_url,
+                json={"query": query, "variables": {"first": limit * 2}},
+            )
+            if resp.status_code != 200:
+                return {"status": "error", "message": f"Subgraph HTTP {resp.status_code}", "pools": []}
+
+            data = resp.json()
+            if "errors" in data:
+                return {"status": "error", "message": str(data["errors"]), "pools": []}
+
+            pools = data.get("data", {}).get("pools", [])
+    except Exception as e:
+        return {"status": "error", "message": str(e), "pools": []}
+
+    scored: list[dict] = []
+    for p in pools:
+        day_data = p.get("poolDayData", [])
+        avg_daily_vol = (
+            sum(float(d.get("volumeUSD", 0)) for d in day_data) / len(day_data)
+            if day_data
+            else 0
+        )
+
+        # Compute volume trend from recent days
+        trend = "flat"
+        if len(day_data) >= 3:
+            recent = sum(float(d["volumeUSD"]) for d in day_data[:3]) / 3
+            older = sum(float(d["volumeUSD"]) for d in day_data[3:]) / max(len(day_data) - 3, 1)
+            if older > 0:
+                change = (recent - older) / older
+                if change > 0.15:
+                    trend = "rising"
+                elif change < -0.15:
+                    trend = "falling"
+
+        inp = PoolScreeningInput(
+            pool_id=p["id"],
+            token0_symbol=p["token0"]["symbol"],
+            token1_symbol=p["token1"]["symbol"],
+            fee_tier=int(p["feeTier"]),
+            tvl_usd=float(p["totalValueLockedUSD"]),
+            volume_usd_24h=avg_daily_vol,
+            volume_trend=trend,
+        )
+        result = screen_pool(inp)
+        scored.append({
+            "pool_id": result.pool_id,
+            "pair": result.pair,
+            "fee_tier": p["feeTier"],
+            "tvl_usd": float(p["totalValueLockedUSD"]),
+            "volume_usd_24h": round(avg_daily_vol, 2),
+            "score": result.score,
+            "recommendation": result.recommendation,
+            "breakdown": result.breakdown,
+        })
+
+    scored.sort(key=lambda x: x["score"], reverse=True)
+    return {"status": "ok", "pools": scored[:limit]}
 
 
 # ── Multi-Symbol Intelligence ──

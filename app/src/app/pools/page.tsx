@@ -6,6 +6,7 @@ import {
   useTopPools,
   usePoolDetail,
   useUserPositions,
+  usePoolScreening,
   feeTierLabel,
   calcFeeApr,
   fmtUsd,
@@ -35,7 +36,7 @@ const FEE_FILTERS = [
   { label: "1%", value: "10000" },
 ] as const;
 
-type SortKey = "pair" | "fee" | "tvl" | "volume" | "apr";
+type SortKey = "pair" | "fee" | "tvl" | "volume" | "apr" | "score";
 type SortDir = "asc" | "desc";
 
 // ---------------------------------------------------------------------------
@@ -48,6 +49,18 @@ export default function PoolsPage() {
   // Pool data
   const { data: pools, isLoading: poolsLoading, error: poolsError } = useTopPools(50);
   const { data: positions } = useUserPositions(isConnected ? address : undefined);
+  const { data: screenedPools } = usePoolScreening(50);
+
+  // Build score lookup map from screening data
+  const scoreMap = useMemo(() => {
+    const m = new Map<string, { score: number; recommendation: string }>();
+    if (screenedPools) {
+      for (const sp of screenedPools) {
+        m.set(sp.pool_id, { score: sp.score, recommendation: sp.recommendation });
+      }
+    }
+    return m;
+  }, [screenedPools]);
 
   // Filters & sort
   const [feeFilter, setFeeFilter] = useState("all");
@@ -107,13 +120,17 @@ export default function PoolsPage() {
               calcFeeApr(b.volumeUSD, b.totalValueLockedUSD, b.feeTier)) *
             dir
           );
+        case "score":
+          return (
+            ((scoreMap.get(a.id)?.score ?? 0) - (scoreMap.get(b.id)?.score ?? 0)) * dir
+          );
         default:
           return 0;
       }
     });
 
     return arr;
-  }, [pools, feeFilter, sortKey, sortDir]);
+  }, [pools, feeFilter, sortKey, sortDir, scoreMap]);
 
   // Position summary stats
   const positionCount = positions?.length ?? 0;
@@ -280,12 +297,19 @@ export default function PoolsPage() {
                     indicator={sortIndicator("apr")}
                     align="right"
                   />
+                  <SortHeader
+                    label="Score"
+                    sortKey="score"
+                    onSort={handleSort}
+                    indicator={sortIndicator("score")}
+                    align="right"
+                  />
                 </tr>
               </thead>
               <tbody>
                 {displayedPools.length === 0 && (
                   <tr>
-                    <td colSpan={5} className="text-center py-12 text-gray-500">
+                    <td colSpan={6} className="text-center py-12 text-gray-500">
                       No pools found for this filter.
                     </td>
                   </tr>
@@ -298,6 +322,7 @@ export default function PoolsPage() {
                     onToggle={() =>
                       setExpandedPool((prev) => (prev === pool.id ? null : pool.id))
                     }
+                    scoreData={scoreMap.get(pool.id)}
                   />
                 ))}
               </tbody>
@@ -380,14 +405,23 @@ function SortHeader({
   );
 }
 
+const SCORE_COLORS: Record<string, string> = {
+  Enter: "bg-[var(--wolf-emerald)]/20 text-[var(--wolf-emerald)]",
+  Consider: "bg-[var(--wolf-blue)]/20 text-[var(--wolf-blue)]",
+  Caution: "bg-[var(--wolf-amber)]/20 text-[var(--wolf-amber)]",
+  Avoid: "bg-[var(--wolf-red)]/20 text-[var(--wolf-red)]",
+};
+
 function PoolRow({
   pool,
   isExpanded,
   onToggle,
+  scoreData,
 }: {
   pool: SubgraphPool;
   isExpanded: boolean;
   onToggle: () => void;
+  scoreData?: { score: number; recommendation: string };
 }) {
   // Pool listing only has all-time cumulative volume — APR requires daily volume from poolDayData
   const apr = 0; // Accurate APR shown in expanded detail view
@@ -423,6 +457,15 @@ function PoolRow({
           >
             {apr > 0 ? fmtPct(apr) : "--"}
           </span>
+        </td>
+        <td className="px-3 py-3 text-right">
+          {scoreData ? (
+            <span className={`px-2 py-0.5 rounded text-xs font-semibold ${SCORE_COLORS[scoreData.recommendation] ?? "text-gray-400"}`}>
+              {scoreData.score} {scoreData.recommendation}
+            </span>
+          ) : (
+            <span className="text-gray-600 text-xs">--</span>
+          )}
         </td>
       </tr>
       {isExpanded && <PoolDetailRow poolId={pool.id} pool={pool} />}
@@ -550,7 +593,7 @@ function PoolDetailRow({
 
   return (
     <tr>
-      <td colSpan={5} className="px-3 py-4 bg-[var(--surface)]">
+      <td colSpan={6} className="px-3 py-4 bg-[var(--surface)]">
         {isLoading && (
           <div className="text-center py-4 text-gray-500 text-sm">Loading pool details...</div>
         )}

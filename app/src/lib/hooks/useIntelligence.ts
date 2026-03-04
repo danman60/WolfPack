@@ -403,6 +403,49 @@ export function useRunAllIntelligence() {
   });
 }
 
+// ── Auto-Trader Hooks ──
+
+interface AutoTraderStatus {
+  enabled: boolean;
+  conviction_threshold: number;
+  equity: number;
+  starting_equity: number;
+  realized_pnl: number;
+  unrealized_pnl: number;
+  open_positions: number;
+  positions: Record<string, unknown>[];
+}
+
+export function useAutoTraderStatus() {
+  return useQuery({
+    queryKey: ["auto-trader-status"],
+    queryFn: async () => {
+      const res = await intelFetch("/intel/auto-trader/status");
+      if (!res.ok) return null;
+      return res.json() as Promise<AutoTraderStatus>;
+    },
+    refetchInterval: 15_000,
+    retry: false,
+  });
+}
+
+export function useToggleAutoTrader() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      const res = await intelFetch("/intel/auto-trader/toggle", {
+        method: "POST",
+      });
+      if (!res.ok) throw new Error(`Toggle failed: ${res.status}`);
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["auto-trader-status"] });
+    },
+  });
+}
+
 // Fetch agent status from intel service
 export function useAgentStatus() {
   return useQuery({

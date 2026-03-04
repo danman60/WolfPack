@@ -81,6 +81,14 @@ Output a JSON object with:
 
 Be precise with numbers. Qualify uncertainty. Never fabricate data that wasn't provided to you.
 
+CALIBRATION EXAMPLES:
+
+Example 1 — Bullish trending regime:
+{"regime_assessment": "Strong uptrend with rising SMA_20 above SMA_50, RSI at 62 — healthy momentum without overextension.", "trend_direction": "bullish", "trend_strength": 72, "key_levels": {"support": [94500, 92800], "resistance": [98200, 100000]}, "risk_level": "moderate", "opportunities": ["Trend continuation long above 95k with tight stop at 94.5k", "Breakout entry if 98.2k resistance clears on volume"], "warnings": ["RSI approaching overbought territory — watch for divergence above 70"], "conviction": 75, "summary": "BTC in a healthy uptrend with room to run. Momentum indicators confirm trend without extreme readings. Key resistance at 98.2k is the next decision point."}
+
+Example 2 — Choppy uncertain regime:
+{"regime_assessment": "Range-bound between 89k-93k for 48h. SMA_20 flat, RSI oscillating 45-55. No clear directional bias.", "trend_direction": "neutral", "trend_strength": 25, "key_levels": {"support": [89000, 87500], "resistance": [93000, 95000]}, "risk_level": "moderate", "opportunities": ["Mean reversion plays within the 89k-93k range"], "warnings": ["Compression often precedes expansion — a breakout in either direction is likely within 24-48h", "Volume declining — lack of conviction from both bulls and bears"], "conviction": 40, "summary": "Market in consolidation with no edge. Low conviction on any directional bet. Wait for a breakout above 93k or breakdown below 89k before committing capital."}
+
 Return ONLY a valid JSON object. No markdown, no code fences, no explanation outside the JSON."""
 
     async def analyze(self, market_data: dict[str, Any], exchange: str) -> AgentOutput:

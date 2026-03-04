@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useExchange } from "@/lib/exchange";
-import { useAgentOutputs, useAgentStatus, useRecommendations, usePortfolio, useWatchlist } from "@/lib/hooks/useIntelligence";
+import { useAgentOutputs, useAgentStatus, useRecommendations, usePortfolio, useWatchlist, useAutoTraderStatus } from "@/lib/hooks/useIntelligence";
 import { WolfHead } from "@/components/WolfHead";
 import { usePrice } from "@/lib/hooks/useMarketData";
 
@@ -15,6 +15,7 @@ export default function Dashboard() {
   const { data: btcPrice } = usePrice("BTC");
   const { data: ethPrice } = usePrice("ETH");
   const { data: watchlist } = useWatchlist();
+  const { data: autoTrader } = useAutoTraderStatus();
 
   const agents = agentStatus?.agents ?? [];
   const isActive = portfolio?.status === "active";
@@ -22,7 +23,7 @@ export default function Dashboard() {
   return (
     <div className="space-y-7">
       {/* Portfolio Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <StatCard
           label="Portfolio Value"
           value={isActive ? `$${portfolio.equity.toLocaleString()}` : "--"}
@@ -53,6 +54,15 @@ export default function Dashboard() {
           color="cyan"
           delay={4}
         />
+        {autoTrader?.enabled && (
+          <StatCard
+            label="Auto-Bot Equity"
+            value={`$${autoTrader.equity.toLocaleString()}`}
+            suffix={`${autoTrader.open_positions} pos`}
+            color="amber"
+            delay={5}
+          />
+        )}
       </div>
 
       {/* Live Prices + Active Exchange */}

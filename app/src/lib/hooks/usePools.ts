@@ -215,6 +215,37 @@ export function useUserPositions(address: string | undefined) {
 }
 
 // ---------------------------------------------------------------------------
+// Pool Screening (scored via intel service)
+// ---------------------------------------------------------------------------
+
+interface ScreenedPool {
+  pool_id: string;
+  pair: string;
+  fee_tier: string;
+  tvl_usd: number;
+  volume_usd_24h: number;
+  score: number;
+  recommendation: "Enter" | "Consider" | "Caution" | "Avoid";
+  breakdown: Record<string, number>;
+}
+
+export function usePoolScreening(limit = 20) {
+  return useQuery<ScreenedPool[]>({
+    queryKey: ["pool-screening", limit],
+    queryFn: async () => {
+      const intelUrl = process.env.NEXT_PUBLIC_INTEL_URL || "http://localhost:8000";
+      const res = await fetch(`${intelUrl}/intel/pools/screen?limit=${limit}`);
+      if (!res.ok) return [];
+      const data = await res.json();
+      return (data.pools ?? []) as ScreenedPool[];
+    },
+    staleTime: 120_000,
+    refetchInterval: 120_000,
+    retry: false,
+  });
+}
+
+// ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 

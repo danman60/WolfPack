@@ -1,36 +1,41 @@
 # Current Work - WolfPack
 
 ## Active Task
-Intelligence system enhancements — social sentiment, whale tracking, OI wiring, watchlist.
+Phase 5 complete — Telegram bot, auto-trading, pool screening, intelligence improvements.
 
 ## Recent Changes (This Session)
-- Wired real Open Interest from Hyperliquid `get_markets()` into funding module (was hardcoded 0)
-- New module: `social_sentiment.py` — Fear & Greed Index + CoinGecko trending + community scores
-- New module: `whale_tracker.py` — large trade detection from Hyperliquid recent trades
-- Orchestrated both new modules in `api.py` intelligence cycle (parallel via asyncio.gather)
-- Enhanced Snoop agent — consumes social sentiment + whale tracker data, new output fields
-- Enhanced Sage agent — consumes OI + social + whale data, OI divergence signal
-- Supabase migration: `wp_watchlist` table (symbol, exchange_id, unique constraint)
-- Watchlist API: GET/POST/DELETE `/watchlist`, `/watchlist/search` for type-to-complete
-- Multi-symbol intelligence: `POST /intelligence/run-all` runs for all watchlist + position symbols
-- Frontend: watchlist hooks (useWatchlist, useAddToWatchlist, useRemoveFromWatchlist, useSymbolSearch, useRunAllIntelligence)
-- Trading page: watchlist section with chips, search dropdown, "Run All Intel" button
-- Dashboard: watchlist count stat card
+- Few-shot calibration examples added to all 4 agents (Quant, Snoop, Sage, Brief)
+- BriefVeto class: post-Brief filtering with hard veto + soft conviction adjustments
+- Deep health check: GET /health/deep (data freshness, API keys, CB state, last run)
+- Backtest graduation criteria: GraduationCriteria dataclass + GET /backtest/runs/{id}/graduation
+- Telegram bot: two-way with /status, /intel, /portfolio, inline Approve/Reject buttons
+- Auto-trader: separate $5K paper bucket, conviction threshold 75, hooks into intel cycle
+- Pool screening: PoolParty scoring algorithm ported, GET /pools/screen, Score column in frontend
+- Supabase migration: wp_auto_trades + wp_auto_portfolio_snapshots tables
 
 ## Files Changed
-- `intel/wolfpack/modules/social_sentiment.py` — NEW
-- `intel/wolfpack/modules/whale_tracker.py` — NEW
-- `intel/wolfpack/modules/__init__.py` — added new modules to exports
-- `intel/wolfpack/agents/snoop.py` — enhanced with social + whale data
-- `intel/wolfpack/agents/sage.py` — enhanced with OI + social + whale data
-- `intel/wolfpack/api.py` — OI wiring, new module orchestration, watchlist endpoints, run-all
-- `intel/wolfpack/db.py` — watchlist CRUD helpers
-- `app/src/lib/hooks/useIntelligence.ts` — watchlist hooks
-- `app/src/app/trading/page.tsx` — watchlist UI
-- `app/src/app/page.tsx` — watchlist count on dashboard
+- `intel/wolfpack/agents/quant.py` — few-shot examples
+- `intel/wolfpack/agents/snoop.py` — few-shot examples
+- `intel/wolfpack/agents/sage.py` — few-shot examples
+- `intel/wolfpack/agents/brief.py` — few-shot examples
+- `intel/wolfpack/veto.py` — NEW, BriefVeto class
+- `intel/wolfpack/telegram_bot.py` — NEW, WolfPackBot class
+- `intel/wolfpack/auto_trader.py` — NEW, AutoTrader class
+- `intel/wolfpack/modules/pool_screening.py` — NEW, pool scoring
+- `intel/wolfpack/modules/backtest.py` — graduation criteria
+- `intel/wolfpack/api.py` — deep health, graduation endpoint, telegram lifespan, veto wiring, auto-trader endpoints, pool screening endpoint
+- `intel/wolfpack/notifications.py` — inline button support via bot singleton
+- `intel/wolfpack/config.py` — auto_trade_*, subgraph_api_key settings
+- `intel/pyproject.toml` — python-telegram-bot dependency
+- `app/src/app/pools/page.tsx` — Score column with color-coded recommendation badge
+- `app/src/lib/hooks/usePools.ts` — usePoolScreening hook
+- `app/src/app/page.tsx` — auto-trader equity stat card
+- `app/src/lib/hooks/useIntelligence.ts` — useAutoTraderStatus, useToggleAutoTrader hooks
 
 ## Next Steps
-1. Deploy to VPS: `cd /root/WolfPack && git pull && kill uvicorn && restart`
-2. Test live: trigger `/intelligence/run?symbol=BTC`, verify OI + social + whale in outputs
-3. Test watchlist: add SOL, verify persist, search works
-4. Test run-all with BTC + ETH on watchlist
+1. Deploy to VPS: `cd /root/WolfPack && git pull && pip install python-telegram-bot && kill uvicorn && restart`
+2. Set TELEGRAM_BOT_TOKEN in VPS .env (user has token from BotFather)
+3. Test: /status command in Telegram, run intel, verify inline buttons
+4. Test auto-trader: POST /auto-trader/toggle, run intel with high-conviction rec
+5. Test pool screening: GET /pools/screen (needs SUBGRAPH_API_KEY)
+6. Register for Reown project ID (WalletConnect)
