@@ -20,6 +20,8 @@ SNOOP_SCHEMA: dict = {
         "narrative_momentum": {"type": "string", "enum": ["accelerating", "peaking", "fading", "dormant"]},
         "crowd_positioning": {"type": "string", "enum": ["crowded_long", "crowded_short", "balanced"]},
         "contrarian_signal": {"type": "boolean"},
+        "whale_activity": {"type": "string"},
+        "social_data_quality": {"type": "string", "enum": ["strong", "moderate", "weak"]},
         "notable_observations": {"type": "array", "items": {"type": "string"}},
         "risk_flags": {"type": "array", "items": {"type": "string"}},
         "conviction": {"type": "number", "minimum": 0, "maximum": 100},
@@ -47,13 +49,15 @@ class SnoopAgent(Agent):
         return """You are The Snoop, a social intelligence analyst for the WolfPack system.
 
 Your role:
-- Infer crypto market sentiment from price action, funding rates, and volume patterns
-- Identify when crowd positioning is extreme (funding rates, OI changes)
+- Analyze crypto market sentiment from quant signals, social data, and whale activity
+- Use the Fear & Greed Index to gauge broad market mood (extreme values are contrarian signals)
+- Check if the symbol is trending on CoinGecko (high social attention = potential volatility)
+- Analyze whale trading patterns — net whale direction and volume indicate smart money positioning
+- Identify when crowd positioning is extreme (funding rates, OI changes, whale flows)
 - Detect narrative shifts from regime changes (panic, breakout, grinding)
 - Flag contrarian opportunities where positioning diverges from technicals
-- Estimate social volume intensity from volume + volatility patterns
 
-You receive quantitative data (not direct social feeds yet). Use it to INFER sentiment.
+You receive both quantitative module data AND social/whale intelligence feeds.
 
 Output a JSON object with:
 {
@@ -62,13 +66,15 @@ Output a JSON object with:
     "narrative_momentum": "accelerating" | "peaking" | "fading" | "dormant",
     "crowd_positioning": "crowded_long" | "crowded_short" | "balanced",
     "contrarian_signal": true/false,
+    "whale_activity": "brief summary of whale behavior and what it implies",
+    "social_data_quality": "strong" | "moderate" | "weak" (based on data availability),
     "notable_observations": ["observation 1", ...],
     "risk_flags": ["flag 1", ...],
     "conviction": 0-100,
     "summary": "2-3 sentence sentiment summary"
 }
 
-Be skeptical of hype. Distinguish signal from noise.
+Be skeptical of hype. Distinguish signal from noise. Whale data > social hype.
 
 Return ONLY a valid JSON object. No markdown, no code fences, no explanation outside the JSON."""
 
@@ -93,8 +99,14 @@ Return ONLY a valid JSON object. No markdown, no code fences, no explanation out
         if market_data.get("liquidity"):
             liq = market_data["liquidity"]
             context["liquidity"] = liq if isinstance(liq, dict) else liq.model_dump()
+        if market_data.get("social_sentiment"):
+            context["social_sentiment"] = market_data["social_sentiment"]
+        if market_data.get("whale_tracker"):
+            context["whale_tracker"] = market_data["whale_tracker"]
+        if market_data.get("open_interest_usd"):
+            context["open_interest_usd"] = market_data["open_interest_usd"]
 
-        prompt = f"""Infer social sentiment for {symbol} on {exchange} from these quantitative signals:
+        prompt = f"""Analyze social sentiment for {symbol} on {exchange} from these signals:
 
 {json.dumps(context, indent=2, default=str)}"""
 
@@ -112,6 +124,10 @@ Return ONLY a valid JSON object. No markdown, no code fences, no explanation out
             signals.append({"type": "narrative", "momentum": parsed["narrative_momentum"], "narrative": parsed.get("narrative", "")})
         if parsed.get("contrarian_signal"):
             signals.append({"type": "contrarian", "active": True})
+        if parsed.get("whale_activity"):
+            signals.append({"type": "whale_activity", "summary": parsed["whale_activity"]})
+        if parsed.get("social_data_quality"):
+            signals.append({"type": "social_quality", "level": parsed["social_data_quality"]})
         for flag in parsed.get("risk_flags", []):
             signals.append({"type": "risk_flag", "description": flag})
 

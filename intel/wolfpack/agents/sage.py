@@ -40,6 +40,7 @@ SAGE_SCHEMA: dict = {
         "macro_context": {"type": "string"},
         "carry_opportunities": {"type": "array", "items": {"type": "string"}},
         "regime_transition_risk": {"type": "string", "enum": ["low", "moderate", "high"]},
+        "oi_divergence_signal": {"type": "string"},
         "conviction": {"type": "number", "minimum": 0, "maximum": 100},
         "summary": {"type": "string"},
     },
@@ -71,8 +72,11 @@ Your role:
 - Identify regime transitions before they complete
 - Evaluate carry opportunities from funding rate differentials
 - Flag correlation regime changes (crisis lock, decorrelation events)
+- Analyze Open Interest levels for crowding risk (price up + OI down = bearish divergence)
+- Use Fear & Greed extremes as contrarian signals (extreme fear = potential bottom, extreme greed = potential top)
+- Factor whale positioning as directional bias input (whale net long/short)
 
-You receive quantitative module outputs. Use them to build a forward-looking view.
+You receive quantitative module outputs plus social/whale intelligence. Use all data to build a forward-looking view.
 
 Output a JSON object with:
 {
@@ -85,6 +89,7 @@ Output a JSON object with:
     "macro_context": "relevant macro factors inferred from data",
     "carry_opportunities": ["opportunity description", ...],
     "regime_transition_risk": "low" | "moderate" | "high",
+    "oi_divergence_signal": "description of OI vs price divergence, if any",
     "conviction": 0-100,
     "summary": "2-3 sentence strategic summary"
 }
@@ -129,8 +134,14 @@ Return ONLY a valid JSON object. No markdown, no code fences, no explanation out
         # Latest price for scenario levels
         if market_data.get("latest_price"):
             context["latest_price"] = market_data["latest_price"]
+        if market_data.get("open_interest_usd"):
+            context["open_interest_usd"] = market_data["open_interest_usd"]
+        if market_data.get("social_sentiment"):
+            context["social_sentiment"] = market_data["social_sentiment"]
+        if market_data.get("whale_tracker"):
+            context["whale_tracker"] = market_data["whale_tracker"]
 
-        prompt = f"""Produce a strategic forecast for {symbol} on {exchange} from these quantitative signals:
+        prompt = f"""Produce a strategic forecast for {symbol} on {exchange} from these signals (including OI, social, and whale data):
 
 {json.dumps(context, indent=2, default=str)}"""
 
@@ -170,6 +181,8 @@ Return ONLY a valid JSON object. No markdown, no code fences, no explanation out
 
         for opp in parsed.get("carry_opportunities", []):
             signals.append({"type": "carry", "description": opp})
+        if parsed.get("oi_divergence_signal"):
+            signals.append({"type": "oi_divergence", "signal": parsed["oi_divergence_signal"]})
 
         return AgentOutput(
             agent_name=self.agent_key,

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useExchange } from "@/lib/exchange";
-import { useAgentOutputs, useAgentStatus, useRecommendations, usePortfolio } from "@/lib/hooks/useIntelligence";
+import { useAgentOutputs, useAgentStatus, useRecommendations, usePortfolio, useWatchlist } from "@/lib/hooks/useIntelligence";
 import { usePrice } from "@/lib/hooks/useMarketData";
 
 export default function Dashboard() {
@@ -13,6 +13,7 @@ export default function Dashboard() {
   const { data: portfolio } = usePortfolio();
   const { data: btcPrice } = usePrice("BTC");
   const { data: ethPrice } = usePrice("ETH");
+  const { data: watchlist } = useWatchlist();
 
   const agents = agentStatus?.agents ?? [];
   const isActive = portfolio?.status === "active";
@@ -45,9 +46,10 @@ export default function Dashboard() {
           delay={3}
         />
         <StatCard
-          label="Pending Recs"
-          value={recommendations?.length?.toString() ?? "--"}
-          color="amber"
+          label="Watchlist"
+          value={watchlist?.length?.toString() ?? "0"}
+          suffix="symbols"
+          color="cyan"
           delay={4}
         />
       </div>
@@ -256,6 +258,7 @@ function StatCard({
     red: "text-[var(--wolf-red)]",
     purple: "text-[var(--wolf-purple)]",
     amber: "text-[var(--wolf-amber)]",
+    cyan: "text-[var(--wolf-cyan)]",
   };
 
   return (

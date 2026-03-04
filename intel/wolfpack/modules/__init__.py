@@ -13,6 +13,8 @@ from wolfpack.modules.volatility import VolatilitySignal
 from wolfpack.modules.circuit_breaker import CircuitBreaker
 from wolfpack.modules.execution import ExecutionTiming
 from wolfpack.modules.backtest import BacktestHarness
+from wolfpack.modules.social_sentiment import SocialSentimentAnalyzer
+from wolfpack.modules.whale_tracker import WhaleTracker
 
 __all__ = [
     "RegimeDetector",
@@ -23,4 +25,6 @@ __all__ = [
     "CircuitBreaker",
     "ExecutionTiming",
     "BacktestHarness",
+    "SocialSentimentAnalyzer",
+    "WhaleTracker",
 ]

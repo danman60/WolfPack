@@ -56,6 +56,8 @@ _module_last_runs: dict[str, datetime | None] = {
     "circuit_breakers": None,
     "execution_timing": None,
     "backtest": None,
+    "social_sentiment": None,
+    "whale_tracker": None,
 }
 
 # Circuit breaker singleton (persists across cycles)
@@ -736,7 +738,9 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
         from wolfpack.modules.funding import FundingIntel
         from wolfpack.modules.liquidity import LiquidityIntel
         from wolfpack.modules.regime import RegimeDetector
+        from wolfpack.modules.social_sentiment import SocialSentimentAnalyzer
         from wolfpack.modules.volatility import VolatilitySignal
+        from wolfpack.modules.whale_tracker import WhaleTracker
 
         adapter = get_exchange(exchange)  # type: ignore[arg-type]
 
@@ -745,6 +749,11 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
         candles_1h = await adapter.get_candles(symbol, interval="1h", limit=300)
         orderbook = await adapter.get_orderbook(symbol, depth=20)
         funding_rates = await adapter.get_funding_rates()
+
+        # Fetch markets for OI data
+        all_markets = await adapter.get_markets()
+        symbol_market = next((m for m in all_markets if m.symbol == symbol), None)
+        open_interest_usd = symbol_market.open_interest * symbol_market.last_price if symbol_market and symbol_market.open_interest else 0.0
 
         # Also fetch ETH candles for correlation analysis
         eth_candles: list = []
@@ -786,8 +795,8 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
         if symbol_rate:
             funding_output = funding_intel.analyze(
                 funding=symbol_rate,
-                open_interest_usd=0,
-                oi_change_24h_pct=0,
+                open_interest_usd=open_interest_usd,
+                oi_change_24h_pct=0,  # Would need previous snapshot to compute delta
             )
             store_module_output("funding_carry", exchange, funding_output.model_dump(), symbol)
             _module_last_runs["funding_carry"] = now_utc
@@ -821,6 +830,32 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
         exec_output = exec_timing.analyze(hourly_volumes, current_hour)
         store_module_output("execution_timing", exchange, exec_output.model_dump(), symbol)
         _module_last_runs["execution_timing"] = now_utc
+
+        # Social sentiment + whale tracker (async, non-blocking)
+        social_output = None
+        whale_output = None
+        try:
+            social_analyzer = SocialSentimentAnalyzer()
+            whale_tracker = WhaleTracker()
+            social_result, whale_result = await asyncio.gather(
+                social_analyzer.analyze(symbol),
+                whale_tracker.analyze(symbol),
+                return_exceptions=True,
+            )
+            if not isinstance(social_result, Exception):
+                social_output = social_result
+                store_module_output("social_sentiment", exchange, social_output.model_dump(), symbol)
+                _module_last_runs["social_sentiment"] = now_utc
+            else:
+                logger.warning(f"[cycle] Social sentiment failed: {social_result}")
+            if not isinstance(whale_result, Exception):
+                whale_output = whale_result
+                store_module_output("whale_tracker", exchange, whale_output.model_dump(), symbol)
+                _module_last_runs["whale_tracker"] = now_utc
+            else:
+                logger.warning(f"[cycle] Whale tracker failed: {whale_result}")
+        except Exception as e:
+            logger.warning(f"[cycle] Social/whale modules failed: {e}")
 
         # Circuit breaker
         cb = _get_circuit_breaker()
@@ -875,12 +910,15 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
             "volatility": vol_output,
             "funding": funding_output.model_dump() if funding_output else None,
             "latest_price": latest_price,
+            "open_interest_usd": open_interest_usd,
+            "social_sentiment": social_output.model_dump() if social_output else None,
+            "whale_tracker": whale_output.model_dump() if whale_output else None,
         }
 
         # Quant gets candles too
         quant_data = {**market_data_base, "candles": candles_1h}
 
-        # Sage gets correlation
+        # Sage gets correlation + OI
         sage_data = {**market_data_base}
         if correlation_output:
             sage_data["correlation"] = correlation_output
@@ -1232,3 +1270,106 @@ async def _run_agent(agent: Any, market_data: dict, exchange: str, store_fn: Any
         raw_data=output.raw_data,
     )
     return output
+
+
+# ── Watchlist Endpoints ──
+
+
+@app.get("/watchlist")
+async def get_watchlist(exchange_id: str = "hyperliquid"):
+    """Return all watchlist symbols."""
+    from wolfpack.db import get_watchlist as db_get_watchlist
+
+    items = db_get_watchlist(exchange_id)
+    return {"watchlist": items}
+
+
+@app.post("/watchlist")
+async def add_watchlist(
+    symbol: str = Body(..., embed=True),
+    exchange_id: str = Body("hyperliquid", embed=True),
+    notes: str | None = Body(None, embed=True),
+    _auth: None = Depends(require_auth),
+):
+    """Add a symbol to the watchlist."""
+    from wolfpack.db import add_to_watchlist
+
+    row = add_to_watchlist(symbol, exchange_id, notes)
+    return {"status": "ok", "item": row}
+
+
+@app.delete("/watchlist/{symbol}")
+async def remove_watchlist(
+    symbol: str,
+    exchange_id: str = "hyperliquid",
+    _auth: None = Depends(require_auth),
+):
+    """Remove a symbol from the watchlist."""
+    from wolfpack.db import remove_from_watchlist
+
+    removed = remove_from_watchlist(symbol, exchange_id)
+    return {"status": "ok", "removed": removed}
+
+
+@app.get("/watchlist/search")
+async def search_symbols(q: str = "", exchange: str = "hyperliquid"):
+    """Search available symbols from exchange. Used for type-to-complete."""
+    from wolfpack.exchanges import get_exchange
+
+    try:
+        adapter = get_exchange(exchange)  # type: ignore[arg-type]
+        markets = await adapter.get_markets()
+        query = q.upper()
+        matches = [
+            {"symbol": m.symbol, "last_price": m.last_price, "volume_24h": m.volume_24h}
+            for m in markets
+            if query in m.symbol.upper()
+        ]
+        # Sort by volume descending, limit to 20
+        matches.sort(key=lambda x: x["volume_24h"], reverse=True)
+        return {"results": matches[:20]}
+    except Exception as e:
+        logger.error(f"[watchlist] Symbol search failed: {e}")
+        return {"results": []}
+
+
+# ── Multi-Symbol Intelligence ──
+
+
+@app.post("/intelligence/run-all")
+async def run_all_intelligence(
+    background_tasks: BackgroundTasks,
+    exchange: str = "hyperliquid",
+    _auth: None = Depends(require_auth),
+):
+    """Run intelligence for all watchlist symbols + open position symbols."""
+    if _running:
+        return {"status": "already_running", "agents": list(_running)}
+
+    from wolfpack.db import get_watchlist as db_get_watchlist
+
+    watchlist = db_get_watchlist(exchange)
+    watchlist_symbols = [w["symbol"] for w in watchlist]
+
+    # Also include symbols from open positions
+    engine = _get_paper_engine()
+    position_symbols = [p.symbol for p in engine.portfolio.positions]
+
+    all_symbols = list(dict.fromkeys(watchlist_symbols + position_symbols))  # Deduplicate, preserve order
+    if not all_symbols:
+        all_symbols = ["BTC"]  # Default
+
+    background_tasks.add_task(_run_multi_symbol, exchange, all_symbols)
+    return {"status": "started", "exchange": exchange, "symbols": all_symbols}
+
+
+async def _run_multi_symbol(exchange: str, symbols: list[str]) -> None:
+    """Run intelligence cycle sequentially for each symbol (avoids rate limits)."""
+    logger.info(f"[multi] Starting multi-symbol run for {symbols} on {exchange}")
+    for symbol in symbols:
+        try:
+            logger.info(f"[multi] Running cycle for {symbol}...")
+            await _run_full_cycle(exchange, symbol)
+        except Exception as e:
+            logger.error(f"[multi] Cycle failed for {symbol}: {e}")
+    logger.info(f"[multi] Multi-symbol run complete: {len(symbols)} symbols")

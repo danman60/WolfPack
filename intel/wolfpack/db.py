@@ -245,6 +245,47 @@ def store_candles(rows: list[dict]) -> int:
     return stored
 
 
+# ---------------------------------------------------------------------------
+# Watchlist helpers
+# ---------------------------------------------------------------------------
+
+
+def get_watchlist(exchange_id: str = "hyperliquid") -> list[dict]:
+    """Fetch all watchlist symbols for an exchange."""
+    db = get_db()
+    result = (
+        db.table("wp_watchlist")
+        .select("*")
+        .eq("exchange_id", exchange_id)
+        .order("added_at")
+        .execute()
+    )
+    return result.data or []
+
+
+def add_to_watchlist(symbol: str, exchange_id: str = "hyperliquid", notes: str | None = None) -> dict:
+    """Add a symbol to the watchlist. Returns the inserted row."""
+    db = get_db()
+    row: dict = {"symbol": symbol.upper(), "exchange_id": exchange_id}
+    if notes:
+        row["notes"] = notes
+    result = db.table("wp_watchlist").upsert(row, on_conflict="symbol,exchange_id").execute()
+    return result.data[0] if result.data else row
+
+
+def remove_from_watchlist(symbol: str, exchange_id: str = "hyperliquid") -> bool:
+    """Remove a symbol from the watchlist."""
+    db = get_db()
+    result = (
+        db.table("wp_watchlist")
+        .delete()
+        .eq("symbol", symbol.upper())
+        .eq("exchange_id", exchange_id)
+        .execute()
+    )
+    return bool(result.data)
+
+
 def get_cached_candles(
     exchange: str, symbol: str, interval: str, start_time: int, end_time: int
 ) -> list[dict]:

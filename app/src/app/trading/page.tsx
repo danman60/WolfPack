@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useExchange } from "@/lib/exchange";
 import { intelFetch } from "@/lib/intel";
@@ -9,6 +9,11 @@ import {
   useApproveRecommendation,
   useRejectRecommendation,
   usePortfolio,
+  useWatchlist,
+  useAddToWatchlist,
+  useRemoveFromWatchlist,
+  useSymbolSearch,
+  useRunAllIntelligence,
 } from "@/lib/hooks/useIntelligence";
 import { useCandles, useMarkets, type Candle } from "@/lib/hooks/useMarketData";
 import {
@@ -46,6 +51,21 @@ export default function TradingPage() {
   // Market data
   const { data: candles, isLoading: candlesLoading } = useCandles(selectedSymbol, "1h", 168);
   const { data: markets } = useMarkets();
+
+  // Watchlist
+  const { data: watchlist } = useWatchlist(activeExchange);
+  const addWatchlist = useAddToWatchlist();
+  const removeWatchlist = useRemoveFromWatchlist();
+  const runAllMutation = useRunAllIntelligence();
+  const [searchQuery, setSearchQuery] = useState("");
+  const { data: searchResults } = useSymbolSearch(searchQuery, activeExchange);
+  const [showSearch, setShowSearch] = useState(false);
+
+  const handleAddSymbol = useCallback((sym: string) => {
+    addWatchlist.mutate({ symbol: sym, exchangeId: activeExchange });
+    setSearchQuery("");
+    setShowSearch(false);
+  }, [addWatchlist, activeExchange]);
 
   const isActive = portfolio?.status === "active";
 
@@ -369,6 +389,89 @@ export default function TradingPage() {
             </div>
           )}
         </div>
+      </div>
+
+      {/* Watchlist */}
+      <div className="wolf-card p-6">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <div className="w-1 h-4 rounded-full bg-[var(--wolf-cyan)]" />
+            <h2 className="text-lg font-semibold text-white">Watchlist</h2>
+            <span className="text-xs text-gray-500 ml-1">{watchlist?.length ?? 0} symbols</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => runAllMutation.mutate({ exchange: activeExchange })}
+              disabled={runAllMutation.isPending || !watchlist?.length}
+              className="px-3 py-1.5 bg-[var(--wolf-cyan)]/20 text-[var(--wolf-cyan)] rounded text-xs font-semibold hover:bg-[var(--wolf-cyan)]/30 transition disabled:opacity-50"
+            >
+              {runAllMutation.isPending ? "Running..." : "Run All Intel"}
+            </button>
+            <button
+              onClick={() => setShowSearch(!showSearch)}
+              className="px-3 py-1.5 bg-[var(--surface)] border border-[var(--border)] text-gray-300 rounded text-xs font-semibold hover:text-white transition"
+            >
+              + Add
+            </button>
+          </div>
+        </div>
+
+        {/* Search input */}
+        {showSearch && (
+          <div className="mb-4 relative">
+            <input
+              type="text"
+              placeholder="Search symbols (BTC, ETH, SOL...)"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-[var(--surface)] border border-[var(--border)] rounded-md px-3 py-2 text-white text-sm focus:border-[var(--wolf-cyan)] focus:outline-none"
+              autoFocus
+            />
+            {searchResults && searchResults.length > 0 && (
+              <div className="absolute z-10 mt-1 w-full bg-[var(--surface-elevated)] border border-[var(--border)] rounded-md max-h-48 overflow-y-auto">
+                {searchResults.map((r) => (
+                  <button
+                    key={r.symbol}
+                    onClick={() => handleAddSymbol(r.symbol)}
+                    className="w-full text-left px-3 py-2 text-sm hover:bg-[var(--surface-hover)] transition flex items-center justify-between"
+                  >
+                    <span className="text-white font-mono">{r.symbol}-USD</span>
+                    <span className="text-xs text-gray-500 font-mono">
+                      ${r.last_price.toLocaleString()} | Vol: ${(r.volume_24h / 1e6).toFixed(1)}M
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Watchlist chips */}
+        {watchlist && watchlist.length > 0 ? (
+          <div className="flex flex-wrap gap-2">
+            {watchlist.map((item) => (
+              <div
+                key={item.id}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--surface)] border border-[var(--border)] rounded-full group hover:border-[var(--wolf-cyan)]/50 transition"
+              >
+                <button
+                  onClick={() => setSelectedSymbol(item.symbol)}
+                  className="text-sm font-mono text-gray-300 hover:text-white transition"
+                >
+                  {item.symbol}
+                </button>
+                <button
+                  onClick={() => removeWatchlist.mutate({ symbol: item.symbol, exchangeId: activeExchange })}
+                  className="text-gray-600 hover:text-[var(--wolf-red)] transition text-xs opacity-0 group-hover:opacity-100"
+                >
+                  x
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-gray-500">No symbols on watchlist. Add symbols to track and run bulk intelligence.</p>
+        )}
       </div>
 
       {/* AI Recommendations */}

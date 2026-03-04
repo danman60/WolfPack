@@ -290,6 +290,119 @@ export function useSetStrategyMode() {
   });
 }
 
+// ── Watchlist Hooks ──
+
+interface WatchlistItem {
+  id: string;
+  symbol: string;
+  exchange_id: string;
+  added_at: string;
+  notes: string | null;
+}
+
+interface SymbolSearchResult {
+  symbol: string;
+  last_price: number;
+  volume_24h: number;
+}
+
+// Fetch watchlist
+export function useWatchlist(exchangeId: string = "hyperliquid") {
+  return useQuery({
+    queryKey: ["watchlist", exchangeId],
+    queryFn: async () => {
+      const res = await intelFetch(`/intel/watchlist?exchange_id=${exchangeId}`);
+      if (!res.ok) return [];
+      const data = await res.json();
+      return (data.watchlist ?? []) as WatchlistItem[];
+    },
+    refetchInterval: 30_000,
+    retry: false,
+  });
+}
+
+// Add symbol to watchlist
+export function useAddToWatchlist() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ symbol, exchangeId = "hyperliquid" }: { symbol: string; exchangeId?: string }) => {
+      const res = await intelFetch("/intel/watchlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ symbol, exchange_id: exchangeId }),
+      });
+      if (!res.ok) throw new Error(`Add failed: ${res.status}`);
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["watchlist"] });
+    },
+  });
+}
+
+// Remove symbol from watchlist
+export function useRemoveFromWatchlist() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ symbol, exchangeId = "hyperliquid" }: { symbol: string; exchangeId?: string }) => {
+      const res = await intelFetch(`/intel/watchlist/${symbol}?exchange_id=${exchangeId}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error(`Remove failed: ${res.status}`);
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["watchlist"] });
+    },
+  });
+}
+
+// Search available symbols (debounced in component)
+export function useSymbolSearch(query: string, exchange: string = "hyperliquid") {
+  return useQuery({
+    queryKey: ["symbol-search", query, exchange],
+    queryFn: async () => {
+      if (!query || query.length < 1) return [];
+      const res = await intelFetch(`/intel/watchlist/search?q=${encodeURIComponent(query)}&exchange=${exchange}`);
+      if (!res.ok) return [];
+      const data = await res.json();
+      return (data.results ?? []) as SymbolSearchResult[];
+    },
+    enabled: query.length >= 1,
+    retry: false,
+    staleTime: 10_000,
+  });
+}
+
+// Run intelligence for all watchlist symbols
+export function useRunAllIntelligence() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ exchange }: { exchange: string }) => {
+      const res = await intelFetch(`/intel/intelligence/run-all?exchange=${exchange}`, {
+        method: "POST",
+      });
+      if (!res.ok) throw new Error(`Run-all failed: ${res.status}`);
+      return res.json();
+    },
+    onSuccess: () => {
+      const invalidateAll = () => {
+        queryClient.invalidateQueries({ queryKey: ["agent-outputs"] });
+        queryClient.invalidateQueries({ queryKey: ["module-outputs"] });
+        queryClient.invalidateQueries({ queryKey: ["recommendations"] });
+        queryClient.invalidateQueries({ queryKey: ["agent-status"] });
+      };
+      setTimeout(invalidateAll, 15_000);
+      setTimeout(invalidateAll, 30_000);
+      setTimeout(invalidateAll, 60_000);
+      setTimeout(invalidateAll, 120_000);
+    },
+  });
+}
+
 // Fetch agent status from intel service
 export function useAgentStatus() {
   return useQuery({
