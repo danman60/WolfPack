@@ -125,7 +125,7 @@ export default function Dashboard() {
           </div>
           {recommendations && recommendations.length > 0 ? (
             <div className="space-y-1">
-              {recommendations.slice(0, 5).map((rec: Record<string, unknown>) => (
+              {recommendations.slice(0, 5).map((rec) => (
                 <div
                   key={rec.id as string}
                   className="flex items-center justify-between py-2.5 px-3 -mx-3 rounded-lg hover:bg-[var(--surface-hover)]/50 transition-colors"

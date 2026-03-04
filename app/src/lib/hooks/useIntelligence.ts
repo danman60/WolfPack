@@ -4,6 +4,44 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { intelFetch } from "@/lib/intel";
 
+/* ── Row types matching Supabase wp_ tables ── */
+
+interface AgentOutput {
+  id: string;
+  agent_name: string;
+  exchange_id: string;
+  summary: string;
+  signals: Record<string, unknown>[];
+  confidence: number;
+  raw_data: Record<string, unknown>;
+  created_at: string;
+}
+
+interface ModuleOutput {
+  id: string;
+  module_name: string;
+  exchange_id: string;
+  output_data: Record<string, unknown>;
+  created_at: string;
+}
+
+interface TradeRecommendation {
+  id: string;
+  symbol: string;
+  direction: string;
+  conviction: number;
+  status: string;
+  rationale: string;
+  entry_price: number | null;
+  stop_loss: number | null;
+  take_profit: number | null;
+  size_pct: number | null;
+  created_at: string;
+  [key: string]: unknown; // Allow additional fields from DB
+}
+
+/* ── Hooks ── */
+
 // Fetch latest agent outputs (one per agent)
 export function useAgentOutputs() {
   return useQuery({
@@ -17,14 +55,15 @@ export function useAgentOutputs() {
 
       if (error) throw error;
 
+      const rows = (data ?? []) as unknown as AgentOutput[];
       // Deduplicate: keep latest per agent
-      const seen = new Map<string, typeof data[0]>();
-      for (const row of data ?? []) {
+      const seen = new Map<string, AgentOutput>();
+      for (const row of rows) {
         if (!seen.has(row.agent_name)) {
           seen.set(row.agent_name, row);
         }
       }
-      return Object.fromEntries(seen);
+      return Object.fromEntries(seen) as Record<string, AgentOutput>;
     },
     refetchInterval: 30_000, // Poll every 30s
   });
@@ -43,14 +82,15 @@ export function useModuleOutputs() {
 
       if (error) throw error;
 
+      const rows = (data ?? []) as unknown as ModuleOutput[];
       // Deduplicate: keep latest per module
-      const seen = new Map<string, typeof data[0]>();
-      for (const row of data ?? []) {
+      const seen = new Map<string, ModuleOutput>();
+      for (const row of rows) {
         if (!seen.has(row.module_name)) {
           seen.set(row.module_name, row);
         }
       }
-      return Object.fromEntries(seen);
+      return Object.fromEntries(seen) as Record<string, ModuleOutput>;
     },
     refetchInterval: 30_000,
   });
@@ -69,7 +109,7 @@ export function useRecommendations(status: string = "pending") {
         .limit(20);
 
       if (error) throw error;
-      return data ?? [];
+      return (data ?? []) as unknown as TradeRecommendation[];
     },
     refetchInterval: 15_000,
   });

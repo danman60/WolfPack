@@ -379,7 +379,7 @@ export default function TradingPage() {
         </div>
         {recommendations && recommendations.length > 0 ? (
           <div className="space-y-3">
-            {recommendations.map((rec: Record<string, unknown>) => (
+            {recommendations.map((rec) => (
               <div
                 key={rec.id as string}
                 className="border border-[var(--border)] rounded-lg p-4 flex items-center justify-between"
