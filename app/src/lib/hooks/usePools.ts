@@ -233,8 +233,7 @@ export function usePoolScreening(limit = 20) {
   return useQuery<ScreenedPool[]>({
     queryKey: ["pool-screening", limit],
     queryFn: async () => {
-      const intelUrl = process.env.NEXT_PUBLIC_INTEL_URL || "http://localhost:8000";
-      const res = await fetch(`${intelUrl}/intel/pools/screen?limit=${limit}`);
+      const res = await fetch(`/intel/pools/screen?limit=${limit}`);
       if (!res.ok) return [];
       const data = await res.json();
       return (data.pools ?? []) as ScreenedPool[];
