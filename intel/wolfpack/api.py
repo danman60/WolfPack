@@ -1852,11 +1852,20 @@ async def screen_pools(limit: int = 20):
     from wolfpack.modules.pool_screening import PoolScreeningInput, screen_pool
 
     api_key = settings.subgraph_api_key
-    if api_key:
-        subgraph_url = f"https://gateway.thegraph.com/api/{api_key}/subgraphs/id/5zvR82QoaXYFyDEKLZ9t6v9adgnptxYpKpSbxtgVENFV"
-    else:
-        # Free public endpoint (rate-limited but no key needed)
-        subgraph_url = "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3"
+    if not api_key:
+        # Free public endpoint - no signup, just works
+        api_key = "demo"
+
+    # Alchemy subgraph endpoint (free, no signup)
+    subgraph_url = f"https://eth-mainnet.g.alchemy.com/api/subgraphs/id/uniswap-v3"
+
+    # Fallback endpoints to try
+    fallback_urls = [
+        f"https://gateway.thegraph.com/api/{api_key}/subgraphs/id/5zvR82QoaXYFyDEKLZ9t6v9adgnptxYpKpSbxtgVENFV",
+        "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3",
+    ]
+
+    endpoints = [subgraph_url] + fallback_urls
 
     query = """
     query TopPools($first: Int!) {
@@ -1879,22 +1888,35 @@ async def screen_pools(limit: int = 20):
     }
     """
 
-    try:
-        async with httpx.AsyncClient(timeout=15.0) as client:
-            resp = await client.post(
-                subgraph_url,
-                json={"query": query, "variables": {"first": limit * 2}},
-            )
-            if resp.status_code != 200:
-                return {"status": "error", "message": f"Subgraph HTTP {resp.status_code}", "pools": []}
+    pools = []
+    last_error = None
 
-            data = resp.json()
-            if "errors" in data:
-                return {"status": "error", "message": str(data["errors"]), "pools": []}
+    for url in endpoints:
+        try:
+            async with httpx.AsyncClient(timeout=15.0) as client:
+                resp = await client.post(
+                    url,
+                    json={"query": query, "variables": {"first": limit * 2}},
+                    headers={"Content-Type": "application/json"},
+                )
+                if resp.status_code != 200:
+                    last_error = f"HTTP {resp.status_code}"
+                    continue
 
-            pools = data.get("data", {}).get("pools", [])
-    except Exception as e:
-        return {"status": "error", "message": str(e), "pools": []}
+                data = resp.json()
+                if "errors" in data:
+                    last_error = str(data["errors"])
+                    continue
+
+                pools = data.get("data", {}).get("pools", [])
+                if pools:
+                    break  # Success!
+        except Exception as e:
+            last_error = str(e)
+            continue
+
+    if not pools:
+        return {"status": "error", "message": f"Subgraph failed: {last_error}", "pools": []}
 
     scored: list[dict] = []
     for p in pools:
