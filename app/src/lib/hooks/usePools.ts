@@ -161,10 +161,7 @@ export function usePoolDetail(poolId: string | undefined) {
     queryKey: ["uniswap-pool-detail", poolId],
     queryFn: async () => {
       if (!poolId) return null;
-      const data = await subgraphFetch<{ pool: SubgraphPoolDetail | null }>(
-        POOL_DETAIL_QUERY,
-        { id: poolId.toLowerCase() }
-      );
+      const data = await fetchFromIntel<{ pool: SubgraphPoolDetail | null }>(`/pools/detail?pool_id=${poolId}`);
       return data.pool;
     },
     enabled: !!poolId,
@@ -177,10 +174,7 @@ export function useUserPositions(address: string | undefined) {
     queryKey: ["uniswap-positions", address],
     queryFn: async () => {
       if (!address) return [];
-      const data = await subgraphFetch<{ positions: SubgraphPosition[] }>(
-        POSITIONS_QUERY,
-        { owner: address.toLowerCase(), first: 50 }
-      );
+      const data = await fetchFromIntel<{ positions: SubgraphPosition[] }>(`/pools/positions?owner=${address}&first=50`);
       return data.positions;
     },
     enabled: !!address,
