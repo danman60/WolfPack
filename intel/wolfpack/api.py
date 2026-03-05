@@ -1964,6 +1964,142 @@ async def screen_pools(limit: int = 20):
     return {"status": "ok", "pools": scored[:limit]}
 
 
+# ── Pool Data Proxies (no API key required on frontend) ──
+
+TOP_POOLS_QUERY = """
+query TopPools($first: Int!) {
+    pools(
+        first: $first
+        orderBy: totalValueLockedUSD
+        orderDirection: desc
+        where: { volumeUSD_gt: "1000000" }
+    ) {
+        id
+        feeTier
+        totalValueLockedUSD
+        volumeUSD
+        token0 { id symbol name decimals }
+        token1 { id symbol name decimals }
+    }
+}
+"""
+
+POOL_DETAIL_QUERY = """
+query PoolDetail($id: ID!) {
+    pool(id: $id) {
+        id
+        feeTier
+        totalValueLockedUSD
+        volumeUSD
+        sqrtPrice
+        tick
+        liquidity
+        token0 { id symbol name decimals }
+        token1 { id symbol name decimals }
+        poolDayData(first: 30, orderBy: date, orderDirection: desc) {
+            date
+            volumeUSD
+            feesUSD
+            tvlUSD
+        }
+    }
+}
+"""
+
+POSITIONS_QUERY = """
+query Positions($owner: Bytes!, $first: Int!) {
+    positions(
+        where: { owner: $owner }
+        first: $first
+        orderBy: liquidity
+        orderDirection: desc
+    ) {
+        id
+        pool {
+            id
+            token0 { id symbol name decimals }
+            token1 { id symbol name decimals }
+            feeTier
+        }
+        liquidity
+        depositedToken0
+        depositedToken1
+        withdrawnToken0
+        withdrawnToken1
+        collectedFeesToken0
+        collectedFeesToken1
+        tickLower { tickIdx }
+        tickUpper { tickIdx }
+    }
+}
+"""
+
+
+async def _fetch_subgraph(query: str, variables: dict) -> dict:
+    """Fetch from Uniswap V3 subgraph with fallback endpoints."""
+    endpoints = [
+        "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3",
+        "https://gateway.thegraph.com/api/demo/subgraphs/id/5zvR82QoaXYFyDEKLZ9t6v9adgnptxYpKpSbxtgVENFV",
+    ]
+
+    for url in endpoints:
+        try:
+            async with httpx.AsyncClient(timeout=15.0) as client:
+                resp = await client.post(
+                    url,
+                    json={"query": query, "variables": variables},
+                    headers={"Content-Type": "application/json"},
+                )
+                if resp.status_code != 200:
+                    continue
+                data = resp.json()
+                if "errors" in data:
+                    continue
+                return data.get("data", {})
+        except Exception:
+            continue
+    raise HTTPException(status_code=502, detail="Subgraph unavailable")
+
+
+@app.get("/pools/top")
+async def get_top_pools(first: int = 50):
+    """Fetch top Uniswap V3 pools by TVL."""
+    try:
+        data = await _fetch_subgraph(TOP_POOLS_QUERY, {"first": first})
+        return {"pools": data.get("pools", [])}
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        logger.error(f"[pools/top] Failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/pools/detail")
+async def get_pool_detail(pool_id: str):
+    """Fetch detailed data for a specific pool."""
+    try:
+        data = await _fetch_subgraph(POOL_DETAIL_QUERY, {"id": pool_id.lower()})
+        return {"pool": data.get("pool")}
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        logger.error(f"[pools/detail] Failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/pools/positions")
+async def get_pool_positions(owner: str, first: int = 50):
+    """Fetch LP positions for an address."""
+    try:
+        data = await _fetch_subgraph(POSITIONS_QUERY, {"owner": owner.lower(), "first": first})
+        return {"positions": data.get("positions", [])}
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        logger.error(f"[pools/positions] Failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 # ── Multi-Symbol Intelligence ──
 
 

@@ -55,40 +55,17 @@ export interface SubgraphPosition {
 // Constants
 // ---------------------------------------------------------------------------
 
-const SUBGRAPH_API_KEY = process.env.NEXT_PUBLIC_SUBGRAPH_API_KEY || "";
-
-const SUBGRAPH_URL = SUBGRAPH_API_KEY
-  ? `https://gateway.thegraph.com/api/${SUBGRAPH_API_KEY}/subgraphs/id/5zvR82QoaXYFyDEKLZ9t6v9adgnptxYpKpSbxtgVENFV`
-  : "https://gateway.thegraph.com/api/subgraphs/id/5zvR82QoaXYFyDEKLZ9t6v9adgnptxYpKpSbxtgVENFV";
-
-// Note: The Graph hosted service (api.thegraph.com/subgraphs/name/) was shut down June 2024.
-// A valid NEXT_PUBLIC_SUBGRAPH_API_KEY from https://thegraph.com/studio is required.
-
 // ---------------------------------------------------------------------------
-// Subgraph fetcher with automatic fallback
+// Pool data fetcher via VPS proxy (no API key needed on frontend)
 // ---------------------------------------------------------------------------
 
-async function subgraphFetch<T>(
-  query: string,
-  variables: Record<string, unknown>
-): Promise<T> {
-  // Try primary endpoint
-  for (const url of [SUBGRAPH_URL]) {
-    try {
-      const res = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query, variables }),
-      });
-      if (!res.ok) continue;
-      const json = await res.json();
-      if (json.errors) continue;
-      return json.data as T;
-    } catch {
-      continue;
-    }
+async function fetchFromIntel<T>(path: string): Promise<T> {
+  const res = await fetch(`/intel${path}`);
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(err || `Failed to fetch: ${res.status}`);
   }
-  throw new Error("Failed to fetch from Uniswap V3 subgraph");
+  return res.json() as Promise<T>;
 }
 
 // ---------------------------------------------------------------------------
@@ -171,10 +148,7 @@ export function useTopPools(count = 50) {
   return useQuery<SubgraphPool[]>({
     queryKey: ["uniswap-top-pools", count],
     queryFn: async () => {
-      const data = await subgraphFetch<{ pools: SubgraphPool[] }>(
-        TOP_POOLS_QUERY,
-        { first: count }
-      );
+      const data = await fetchFromIntel<{ pools: SubgraphPool[] }>(`/pools/top?first=${count}`);
       return data.pools;
     },
     staleTime: 60_000,
