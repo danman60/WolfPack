@@ -67,7 +67,7 @@ async def require_auth(
 ) -> None:
     """Verify bearer token on protected endpoints. No-op if API_SECRET_KEY is unset."""
     if not settings.api_secret_key:
-        return  # Auth disabled — dev mode
+        raise HTTPException(status_code=403, detail="API authentication not configured")
     if creds is None or creds.credentials != settings.api_secret_key:
         raise HTTPException(status_code=401, detail="Invalid or missing API key")
 
