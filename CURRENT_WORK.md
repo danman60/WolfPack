@@ -1,41 +1,40 @@
 # Current Work - WolfPack
 
 ## Active Task
-Frontend Data & UX Upgrade — 4 features — COMPLETE
+None — last task completed.
 
-## Recent Changes (This Session)
-- `c25adbb` — feat: 24h change, TradingView chart, trade history, auto-bot page
+## Recent Changes (2026-03-13)
+- Built full Playwright CLI business logic test suite (tests/20-27)
+- Updated helpers.js with new utilities: isBackendUp, skipTest, clickButton, waitForAPI, fillByLabel, getButtonTexts, assertOkResponse
+- Updated run-all.sh to support SUITE=smoke|workflow|all
+- Installed intel backend Python venv at intel/.venv/
+- All 20 tests passing on production (https://wolf-pack-eight.vercel.app/)
 
-### What was implemented:
-1. **24h % Change** — `use24hChange(symbol)` hook in useMarketData.ts, displayed on dashboard BTC/ETH tickers and trading page
-2. **TradingView Chart** — lightweight-charts candlestick chart with SMA(20,50), EMA(12), Bollinger Bands, RSI(14), MACD(12,26,9), 6 timeframes (1m-1D), 3 tabs (Price/Volume/Indicators)
-3. **Trade History** — `wp_trade_history` Supabase table, `_store_closed_trade()` in paper_trading.py, `GET /portfolio/trades` endpoint, `useTradeHistory` hook, trade history section on /portfolio
-4. **Auto-Bot Page** — `/auto-bot` route with enable/disable toggle, bucket stats, configuration (conviction threshold + equity), open positions, pending position actions, activity log. `POST /auto-trader/config` backend endpoint. `useAutoTraderTrades` + `useConfigureAutoTrader` hooks. Nav link added.
+### Workflow Tests Created
+| File | Test | Notes |
+|------|------|-------|
+| 20-paper-trade.js | Order form fill + submit | Tolerates Supabase 500 in dev |
+| 21-intelligence-cycle.js | Run Intelligence, verify agent outputs | |
+| 22-approve-reject.js | Approve/reject recommendations | Needs prior intel run for data |
+| 23-close-position.js | Close position on Portfolio page | Tolerates Supabase 500 in dev |
+| 24-autobot-toggle.js | Toggle Auto-Bot, save config, revert | |
+| 25-exchange-switch.js | Switch HL↔dYdX, verify data refresh | UI-only, no backend needed |
+| 26-backtest.js | Configure + run backtest | Button text is "Run Backtest" |
+| 27-watchlist.js | Add/remove symbols from watchlist | |
 
-### New files:
-- `app/src/app/auto-bot/page.tsx` — dedicated auto-trader page
-- `app/src/components/TradingChart.tsx` — lightweight-charts wrapper with indicators
-- `app/src/lib/indicators.ts` — pure math: SMA, EMA, BB, RSI, MACD
-
-### Modified files:
-- `app/src/lib/hooks/useMarketData.ts` — use24hChange hook
-- `app/src/app/page.tsx` — 24h change on PriceTicker
-- `app/src/app/trading/page.tsx` — TradingChart replaces recharts, 24h change
-- `app/src/app/portfolio/page.tsx` — trade history section
-- `app/src/components/Nav.tsx` — Auto-Bot nav link
-- `app/src/lib/hooks/useIntelligence.ts` — 3 new hooks
-- `intel/wolfpack/api.py` — GET /portfolio/trades, POST /auto-trader/config
-- `intel/wolfpack/paper_trading.py` — _store_closed_trade()
+## Blockers / Open Questions
+- Exchange context doesn't persist across page navigation (resets to Hyperliquid)
+- No recommendations generated in test runs — approve/reject test can't fully exercise buttons
+- intel/.env not configured locally (no Supabase creds) — some endpoints return 500 in dev
 
 ## Next Steps
-1. Deploy to VPS: `cd /root/WolfPack && git pull`
-2. Test all 4 features in browser
-3. Verify chart renders with live data
-4. Test auto-bot config persistence
-5. Close a position and verify trade history populates
+- Generate intelligence data so approve/reject test can be fully validated
+- Fix exchange persistence across navigation (if it's a bug)
+- Consider adding test for full trade lifecycle: place order → run intel → approve rec → close position
 
 ## Context for Next Session
-- lightweight-charts is browser-only — must use dynamic import + useEffect (no SSR)
-- Trade history stores on close_position() — both manual and auto-trader closes
-- Auto-bot config is in-memory (resets on restart) — env vars are boot defaults
-- `POST /auto-trader/config` only resets equity if no open positions
+- Dev server: port 3001 (port 3000 used by Remotion)
+- Intel backend: `cd intel && source .venv/bin/activate && uvicorn wolfpack.api:app --port 8000`
+- Production: https://wolf-pack-eight.vercel.app/
+- Test runner: `bash tests/run-all.sh <url>` or `SUITE=workflow bash tests/run-all.sh <url>`
+- All 20 tests green on production as of 2026-03-13
