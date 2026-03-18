@@ -52,10 +52,6 @@ export interface SubgraphPosition {
 }
 
 // ---------------------------------------------------------------------------
-// Constants
-// ---------------------------------------------------------------------------
-
-// ---------------------------------------------------------------------------
 // Pool data fetcher via VPS proxy (no API key needed on frontend)
 // ---------------------------------------------------------------------------
 
@@ -67,78 +63,6 @@ async function fetchFromIntel<T>(path: string): Promise<T> {
   }
   return res.json() as Promise<T>;
 }
-
-// ---------------------------------------------------------------------------
-// Queries
-// ---------------------------------------------------------------------------
-
-const TOP_POOLS_QUERY = `
-  query TopPools($first: Int!) {
-    pools(
-      first: $first
-      orderBy: totalValueLockedUSD
-      orderDirection: desc
-      where: { volumeUSD_gt: "1000000" }
-    ) {
-      id
-      feeTier
-      totalValueLockedUSD
-      volumeUSD
-      token0 { id symbol name decimals }
-      token1 { id symbol name decimals }
-    }
-  }
-`;
-
-const POOL_DETAIL_QUERY = `
-  query PoolDetail($id: ID!) {
-    pool(id: $id) {
-      id
-      feeTier
-      totalValueLockedUSD
-      volumeUSD
-      sqrtPrice
-      tick
-      liquidity
-      token0 { id symbol name decimals }
-      token1 { id symbol name decimals }
-      poolDayData(first: 30, orderBy: date, orderDirection: desc) {
-        date
-        volumeUSD
-        feesUSD
-        tvlUSD
-      }
-    }
-  }
-`;
-
-const POSITIONS_QUERY = `
-  query Positions($owner: Bytes!, $first: Int!) {
-    positions(
-      where: { owner: $owner }
-      first: $first
-      orderBy: liquidity
-      orderDirection: desc
-    ) {
-      id
-      pool {
-        id
-        token0 { id symbol name decimals }
-        token1 { id symbol name decimals }
-        feeTier
-      }
-      liquidity
-      depositedToken0
-      depositedToken1
-      withdrawnToken0
-      withdrawnToken1
-      collectedFeesToken0
-      collectedFeesToken1
-      tickLower { tickIdx }
-      tickUpper { tickIdx }
-    }
-  }
-`;
 
 // ---------------------------------------------------------------------------
 // Hooks

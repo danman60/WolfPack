@@ -2,10 +2,11 @@
 
 import asyncio
 import logging
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
-from fastapi import BackgroundTasks, Body, Depends, FastAPI, HTTPException, Request
+import httpx
+from fastapi import BackgroundTasks, Body, Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
@@ -52,7 +53,11 @@ app = FastAPI(title="WolfPack Intel", version="0.1.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "https://wolf-pack-eight.vercel.app",
+        "http://localhost:3000",
+        "http://localhost:3001",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -2038,7 +2043,6 @@ query Positions($owner: Bytes!, $first: Int!) {
 async def _fetch_subgraph(query: str, variables: dict) -> dict:
     """Fetch from Uniswap V3 subgraph with fallback endpoints."""
     endpoints = [
-        "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3",
         "https://gateway.thegraph.com/api/demo/subgraphs/id/5zvR82QoaXYFyDEKLZ9t6v9adgnptxYpKpSbxtgVENFV",
     ]
 
