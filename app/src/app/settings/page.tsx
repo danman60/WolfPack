@@ -48,7 +48,11 @@ export default function SettingsPage() {
                   <p className="text-xs text-gray-500 mt-0.5">
                     {ex.id === "hyperliquid"
                       ? "On-chain perpetual futures (L1)"
-                      : "Decentralized perpetual exchange (Cosmos)"}
+                      : ex.id === "dydx"
+                      ? "Decentralized perpetual exchange (Cosmos)"
+                      : ex.id === "kraken"
+                      ? "Centralized exchange — spot & futures via CLI"
+                      : "Exchange"}
                   </p>
                 </div>
               </div>

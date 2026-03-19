@@ -37,9 +37,28 @@ export function SignalFeed() {
   if (snoopOutput?.signals) {
     for (const s of snoopOutput.signals) {
       if (s.type === "sentiment" || s.source) {
+        // Build a readable headline from signal data instead of raw JSON
+        let headline = (s.headline ?? s.text ?? s.summary ?? "") as string;
+        if (!headline) {
+          if (s.type === "sentiment" && s.score !== undefined) {
+            const score = Number(s.score);
+            const direction = score > 0 ? "Bullish" : score < 0 ? "Bearish" : "Neutral";
+            headline = `${direction} sentiment signal (score: ${score})`;
+          } else if (s.type === "trend") {
+            headline = `${s.direction ?? "Unknown"} trend (${s.strength ?? "moderate"})`;
+          } else if (s.type === "risk") {
+            headline = `Risk level: ${s.level ?? "unknown"}`;
+          } else if (s.type === "recommendation") {
+            headline = `${s.direction ?? ""} ${s.symbol ?? ""} — conviction ${s.conviction ?? "?"}%`;
+          } else if (s.indicator) {
+            headline = `${s.indicator}: ${typeof s.value === "number" ? Number(s.value).toFixed(2) : s.value}`;
+          } else {
+            headline = `${s.type ?? "Signal"} detected`;
+          }
+        }
         signals.push({
           source: (s.source ?? s.platform ?? "Snoop") as string,
-          headline: (s.headline ?? s.text ?? s.summary ?? JSON.stringify(s)) as string,
+          headline,
           sentiment: (s.sentiment ?? s.score ?? "neutral") as string,
           timestamp: (s.timestamp ?? snoopOutput.created_at ?? "") as string,
         });
