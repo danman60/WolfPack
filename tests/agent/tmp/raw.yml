@@ -1,4 +1,4 @@
-- generic [ref=e1]:
+- generic [active] [ref=e1]:
   - banner [ref=e2]:
     - navigation [ref=e3]:
       - generic [ref=e4]:
@@ -28,56 +28,113 @@
         - button "dYdX" [ref=e25] [cursor=pointer]
         - button "Kraken" [ref=e26] [cursor=pointer]
   - main [ref=e27]:
-    - generic [ref=e649]:
-      - generic [ref=e650]:
-        - generic [ref=e651]:
-          - heading "Auto-Bot" [level=1] [ref=e652]
-          - paragraph [ref=e653]: Autonomous trading powered by Brief intelligence
-        - generic [ref=e654]:
-          - generic [ref=e655]: Paused
-          - button "Enable" [ref=e656] [cursor=pointer]
-      - paragraph [ref=e658]: "How it works: The Auto-Bot follows Brief intelligence — when Brief recommends a trade above the conviction threshold, the bot executes it automatically. It also manages positions by auto-executing close, stop-loss, and take-profit adjustments. Operates a separate equity bucket from manual trading."
-      - generic [ref=e659]:
-        - generic [ref=e660]:
-          - paragraph [ref=e661]: Equity
-          - paragraph [ref=e662]: $5,000
-        - generic [ref=e663]:
-          - paragraph [ref=e664]: Starting
-          - paragraph [ref=e665]: $5,000
-        - generic [ref=e666]:
-          - paragraph [ref=e667]: Realized P&L
-          - paragraph [ref=e668]: +$0.00
-        - generic [ref=e669]:
-          - paragraph [ref=e670]: Unrealized P&L
-          - paragraph [ref=e671]: +$0.00
-        - generic [ref=e672]:
-          - paragraph [ref=e673]: Return
-          - paragraph [ref=e674]: +0.00%
-      - generic [ref=e675]:
-        - heading "Configuration" [level=2] [ref=e678]
-        - generic [ref=e679]:
-          - generic [ref=e680]:
-            - text: Conviction Threshold
-            - generic [ref=e681]:
-              - spinbutton [active] [ref=e682]: "80"
-              - generic [ref=e683]: "%"
-            - paragraph [ref=e684]: "Current: 75% — Only executes recs above this level"
-          - generic [ref=e685]:
-            - text: Equity Allocation
-            - generic [ref=e686]:
-              - generic [ref=e687]: $
-              - spinbutton [ref=e688]
-            - paragraph [ref=e689]: Resets equity if no open positions
-          - button "Save Config" [ref=e691] [cursor=pointer]
-      - generic [ref=e692]:
-        - generic [ref=e693]:
-          - heading "Open Positions" [level=2] [ref=e695]
-          - generic [ref=e696]: 0 active
-        - generic [ref=e697]: No open auto-bot positions
-      - generic [ref=e698]:
-        - generic [ref=e699]:
-          - heading "Activity Log" [level=2] [ref=e701]
-          - generic [ref=e702]: 0 trades
-        - generic [ref=e703]: No auto-bot trades yet. Enable the bot and run intelligence to start.
-  - alert [ref=e103]
-  - generic [ref=e506]: $10,000
+    - generic [ref=e28]:
+      - generic [ref=e29]:
+        - heading "Settings" [level=1] [ref=e30]
+        - paragraph [ref=e31]: Platform configuration — read-only display, configure via .env files
+      - generic [ref=e32]:
+        - heading "Exchange Configuration" [level=2] [ref=e33]
+        - generic [ref=e34]:
+          - generic [ref=e35]:
+            - generic [ref=e38]:
+              - text: Hyperliquid
+              - paragraph [ref=e39]: On-chain perpetual futures (L1)
+            - generic [ref=e40]: Active
+          - generic [ref=e44]:
+            - text: dYdX
+            - paragraph [ref=e45]: Decentralized perpetual exchange (Cosmos)
+          - generic [ref=e49]:
+            - text: Kraken
+            - paragraph [ref=e50]: Centralized exchange — spot & futures via CLI
+          - paragraph [ref=e51]: Switch exchanges using the toggle in the navigation bar.
+      - generic [ref=e52]:
+        - heading "Strategy Mode" [level=2] [ref=e53]
+        - generic [ref=e54]:
+          - generic [ref=e55]:
+            - generic [ref=e58]: Paper Trading
+            - paragraph [ref=e59]: Simulated execution with virtual portfolio. No real funds at risk.
+          - generic [ref=e60]:
+            - generic [ref=e63]: Live Trading
+            - paragraph [ref=e64]: Requires all safety checks to pass. Disabled until safety checklist is complete.
+        - paragraph [ref=e65]:
+          - text: Set
+          - code [ref=e66]: TRADING_MODE=live
+          - text: in .env to enable live trading (requires safety checklist).
+      - generic [ref=e67]:
+        - heading "LLM Providers" [level=2] [ref=e68]
+        - generic [ref=e69]:
+          - generic [ref=e70]:
+            - generic [ref=e71]:
+              - text: Anthropic (Claude)
+              - paragraph [ref=e72]: Primary analysis, The Brief synthesis
+            - generic [ref=e73]:
+              - code [ref=e74]: ANTHROPIC_API_KEY
+              - paragraph [ref=e75]: Configure in .env
+          - generic [ref=e76]:
+            - generic [ref=e77]:
+              - text: DeepSeek
+              - paragraph [ref=e78]: Quantitative analysis, The Quant
+            - generic [ref=e79]:
+              - code [ref=e80]: DEEPSEEK_API_KEY
+              - paragraph [ref=e81]: Configure in .env
+          - generic [ref=e82]:
+            - generic [ref=e83]:
+              - text: OpenRouter
+              - paragraph [ref=e84]: Fallback routing, multi-model access
+            - generic [ref=e85]:
+              - code [ref=e86]: OPENROUTER_API_KEY
+              - paragraph [ref=e87]: Configure in .env
+      - generic [ref=e88]:
+        - heading "Telegram Notifications" [level=2] [ref=e89]
+        - generic [ref=e90]:
+          - generic [ref=e91]:
+            - generic [ref=e92]:
+              - generic [ref=e93]:
+                - generic [ref=e94]: Bot Token
+                - code [ref=e95]: TELEGRAM_BOT_TOKEN
+              - paragraph [ref=e96]: Telegram bot API token for sending alerts
+            - generic [ref=e97]:
+              - generic [ref=e98]:
+                - generic [ref=e99]: Chat ID
+                - code [ref=e100]: TELEGRAM_CHAT_ID
+              - paragraph [ref=e101]: Target chat/channel for trade notifications
+          - generic [ref=e102]:
+            - paragraph [ref=e103]: Notification Events
+            - generic [ref=e104]:
+              - generic [ref=e105]: Trade Recommendations
+              - generic [ref=e106]: Position Opened
+              - generic [ref=e107]: Position Closed
+              - generic [ref=e108]: Circuit Breaker Triggered
+              - generic [ref=e109]: Daily Summary
+      - generic [ref=e110]:
+        - generic [ref=e111]:
+          - heading "Live Trading Safety Checklist" [level=2] [ref=e112]
+          - generic [ref=e113]: 4/5 passed
+        - generic [ref=e114]:
+          - generic [ref=e115]:
+            - generic [ref=e117]: ✗
+            - generic [ref=e118]:
+              - text: Private key configured
+              - paragraph [ref=e119]: HYPERLIQUID_PRIVATE_KEY must be set in .env
+          - generic [ref=e120]:
+            - generic [ref=e122]: ✓
+            - generic [ref=e123]:
+              - text: Circuit breaker active
+              - paragraph [ref=e124]: Circuit breaker must not be in EMERGENCY_STOP state
+          - generic [ref=e125]:
+            - generic [ref=e127]: ✓
+            - generic [ref=e128]:
+              - text: Max position size set
+              - paragraph [ref=e129]: Brief agent caps at 25% per position
+          - generic [ref=e130]:
+            - generic [ref=e132]: ✓
+            - generic [ref=e133]:
+              - text: Intelligence pipeline tested
+              - paragraph [ref=e134]: At least one full intelligence cycle must have run
+          - generic [ref=e135]:
+            - generic [ref=e137]: ✓
+            - generic [ref=e138]:
+              - text: Paper trading profitable
+              - paragraph [ref=e139]: Paper trading must show positive returns before going live
+        - paragraph [ref=e141]: All safety checks must pass before live trading can be enabled.
+  - alert [ref=e142]
