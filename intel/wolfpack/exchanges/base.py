@@ -5,7 +5,7 @@ from typing import Literal
 
 from pydantic import BaseModel
 
-ExchangeId = Literal["hyperliquid", "dydx"]
+ExchangeId = Literal["hyperliquid", "dydx", "kraken"]
 
 
 class Candle(BaseModel):

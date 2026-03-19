@@ -8,6 +8,10 @@ import {
   useAgentStatus,
 } from "@/lib/hooks/useIntelligence";
 import { WolfHead } from "@/components/WolfHead";
+import { SentimentGauge } from "@/components/charts/SentimentGauge";
+import { PredictionAccuracy } from "@/components/charts/PredictionAccuracy";
+import { PredictionOverlay } from "@/components/charts/PredictionOverlay";
+import { SignalFeed } from "@/components/charts/SignalFeed";
 
 const AGENTS = [
   { key: "quant", name: "The Quant", role: "Technical Analysis", description: "Regime detection, technical indicators, quantitative signals, chart patterns" },
@@ -43,6 +47,18 @@ export default function IntelligencePage() {
     }
   }
 
+  // Compute sentiment value from Brief agent output
+  const briefOutput = agentOutputs?.brief;
+  const sentimentValue = (() => {
+    if (!briefOutput) return 0;
+    const confidence = briefOutput.confidence ?? 0;
+    const signals = briefOutput.signals ?? [];
+    const rec = signals.find((s: Record<string, unknown>) => s.type === "recommendation" || s.direction);
+    const direction = rec?.direction ?? (briefOutput.raw_data as Record<string, unknown>)?.direction ?? "neutral";
+    const multiplier = direction === "long" ? 1 : direction === "short" ? -1 : 0;
+    return Math.round(confidence * 100 * multiplier);
+  })();
+
   return (
     <div className="space-y-7">
       <div className="page-header flex items-center justify-between">
@@ -59,6 +75,18 @@ export default function IntelligencePage() {
         >
           {runIntel.isPending ? "Running..." : "Run Intelligence"}
         </button>
+      </div>
+
+      {/* Market Intelligence Overview */}
+      <div className="wolf-card p-6">
+        <div className="flex items-center gap-2 mb-5">
+          <div className="w-1 h-4 rounded-full bg-[var(--wolf-amber)]" />
+          <h2 className="section-title">Market Intelligence</h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center justify-items-center">
+          <SentimentGauge value={sentimentValue} />
+          <PredictionAccuracy />
+        </div>
       </div>
 
       {/* Agent Grid */}
@@ -82,6 +110,18 @@ export default function IntelligencePage() {
             />
           );
         })}
+      </div>
+
+      {/* Prediction vs Reality */}
+      <PredictionOverlay />
+
+      {/* Signal Feed */}
+      <div className="wolf-card p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-1 h-4 rounded-full bg-[var(--wolf-purple)]" />
+          <h2 className="section-title">Snoop Signal Feed</h2>
+        </div>
+        <SignalFeed />
       </div>
 
       {/* Quantitative Modules */}

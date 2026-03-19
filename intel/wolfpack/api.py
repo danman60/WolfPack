@@ -853,6 +853,150 @@ async def auto_trader_trades(limit: int = 50):
 # ── Market Data Endpoints ──
 
 
+@app.get("/market/orderbook")
+async def market_orderbook(symbol: str = "BTC", depth: int = 20, exchange: str = "hyperliquid"):
+    """Fetch orderbook from exchange adapter."""
+    try:
+        from wolfpack.exchanges import get_exchange
+
+        adapter = get_exchange(exchange)  # type: ignore[arg-type]
+        ob = await adapter.get_orderbook(symbol, depth=depth)
+        return {"orderbook": ob.model_dump()}
+    except Exception as e:
+        logger.error(f"Failed to fetch orderbook: {e}")
+        return {"orderbook": {"symbol": symbol, "bids": [], "asks": [], "timestamp": 0}, "error": str(e)}
+
+
+# ── Kraken Paper Trading Endpoints ──
+
+
+async def _kraken_cli(*args: str, timeout: float = 15) -> dict | list:
+    """Run Kraken CLI and return parsed JSON."""
+    import asyncio
+    import json
+    import os
+
+    cli = os.path.expanduser("~/.cargo/bin/kraken")
+    cmd = [cli] + list(args) + ["-o", "json"]
+    proc = await asyncio.create_subprocess_exec(
+        *cmd,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.PIPE,
+    )
+    stdout, stderr = await asyncio.wait_for(proc.communicate(), timeout=timeout)
+    if proc.returncode != 0:
+        err = stderr.decode().strip() if stderr else "unknown error"
+        raise RuntimeError(f"Kraken CLI error: {err}")
+    return json.loads(stdout.decode())
+
+
+@app.post("/kraken/paper/init")
+async def kraken_paper_init(balance: float = 10000):
+    """Initialize Kraken paper trading with starting balance."""
+    try:
+        result = await _kraken_cli("paper", "init", "--balance", str(balance))
+        return {"status": "ok", "result": result}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
+@app.post("/kraken/paper/buy")
+async def kraken_paper_buy(pair: str, volume: float):
+    """Place a paper buy order via Kraken CLI."""
+    try:
+        result = await _kraken_cli("paper", "buy", pair, str(volume))
+        return {"status": "ok", "result": result}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
+@app.post("/kraken/paper/sell")
+async def kraken_paper_sell(pair: str, volume: float):
+    """Place a paper sell order via Kraken CLI."""
+    try:
+        result = await _kraken_cli("paper", "sell", pair, str(volume))
+        return {"status": "ok", "result": result}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
+@app.get("/kraken/paper/status")
+async def kraken_paper_status():
+    """Get Kraken paper trading status."""
+    try:
+        result = await _kraken_cli("paper", "status")
+        return result if isinstance(result, dict) else {"data": result}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
+@app.get("/kraken/paper/history")
+async def kraken_paper_history():
+    """Get Kraken paper trading history."""
+    try:
+        result = await _kraken_cli("paper", "history")
+        return result if isinstance(result, dict) else {"trades": result}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
+@app.get("/kraken/paper/balance")
+async def kraken_paper_balance():
+    """Get Kraken paper trading balance."""
+    try:
+        result = await _kraken_cli("paper", "balance")
+        return result if isinstance(result, dict) else {"balance": result}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
+@app.post("/kraken/paper/reset")
+async def kraken_paper_reset(_auth: None = Depends(require_auth)):
+    """Reset Kraken paper trading state."""
+    try:
+        result = await _kraken_cli("paper", "reset")
+        return {"status": "ok", "result": result}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
+# ── Prediction Scoring Endpoints ──
+
+
+@app.get("/predictions/accuracy")
+async def prediction_accuracy(days: int = 7):
+    """Get prediction accuracy for the last N days."""
+    try:
+        from wolfpack.modules.prediction_scorer import get_prediction_accuracy
+        return get_prediction_accuracy(days=days)
+    except Exception as e:
+        logger.error(f"Failed to get prediction accuracy: {e}")
+        return {"accuracy_pct": 0, "total_scored": 0, "correct": 0, "incorrect": 0, "neutral": 0}
+
+
+@app.get("/predictions/history")
+async def prediction_history(days: int = 7):
+    """Get scored prediction history for charting."""
+    try:
+        from wolfpack.modules.prediction_scorer import get_prediction_history
+        return {"predictions": get_prediction_history(days=days)}
+    except Exception as e:
+        logger.error(f"Failed to get prediction history: {e}")
+        return {"predictions": []}
+
+
+@app.post("/predictions/score")
+async def trigger_prediction_scoring(days: int = 7, _auth: None = Depends(require_auth)):
+    """Manually trigger prediction scoring."""
+    try:
+        from wolfpack.modules.prediction_scorer import score_predictions
+        result = await score_predictions(days=days)
+        return {"status": "ok", **result}
+    except Exception as e:
+        logger.error(f"Failed to score predictions: {e}")
+        return {"status": "error", "message": str(e)}
+
+
 @app.get("/market/candles")
 async def market_candles(
     symbol: str = "BTC",

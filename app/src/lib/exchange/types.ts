@@ -1,6 +1,6 @@
 // Exchange adapter interface — unified API for Hyperliquid, dYdX, and Uniswap V3
 
-export type ExchangeId = "hyperliquid" | "dydx";
+export type ExchangeId = "hyperliquid" | "dydx" | "kraken";
 
 export interface Asset {
   symbol: string;
@@ -157,6 +157,15 @@ export const EXCHANGE_CONFIGS: Record<ExchangeId, ExchangeConfig> = {
     chainId: 1, // Ethereum mainnet
     rpcUrl: "https://indexer.dydx.trade/v4",
     explorerUrl: "https://trade.dydx.exchange",
+    testnet: false,
+  },
+  kraken: {
+    id: "kraken",
+    name: "Kraken",
+    icon: "KR",
+    chainId: 0,
+    rpcUrl: "",
+    explorerUrl: "https://www.kraken.com",
     testnet: false,
   },
 };
