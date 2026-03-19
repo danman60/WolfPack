@@ -1600,10 +1600,20 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
             stored_recs: list[dict] = []
 
             for rec in recs:
+                # Extract quant signals for EMA/VWAP extension check
+                quant_sigs = None
+                if "quant" in agent_outputs:
+                    qo = agent_outputs["quant"]
+                    if hasattr(qo, "signals"):
+                        quant_sigs = qo.signals
+                    elif isinstance(qo, dict):
+                        quant_sigs = qo.get("signals")
+
                 veto_result = veto.evaluate(
                     rec,
                     cb_output=cb_output.model_dump(),
                     vol_output=vol_output.model_dump() if vol_output else None,
+                    quant_signals=quant_sigs,
                 )
                 if veto_result.action == "reject":
                     logger.info(f"[veto] Rejected {rec.get('symbol', symbol)} {rec.get('direction')}: {veto_result.reasons}")

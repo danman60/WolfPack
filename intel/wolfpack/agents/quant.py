@@ -172,11 +172,14 @@ Return ONLY a valid JSON object. No markdown, no code fences, no explanation out
             return []
 
         closes: list[float] = []
+        volumes: list[float] = []
         for c in candles:
             if isinstance(c, Candle):
                 closes.append(c.close)
+                volumes.append(c.volume)
             elif isinstance(c, dict):
                 closes.append(float(c.get("close", 0)))
+                volumes.append(float(c.get("volume", 0)))
 
         signals: list[dict[str, Any]] = []
 
@@ -187,6 +190,40 @@ Return ONLY a valid JSON object. No markdown, no code fences, no explanation out
         if len(closes) >= 50:
             sma_50 = sum(closes[-50:]) / 50
             signals.append({"indicator": "SMA_50", "value": round(sma_50, 2)})
+
+        # 9 EMA — fast trend filter (price extended above = risky entry)
+        if len(closes) >= 9:
+            ema_9 = self._ema(closes, 9)
+            signals.append({"indicator": "EMA_9", "value": round(ema_9, 2)})
+            if closes[-1] != 0:
+                ema_9_dist_pct = ((closes[-1] - ema_9) / ema_9) * 100
+                signals.append({"indicator": "EMA_9_dist_pct", "value": round(ema_9_dist_pct, 2)})
+                # Flag extended price: >3% above 9 EMA = overextended long, <-3% = overextended short
+                if abs(ema_9_dist_pct) > 3:
+                    direction = "above" if ema_9_dist_pct > 0 else "below"
+                    signals.append({
+                        "type": "risk",
+                        "level": "elevated",
+                        "indicator": "EMA_9_extension",
+                        "detail": f"Price {abs(ema_9_dist_pct):.1f}% {direction} 9 EMA — overextended, wait for pullback",
+                    })
+
+        # VWAP — volume-weighted average price (session anchor)
+        if len(closes) >= 10 and len(volumes) >= 10:
+            vwap = self._vwap(closes, volumes)
+            signals.append({"indicator": "VWAP", "value": round(vwap, 2)})
+            if vwap > 0:
+                vwap_dist_pct = ((closes[-1] - vwap) / vwap) * 100
+                signals.append({"indicator": "VWAP_dist_pct", "value": round(vwap_dist_pct, 2)})
+                # Flag >10% above VWAP = extreme extension
+                if abs(vwap_dist_pct) > 10:
+                    direction = "above" if vwap_dist_pct > 0 else "below"
+                    signals.append({
+                        "type": "risk",
+                        "level": "high",
+                        "indicator": "VWAP_extension",
+                        "detail": f"Price {abs(vwap_dist_pct):.1f}% {direction} VWAP — extreme extension, high reversion risk",
+                    })
 
         if len(closes) >= 2:
             pct_change = (closes[-1] - closes[-2]) / closes[-2] * 100 if closes[-2] != 0 else 0
@@ -200,6 +237,25 @@ Return ONLY a valid JSON object. No markdown, no code fences, no explanation out
             signals.append({"indicator": "latest_close", "value": closes[-1]})
 
         return signals
+
+    @staticmethod
+    def _ema(closes: list[float], period: int) -> float:
+        """Exponential moving average."""
+        if len(closes) < period:
+            return closes[-1] if closes else 0.0
+        multiplier = 2 / (period + 1)
+        ema = sum(closes[:period]) / period  # Seed with SMA
+        for price in closes[period:]:
+            ema = (price - ema) * multiplier + ema
+        return ema
+
+    @staticmethod
+    def _vwap(closes: list[float], volumes: list[float]) -> float:
+        """Volume-weighted average price over the available candles."""
+        total_vol = sum(volumes)
+        if total_vol == 0:
+            return closes[-1] if closes else 0.0
+        return sum(c * v for c, v in zip(closes, volumes)) / total_vol
 
     @staticmethod
     def _rsi(closes: list[float], period: int = 14) -> float:

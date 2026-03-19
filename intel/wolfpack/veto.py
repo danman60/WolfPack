@@ -45,6 +45,7 @@ class BriefVeto:
         rec: dict,
         cb_output: dict | None = None,
         vol_output: dict | None = None,
+        quant_signals: list[dict] | None = None,
     ) -> VetoResult:
         """Evaluate a single recommendation.
 
@@ -52,6 +53,7 @@ class BriefVeto:
             rec: Recommendation dict from Brief agent
             cb_output: Circuit breaker output dict (optional)
             vol_output: Volatility module output dict (optional)
+            quant_signals: Quant agent signal list (optional) — used for EMA/VWAP extension check
 
         Returns:
             VetoResult with action, adjusted conviction, and reasons.
@@ -131,6 +133,27 @@ class BriefVeto:
             if cb_state == "SUSPENDED":
                 adjusted -= 15
                 reasons.append("circuit breaker SUSPENDED: -15 conviction")
+
+        # EMA/VWAP extension penalty — price overextended from mean
+        if quant_signals:
+            for sig in quant_signals:
+                indicator = sig.get("indicator", "")
+                if indicator == "EMA_9_dist_pct":
+                    dist = abs(float(sig.get("value", 0)))
+                    if dist > 5:
+                        adjusted -= 15
+                        reasons.append(f"price {dist:.1f}% from 9 EMA (overextended): -15 conviction")
+                    elif dist > 3:
+                        adjusted -= 8
+                        reasons.append(f"price {dist:.1f}% from 9 EMA (extended): -8 conviction")
+                elif indicator == "VWAP_dist_pct":
+                    dist = abs(float(sig.get("value", 0)))
+                    if dist > 10:
+                        adjusted -= 15
+                        reasons.append(f"price {dist:.1f}% from VWAP (extreme extension): -15 conviction")
+                    elif dist > 5:
+                        adjusted -= 5
+                        reasons.append(f"price {dist:.1f}% from VWAP (extended): -5 conviction")
 
         # Recent rejection penalty
         if self._recently_rejected(symbol):
