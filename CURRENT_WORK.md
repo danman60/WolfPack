@@ -26,12 +26,13 @@ PASSING — Next.js 16.1.6 Turbopack, 3.9s, 10 static pages
 - All DB oracle checks PASS (portfolio, watchlist CRUD, close position, backtest delete, agent outputs)
 
 ## Next Steps
-1. Fix Quant agent raw JSON display (format regime_assessment into prose summary)
-2. Run DB migration for wp_prediction_performance table via Supabase MCP
-3. Fix backtest candle fetch on Droplet (returns 0 bars — cache or exchange adapter issue)
-4. Add win rate calculation to Portfolio page (currently shows "--")
-5. Test Kraken CLI end-to-end on a machine with the binary installed
-6. Run prediction scorer after 24h of recommendations accumulate
+1. **GLOSSARY TOOLTIPS (IN PROGRESS)**: Wrap remaining 7 pages + 4 chart components with `<Term>` tags. Foundation done (glossary.ts + Term.tsx + Dashboard). Plan: docs/plans/2026-03-19-glossary-tooltips.md. Run /design-pass on Term.tsx after wrapping all pages.
+2. Fix Quant agent raw JSON display (format regime_assessment into prose summary)
+3. Run DB migration for wp_prediction_performance table via Supabase MCP
+4. Fix backtest candle fetch on Droplet (returns 0 bars — cache or exchange adapter issue)
+5. Add win rate calculation to Portfolio page (currently shows "--")
+6. Test Kraken CLI end-to-end on a machine with the binary installed
+7. Run prediction scorer after 24h of recommendations accumulate
 
 ## Gotchas for Next Session
 - API auth: Droplet API_SECRET_KEY and Vercel NEXT_PUBLIC_INTEL_API_KEY are now set and working
