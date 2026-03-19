@@ -5,6 +5,7 @@ import { useExchange } from "@/lib/exchange";
 import { useAgentOutputs, useAgentStatus, useRecommendations, usePortfolio, useWatchlist, useAutoTraderStatus } from "@/lib/hooks/useIntelligence";
 import { WolfHead } from "@/components/WolfHead";
 import { usePrice, use24hChange } from "@/lib/hooks/useMarketData";
+import { Term } from "@/components/Term";
 
 export default function Dashboard() {
   const { config } = useExchange();
@@ -25,14 +26,14 @@ export default function Dashboard() {
       {/* Portfolio Stats */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <StatCard
-          label="Portfolio Value"
+          label={<Term id="equity">Portfolio Value</Term>}
           value={isActive ? `$${portfolio.equity.toLocaleString()}` : "--"}
           suffix="USD"
           color="emerald"
           delay={1}
         />
         <StatCard
-          label="Unrealized P&L"
+          label={<Term id="unrealized-pnl">Unrealized P&L</Term>}
           value={
             isActive
               ? `${portfolio.unrealized_pnl >= 0 ? "+" : ""}$${portfolio.unrealized_pnl.toFixed(2)}`
@@ -42,13 +43,13 @@ export default function Dashboard() {
           delay={2}
         />
         <StatCard
-          label="Open Positions"
+          label={<Term id="position">Open Positions</Term>}
           value={isActive ? String(portfolio.positions?.length ?? 0) : "--"}
           color="purple"
           delay={3}
         />
         <StatCard
-          label="Watchlist"
+          label={<Term id="watchlist">Watchlist</Term>}
           value={watchlist?.length?.toString() ?? "0"}
           suffix="symbols"
           color="cyan"
@@ -56,7 +57,7 @@ export default function Dashboard() {
         />
         {autoTrader?.enabled && (
           <StatCard
-            label="Auto-Bot Equity"
+            label={<Term id="auto-bot">Auto-Bot Equity</Term>}
             value={`$${autoTrader.equity.toLocaleString()}`}
             suffix={`${autoTrader.open_positions} pos`}
             color="amber"
@@ -152,7 +153,7 @@ export default function Dashboard() {
                           : "bg-[var(--wolf-red)]/15 text-[var(--wolf-red)]"
                       }`}
                     >
-                      {rec.direction as string}
+                      <Term id={rec.direction === "long" ? "long" : "short"}>{rec.direction as string}</Term>
                     </span>
                     <span className="text-[13px] text-white font-mono font-medium">{rec.symbol as string}</span>
                   </div>
@@ -267,7 +268,7 @@ function StatCard({
   color,
   delay,
 }: {
-  label: string;
+  label: React.ReactNode;
   value: string;
   suffix?: string;
   color: string;
