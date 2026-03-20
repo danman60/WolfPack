@@ -12,6 +12,7 @@ import { SentimentGauge } from "@/components/charts/SentimentGauge";
 import { PredictionAccuracy } from "@/components/charts/PredictionAccuracy";
 import { PredictionOverlay } from "@/components/charts/PredictionOverlay";
 import { SignalFeed } from "@/components/charts/SignalFeed";
+import { IntelProgress } from "@/components/IntelProgress";
 
 const AGENTS = [
   { key: "quant", name: "The Quant", role: "Technical Analysis", description: "Regime detection, technical indicators, quantitative signals, chart patterns" },
@@ -88,6 +89,9 @@ export default function IntelligencePage() {
           <PredictionAccuracy />
         </div>
       </div>
+
+      {/* Intelligence Progress */}
+      <IntelProgress running={runIntel.isPending} />
 
       {/* Agent Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">

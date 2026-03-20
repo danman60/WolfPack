@@ -3,6 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { intelFetch } from "@/lib/intel";
+import { toast } from "sonner";
 
 /* ── Row types matching Supabase wp_ tables ── */
 
@@ -124,11 +125,18 @@ export function useRunIntelligence() {
       const res = await intelFetch(`/intel/intelligence/run?exchange=${exchange}&symbol=${symbol}`, {
         method: "POST",
       });
-      if (!res.ok) throw new Error(`Intel service error: ${res.status}`);
+      if (!res.ok) {
+        const text = await res.text().catch(() => `HTTP ${res.status}`);
+        throw new Error(text.includes("403") ? "Intel service: API key not configured" : `Intel service error: ${res.status}`);
+      }
       return res.json();
     },
+    onMutate: () => {
+      toast.loading("Intelligence cycle started — agents analyzing...", { id: "intel-run", duration: 90_000 });
+    },
     onSuccess: () => {
-      // Intelligence cycle takes 30-60s. Poll at increasing intervals.
+      toast.success("Intelligence cycle running! Agents will report in ~30-60s.", { id: "intel-run" });
+      // Poll at increasing intervals
       const invalidateAll = () => {
         queryClient.invalidateQueries({ queryKey: ["agent-outputs"] });
         queryClient.invalidateQueries({ queryKey: ["module-outputs"] });
@@ -139,7 +147,13 @@ export function useRunIntelligence() {
       setTimeout(invalidateAll, 10_000);
       setTimeout(invalidateAll, 20_000);
       setTimeout(invalidateAll, 35_000);
-      setTimeout(invalidateAll, 60_000);
+      setTimeout(() => {
+        invalidateAll();
+        toast.success("Intelligence cycle complete — check agent outputs.", { id: "intel-done" });
+      }, 60_000);
+    },
+    onError: (error: Error) => {
+      toast.error(`Intelligence failed: ${error.message}`, { id: "intel-run", duration: 8_000 });
     },
   });
 }

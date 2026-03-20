@@ -4,6 +4,7 @@ import { useState, useMemo, useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useExchange } from "@/lib/exchange";
 import { intelFetch } from "@/lib/intel";
+import { toast } from "sonner";
 import {
   useRecommendations,
   useApproveRecommendation,
@@ -95,17 +96,23 @@ export default function TradingPage() {
       const res = await intelFetch(`/intel/paper/order?${params}`, { method: "POST" });
       const result = await res.json();
       if (result.status === "executed") {
-        setOrderResult(result.message || `Paper ${direction} ${selectedSymbol} placed`);
+        const msg = result.message || `Paper ${direction} ${selectedSymbol} placed`;
+        setOrderResult(msg);
+        toast.success(msg);
         setSizeUsd("");
         setStopLoss("");
         setTakeProfit("");
         queryClient.invalidateQueries({ queryKey: ["portfolio"] });
         queryClient.invalidateQueries({ queryKey: ["portfolio-history"] });
       } else {
-        setOrderResult(result.message || "Order failed");
+        const msg = result.message || "Order failed — check intel service";
+        setOrderResult(msg);
+        toast.error(msg);
       }
     } catch {
-      setOrderResult("Intel service unavailable — start the backend to trade");
+      const msg = "Intel service unavailable — start the backend to trade";
+      setOrderResult(msg);
+      toast.error(msg);
     } finally {
       setOrderSubmitting(false);
     }
