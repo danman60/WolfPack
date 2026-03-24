@@ -122,6 +122,16 @@ Return ONLY a valid JSON object. No markdown, no code fences, no explanation out
         if funding_output:
             context["funding"] = funding_output if isinstance(funding_output, dict) else funding_output
 
+        # Correlation + stat arb data
+        correlation_output = market_data.get("correlation")
+        if correlation_output:
+            corr_data = correlation_output if isinstance(correlation_output, dict) else correlation_output.model_dump()
+            context["correlation"] = corr_data
+            # Highlight stat arb signal if present
+            stat_arb = corr_data.get("stat_arb")
+            if stat_arb and stat_arb.get("strength") in ("strong", "moderate"):
+                context["stat_arb_alert"] = stat_arb
+
         # Get latest price info
         if candles_raw:
             last = candles_raw[-1]

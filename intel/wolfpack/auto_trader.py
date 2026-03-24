@@ -154,6 +154,11 @@ class AutoTrader:
                 if rec.get("take_profit"):
                     pos.take_profit = rec["take_profit"]
 
+                # Enable trailing stop if recommended by Brief
+                trailing_pct = rec.get("trailing_stop_pct")
+                if trailing_pct and trailing_pct > 0:
+                    self.engine.enable_trailing_stop(symbol, trailing_pct)
+
                 trade = {
                     "symbol": symbol,
                     "direction": direction,

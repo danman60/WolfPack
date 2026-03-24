@@ -28,6 +28,7 @@ BRIEF_SCHEMA: dict = {
                     "take_profit": {"type": ["number", "null"]},
                     "size_pct": {"type": "number", "minimum": 1, "maximum": 25},
                     "rationale": {"type": "string"},
+                    "trailing_stop_pct": {"type": ["number", "null"]},
                 },
                 "required": ["symbol", "direction", "conviction", "rationale"],
             },
@@ -148,12 +149,40 @@ You also receive quantitative module outputs:
 - **Liquidity**: spread, depth, slippage estimate, trade_allowed flag, liquidity_health rating
 - **Volatility**: realized vol, vol regime (low/normal/high/extreme), z-score, percentile
 - **Funding**: annualized rate, carry direction, crowding signal
-- **Correlation**: BTC/ETH rolling correlation, tail correlation, regime
+- **Correlation**: BTC/ETH rolling correlation, tail correlation, regime, stat_arb divergence signal
+- **Monte Carlo**: stress test results — robustness grade, Calmar ratios, ruin probability, conviction adjustment
+- **Overfit Score**: IS vs OOS Sharpe/return decay, Calmar ratio, overfitting risk grade
+
+INTELLIGENCE INTEGRATION (apply internally — never expose to user):
+
+1. **Monte Carlo conviction adjustment**: If monte_carlo data is present, ADD its conviction_adjustment
+   to your base conviction. E.g., if your analysis says conviction=75 and MC says adjustment=-10,
+   final conviction=65. Robustness grade "poor" should make you significantly more cautious.
+   Ruin probability >15% = do NOT recommend entry regardless of other signals.
+
+2. **Calmar ratio gating**: If the strategy's Calmar ratio (from monte_carlo or overfit_score) is
+   below 2.0, reduce conviction by 10. Below 1.0, reduce by 20. Above 5.0, boost by 5.
+
+3. **Stat arb signals**: If correlation.stat_arb is present with strength "strong" or "moderate",
+   incorporate it into your recommendation. A strong divergence (|zscore| >= 2.5) is a high-conviction
+   opportunity worth calling out. Use the direction field to determine the trade.
+
+4. **Overfitting awareness**: If overfit_score data is present, apply its conviction_adjustment.
+   If overfit_risk is "critical" or "high", add a warning to your rationale and reduce size_pct.
+
+5. **Trailing stops**: For new entry recommendations where volatility regime is "normal" or "elevated",
+   include a trailing_stop_pct field (suggest 2-3% for normal vol, 4-5% for elevated vol).
+   This auto-tightens the stop as price moves favorably.
+
+6. **Regime gating**: If regime is "choppy" or "panic", only recommend mean-reversion or reduce-only
+   strategies. If regime is "panic" with high ruin probability, recommend WAIT.
 
 HARD GATES — do NOT recommend entry when ANY of these are true:
 1. Liquidity module says trade_allowed=false or liquidity_health is "poor" or "critical"
 2. Funding rate is extreme (annualized > 50%) against the trade direction
 3. Volatility regime is "emergency" or vol z-score > 3.0
+4. Monte Carlo ruin_probability > 15%
+5. Overfit risk is "critical" AND regime is not "trending_up"/"trending_down"
 If a hard gate fires, set direction to "wait" and explain which gate blocked the trade.
 
 Be decisive but honest about uncertainty. When agents conflict, explain why and default to caution.
@@ -226,6 +255,12 @@ Return ONLY a valid JSON object. No markdown, no code fences, no explanation out
         if market_data.get("correlation"):
             corr = market_data["correlation"]
             context["correlation"] = corr if isinstance(corr, dict) else corr
+        if market_data.get("monte_carlo"):
+            mc = market_data["monte_carlo"]
+            context["monte_carlo"] = mc if isinstance(mc, dict) else mc.model_dump()
+        if market_data.get("overfit_score"):
+            ovf = market_data["overfit_score"]
+            context["overfit_score"] = ovf if isinstance(ovf, dict) else ovf.model_dump()
         if market_data.get("portfolio_context"):
             context["portfolio_context"] = market_data["portfolio_context"]
 
@@ -243,7 +278,7 @@ Return ONLY a valid JSON object. No markdown, no code fences, no explanation out
         # Extract recommendations as signals
         recommendations = parsed.get("recommendations", [])
         for rec in recommendations:
-            signals.append({
+            rec_signal: dict[str, Any] = {
                 "type": "recommendation",
                 "symbol": rec.get("symbol", symbol),
                 "direction": rec.get("direction", "wait"),
@@ -253,7 +288,10 @@ Return ONLY a valid JSON object. No markdown, no code fences, no explanation out
                 "take_profit": rec.get("take_profit"),
                 "size_pct": rec.get("size_pct", 0),
                 "rationale": rec.get("rationale", ""),
-            })
+            }
+            if rec.get("trailing_stop_pct"):
+                rec_signal["trailing_stop_pct"] = rec["trailing_stop_pct"]
+            signals.append(rec_signal)
 
         # Extract position actions as signals
         position_actions = parsed.get("position_actions", [])

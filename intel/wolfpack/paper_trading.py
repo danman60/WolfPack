@@ -26,6 +26,8 @@ class PaperPosition(BaseModel):
     opened_at: datetime
     stop_loss: float | None = None
     take_profit: float | None = None
+    trailing_stop_pct: float | None = None  # e.g. 2.0 = trail 2% from peak
+    trailing_stop_peak: float | None = None  # highest (long) or lowest (short) price seen
 
 
 class PaperPortfolio(BaseModel):
@@ -96,12 +98,20 @@ class PaperTradingEngine:
         return position
 
     def update_prices(self, prices: dict[str, float]) -> None:
-        """Update current prices for all open positions and recalculate P&L."""
+        """Update current prices for all open positions and recalculate P&L.
+
+        Also updates trailing stop peaks and dynamically adjusts stop-loss
+        levels for positions with trailing stops enabled.
+        """
         total_unrealized = 0.0
 
         for pos in self.portfolio.positions:
             if pos.symbol in prices:
                 pos.current_price = prices[pos.symbol]
+
+            # Update trailing stop peak and adjust stop level
+            if pos.trailing_stop_pct is not None and pos.trailing_stop_pct > 0:
+                self._update_trailing_stop(pos)
 
             # Calculate unrealized P&L
             if pos.direction == "long":
@@ -234,6 +244,56 @@ class PaperTradingEngine:
         else:
             pnl_pct = (pos.entry_price - pos.current_price) / pos.entry_price
         pos.unrealized_pnl = pos.size_usd * pnl_pct
+
+    @staticmethod
+    def _update_trailing_stop(pos: PaperPosition) -> None:
+        """Update trailing stop peak and dynamically tighten stop-loss.
+
+        For longs: tracks highest price, stop trails below peak
+        For shorts: tracks lowest price, stop trails above trough
+        """
+        if pos.trailing_stop_pct is None or pos.trailing_stop_pct <= 0:
+            return
+
+        trail_frac = pos.trailing_stop_pct / 100.0
+
+        if pos.direction == "long":
+            # Track highest price seen
+            if pos.trailing_stop_peak is None or pos.current_price > pos.trailing_stop_peak:
+                pos.trailing_stop_peak = pos.current_price
+            # Trailing stop = peak * (1 - trail%)
+            new_stop = pos.trailing_stop_peak * (1.0 - trail_frac)
+            # Only tighten, never loosen
+            if pos.stop_loss is None or new_stop > pos.stop_loss:
+                pos.stop_loss = round(new_stop, 2)
+        else:
+            # Short: track lowest price seen
+            if pos.trailing_stop_peak is None or pos.current_price < pos.trailing_stop_peak:
+                pos.trailing_stop_peak = pos.current_price
+            # Trailing stop = trough * (1 + trail%)
+            new_stop = pos.trailing_stop_peak * (1.0 + trail_frac)
+            # Only tighten (lower for shorts), never loosen
+            if pos.stop_loss is None or new_stop < pos.stop_loss:
+                pos.stop_loss = round(new_stop, 2)
+
+    def enable_trailing_stop(self, symbol: str, trail_pct: float) -> bool:
+        """Enable trailing stop on an open position.
+
+        Args:
+            symbol: Asset symbol
+            trail_pct: Trail distance as percentage (e.g. 2.0 = 2%)
+
+        Returns True if trailing stop was enabled, False if position not found.
+        """
+        for pos in self.portfolio.positions:
+            if pos.symbol == symbol:
+                pos.trailing_stop_pct = trail_pct
+                pos.trailing_stop_peak = pos.current_price
+                # Immediately set initial trailing stop
+                self._update_trailing_stop(pos)
+                logger.info(f"Trailing stop enabled for {symbol}: {trail_pct}% trail from {pos.current_price}")
+                return True
+        return False
 
     def take_snapshot(self, exchange: str) -> dict[str, Any]:
         """Generate a portfolio snapshot dict for Supabase storage."""

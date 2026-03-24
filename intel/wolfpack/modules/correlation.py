@@ -1,12 +1,24 @@
-"""Correlation & Cross-Asset Intel — Pair correlation, beta, tail risk, diversification analysis."""
+"""Correlation & Cross-Asset Intel — Pair correlation, beta, tail risk, diversification, stat arb signals."""
 
 from typing import Literal
 
 import numpy as np
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 CorrelationRegime = Literal["crisis_lock", "highly_correlated", "normal", "decorrelated"]
+
+
+class StatArbSignal(BaseModel):
+    """Stat arb divergence signal — fed to agents when correlated assets diverge."""
+
+    pair: str
+    zscore: float = Field(description="Z-score of price ratio vs 30d mean. >2 or <-2 = significant")
+    direction: str = Field(description="'long_eth_short_btc' or 'long_btc_short_eth' or 'neutral'")
+    strength: str = Field(description="'strong' (|z|>=2.5), 'moderate' (|z|>=1.5), 'weak' (|z|>=1.0), 'neutral'")
+    mean_reversion_target: float = Field(description="Expected ratio to revert to")
+    current_ratio: float
+    ratio_percentile: float = Field(description="Where current ratio sits in 30d distribution (0-100)")
 
 
 class CorrelationOutput(BaseModel):
@@ -19,6 +31,7 @@ class CorrelationOutput(BaseModel):
     effective_exposure_multiplier: float
     correlation_regime: CorrelationRegime
     max_combined_position_pct: float
+    stat_arb: StatArbSignal | None = Field(default=None, description="Stat arb divergence signal when assets diverge")
 
 
 class CorrelationIntel:
@@ -83,6 +96,9 @@ class CorrelationIntel:
         # --- Regime classification ---
         regime, max_pos = self._classify_regime(corr_7d, tail_corr)
 
+        # --- Stat arb divergence detection ---
+        stat_arb = self._detect_stat_arb(btc, eth, corr_7d)
+
         return CorrelationOutput(
             pair="BTC/ETH",
             correlation_30d=round(corr_30d, 4),
@@ -93,6 +109,7 @@ class CorrelationIntel:
             effective_exposure_multiplier=round(eff_exposure, 4),
             correlation_regime=regime,
             max_combined_position_pct=max_pos,
+            stat_arb=stat_arb,
         )
 
     @staticmethod
@@ -174,6 +191,73 @@ class CorrelationIntel:
             return "decorrelated", 50.0
         else:
             return "normal", 50.0
+
+    @staticmethod
+    def _detect_stat_arb(
+        btc: np.ndarray, eth: np.ndarray, corr_7d: float
+    ) -> StatArbSignal | None:
+        """Detect stat arb opportunities from price ratio divergence.
+
+        Only fires when correlation is high enough that mean reversion is expected.
+        Uses z-score of ETH/BTC price ratio vs 30d rolling mean.
+        """
+        # Only look for stat arb when assets are meaningfully correlated
+        if corr_7d < 0.50 or len(btc) < 168:  # Need 7d+ of data and correlation
+            return None
+
+        # Price ratio: ETH/BTC
+        # Filter out zero prices
+        mask = (btc > 0) & (eth > 0)
+        if np.sum(mask) < 168:
+            return None
+
+        ratio = eth[mask] / btc[mask]
+
+        # 30d window (720h) or whatever we have
+        window = min(720, len(ratio))
+        ratio_window = ratio[-window:]
+        current_ratio = float(ratio[-1])
+
+        mean_ratio = float(np.mean(ratio_window))
+        std_ratio = float(np.std(ratio_window, ddof=1))
+
+        if std_ratio < 1e-10:
+            return None
+
+        zscore = (current_ratio - mean_ratio) / std_ratio
+
+        # Percentile of current ratio in distribution
+        percentile = float(np.mean(ratio_window <= current_ratio) * 100)
+
+        # Direction and strength
+        if zscore >= 1.5:
+            # ETH expensive relative to BTC — expect reversion down
+            direction = "long_btc_short_eth"
+        elif zscore <= -1.5:
+            # ETH cheap relative to BTC — expect reversion up
+            direction = "long_eth_short_btc"
+        else:
+            direction = "neutral"
+
+        abs_z = abs(zscore)
+        if abs_z >= 2.5:
+            strength = "strong"
+        elif abs_z >= 1.5:
+            strength = "moderate"
+        elif abs_z >= 1.0:
+            strength = "weak"
+        else:
+            strength = "neutral"
+
+        return StatArbSignal(
+            pair="ETH/BTC",
+            zscore=round(zscore, 3),
+            direction=direction,
+            strength=strength,
+            mean_reversion_target=round(mean_ratio, 6),
+            current_ratio=round(current_ratio, 6),
+            ratio_percentile=round(percentile, 1),
+        )
 
     @staticmethod
     def _empty_output() -> CorrelationOutput:

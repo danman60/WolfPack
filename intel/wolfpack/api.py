@@ -438,6 +438,21 @@ async def approve_recommendation(rec_id: str, exchange: str = "hyperliquid", _au
             if rec.get("take_profit"):
                 pos.take_profit = rec["take_profit"]
 
+            # Enable trailing stop — use Brief's recommendation or default based on vol regime
+            trailing_pct = rec.get("trailing_stop_pct")
+            if not trailing_pct and _latest_volatility:
+                # Auto-assign trailing stop based on volatility regime
+                vol_regime = _latest_volatility.vol_regime if hasattr(_latest_volatility, 'vol_regime') else "normal"
+                if vol_regime in ("elevated", "high"):
+                    trailing_pct = 4.0
+                elif vol_regime == "extreme":
+                    trailing_pct = 5.0
+                else:
+                    trailing_pct = 2.5  # Normal vol default
+            if trailing_pct and trailing_pct > 0:
+                engine.enable_trailing_stop(rec["symbol"], trailing_pct)
+                logger.info(f"[approve] Trailing stop {trailing_pct}% enabled for {rec['symbol']}")
+
             # Update status to executed
             db.table("wp_trade_recommendations").update(
                 {"status": "executed"}
@@ -1385,6 +1400,34 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
         store_module_output("execution_timing", exchange, exec_output.model_dump(), symbol)
         _module_last_runs["execution_timing"] = now_utc
 
+        # Monte Carlo stress test — runs on recent trade returns from paper portfolio
+        monte_carlo_output = None
+        try:
+            from wolfpack.modules.monte_carlo import MonteCarloEngine
+            engine_mc = _get_paper_engine()
+            # Collect recent trade returns from closed trade history
+            from wolfpack.db import get_db
+            db = get_db()
+            trade_history = db.table("wp_trade_history").select("pnl_usd,size_usd").order("closed_at", desc=True).limit(100).execute()
+            trade_returns_list: list[float] = []
+            if trade_history.data:
+                for t in trade_history.data:
+                    size = t.get("size_usd", 0)
+                    pnl = t.get("pnl_usd", 0)
+                    if size and size > 0:
+                        trade_returns_list.append(pnl / size)
+
+            if len(trade_returns_list) >= 10:
+                mc_engine = MonteCarloEngine(n_simulations=2000, seed=42)
+                monte_carlo_output = mc_engine.run(trade_returns_list)
+                store_module_output("monte_carlo", exchange, monte_carlo_output.model_dump(), symbol)
+                _module_last_runs["monte_carlo"] = now_utc
+                logger.info(f"[cycle] Monte Carlo: grade={monte_carlo_output.robustness_grade}, calmar_p5={monte_carlo_output.calmar_p5}, ruin={monte_carlo_output.ruin_probability}%")
+            else:
+                logger.debug(f"[cycle] Monte Carlo skipped: only {len(trade_returns_list)} trades (need 10+)")
+        except Exception as e:
+            logger.warning(f"[cycle] Monte Carlo analysis failed: {e}")
+
         # Social sentiment + whale tracker (async, non-blocking)
         social_output = None
         whale_output = None
@@ -1469,8 +1512,10 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
             "whale_tracker": whale_output.model_dump() if whale_output else None,
         }
 
-        # Quant gets candles too
+        # Quant gets candles + correlation (for stat arb alerts)
         quant_data = {**market_data_base, "candles": candles_1h}
+        if correlation_output:
+            quant_data["correlation"] = correlation_output
 
         # Sage gets correlation + OI
         sage_data = {**market_data_base}
@@ -1562,6 +1607,10 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
             "circuit_breaker": cb_output.model_dump(),
             "execution_timing": exec_output.model_dump(),
         }
+        if monte_carlo_output:
+            brief_data["monte_carlo"] = monte_carlo_output.model_dump()
+        # Note: overfit_score is computed per-backtest, not per-cycle.
+        # It's available when backtests have been run recently.
         if portfolio_context:
             brief_data["portfolio_context"] = portfolio_context
         if "quant" in agent_outputs:
