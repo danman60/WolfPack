@@ -36,6 +36,9 @@ class Settings(BaseSettings):
     # Pool screening
     subgraph_api_key: str = ""
 
+    # Email reports
+    resend_api_key: str = ""
+
     # Service
     tick_interval_seconds: int = 300   # 5 minutes
     log_level: str = "INFO"

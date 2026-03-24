@@ -23,11 +23,18 @@ import httpx
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(name)s] %(message)s")
 logger = logging.getLogger("wolfpack.daily_report")
 
-RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
 TO_EMAIL = "danieljohnabrahamson@gmail.com"
 FROM_EMAIL = "WolfPack Intel <onboarding@resend.dev>"
 API_BASE = "http://localhost:8000"
-AUTH_TOKEN = os.environ.get("API_SECRET_KEY", "")
+
+# Load from settings (reads .env) or fall back to env var
+try:
+    from wolfpack.config import settings
+    RESEND_API_KEY = settings.resend_api_key
+    AUTH_TOKEN = settings.api_secret_key
+except Exception:
+    RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
+    AUTH_TOKEN = os.environ.get("API_SECRET_KEY", "")
 
 
 def _headers() -> dict:
