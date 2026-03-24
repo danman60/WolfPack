@@ -1306,6 +1306,7 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
         from wolfpack.modules.execution import ExecutionTiming
         from wolfpack.modules.funding import FundingIntel
         from wolfpack.modules.liquidity import LiquidityIntel
+        from wolfpack.modules.momentum_buckets import MomentumBuckets
         from wolfpack.modules.regime import RegimeDetector
         from wolfpack.modules.social_sentiment import SocialSentimentAnalyzer
         from wolfpack.modules.volatility import VolatilitySignal
@@ -1344,6 +1345,12 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
         _latest_regime = regime_output
         store_module_output("regime_detection", exchange, regime_output.model_dump(), symbol)
         _module_last_runs["regime_detection"] = now_utc
+
+        # Momentum Buckets (noise-reduced trend detection)
+        momentum_buckets = MomentumBuckets()
+        momentum_output = momentum_buckets.analyze(candles_1h, asset=symbol)
+        store_module_output("momentum_buckets", exchange, momentum_output.model_dump(), symbol)
+        _module_last_runs["momentum_buckets"] = now_utc
 
         # Liquidity
         global _latest_liquidity
@@ -1503,6 +1510,7 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
         market_data_base: dict[str, Any] = {
             "symbol": symbol,
             "regime": regime_output,
+            "momentum_buckets": momentum_output,
             "liquidity": liquidity_output,
             "volatility": vol_output,
             "funding": funding_output.model_dump() if funding_output else None,

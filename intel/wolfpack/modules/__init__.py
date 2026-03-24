@@ -15,6 +15,7 @@ from wolfpack.modules.execution import ExecutionTiming
 from wolfpack.modules.backtest import BacktestHarness
 from wolfpack.modules.social_sentiment import SocialSentimentAnalyzer
 from wolfpack.modules.whale_tracker import WhaleTracker
+from wolfpack.modules.momentum_buckets import MomentumBuckets
 
 __all__ = [
     "RegimeDetector",
@@ -27,4 +28,5 @@ __all__ = [
     "BacktestHarness",
     "SocialSentimentAnalyzer",
     "WhaleTracker",
+    "MomentumBuckets",
 ]

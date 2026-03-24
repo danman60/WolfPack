@@ -37,6 +37,10 @@ class SubSignals(BaseModel):
     atr_percentile: float = Field(description="Current ATR percentile vs 60-bar lookback [0, 1]")
     breakout_strength: float = Field(description="Distance from 20-bar high/low normalized by ATR")
     multi_tf_agreement: float = Field(description="Cross-timeframe directional agreement [0.5, 1.0]")
+    bucket_momentum: float = Field(
+        default=0.0,
+        description="Discrete bucketing momentum score [-1, 1] — noise-reduced trend signal",
+    )
 
 
 class RegimeSignal(BaseModel):
@@ -272,6 +276,56 @@ def _breakout_strength(
 # ---------------------------------------------------------------------------
 
 
+def _bucket_momentum(closes: np.ndarray) -> float:
+    """Compute discrete bucket momentum score from close prices.
+
+    Buckets prices into volatility-adaptive steps and detects monotonic
+    movement across buckets, filtering tick-level noise.
+    Returns [-1, 1]: positive = bullish momentum, negative = bearish.
+    """
+    if len(closes) < 5:
+        return 0.0
+
+    # Auto-select bucket size from recent volatility
+    atr_period = min(14, len(closes) - 1)
+    abs_returns = np.abs(np.diff(closes[-atr_period - 1:])) / closes[-atr_period - 1:-1]
+    avg_return = np.mean(abs_returns)
+    bucket_pct = float(np.clip(avg_return * 1.5, 0.003, 0.015))
+
+    # Bucket the last 13 closes (swing detection window)
+    lookback = min(13, len(closes))
+    window = closes[-lookback:]
+    step = window[-1] * bucket_pct
+    if step <= 0:
+        return 0.0
+
+    bucketed = np.floor(window / step) * step
+    transitions = np.diff(bucketed)
+
+    # Count consecutive same-direction bucket moves from the end
+    consecutive = 0
+    if len(transitions) > 0:
+        last_sign = np.sign(transitions[-1])
+        if last_sign != 0:
+            for i in range(len(transitions) - 1, -1, -1):
+                if np.sign(transitions[i]) == last_sign:
+                    consecutive += 1
+                else:
+                    break
+
+    # Net velocity: direction of bucket changes
+    nonzero = transitions[transitions != 0]
+    if len(nonzero) > 0:
+        velocity = float(np.sum(np.sign(nonzero))) / len(transitions)
+    else:
+        velocity = 0.0
+
+    # Score: velocity weighted by consecutive streak
+    streak_weight = min(consecutive / 4.0, 1.0)
+    score = velocity * (0.5 + 0.5 * streak_weight)
+    return float(np.clip(score, -1.0, 1.0))
+
+
 def _analyze_single_tf(candles: list[Candle]) -> tuple[float, SubSignals]:
     """Run all indicators on one timeframe and return (direction_score, sub_signals).
 
@@ -285,9 +339,11 @@ def _analyze_single_tf(candles: list[Candle]) -> tuple[float, SubSignals]:
     atr_pct = _atr_percentile(highs, lows, closes)
     rsi_val, rsi_zone = _rsi(closes)
     breakout = _breakout_strength(closes, highs, lows)
+    bucket_mom = _bucket_momentum(closes)
 
-    # Direction score: weighted blend of EMA trend and breakout
-    direction_score = 0.7 * ema_score + 0.3 * breakout
+    # Direction score: weighted blend of EMA trend, breakout, and bucket momentum
+    # Bucket momentum gets 15% weight — acts as noise-filtered confirmation
+    direction_score = 0.60 * ema_score + 0.25 * breakout + 0.15 * bucket_mom
 
     sub = SubSignals(
         ema_trend_score=round(ema_score, 4),
@@ -296,6 +352,7 @@ def _analyze_single_tf(candles: list[Candle]) -> tuple[float, SubSignals]:
         atr_percentile=round(atr_pct, 4),
         breakout_strength=round(breakout, 4),
         multi_tf_agreement=1.0,  # placeholder
+        bucket_momentum=round(bucket_mom, 4),
     )
     return direction_score, sub
 
