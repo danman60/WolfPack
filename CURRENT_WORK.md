@@ -1,71 +1,46 @@
 # Current Work - WolfPack
 
 ## Last Session Summary
-Two sessions combined: Built Kraken exchange adapter (Python CLI + TS proxy), AI dashboard visualizations (SentimentGauge, PredictionAccuracy, PredictionOverlay, SignalFeed), EMA/VWAP extension filter, prediction scoring module, glossary tooltip system (87 terms), toast notifications with animated intelligence progress bar, and scheduled cron jobs for intelligence + prediction scoring.
+Built the YOLO Meter feature — a single UI slider on the Auto-Bot page that controls trading aggressiveness across all 6 throttle layers (conviction threshold, veto floor, trade limits, penalty scaling, cooldown, position sizing). Set to level 4 (YOLO) to increase trade activity on paper trading.
 
 ## What Changed
-- [048d0dd] Kraken adapter + AI dashboard visualizations (9 new files, 1313 insertions)
-- [0091970] Bug fixes: Kraken description in Settings, Signal Feed raw JSON
-- [9a612ff] EMA/VWAP extension filter + veto penalties + test suite
-- [6d53ddd] Test reports (3 runs, v3: 34/39 pass, 12/12 oracle match)
-- [e7648b4] Glossary tooltip system (87 terms, Term.tsx with Framer Motion, Dashboard wired)
-- [af46dce] Toast notifications (sonner) + animated IntelProgress bar
-- [infra] API_SECRET_KEY on Droplet, NEXT_PUBLIC_INTEL_API_KEY on Vercel
-- [infra] Cron: intelligence every 4h + prediction scorer daily 6am ET
+- `24ff3b4` feat: YOLO Meter — single slider controls trading aggressiveness (5 files)
+  - `intel/wolfpack/auto_trader.py` — YOLO_PROFILES dict (5 levels), `_apply_yolo_profile()`, configurable veto/CB params
+  - `intel/wolfpack/veto.py` — BriefVeto now accepts conviction_floor, penalty_multiplier, rejection_cooldown_hours
+  - `intel/wolfpack/api.py` — POST /auto-trader/yolo-level endpoint
+  - `app/src/lib/hooks/useIntelligence.ts` — useSetYoloLevel mutation, AutoTraderStatus extended
+  - `app/src/app/auto-bot/page.tsx` — YOLO Meter slider UI with gradient track, 5 labeled stops, profile stats grid
 
 ## Build Status
-PASSING — Next.js 16.1.6 Turbopack, 3.9s, 10 static pages
+PASSING — Next.js build clean, Python imports verified, GitNexus re-indexed (1,004 symbols)
 
 ## Known Bugs & Issues
-- UX-ISSUE: Quant agent displays raw JSON in Latest Analysis instead of prose
-- UX-SUGGESTION: PredictionAccuracy shows "0%" — needs "Predictions tracked after trades" message
-- UX-SUGGESTION: Portfolio win rate shows "--" instead of calculating from closed trades
-- UX-SUGGESTION: Backtest failure doesn't surface error message to user
-- Backtest on VPS returns "Insufficient candle data: 0 bars" — candle cache/fetch issue on Droplet
+- YOLO level is stored in-memory only (resets on intel service restart). Should persist to Supabase wp_settings or similar.
+- Circuit breaker MAX_TRADES_PER_DAY is still hardcoded at 4 in circuit_breaker.py — the YOLO meter relaxes the CB check in auto_trader.py but doesn't modify the CB module itself. At levels 4-5, CB SUSPENDED state is ignored (only EMERGENCY_STOP blocks).
 
 ## Incomplete Work
-- **Glossary tooltips**: Foundation done (glossary.ts + Term.tsx + Dashboard page). 7 remaining pages + 4 chart components need `<Term>` wrapping. Plan: docs/plans/2026-03-19-glossary-tooltips.md
-- Need /design-pass on Term.tsx after all pages wired
+- None — feature is complete and building
 
 ## Tests
-- 3 test runs (v1 smoke, v2 blocked by 403, v3 with auth: 34/39 pass)
-- Latest: tests/reports/run-20260319-213924/report.md — 12/12 oracle matches
-- Toast + progress bar NOT yet tested (deployed after last test run)
+- No test run this session
+- Untested: YOLO meter UI interaction, API endpoint, profile application during intelligence cycle
 
-## Next Steps
-1. **Wrap remaining 7 pages with `<Term>` glossary tooltips** (intelligence, trading, portfolio, backtest, auto-bot, pools, settings)
-2. Run /design-pass on Term.tsx for polish
-3. Fix Quant agent raw JSON display
-4. Run DB migration for wp_prediction_performance table via Supabase MCP
-5. Fix backtest candle fetch on Droplet (returns 0 bars)
-6. Add win rate calculation to Portfolio page
-7. Test Kraken CLI end-to-end on a machine with the binary
+## Next Steps (priority order)
+1. Deploy intel service with YOLO meter changes and verify trades execute at level 4
+2. Persist yolo_level to Supabase so it survives service restarts
+3. Monitor auto-bot activity over next 24h — expect significantly more trades at level 4
+4. Consider wiring MAX_TRADES_PER_DAY in circuit_breaker.py to YOLO profile for full integration
+5. Run backtest with OverfitDetector to validate IS/OOS splits
 
 ## Gotchas for Next Session
-- **Droplet crons active**: Intelligence runs every 4h, scorer daily 6am ET. Logs at /var/log/wolfpack-*.log
-- **API auth**: Droplet API_SECRET_KEY and Vercel NEXT_PUBLIC_INTEL_API_KEY both set to `1bee9d...b43b`
-- **Vercel project**: `wolf-pack` (not `app`). Link with `vercel link --project wolf-pack`
-- **Kraken CLI**: `~/.cargo/bin/kraken` — NOT installed on Droplet (1GB VPS, 98% disk)
-- **EMA/VWAP veto**: penalties -8/-15 for EMA extension, -5/-15 for VWAP. Wired in api.py
-- **GitNexus**: Indexed (943 nodes, 2383 edges). `.gitnexus/` exists.
-- **sonner toast**: Added to layout.tsx, wired in useIntelligence.ts and trading/page.tsx
-- **framer-motion**: Installed for Term.tsx and IntelProgress.tsx
+- YOLO level defaults to 4 in code (`auto_trader.py:23`) — if user wants to change default, edit there
+- The veto penalty_multiplier at level 4 is 0.25 (penalties quartered), at level 5 is 0.0 (penalties disabled)
+- At levels 4-5, only EMERGENCY_STOP blocks trades (CB SUSPENDED is bypassed)
+- Pre-existing uncommitted files (tests/, overnight notes, .claude/) are from prior sessions — not from this session
 
 ## Files Touched This Session
-### Created
-- intel/wolfpack/exchanges/kraken.py, app/src/lib/exchange/kraken.ts
-- intel/wolfpack/modules/prediction_scorer.py
-- app/src/lib/hooks/usePredictions.ts
-- app/src/components/charts/{SentimentGauge,PredictionAccuracy,PredictionOverlay,SignalFeed}.tsx
-- app/src/lib/glossary.ts, app/src/components/Term.tsx
-- app/src/components/IntelProgress.tsx
-- supabase/migrations/20260319_kraken_and_predictions.sql
-- tests/agent/ (TEST_PLAN.md, 4 flows, lib helpers)
-- docs/plans/2026-03-19-glossary-tooltips.md
-
-### Modified
-- intel/wolfpack/exchanges/{base.py,__init__.py}, intel/wolfpack/api.py
-- intel/wolfpack/agents/quant.py (EMA/VWAP), intel/wolfpack/veto.py
-- app/src/lib/exchange/{types.ts,index.ts}, app/src/app/intelligence/page.tsx
-- app/src/app/{settings,trading}/page.tsx, app/src/app/page.tsx
-- app/src/app/layout.tsx (Toaster), app/src/lib/hooks/useIntelligence.ts (toast)
+- `intel/wolfpack/auto_trader.py` — YOLO profiles + apply logic
+- `intel/wolfpack/veto.py` — configurable conviction floor, penalties, cooldown
+- `intel/wolfpack/api.py` — /auto-trader/yolo-level endpoint
+- `app/src/lib/hooks/useIntelligence.ts` — useSetYoloLevel hook
+- `app/src/app/auto-bot/page.tsx` — YOLO Meter UI component
