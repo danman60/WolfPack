@@ -846,6 +846,22 @@ async def auto_trader_config(
     return trader.get_status()
 
 
+@app.post("/auto-trader/yolo-level")
+async def auto_trader_yolo_level(
+    level: int = Body(..., embed=True),
+    _auth: None = Depends(require_auth),
+):
+    """Set the YOLO meter level (1-5)."""
+    if level < 1 or level > 5:
+        raise HTTPException(status_code=400, detail="YOLO level must be 1-5")
+    trader = _get_auto_trader()
+    trader.yolo_level = level
+    trader._apply_yolo_profile()
+    from wolfpack.auto_trader import YOLO_PROFILES
+    logger.info(f"[auto-trader] YOLO level set to {level} ({YOLO_PROFILES[level]['label']})")
+    return trader.get_status()
+
+
 @app.get("/auto-trader/trades")
 async def auto_trader_trades(limit: int = 50):
     """Return recent auto-trades."""

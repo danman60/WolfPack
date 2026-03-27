@@ -13,6 +13,59 @@ from wolfpack.config import settings
 
 logger = logging.getLogger(__name__)
 
+YOLO_PROFILES = {
+    1: {  # Cautious
+        "label": "Cautious",
+        "conviction_threshold": 85,
+        "veto_floor": 60,
+        "max_trades_per_day": 3,
+        "penalty_multiplier": 1.5,
+        "cooldown_seconds": 2700,  # 45 min
+        "max_size_pct": 10,
+        "rejection_cooldown_hours": 4,
+    },
+    2: {  # Balanced
+        "label": "Balanced",
+        "conviction_threshold": 75,
+        "veto_floor": 55,
+        "max_trades_per_day": 4,
+        "penalty_multiplier": 1.0,
+        "cooldown_seconds": 1800,  # 30 min
+        "max_size_pct": 15,
+        "rejection_cooldown_hours": 2,
+    },
+    3: {  # Aggressive
+        "label": "Aggressive",
+        "conviction_threshold": 65,
+        "veto_floor": 45,
+        "max_trades_per_day": 8,
+        "penalty_multiplier": 0.5,
+        "cooldown_seconds": 900,  # 15 min
+        "max_size_pct": 20,
+        "rejection_cooldown_hours": 0.5,
+    },
+    4: {  # YOLO
+        "label": "YOLO",
+        "conviction_threshold": 55,
+        "veto_floor": 35,
+        "max_trades_per_day": 12,
+        "penalty_multiplier": 0.25,
+        "cooldown_seconds": 300,  # 5 min
+        "max_size_pct": 25,
+        "rejection_cooldown_hours": 0.25,
+    },
+    5: {  # Full Send
+        "label": "Full Send",
+        "conviction_threshold": 45,
+        "veto_floor": 25,
+        "max_trades_per_day": 20,
+        "penalty_multiplier": 0.0,
+        "cooldown_seconds": 0,
+        "max_size_pct": 25,
+        "rejection_cooldown_hours": 0,
+    },
+}
+
 
 class AutoTrader:
     """Autonomous trading bot with a separate paper trading engine."""
@@ -24,6 +77,8 @@ class AutoTrader:
         self.conviction_threshold = settings.auto_trade_conviction_threshold
         self.engine = PaperTradingEngine(starting_equity=settings.auto_trade_equity)
         self._restored = False
+        self.yolo_level = 4  # Default to YOLO for paper trading
+        self._apply_yolo_profile()
 
     def restore_from_snapshot(self) -> None:
         """Restore auto-trader portfolio from latest Supabase snapshot."""
@@ -65,6 +120,12 @@ class AutoTrader:
         except Exception as e:
             logger.warning(f"[auto-trader] Could not restore from snapshot: {e}")
 
+    def _apply_yolo_profile(self) -> None:
+        """Apply YOLO profile settings to all throttle layers."""
+        profile = YOLO_PROFILES.get(self.yolo_level, YOLO_PROFILES[2])
+        self.conviction_threshold = profile["conviction_threshold"]
+        self._yolo_profile = profile
+
     async def process_recommendations(
         self,
         recs: list[dict],
@@ -82,7 +143,12 @@ class AutoTrader:
         self.restore_from_snapshot()
 
         from wolfpack.veto import BriefVeto
-        veto = BriefVeto()
+        profile = YOLO_PROFILES.get(self.yolo_level, YOLO_PROFILES[2])
+        veto = BriefVeto(
+            conviction_floor=profile["veto_floor"],
+            penalty_multiplier=profile["penalty_multiplier"],
+            rejection_cooldown_hours=profile["rejection_cooldown_hours"],
+        )
 
         executed: list[dict] = []
 
@@ -110,8 +176,11 @@ class AutoTrader:
             # Check circuit breaker
             if cb_output:
                 cb_state = cb_dict.get("state", "") if isinstance(cb_dict, dict) else ""
-                if cb_state != "ACTIVE":
-                    logger.info(f"[auto-trader] CB not active ({cb_state}), skipping {symbol}")
+                if cb_state == "EMERGENCY_STOP":
+                    logger.info(f"[auto-trader] CB emergency stop, skipping {symbol}")
+                    continue
+                if cb_state == "SUSPENDED" and self.yolo_level < 4:
+                    logger.info(f"[auto-trader] CB suspended and YOLO level {self.yolo_level} < 4, skipping {symbol}")
                     continue
 
             # Get entry price
@@ -134,7 +203,7 @@ class AutoTrader:
                 )
                 size_pct = sizing.final_size_pct
             except Exception:
-                size_pct = min(rec.get("size_pct", 10), 15)  # Conservative default
+                size_pct = min(rec.get("size_pct", 10), profile["max_size_pct"])
 
             if size_pct <= 0:
                 continue
@@ -144,7 +213,7 @@ class AutoTrader:
                 symbol=symbol,
                 direction=direction,
                 current_price=round(entry_price, 2),
-                size_pct=min(size_pct, 15),  # Auto-trader capped at 15%
+                size_pct=min(size_pct, profile["max_size_pct"]),
                 recommendation_id=f"auto-{rec.get('id', 'unknown')}",
             )
 
@@ -337,4 +406,6 @@ class AutoTrader:
             "unrealized_pnl": round(p.unrealized_pnl, 2),
             "open_positions": len(p.positions),
             "positions": [pos.model_dump() for pos in p.positions],
+            "yolo_level": self.yolo_level,
+            "yolo_profile": YOLO_PROFILES.get(self.yolo_level, YOLO_PROFILES[2]),
         }

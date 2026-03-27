@@ -7,7 +7,24 @@ import {
   useAutoTraderTrades,
   useConfigureAutoTrader,
   usePositionActions,
+  useSetYoloLevel,
 } from "@/lib/hooks/useIntelligence";
+
+const YOLO_LABELS = [
+  { level: 1, label: "Cautious", icon: "\u{1F6E1}\uFE0F", color: "text-[var(--wolf-emerald)]" },
+  { level: 2, label: "Balanced", icon: "\u2696\uFE0F", color: "text-[var(--wolf-blue)]" },
+  { level: 3, label: "Aggressive", icon: "\u{1F525}", color: "text-[var(--wolf-amber)]" },
+  { level: 4, label: "YOLO", icon: "\u{1F680}", color: "text-[var(--wolf-purple)]" },
+  { level: 5, label: "Full Send", icon: "\u{1F480}", color: "text-[var(--wolf-red)]" },
+];
+
+const YOLO_DEFAULTS: Record<number, { conviction_threshold: number; veto_floor: number; max_trades_per_day: number; penalty_multiplier: number; cooldown_seconds: number; max_size_pct: number; rejection_cooldown_hours: number }> = {
+  1: { conviction_threshold: 85, veto_floor: 60, max_trades_per_day: 3, penalty_multiplier: 1.5, cooldown_seconds: 2700, max_size_pct: 10, rejection_cooldown_hours: 4 },
+  2: { conviction_threshold: 75, veto_floor: 55, max_trades_per_day: 4, penalty_multiplier: 1.0, cooldown_seconds: 1800, max_size_pct: 15, rejection_cooldown_hours: 2 },
+  3: { conviction_threshold: 65, veto_floor: 45, max_trades_per_day: 8, penalty_multiplier: 0.5, cooldown_seconds: 900, max_size_pct: 20, rejection_cooldown_hours: 0.5 },
+  4: { conviction_threshold: 55, veto_floor: 35, max_trades_per_day: 12, penalty_multiplier: 0.25, cooldown_seconds: 300, max_size_pct: 25, rejection_cooldown_hours: 0.25 },
+  5: { conviction_threshold: 45, veto_floor: 25, max_trades_per_day: 20, penalty_multiplier: 0.0, cooldown_seconds: 0, max_size_pct: 25, rejection_cooldown_hours: 0 },
+};
 
 export default function AutoBotPage() {
   const { data: status } = useAutoTraderStatus();
@@ -16,9 +33,14 @@ export default function AutoBotPage() {
   const toggleMutation = useToggleAutoTrader();
   const configMutation = useConfigureAutoTrader();
 
+  const yoloMutation = useSetYoloLevel();
+  const [pendingYolo, setPendingYolo] = useState<number | null>(null);
+
   const [editEquity, setEditEquity] = useState("");
   const [editThreshold, setEditThreshold] = useState("");
   const [configSaved, setConfigSaved] = useState(false);
+
+  const currentYolo = pendingYolo ?? status?.yolo_level ?? 4;
 
   const enabled = status?.enabled ?? false;
   const equity = status?.equity ?? 0;
@@ -109,59 +131,144 @@ export default function AutoBotPage() {
         />
       </div>
 
-      {/* Configuration */}
+      {/* YOLO Meter */}
       <div className="wolf-card p-6">
         <div className="flex items-center gap-2 mb-5">
-          <div className="w-1 h-4 rounded-full bg-[var(--wolf-purple)]" />
-          <h2 className="section-title">Configuration</h2>
+          <div className="w-1 h-4 rounded-full bg-[var(--wolf-amber)]" />
+          <h2 className="section-title">YOLO Meter</h2>
+          <span className="ml-auto text-xs text-gray-500">
+            Trading aggressiveness
+          </span>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label className="text-xs text-gray-500 uppercase">Conviction Threshold</label>
-            <div className="flex items-center gap-2 mt-1">
-              <input
-                type="number"
-                min={50}
-                max={100}
-                placeholder={String(status?.conviction_threshold ?? 75)}
-                value={editThreshold}
-                onChange={(e) => setEditThreshold(e.target.value)}
-                className="w-full bg-[var(--surface)] border border-[var(--border)] rounded-md px-3 py-2 text-white text-sm"
-              />
-              <span className="text-sm text-gray-400">%</span>
-            </div>
-            <p className="text-[10px] text-gray-600 mt-1">
-              Current: {status?.conviction_threshold ?? 75}% — Only executes recs above this level
-            </p>
+
+        {/* Slider */}
+        <div className="mb-6">
+          <div className="relative">
+            {/* Gradient track background */}
+            <div className="h-2 rounded-full bg-gradient-to-r from-[var(--wolf-emerald)] via-[var(--wolf-amber)] to-[var(--wolf-red)]" />
+            {/* Range input overlay */}
+            <input
+              type="range"
+              min={1}
+              max={5}
+              step={1}
+              value={currentYolo}
+              onChange={(e) => {
+                const level = Number(e.target.value);
+                setPendingYolo(level);
+                yoloMutation.mutate(level, {
+                  onSuccess: () => setPendingYolo(null),
+                });
+              }}
+              className="absolute inset-0 w-full opacity-0 cursor-pointer h-2"
+              style={{ top: 0 }}
+            />
+            {/* Custom thumb indicator */}
+            <div
+              className="absolute top-1/2 -translate-y-1/2 w-5 h-5 rounded-full border-2 border-white bg-[var(--surface)] shadow-lg shadow-black/50 pointer-events-none transition-all duration-200"
+              style={{ left: `${((currentYolo - 1) / 4) * 100}%`, transform: `translateX(-50%) translateY(-50%)` }}
+            />
           </div>
-          <div>
-            <label className="text-xs text-gray-500 uppercase">Equity Allocation</label>
-            <div className="flex items-center gap-2 mt-1">
-              <span className="text-sm text-gray-400">$</span>
-              <input
-                type="number"
-                min={100}
-                placeholder={String(startingEquity)}
-                value={editEquity}
-                onChange={(e) => setEditEquity(e.target.value)}
-                className="w-full bg-[var(--surface)] border border-[var(--border)] rounded-md px-3 py-2 text-white text-sm"
-              />
-            </div>
-            <p className="text-[10px] text-gray-600 mt-1">
-              Resets equity if no open positions
-            </p>
-          </div>
-          <div className="flex items-end">
-            <button
-              onClick={handleSaveConfig}
-              disabled={configMutation.isPending || (!editEquity && !editThreshold)}
-              className="px-5 py-2 bg-[var(--wolf-purple)]/20 text-[var(--wolf-purple)] rounded-md text-sm font-semibold hover:bg-[var(--wolf-purple)]/30 transition disabled:opacity-50"
-            >
-              {configMutation.isPending ? "Saving..." : configSaved ? "Saved!" : "Save Config"}
-            </button>
+
+          {/* Labels */}
+          <div className="flex justify-between mt-3 px-0">
+            {YOLO_LABELS.map((item) => (
+              <button
+                key={item.level}
+                onClick={() => {
+                  setPendingYolo(item.level);
+                  yoloMutation.mutate(item.level, {
+                    onSuccess: () => setPendingYolo(null),
+                  });
+                }}
+                className={`flex flex-col items-center gap-1 transition-all ${
+                  currentYolo === item.level
+                    ? "opacity-100 scale-105"
+                    : "opacity-40 hover:opacity-70"
+                }`}
+              >
+                <span className="text-base">{item.icon}</span>
+                <span className={`text-[10px] font-bold uppercase tracking-wider ${
+                  currentYolo === item.level ? item.color : "text-gray-500"
+                }`}>
+                  {item.label}
+                </span>
+              </button>
+            ))}
           </div>
         </div>
+
+        {/* Active profile details */}
+        {(() => {
+          const profile = status?.yolo_profile ?? YOLO_DEFAULTS[currentYolo as keyof typeof YOLO_DEFAULTS];
+          if (!profile) return null;
+          return (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 p-4 rounded-lg bg-[var(--surface)] border border-[var(--border)]">
+              <ProfileStat label="Conviction" value={`${profile.conviction_threshold}%`} />
+              <ProfileStat label="Veto Floor" value={`${profile.veto_floor}%`} />
+              <ProfileStat label="Max Trades/Day" value={String(profile.max_trades_per_day)} />
+              <ProfileStat label="Penalty Scale" value={`${(profile.penalty_multiplier * 100).toFixed(0)}%`} />
+              <ProfileStat label="Cooldown" value={profile.cooldown_seconds >= 60 ? `${Math.round(profile.cooldown_seconds / 60)}min` : profile.cooldown_seconds > 0 ? `${profile.cooldown_seconds}s` : "None"} />
+              <ProfileStat label="Max Size" value={`${profile.max_size_pct}%`} />
+            </div>
+          );
+        })()}
       </div>
+
+      {/* Advanced Configuration (collapsed) */}
+      <details className="wolf-card">
+        <summary className="p-5 cursor-pointer text-sm text-gray-400 hover:text-gray-300 transition select-none">
+          Advanced Configuration
+        </summary>
+        <div className="px-6 pb-6 pt-1">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="text-xs text-gray-500 uppercase">Conviction Override</label>
+              <div className="flex items-center gap-2 mt-1">
+                <input
+                  type="number"
+                  min={30}
+                  max={100}
+                  placeholder={String(status?.conviction_threshold ?? 55)}
+                  value={editThreshold}
+                  onChange={(e) => setEditThreshold(e.target.value)}
+                  className="w-full bg-[var(--surface)] border border-[var(--border)] rounded-md px-3 py-2 text-white text-sm"
+                />
+                <span className="text-sm text-gray-400">%</span>
+              </div>
+              <p className="text-[10px] text-gray-600 mt-1">
+                Overrides YOLO meter conviction
+              </p>
+            </div>
+            <div>
+              <label className="text-xs text-gray-500 uppercase">Equity Allocation</label>
+              <div className="flex items-center gap-2 mt-1">
+                <span className="text-sm text-gray-400">$</span>
+                <input
+                  type="number"
+                  min={100}
+                  placeholder={String(startingEquity)}
+                  value={editEquity}
+                  onChange={(e) => setEditEquity(e.target.value)}
+                  className="w-full bg-[var(--surface)] border border-[var(--border)] rounded-md px-3 py-2 text-white text-sm"
+                />
+              </div>
+              <p className="text-[10px] text-gray-600 mt-1">
+                Resets equity if no open positions
+              </p>
+            </div>
+            <div className="flex items-end">
+              <button
+                onClick={handleSaveConfig}
+                disabled={configMutation.isPending || (!editEquity && !editThreshold)}
+                className="px-5 py-2 bg-[var(--wolf-purple)]/20 text-[var(--wolf-purple)] rounded-md text-sm font-semibold hover:bg-[var(--wolf-purple)]/30 transition disabled:opacity-50"
+              >
+                {configMutation.isPending ? "Saving..." : configSaved ? "Saved!" : "Save Config"}
+              </button>
+            </div>
+          </div>
+        </div>
+      </details>
 
       {/* Open Positions */}
       <div className="wolf-card p-6">
@@ -350,6 +457,15 @@ function StatCard({
       <p className={`text-xl font-bold mt-1.5 tracking-tight ${colorMap[color] ?? "text-white"}`}>
         {value}
       </p>
+    </div>
+  );
+}
+
+function ProfileStat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="text-center">
+      <p className="text-[10px] text-gray-500 uppercase tracking-wider">{label}</p>
+      <p className="text-sm text-white font-mono font-semibold mt-0.5">{value}</p>
     </div>
   );
 }

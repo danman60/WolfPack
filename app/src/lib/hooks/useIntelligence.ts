@@ -525,6 +525,17 @@ interface AutoTraderStatus {
   unrealized_pnl: number;
   open_positions: number;
   positions: Record<string, unknown>[];
+  yolo_level: number;
+  yolo_profile: {
+    label: string;
+    conviction_threshold: number;
+    veto_floor: number;
+    max_trades_per_day: number;
+    penalty_multiplier: number;
+    cooldown_seconds: number;
+    max_size_pct: number;
+    rejection_cooldown_hours: number;
+  };
 }
 
 export function useAutoTraderStatus() {
@@ -602,6 +613,26 @@ export function useConfigureAutoTrader() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["auto-trader-status"] });
       queryClient.invalidateQueries({ queryKey: ["auto-trader-trades"] });
+    },
+  });
+}
+
+// Set YOLO meter level
+export function useSetYoloLevel() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (level: number) => {
+      const res = await intelFetch("/intel/auto-trader/yolo-level", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ level }),
+      });
+      if (!res.ok) throw new Error(`YOLO level update failed: ${res.status}`);
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["auto-trader-status"] });
     },
   });
 }

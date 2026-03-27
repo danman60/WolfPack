@@ -24,21 +24,32 @@ class VetoResult:
 class BriefVeto:
     """Evaluates Brief recommendations against hard veto rules and soft adjustments.
 
+    All thresholds and penalties are configurable via constructor parameters,
+    allowing the YOLO Meter to scale aggressiveness across all throttle layers.
+
     Hard veto (reject):
         - direction == "wait"
-        - conviction < 55
+        - conviction < conviction_floor (default 55)
         - no stop_loss set
         - size_pct > 25
 
-    Soft adjustments (reduce conviction):
-        - volatility regime "high" or "extreme": -10
-        - circuit breaker recently suspended: -15
-        - same symbol rejected within 2h: -20
+    Soft adjustments (reduce conviction, scaled by penalty_multiplier):
+        - volatility regime "high" or "extreme"
+        - circuit breaker recently suspended
+        - same symbol rejected within cooldown window
     """
 
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        conviction_floor: int = 55,
+        penalty_multiplier: float = 1.0,
+        rejection_cooldown_hours: float = 2.0,
+    ) -> None:
         # Track recent rejections: {symbol: datetime}
         self._recent_rejections: dict[str, datetime] = {}
+        self._conviction_floor = conviction_floor
+        self._penalty_multiplier = penalty_multiplier
+        self._rejection_cooldown_hours = rejection_cooldown_hours
 
     def evaluate(
         self,
@@ -78,8 +89,8 @@ class BriefVeto:
                 reasons=reasons,
             )
 
-        if conviction < 55:
-            reasons.append(f"conviction {conviction} < 55 minimum")
+        if conviction < self._conviction_floor:
+            reasons.append(f"conviction {conviction} < {self._conviction_floor} minimum")
             self._record_rejection(symbol)
             return VetoResult(
                 action="reject",
@@ -120,8 +131,9 @@ class BriefVeto:
             elif hasattr(vol_output, "vol_regime"):
                 vol_regime = vol_output.vol_regime
             if vol_regime in ("high", "extreme"):
-                adjusted -= 10
-                reasons.append(f"vol regime '{vol_regime}': -10 conviction")
+                penalty = int(10 * self._penalty_multiplier)
+                adjusted -= penalty
+                reasons.append(f"vol regime '{vol_regime}': -{penalty} conviction")
 
         # Circuit breaker penalty
         if cb_output:
@@ -131,8 +143,9 @@ class BriefVeto:
             elif hasattr(cb_output, "state"):
                 cb_state = cb_output.state
             if cb_state == "SUSPENDED":
-                adjusted -= 15
-                reasons.append("circuit breaker SUSPENDED: -15 conviction")
+                penalty = int(15 * self._penalty_multiplier)
+                adjusted -= penalty
+                reasons.append(f"circuit breaker SUSPENDED: -{penalty} conviction")
 
         # EMA/VWAP extension penalty — price overextended from mean
         if quant_signals:
@@ -141,28 +154,33 @@ class BriefVeto:
                 if indicator == "EMA_9_dist_pct":
                     dist = abs(float(sig.get("value", 0)))
                     if dist > 5:
-                        adjusted -= 15
-                        reasons.append(f"price {dist:.1f}% from 9 EMA (overextended): -15 conviction")
+                        penalty = int(15 * self._penalty_multiplier)
+                        adjusted -= penalty
+                        reasons.append(f"price {dist:.1f}% from 9 EMA (overextended): -{penalty} conviction")
                     elif dist > 3:
-                        adjusted -= 8
-                        reasons.append(f"price {dist:.1f}% from 9 EMA (extended): -8 conviction")
+                        penalty = int(8 * self._penalty_multiplier)
+                        adjusted -= penalty
+                        reasons.append(f"price {dist:.1f}% from 9 EMA (extended): -{penalty} conviction")
                 elif indicator == "VWAP_dist_pct":
                     dist = abs(float(sig.get("value", 0)))
                     if dist > 10:
-                        adjusted -= 15
-                        reasons.append(f"price {dist:.1f}% from VWAP (extreme extension): -15 conviction")
+                        penalty = int(15 * self._penalty_multiplier)
+                        adjusted -= penalty
+                        reasons.append(f"price {dist:.1f}% from VWAP (extreme extension): -{penalty} conviction")
                     elif dist > 5:
-                        adjusted -= 5
-                        reasons.append(f"price {dist:.1f}% from VWAP (extended): -5 conviction")
+                        penalty = int(5 * self._penalty_multiplier)
+                        adjusted -= penalty
+                        reasons.append(f"price {dist:.1f}% from VWAP (extended): -{penalty} conviction")
 
         # Recent rejection penalty
         if self._recently_rejected(symbol):
-            adjusted -= 20
-            reasons.append(f"{symbol} rejected within last 2h: -20 conviction")
+            penalty = int(20 * self._penalty_multiplier)
+            adjusted -= penalty
+            reasons.append(f"{symbol} rejected within last {self._rejection_cooldown_hours}h: -{penalty} conviction")
 
         # Check if adjusted conviction still passes threshold
-        if adjusted < 55:
-            reasons.append(f"adjusted conviction {adjusted} < 55 after penalties")
+        if adjusted < self._conviction_floor:
+            reasons.append(f"adjusted conviction {adjusted} < {self._conviction_floor} after penalties")
             self._record_rejection(symbol)
             return VetoResult(
                 action="reject",
@@ -183,7 +201,9 @@ class BriefVeto:
         self._recent_rejections[symbol] = datetime.now(timezone.utc)
 
     def _recently_rejected(self, symbol: str) -> bool:
+        if self._rejection_cooldown_hours <= 0:
+            return False
         last = self._recent_rejections.get(symbol)
         if not last:
             return False
-        return datetime.now(timezone.utc) - last < timedelta(hours=2)
+        return datetime.now(timezone.utc) - last < timedelta(hours=self._rejection_cooldown_hours)
