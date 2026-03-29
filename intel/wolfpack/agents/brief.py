@@ -264,9 +264,22 @@ Return ONLY a valid JSON object. No markdown, no code fences, no explanation out
         if market_data.get("portfolio_context"):
             context["portfolio_context"] = market_data["portfolio_context"]
 
+        yolo_level = market_data.get("yolo_level", 2)
+        yolo_override = ""
+        if yolo_level >= 4:
+            yolo_override = f"""
+
+AGGRESSIVENESS OVERRIDE (YOLO level {yolo_level}/5):
+The trader has set maximum aggressiveness. Adjust your behavior:
+- Lower your conviction floor to {max(30, 60 - (yolo_level - 3) * 15)} (normally 60)
+- In choppy regimes, DO recommend mean-reversion trades instead of defaulting to "wait"
+- Be willing to take trades with moderate conviction when risk/reward is favorable
+- Still respect hard gates (liquidity, extreme vol, ruin probability) but be more aggressive on everything else
+- The trader wants to see trades, not "wait" signals — find opportunities even in uncertain markets"""
+
         prompt = f"""Synthesize the following intelligence for {symbol} on {exchange} into trade recommendations and position management actions:
 
-{json.dumps(context, indent=2, default=str)}"""
+{json.dumps(context, indent=2, default=str)}{yolo_override}"""
 
         parsed = await self._call_llm_structured(prompt, BRIEF_SCHEMA)
 

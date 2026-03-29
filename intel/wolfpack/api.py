@@ -1620,6 +1620,8 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                 "free_collateral_pct": round(portfolio.free_collateral / portfolio.equity * 100, 1) if portfolio.equity > 0 else 0,
             }
 
+        # Pass YOLO level to Brief so it adjusts conviction floor
+        auto_trader = _get_auto_trader()
         brief_data: dict[str, Any] = {
             "symbol": symbol,
             "latest_price": latest_price,
@@ -1630,6 +1632,7 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
             "correlation": correlation_output.model_dump() if correlation_output else None,
             "circuit_breaker": cb_output.model_dump(),
             "execution_timing": exec_output.model_dump(),
+            "yolo_level": auto_trader.yolo_level,
         }
         if monte_carlo_output:
             brief_data["monte_carlo"] = monte_carlo_output.model_dump()
