@@ -68,11 +68,30 @@ class Agent(ABC):
     def _now(self) -> datetime:
         return datetime.now(timezone.utc)
 
+    def _get_deepseek_client_config(self) -> tuple[str, str, str, str]:
+        """Return (api_key, base_url, chat_model, reasoner_model) for DeepSeek calls.
+
+        Prefers OpenRouter over direct DeepSeek API.
+        """
+        if settings.openrouter_api_key:
+            return (
+                settings.openrouter_api_key,
+                "https://openrouter.ai/api/v1",
+                "deepseek/deepseek-chat-v3-0324",
+                "deepseek/deepseek-r1",
+            )
+        return (
+            settings.deepseek_api_key,
+            settings.deepseek_base_url,
+            settings.deepseek_model,
+            settings.deepseek_reasoner_model,
+        )
+
     async def _call_llm(self, prompt: str) -> str:
         """Call LLM (Anthropic -> DeepSeek fallback) with the agent's system prompt."""
         if settings.anthropic_api_key:
             return await self._call_anthropic(prompt)
-        elif settings.deepseek_api_key:
+        elif settings.openrouter_api_key or settings.deepseek_api_key:
             return await self._call_deepseek(prompt)
         else:
             logger.warning(f"{self.name}: No LLM API key configured")
@@ -88,9 +107,10 @@ class Agent(ABC):
         """
         if settings.anthropic_api_key:
             return await self._call_anthropic_structured(prompt, schema)
-        elif settings.deepseek_api_key:
-            model = self.model_override or settings.deepseek_model
-            if model == settings.deepseek_reasoner_model:
+        elif settings.openrouter_api_key or settings.deepseek_api_key:
+            api_key, base_url, chat_model, reasoner_model = self._get_deepseek_client_config()
+            model = self.model_override or chat_model
+            if model in (settings.deepseek_reasoner_model, reasoner_model):
                 return await self._call_deepseek_reasoner(prompt)
             return await self._call_deepseek_structured(prompt)
         else:
@@ -152,11 +172,9 @@ class Agent(ABC):
     async def _call_deepseek(self, prompt: str) -> str:
         from openai import AsyncOpenAI
 
-        client = AsyncOpenAI(
-            api_key=settings.deepseek_api_key,
-            base_url=settings.deepseek_base_url,
-        )
-        model = self.model_override or settings.deepseek_model
+        api_key, base_url, chat_model, reasoner_model = self._get_deepseek_client_config()
+        client = AsyncOpenAI(api_key=api_key, base_url=base_url)
+        model = self.model_override or chat_model
         try:
             kwargs: dict[str, Any] = {
                 "model": model,
@@ -167,7 +185,7 @@ class Agent(ABC):
                 "max_tokens": 1024,
             }
             # R1 (deepseek-reasoner) does not support temperature
-            if model != settings.deepseek_reasoner_model:
+            if model not in (settings.deepseek_reasoner_model, reasoner_model):
                 kwargs["temperature"] = 0.3
             response = await client.chat.completions.create(**kwargs)
             return response.choices[0].message.content or ""
@@ -179,11 +197,9 @@ class Agent(ABC):
         """Call DeepSeek with JSON mode for structured output."""
         from openai import AsyncOpenAI
 
-        client = AsyncOpenAI(
-            api_key=settings.deepseek_api_key,
-            base_url=settings.deepseek_base_url,
-        )
-        model = self.model_override or settings.deepseek_model
+        api_key, base_url, chat_model, _reasoner = self._get_deepseek_client_config()
+        client = AsyncOpenAI(api_key=api_key, base_url=base_url)
+        model = self.model_override or chat_model
         try:
             response = await client.chat.completions.create(
                 model=model,
@@ -212,13 +228,11 @@ class Agent(ABC):
         """
         from openai import AsyncOpenAI
 
-        client = AsyncOpenAI(
-            api_key=settings.deepseek_api_key,
-            base_url=settings.deepseek_base_url,
-        )
+        api_key, base_url, _chat, reasoner_model = self._get_deepseek_client_config()
+        client = AsyncOpenAI(api_key=api_key, base_url=base_url)
         try:
             response = await client.chat.completions.create(
-                model=settings.deepseek_reasoner_model,
+                model=reasoner_model,
                 messages=[
                     {"role": "system", "content": self.system_prompt},
                     {"role": "user", "content": prompt},

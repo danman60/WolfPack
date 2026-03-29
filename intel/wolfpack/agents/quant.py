@@ -50,8 +50,8 @@ class QuantAgent(Agent):
 
     @property
     def model_override(self) -> str | None:
-        from wolfpack.config import settings
-        return settings.deepseek_reasoner_model
+        _api_key, _base_url, _chat, reasoner = self._get_deepseek_client_config()
+        return reasoner
 
     @property
     def system_prompt(self) -> str:
