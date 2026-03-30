@@ -18,63 +18,47 @@ from wolfpack.bot_permissions import check_permission
 API_BASE_URL = "http://localhost:8000"
 
 
-def _api_get(endpoint: str, params: dict | None = None) -> dict:
-    """Make a GET request to the internal API."""
-    return _sync_api_get(endpoint, params)
+async def _api_get(endpoint: str, params: dict | None = None) -> dict:
+    """Async GET request — won't deadlock single-worker uvicorn."""
+    async with httpx.AsyncClient() as client:
+        response = await client.get(f"{API_BASE_URL}{endpoint}", params=params, timeout=30)
+        return response.json()
 
 
-def _sync_api_get(endpoint: str, params: dict | None = None) -> dict:
-    """Synchronous GET request to API."""
-    import requests
-    response = requests.get(f"{API_BASE_URL}{endpoint}", params=params, timeout=30)
-    return response.json()
-
-
-def _api_post(endpoint: str, json_data: dict | None = None) -> dict:
-    """Make a POST request to the internal API."""
-    try:
-        asyncio.get_running_loop()
-        # Called from async context — must use sync helper directly
-        # (can't run_in_executor from a non-async function reliably)
-        return _sync_api_post(endpoint, json_data)
-    except RuntimeError:
-        return _sync_api_post(endpoint, json_data)
-
-
-def _sync_api_post(endpoint: str, json_data: dict | None = None) -> dict:
-    """Synchronous POST request to API."""
-    import requests
-    response = requests.post(f"{API_BASE_URL}{endpoint}", json=json_data, timeout=30)
-    return response.json()
+async def _api_post(endpoint: str, json_data: dict | None = None) -> dict:
+    """Async POST request — won't deadlock single-worker uvicorn."""
+    async with httpx.AsyncClient() as client:
+        response = await client.post(f"{API_BASE_URL}{endpoint}", json=json_data, timeout=30)
+        return response.json()
 
 
 # ============================================================================
 # PORTFOLIO & MARKET TOOLS (4)
 # ============================================================================
 
-def get_portfolio_executor(exchange: str = "hyperliquid") -> dict:
+async def get_portfolio_executor(exchange: str = "hyperliquid") -> dict:
     """Get current portfolio positions from exchange adapter."""
-    result = _api_get("/portfolio", params={"exchange": exchange})
+    result = await _api_get("/portfolio", params={"exchange": exchange})
     return result
 
 
-def get_market_data_executor(pairs: str | None = None) -> dict:
+async def get_market_data_executor(pairs: str | None = None) -> dict:
     """Get market data: prices, volume, funding rates."""
     if pairs:
         # Fetch prices for each symbol individually
         symbols = [p.strip() for p in pairs.split(",")]
         results = {}
         for sym in symbols:
-            result = _api_get("/market/price", params={"symbol": sym.replace("-PERP", "")})
+            result = await _api_get("/market/price", params={"symbol": sym.replace("-PERP", "")})
             results[sym] = result
         return {"prices": results}
     # Default: return BTC price
-    return _api_get("/market/price", params={"symbol": "BTC"})
+    return await _api_get("/market/price", params={"symbol": "BTC"})
 
 
-def get_pnl_executor() -> dict:
+async def get_pnl_executor() -> dict:
     """Get P&L summary for the portfolio."""
-    result = _api_get("/portfolio")
+    result = await _api_get("/portfolio")
     portfolio = result.get("portfolio", result)
     return {
         "realized_pnl": portfolio.get("realized_pnl", 0),
@@ -88,10 +72,10 @@ def get_pnl_executor() -> dict:
     }
 
 
-def get_funding_rates_executor(exchange: str = "hyperliquid") -> dict:
+async def get_funding_rates_executor(exchange: str = "hyperliquid") -> dict:
     """Get funding rates from exchanges."""
     # Funding rates are embedded in the latest intelligence output
-    result = _api_get("/intelligence/latest", params={"exchange": exchange})
+    result = await _api_get("/intelligence/latest", params={"exchange": exchange})
     funding = result.get("funding_rates", [])
     return {"exchange": exchange, "funding_rates": funding}
 
@@ -100,27 +84,27 @@ def get_funding_rates_executor(exchange: str = "hyperliquid") -> dict:
 # AGENTS TOOLS (4)
 # ============================================================================
 
-def get_agent_status_executor() -> dict:
+async def get_agent_status_executor() -> dict:
     """Get running agents and their states."""
-    result = _api_get("/agents/status")
+    result = await _api_get("/agents/status")
     return result
 
 
-def pause_agent_executor(agent_id: str) -> dict:
+async def pause_agent_executor(agent_id: str) -> dict:
     """Pause a running agent."""
-    result = _api_post(f"/agents/{agent_id}/pause")
+    result = await _api_post(f"/agents/{agent_id}/pause")
     return result
 
 
-def resume_agent_executor(agent_id: str) -> dict:
+async def resume_agent_executor(agent_id: str) -> dict:
     """Resume a paused agent."""
-    result = _api_post(f"/agents/{agent_id}/resume")
+    result = await _api_post(f"/agents/{agent_id}/resume")
     return result
 
 
-def get_recommendations_executor(status: str = "pending", limit: int = 10) -> dict:
+async def get_recommendations_executor(status: str = "pending", limit: int = 10) -> dict:
     """Get pending trade recommendations."""
-    result = _api_get("/intelligence/recommendations", params={
+    result = await _api_get("/intelligence/recommendations", params={
         "status": status,
         "limit": limit
     })
@@ -131,27 +115,27 @@ def get_recommendations_executor(status: str = "pending", limit: int = 10) -> di
 # TRADE EXECUTION TOOLS (6) - All tier2 (require permission)
 # ============================================================================
 
-def approve_trade_executor(recommendation_id: str, exchange: str = "hyperliquid") -> dict:
+async def approve_trade_executor(recommendation_id: str, exchange: str = "hyperliquid") -> dict:
     """Approve a trade recommendation for execution."""
     if not check_permission("approve_trade"):
         return {"status": "denied", "message": "Trade execution permission denied. Enable in permissions."}
     
-    result = _api_post(f"/recommendations/{recommendation_id}/approve", json_data={
+    result = await _api_post(f"/recommendations/{recommendation_id}/approve", json_data={
         "exchange": exchange
     })
     return result
 
 
-def reject_trade_executor(recommendation_id: str) -> dict:
+async def reject_trade_executor(recommendation_id: str) -> dict:
     """Reject a trade recommendation."""
     if not check_permission("reject_trade"):
         return {"status": "denied", "message": "Trade execution permission denied. Enable in permissions."}
     
-    result = _api_post(f"/recommendations/{recommendation_id}/reject")
+    result = await _api_post(f"/recommendations/{recommendation_id}/reject")
     return result
 
 
-def place_order_executor(
+async def place_order_executor(
     exchange: str,
     pair: str,
     side: str,
@@ -176,28 +160,28 @@ def place_order_executor(
     if price:
         params["stop_loss"] = None  # price not used in paper/order; included for context
 
-    result = _api_post("/paper/order", json_data=params)
+    result = await _api_post("/paper/order", json_data=params)
     return result
 
 
-def cancel_order_executor(order_id: str, exchange: str = "hyperliquid") -> dict:
+async def cancel_order_executor(order_id: str, exchange: str = "hyperliquid") -> dict:
     """Cancel an open order."""
     if not check_permission("cancel_order"):
         return {"status": "denied", "message": "Trade execution permission denied. Enable in permissions."}
 
     # API expects symbol + order_id as query params, not body
-    result = _sync_api_post(f"/trades/cancel?symbol=&order_id={order_id}")
+    result = await _api_post(f"/trades/cancel?symbol=&order_id={order_id}")
     return result
 
 
-def close_position_executor(position_id: str, exchange: str = "hyperliquid") -> dict:
+async def close_position_executor(position_id: str, exchange: str = "hyperliquid") -> dict:
     """Close a trading position. position_id is treated as symbol (e.g. 'BTC')."""
     if not check_permission("close_position"):
         return {"status": "denied", "message": "Trade execution permission denied. Enable in permissions."}
 
     # API endpoint: POST /portfolio/close/{symbol}?exchange=...
     symbol = position_id.replace("-PERP", "").upper()
-    result = _api_post(f"/portfolio/close/{symbol}?exchange={exchange}")
+    result = await _api_post(f"/portfolio/close/{symbol}?exchange={exchange}")
     return result
 
 
@@ -225,39 +209,39 @@ def set_stop_loss_executor(position_id: str, price: float, exchange: str = "hype
 # AUTOBOT CONTROL TOOLS (4) - All tier2 (require permission)
 # ============================================================================
 
-def autobot_status_executor() -> dict:
+async def autobot_status_executor() -> dict:
     """Get full AutoBot state and status."""
-    result = _api_get("/auto-trader/status")
+    result = await _api_get("/auto-trader/status")
     return result
 
 
-def autobot_start_executor(strategy: str = "default") -> dict:
+async def autobot_start_executor(strategy: str = "default") -> dict:
     """Start the AutoBot (toggle on). The API uses a toggle endpoint."""
     if not check_permission("autobot_start"):
         return {"status": "denied", "message": "AutoBot control permission denied. Enable in permissions."}
 
     # Check current state first, then toggle if not already enabled
-    status = _api_get("/auto-trader/status")
+    status = await _api_get("/auto-trader/status")
     if status.get("enabled"):
         return {"status": "already_running", "message": "AutoBot is already running."}
-    result = _api_post("/auto-trader/toggle")
+    result = await _api_post("/auto-trader/toggle")
     return result
 
 
-def autobot_stop_executor() -> dict:
+async def autobot_stop_executor() -> dict:
     """Stop the AutoBot (toggle off)."""
     if not check_permission("autobot_stop"):
         return {"status": "denied", "message": "AutoBot control permission denied. Enable in permissions."}
 
     # Check current state first, then toggle if enabled
-    status = _api_get("/auto-trader/status")
+    status = await _api_get("/auto-trader/status")
     if not status.get("enabled"):
         return {"status": "already_stopped", "message": "AutoBot is already stopped."}
-    result = _api_post("/auto-trader/toggle")
+    result = await _api_post("/auto-trader/toggle")
     return result
 
 
-def autobot_configure_executor(params: dict) -> dict:
+async def autobot_configure_executor(params: dict) -> dict:
     """Update AutoBot strategy and risk parameters."""
     if not check_permission("autobot_configure"):
         return {"status": "denied", "message": "AutoBot control permission denied. Enable in permissions."}
@@ -271,7 +255,7 @@ def autobot_configure_executor(params: dict) -> dict:
     if conviction is not None:
         query.append(f"conviction_threshold={conviction}")
     qs = "&".join(query)
-    result = _api_post(f"/auto-trader/config?{qs}")
+    result = await _api_post(f"/auto-trader/config?{qs}")
     return result
 
 
@@ -279,20 +263,20 @@ def autobot_configure_executor(params: dict) -> dict:
 # INTELLIGENCE TOOLS (2)
 # ============================================================================
 
-def get_sentiment_executor(sources: str | None = None) -> dict:
+async def get_sentiment_executor(sources: str | None = None) -> dict:
     """Get social sentiment analysis from the latest intelligence output."""
     # Sentiment is embedded in /intelligence/latest output
-    result = _api_get("/intelligence/latest")
+    result = await _api_get("/intelligence/latest")
     sentiment = result.get("social_sentiment") or result.get("sentiment")
     if sentiment:
         return {"sentiment": sentiment}
     return {"status": "no_data", "message": "No sentiment data available. Run an intelligence cycle first."}
 
 
-def get_daily_report_executor(date: str | None = None) -> dict:
+async def get_daily_report_executor(date: str | None = None) -> dict:
     """Get the latest daily trading report."""
     # Map to /intelligence/latest — the API doesn't have a separate daily-report endpoint
-    result = _api_get("/intelligence/latest")
+    result = await _api_get("/intelligence/latest")
     return result
 
 
