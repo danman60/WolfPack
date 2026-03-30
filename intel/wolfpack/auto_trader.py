@@ -414,4 +414,5 @@ class AutoTrader:
             "positions": [pos.model_dump() for pos in p.positions],
             "yolo_level": self.yolo_level,
             "yolo_profile": YOLO_PROFILES.get(self.yolo_level, YOLO_PROFILES[2]),
+            "type": "AutoBot",
         }

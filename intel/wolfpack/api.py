@@ -530,6 +530,7 @@ async def portfolio_status(exchange: str = "hyperliquid"):
         "closed_trades": portfolio.closed_trades,
         "winning_trades": portfolio.winning_trades,
         "win_rate": round(portfolio.winning_trades / portfolio.closed_trades, 3) if portfolio.closed_trades > 0 else 0,
+        "type": "Paper",
     }
 
 
@@ -678,7 +679,7 @@ async def get_positions():
 
     try:
         positions = await trader.get_positions()
-        return {"status": "ok", "positions": positions}
+        return {"status": "ok", "positions": positions, "type": "Actual"}
     except Exception as e:
         logger.error(f"Failed to fetch positions: {e}")
         return {"status": "error", "positions": [], "message": str(e)}

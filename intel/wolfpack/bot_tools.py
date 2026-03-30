@@ -288,7 +288,7 @@ TOOLS = [
     # Portfolio & Market Tools (4)
     {
         "name": "get_portfolio",
-        "description": "Get current portfolio positions and status from exchange.",
+        "description": "Get current Paper portfolio positions and status (simulated $10K manual trading engine).",
         "parameters": {
             "type": "object",
             "properties": {
@@ -552,7 +552,7 @@ TOOLS = [
     # AutoBot Control Tools (4) - tier2
     {
         "name": "autobot_status",
-        "description": "Get AutoBot state: running, paused, stopped, positions.",
+        "description": "Get AutoBot autonomous portfolio: positions, equity, P&L ($25K autonomous trading engine).",
         "parameters": {
             "type": "object",
             "properties": {}
