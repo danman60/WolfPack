@@ -394,7 +394,7 @@ class AutoTrader:
                 "free_collateral": round(p.free_collateral, 2),
                 "unrealized_pnl": round(p.unrealized_pnl, 2),
                 "realized_pnl": round(p.realized_pnl, 2),
-                "positions": [pos.model_dump() for pos in p.positions],
+                "positions": [pos.model_dump(mode="json") for pos in p.positions],
             }).execute()
         except Exception as e:
             logger.error(f"[auto-trader] Failed to store snapshot: {e}")
@@ -411,7 +411,7 @@ class AutoTrader:
             "realized_pnl": round(p.realized_pnl, 2),
             "unrealized_pnl": round(p.unrealized_pnl, 2),
             "open_positions": len(p.positions),
-            "positions": [pos.model_dump() for pos in p.positions],
+            "positions": [pos.model_dump(mode="json") for pos in p.positions],
             "yolo_level": self.yolo_level,
             "yolo_profile": YOLO_PROFILES.get(self.yolo_level, YOLO_PROFILES[2]),
             "type": "AutoBot",
