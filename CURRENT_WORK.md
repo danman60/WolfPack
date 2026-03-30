@@ -1,46 +1,56 @@
 # Current Work - WolfPack
 
 ## Last Session Summary
-Built the YOLO Meter feature — a single UI slider on the Auto-Bot page that controls trading aggressiveness across all 6 throttle layers (conviction threshold, veto floor, trade limits, penalty scaling, cooldown, position sizing). Set to level 4 (YOLO) to increase trade activity on paper trading.
+Fixed multiple critical bugs in the Telegram bot's LLM chat handler (400 errors, deadlock, Future serialization), fixed auto-trader equity/snapshot issues, added training data export pipeline for LLM distillation, and standardized portfolio naming across the system (Actual/Paper/AutoBot).
 
 ## What Changed
-- `24ff3b4` feat: YOLO Meter — single slider controls trading aggressiveness (5 files)
-  - `intel/wolfpack/auto_trader.py` — YOLO_PROFILES dict (5 levels), `_apply_yolo_profile()`, configurable veto/CB params
-  - `intel/wolfpack/veto.py` — BriefVeto now accepts conviction_floor, penalty_multiplier, rejection_cooldown_hours
-  - `intel/wolfpack/api.py` — POST /auto-trader/yolo-level endpoint
-  - `app/src/lib/hooks/useIntelligence.ts` — useSetYoloLevel mutation, AutoTraderStatus extended
-  - `app/src/app/auto-bot/page.tsx` — YOLO Meter slider UI with gradient track, 5 labeled stops, profile stats grid
+- `f3b942e` fix: auto-trader respects configured equity when snapshot is stale (auto_trader.py)
+- `4fa8352` feat: automated training data export for LLM distillation (export_training_data.py + api.py integration)
+- `b3672f3` fix: bot 400 errors — tool message format and DeepSeek model name (llm_client.py)
+- `c208dec` fix: bot tool executor returning Future instead of value (bot_tools.py)
+- `924ddeb` fix: bot deadlock — sync requests to self on single-worker uvicorn (bot_tools.py async conversion)
+- `11c7862` feat: consistent portfolio naming — Actual/Paper/AutoBot (api.py, auto_trader.py, bot_prompt.py, bot_tools.py)
+- `1854199` fix: auto-trader snapshot serialization — datetime not JSON serializable (auto_trader.py)
+- [uncommitted] .gitignore, AGENTS.md, CLAUDE.md, telegram_bot.py, bot_memory.py, bot_permissions.py
 
 ## Build Status
-PASSING — Next.js build clean, Python imports verified, GitNexus re-indexed (1,004 symbols)
+NOT RUN — no frontend build this session. Backend deployed to droplet via git pull + systemctl restart.
 
 ## Known Bugs & Issues
-- YOLO level is stored in-memory only (resets on intel service restart). Should persist to Supabase wp_settings or similar.
-- Circuit breaker MAX_TRADES_PER_DAY is still hardcoded at 4 in circuit_breaker.py — the YOLO meter relaxes the CB check in auto_trader.py but doesn't modify the CB module itself. At levels 4-5, CB SUSPENDED state is ignored (only EMERGENCY_STOP blocks).
+- Auto-trader only executes 1 trade per symbol (paper engine blocks duplicates at paper_trading.py:73-77)
+- Health check endpoint (/health/deep) shows "never run" after restart — in-memory state only
+- Circuit breaker state check constraint error in DB: "ACTIVE" rejected by wp_circuit_breaker_state_state_check
+- Conviction threshold 55 (YOLO level 4) means many recs at exactly 55 are borderline
 
 ## Incomplete Work
-- None — feature is complete and building
+- Training data export: backfill done (324 examples), real-time append integrated but not yet verified post-deploy
+- Distillation pipeline: export script done, fine-tuning step not built yet (Unsloth/PEFT on FIRMAMENT)
+- NVIDIA cufolio portfolio optimization: researched (github.com/NVIDIA-AI-Blueprints/quantitative-portfolio-optimization), not integrated
+- KX distillation pipeline: researched (github.com/KxSystems/nvidia-kx-samples), architecture informed our export script
 
 ## Tests
-- No test run this session
-- Untested: YOLO meter UI interaction, API endpoint, profile application during intelligence cycle
+- No automated tests run this session
+- Bot manually tested via Telegram — "Portfolio?" returns correct data with Paper/AutoBot labels
 
 ## Next Steps (priority order)
-1. Deploy intel service with YOLO meter changes and verify trades execute at level 4
-2. Persist yolo_level to Supabase so it survives service restarts
-3. Monitor auto-bot activity over next 24h — expect significantly more trades at level 4
-4. Consider wiring MAX_TRADES_PER_DAY in circuit_breaker.py to YOLO profile for full integration
-5. Run backtest with OverfitDetector to validate IS/OOS splits
+1. Verify training data appending on each cycle: `ssh droplet "ls -la /root/WolfPack/intel/training_data/"`
+2. Build LoRA fine-tuning script for distilling Brief agent to small model on FIRMAMENT
+3. Fix circuit breaker DB check constraint (ACTIVE value rejected)
+4. Consider merging Paper + AutoBot into single portfolio or unified view
+5. Add Hyperliquid private key for live trading when ready
 
 ## Gotchas for Next Session
-- YOLO level defaults to 4 in code (`auto_trader.py:23`) — if user wants to change default, edit there
-- The veto penalty_multiplier at level 4 is 0.25 (penalties quartered), at level 5 is 0.0 (penalties disabled)
-- At levels 4-5, only EMERGENCY_STOP blocks trades (CB SUSPENDED is bypassed)
-- Pre-existing uncommitted files (tests/, overnight notes, .claude/) are from prior sessions — not from this session
+- Droplet SSH: `ssh droplet` (key: id_ed25519_spyballoon, root@159.89.115.95)
+- Bot files (bot_memory.py, bot_permissions.py, bot_prompt.py, bot_tools.py, llm_client.py) were untracked on droplet — had to `rm` before `git pull`
+- Bot memory at `~/.wolfpack-bot/bot_memory.json` on droplet — cleared this session. Stale tool_calls cause 400s.
+- systemd service `wolfpack-intel` is now enabled with Restart=always
+- Auto-trader equity was stuck at $5K, fixed to $25K. Snapshot restore logic patched.
+- Three portfolios: Actual (Hyperliquid read-only), Paper ($10K manual), AutoBot ($25K autonomous YOLO 4)
 
 ## Files Touched This Session
-- `intel/wolfpack/auto_trader.py` — YOLO profiles + apply logic
-- `intel/wolfpack/veto.py` — configurable conviction floor, penalties, cooldown
-- `intel/wolfpack/api.py` — /auto-trader/yolo-level endpoint
-- `app/src/lib/hooks/useIntelligence.ts` — useSetYoloLevel hook
-- `app/src/app/auto-bot/page.tsx` — YOLO Meter UI component
+- intel/wolfpack/auto_trader.py (equity restore, snapshot serialization, type field)
+- intel/wolfpack/export_training_data.py (NEW — training data export pipeline)
+- intel/wolfpack/llm_client.py (tool message format, DeepSeek model name)
+- intel/wolfpack/bot_tools.py (async conversion, tool descriptions)
+- intel/wolfpack/bot_prompt.py (system prompt with portfolio types)
+- intel/wolfpack/api.py (training data integration, portfolio type fields)
