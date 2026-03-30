@@ -1757,6 +1757,21 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
             except Exception as e:
                 logger.warning(f"[cycle] Position action processing error: {e}")
 
+            # ── Step 5d: Append training data for distillation ──
+            try:
+                from wolfpack.export_training_data import format_training_pair, append_training_pair
+                quant_dict = agent_outputs["quant"].model_dump() if "quant" in agent_outputs and hasattr(agent_outputs["quant"], "model_dump") else agent_outputs.get("quant")
+                snoop_dict = agent_outputs["snoop"].model_dump() if "snoop" in agent_outputs and hasattr(agent_outputs["snoop"], "model_dump") else agent_outputs.get("snoop")
+                sage_dict = agent_outputs["sage"].model_dump() if "sage" in agent_outputs and hasattr(agent_outputs["sage"], "model_dump") else agent_outputs.get("sage")
+                brief_dict = brief_out.model_dump() if hasattr(brief_out, "model_dump") else brief_out
+                pair = format_training_pair(quant_dict, snoop_dict, sage_dict, brief_dict, stored_recs)
+                if pair:
+                    training_dir = os.environ.get("WOLFPACK_TRAINING_DIR", "training_data")
+                    append_training_pair(pair, symbol, training_dir)
+                    logger.info(f"[training] Appended training pair for {symbol}")
+            except Exception as e:
+                logger.warning(f"[training] Failed to append training data: {e}")
+
             # ── Step 6: Update paper trading portfolio ──
             engine = _get_paper_engine()
             if latest_price and engine.portfolio.positions:
