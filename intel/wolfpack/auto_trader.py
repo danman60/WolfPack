@@ -101,8 +101,14 @@ class AutoTrader:
             if result.data:
                 snap = result.data[0]
                 p = self.engine.portfolio
-                p.equity = snap.get("equity", settings.auto_trade_equity)
-                p.free_collateral = snap.get("free_collateral", settings.auto_trade_equity)
+                snap_equity = snap.get("equity", settings.auto_trade_equity)
+                # If snapshot equity is less than configured starting equity and
+                # there are no positions/PnL, use the configured value (equity was raised)
+                if snap_equity < settings.auto_trade_equity and not snap.get("positions") and snap.get("realized_pnl", 0) == 0:
+                    snap_equity = settings.auto_trade_equity
+                    logger.info(f"[auto-trader] Snapshot equity ${snap.get('equity')} < configured ${settings.auto_trade_equity}, using configured value")
+                p.equity = snap_equity
+                p.free_collateral = max(snap.get("free_collateral", settings.auto_trade_equity), snap_equity)
                 p.realized_pnl = snap.get("realized_pnl", 0.0)
                 p.unrealized_pnl = snap.get("unrealized_pnl", 0.0)
                 for pos_data in snap.get("positions", []):
