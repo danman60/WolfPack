@@ -10,7 +10,9 @@ Messages:
 - Daily intelligence summaries
 """
 
+import json
 import logging
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 import httpx
@@ -23,6 +25,50 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 TELEGRAM_API = "https://api.telegram.org"
+
+# Bot fleet config — read from constellation dashboard
+BOT_FLEET_CONFIG = Path.home() / "projects" / "constellation-dashboard" / "data" / "bot-fleet.json"
+
+# Map function names to bot-fleet notification keys
+_NOTIF_KEYS = {
+    "notify_recommendation": "tradeRecommendations",
+    "notify_position_opened": "positionOpened",
+    "notify_position_closed": "positionClosed",
+    "notify_circuit_breaker": "circuitBreaker",
+    "notify_position_action": "positionActions",
+    "notify_daily_summary": "dailySummary",
+}
+
+
+def _is_notif_enabled(func_name: str) -> bool:
+    """Check if a notification is enabled in bot-fleet config. Fail-open."""
+    try:
+        data = json.loads(BOT_FLEET_CONFIG.read_text())
+        if data.get("globalSettings", {}).get("globalMute", False):
+            return False
+        bot = next((b for b in data.get("bots", []) if b["id"] == "wolfpack"), None)
+        if not bot or not bot.get("enabled", True):
+            return False
+        key = _NOTIF_KEYS.get(func_name, func_name)
+        notif = bot.get("notifications", {}).get(key, {})
+        if not notif:
+            return True
+        return notif.get("enabled", True) and notif.get("mode", "individual") != "disabled"
+    except Exception:
+        return True
+
+
+def _get_conviction_threshold() -> int:
+    """Get conviction threshold from bot-fleet config. Default 70."""
+    try:
+        data = json.loads(BOT_FLEET_CONFIG.read_text())
+        bot = next((b for b in data.get("bots", []) if b["id"] == "wolfpack"), None)
+        if not bot:
+            return 70
+        notif = bot.get("notifications", {}).get("tradeRecommendations", {})
+        return notif.get("convictionThreshold", 70)
+    except Exception:
+        return 70
 
 # Bot singleton — set by api.py on startup when bot is active
 _bot_instance: "WolfPackBot | None" = None
@@ -78,6 +124,13 @@ async def notify_recommendation(
     Uses inline Approve/Reject buttons when bot is active and rec_id is provided.
     Falls back to plain text notification otherwise.
     """
+    if not _is_notif_enabled("notify_recommendation"):
+        return False
+    # Check configurable conviction threshold
+    threshold = _get_conviction_threshold()
+    if conviction < threshold:
+        logger.debug(f"Skipping rec: conviction {conviction}% < threshold {threshold}%")
+        return False
     # Try inline buttons via bot first
     if _bot_instance and _bot_instance.is_running and rec_id:
         return await _bot_instance.send_recommendation_with_buttons(
@@ -115,6 +168,8 @@ async def notify_position_opened(
     size_usd: float,
 ) -> bool:
     """Notify when a paper position is opened."""
+    if not _is_notif_enabled("notify_position_opened"):
+        return False
     arrow = "\u2b06\ufe0f" if direction == "long" else "\u2b07\ufe0f"
     msg = (
         f"<b>{arrow} Position Opened: {direction.upper()} {symbol}</b>\n"
@@ -130,6 +185,8 @@ async def notify_position_closed(
     realized_pnl: float,
 ) -> bool:
     """Notify when a paper position is closed."""
+    if not _is_notif_enabled("notify_position_closed"):
+        return False
     icon = "\u2705" if realized_pnl >= 0 else "\u274c"
     pnl_str = f"+${realized_pnl:,.2f}" if realized_pnl >= 0 else f"-${abs(realized_pnl):,.2f}"
     msg = (
@@ -142,6 +199,8 @@ async def notify_position_closed(
 
 async def notify_circuit_breaker(state: str, reason: str) -> bool:
     """Notify on circuit breaker state changes."""
+    if not _is_notif_enabled("notify_circuit_breaker"):
+        return False
     icon = "\u26a0\ufe0f" if state == "SUSPENDED" else "\ud83d\uded1" if state == "EMERGENCY_STOP" else "\u2705"
     msg = f"<b>{icon} Circuit Breaker: {state}</b>\n{reason}"
     return await send_telegram(msg)
@@ -155,6 +214,8 @@ async def notify_position_action(
     action_id: str | None = None,
 ) -> bool:
     """Send a position action notification with inline Approve/Dismiss buttons."""
+    if not _is_notif_enabled("notify_position_action"):
+        return False
     action_icons = {
         "close": "\u274c",
         "reduce": "\u2702\ufe0f",
@@ -193,6 +254,8 @@ async def notify_daily_summary(
     pending_recs: int,
 ) -> bool:
     """Send daily portfolio summary."""
+    if not _is_notif_enabled("notify_daily_summary"):
+        return False
     total_pnl = unrealized_pnl + realized_pnl
     icon = "\u2705" if total_pnl >= 0 else "\u274c"
     pnl_str = f"+${total_pnl:,.2f}" if total_pnl >= 0 else f"-${abs(total_pnl):,.2f}"
