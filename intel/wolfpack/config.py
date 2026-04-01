@@ -11,8 +11,6 @@ class Settings(BaseSettings):
     # LLM providers
     anthropic_api_key: str = ""
     openai_api_key: str = ""          # Also used for DeepSeek via base_url override
-    openrouter_api_key: str = ""
-
     # DeepSeek (financial-tuned model)
     deepseek_api_key: str = ""
     deepseek_base_url: str = "https://api.deepseek.com"

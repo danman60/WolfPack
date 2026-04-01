@@ -69,17 +69,7 @@ class Agent(ABC):
         return datetime.now(timezone.utc)
 
     def _get_deepseek_client_config(self) -> tuple[str, str, str, str]:
-        """Return (api_key, base_url, chat_model, reasoner_model) for DeepSeek calls.
-
-        Prefers OpenRouter over direct DeepSeek API.
-        """
-        if settings.openrouter_api_key:
-            return (
-                settings.openrouter_api_key,
-                "https://openrouter.ai/api/v1",
-                "deepseek/deepseek-chat-v3-0324",
-                "deepseek/deepseek-r1",
-            )
+        """Return (api_key, base_url, chat_model, reasoner_model) for DeepSeek calls."""
         return (
             settings.deepseek_api_key,
             settings.deepseek_base_url,
@@ -91,7 +81,7 @@ class Agent(ABC):
         """Call LLM (Anthropic -> DeepSeek fallback) with the agent's system prompt."""
         if settings.anthropic_api_key:
             return await self._call_anthropic(prompt)
-        elif settings.openrouter_api_key or settings.deepseek_api_key:
+        elif settings.deepseek_api_key:
             return await self._call_deepseek(prompt)
         else:
             logger.warning(f"{self.name}: No LLM API key configured")
@@ -107,7 +97,7 @@ class Agent(ABC):
         """
         if settings.anthropic_api_key:
             return await self._call_anthropic_structured(prompt, schema)
-        elif settings.openrouter_api_key or settings.deepseek_api_key:
+        elif settings.deepseek_api_key:
             api_key, base_url, chat_model, reasoner_model = self._get_deepseek_client_config()
             model = self.model_override or chat_model
             if model in (settings.deepseek_reasoner_model, reasoner_model):
