@@ -2024,6 +2024,19 @@ async def _execute_backtest(run_id: str, config) -> None:
             end_time=config.end_time,
         )
 
+        # Fallback: direct exchange fetch if cache returns empty
+        if len(candles) < 100:
+            logger.info(f"[backtest] Cache returned {len(candles)} candles, fetching directly from exchange")
+            from wolfpack.exchanges import get_exchange
+            adapter = get_exchange(config.exchange)
+            interval_ms = {"1m": 60_000, "5m": 300_000, "1h": 3_600_000, "4h": 14_400_000, "1d": 86_400_000}
+            step = interval_ms.get(config.interval, 3_600_000)
+            limit = (config.end_time - config.start_time) // step + 2
+            candles = await adapter.get_candles(
+                config.symbol, interval=config.interval, limit=min(limit, 5000), start_time=config.start_time
+            )
+            candles = [c for c in candles if config.start_time <= c.timestamp <= config.end_time]
+
         if len(candles) < 100:
             update_backtest_result(
                 run_id, status="failed", error=f"Insufficient candle data: {len(candles)} bars"
