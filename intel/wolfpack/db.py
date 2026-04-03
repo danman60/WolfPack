@@ -34,7 +34,9 @@ def store_agent_output(
         "confidence": confidence,
         "raw_data": raw_data,
     }
-    result = db.table("wp_agent_outputs").insert(row).execute()
+    result = db.table("wp_agent_outputs").upsert(
+        row, on_conflict="agent_name,exchange_id"
+    ).execute()
     return result.data[0] if result.data else row
 
 
@@ -52,7 +54,9 @@ def store_module_output(
         "output": output,
         "symbol": symbol,
     }
-    result = db.table("wp_module_outputs").insert(row).execute()
+    result = db.table("wp_module_outputs").upsert(
+        row, on_conflict="module_name,exchange_id,symbol"
+    ).execute()
     return result.data[0] if result.data else row
 
 
@@ -316,15 +320,18 @@ def save_cb_state(
     max_exposure_pct: float,
     peak_equity: float | None = None,
 ) -> dict:
-    """Save current circuit breaker state to DB (insert — keeps history)."""
+    """Upsert circuit breaker state — single row, updated each cycle."""
     db = get_db()
     row = {
+        "singleton_key": "current",
         "state": state,
         "triggers": triggers,
         "max_exposure_pct": max_exposure_pct,
         "peak_equity": peak_equity,
     }
-    result = db.table("wp_circuit_breaker_state").insert(row).execute()
+    result = db.table("wp_circuit_breaker_state").upsert(
+        row, on_conflict="singleton_key"
+    ).execute()
     return result.data[0] if result.data else row
 
 
@@ -341,3 +348,59 @@ def load_cb_state() -> dict | None:
     if not result.data:
         return None
     return result.data[0]
+
+
+# ---------------------------------------------------------------------------
+# Snapshot cleanup (called once per day from cycle)
+# ---------------------------------------------------------------------------
+
+_snapshot_cleanup_done: bool = False
+
+
+def cleanup_old_snapshots() -> None:
+    """Prune old portfolio snapshots: keep all from last 7 days, 1/day for older.
+
+    Only runs once per process lifetime (resets on restart). Safe to call every cycle.
+    """
+    global _snapshot_cleanup_done
+    if _snapshot_cleanup_done:
+        return
+    _snapshot_cleanup_done = True
+
+    from datetime import datetime, timedelta, timezone
+
+    cutoff = (datetime.now(timezone.utc) - timedelta(days=7)).isoformat()
+    db = get_db()
+
+    for table in ("wp_portfolio_snapshots", "wp_auto_portfolio_snapshots"):
+        try:
+            # Fetch all old snapshot IDs + timestamps
+            result = (
+                db.table(table)
+                .select("id, created_at")
+                .lt("created_at", cutoff)
+                .order("created_at", desc=True)
+                .execute()
+            )
+            if not result.data:
+                continue
+
+            # Group by calendar day, keep only the latest per day
+            by_day: dict[str, str] = {}
+            for row in result.data:
+                day = row["created_at"][:10]  # YYYY-MM-DD
+                if day not in by_day:
+                    by_day[day] = row["id"]
+
+            keep_ids = set(by_day.values())
+            delete_ids = [r["id"] for r in result.data if r["id"] not in keep_ids]
+
+            if not delete_ids:
+                continue
+
+            # Delete in batches of 100
+            for i in range(0, len(delete_ids), 100):
+                batch = delete_ids[i : i + 100]
+                db.table(table).delete().in_("id", batch).execute()
+        except Exception:
+            pass  # Non-critical — will retry next restart

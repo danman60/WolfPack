@@ -1258,7 +1258,7 @@ async def _process_position_actions(
 
         # Store to wp_position_actions
         try:
-            row = db.table("wp_position_actions").insert({
+            row = db.table("wp_position_actions").upsert({
                 "symbol": pa_symbol,
                 "exchange_id": exchange,
                 "action": action,
@@ -1269,7 +1269,7 @@ async def _process_position_actions(
                 "reduce_pct": pa.get("reduce_pct"),
                 "urgency": pa.get("urgency", "medium"),
                 "status": "pending",
-            }).execute()
+            }, on_conflict="symbol,action,status").execute()
 
             action_id = row.data[0]["id"] if row.data else None
 
@@ -1821,6 +1821,13 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                     auto_trader._store_snapshot()
             except Exception as e:
                 logger.warning(f"[cycle] Auto-trader price update error: {e}")
+
+            # Snapshot cleanup — runs once per process lifetime
+            try:
+                from wolfpack.db import cleanup_old_snapshots
+                cleanup_old_snapshots()
+            except Exception as e:
+                logger.warning(f"[cycle] Snapshot cleanup error: {e}")
 
             logger.info(f"[cycle] Full intelligence cycle complete for {symbol} on {exchange}")
 
