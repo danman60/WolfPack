@@ -1751,6 +1751,27 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
             except Exception as e:
                 logger.warning(f"[cycle] Auto-trader error: {e}")
 
+            # ── Step 5b2: Run mechanical strategies (regime_momentum, vol_breakout, ema_crossover, orb_session) ──
+            try:
+                auto_trader = _get_auto_trader()
+                if auto_trader.enabled:
+                    # 1h strategies use existing candles
+                    strat_executed = auto_trader.process_strategy_signals(candles_1h, symbol)
+                    if strat_executed:
+                        logger.info(f"[cycle] Strategy signals executed {len(strat_executed)} trades")
+
+                    # 5m candles for ORB session strategy
+                    try:
+                        candles_5m = await adapter.get_candles(symbol, interval="5m", limit=100)
+                        if candles_5m:
+                            strat_5m = auto_trader.process_strategy_signals(candles_5m, symbol)
+                            if strat_5m:
+                                logger.info(f"[cycle] 5m strategy signals executed {len(strat_5m)} trades")
+                    except Exception as e:
+                        logger.warning(f"[cycle] Failed to fetch 5m candles for strategies: {e}")
+            except Exception as e:
+                logger.warning(f"[cycle] Strategy signals error: {e}")
+
             # ── Step 5c: Process position actions from Brief ──
             try:
                 pos_actions = brief_out.raw_data.get("position_actions", []) if brief_out.raw_data else []
@@ -1779,6 +1800,27 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                 engine.update_prices({symbol: latest_price})
                 engine.store_snapshot(exchange)
                 logger.info(f"[cycle] Paper portfolio snapshot stored (equity: ${engine.portfolio.equity:.2f})")
+
+            # ── Step 6b: Update auto-trader prices + check stops ──
+            try:
+                auto_trader = _get_auto_trader()
+                if auto_trader.enabled and latest_price and auto_trader.engine.portfolio.positions:
+                    auto_trader.engine.update_prices({symbol: latest_price})
+                    triggered = auto_trader.engine.check_stops({symbol: latest_price})
+                    if triggered:
+                        for sym, reason in triggered:
+                            logger.info(f"[auto-trader] {reason} triggered for {sym}")
+                            try:
+                                from wolfpack.notifications import send_telegram
+                                await send_telegram(
+                                    f"<b>\U0001f6a8 Auto-Bot {reason.upper()} hit for {sym}</b>\n"
+                                    f"Price: <code>${latest_price:,.2f}</code>"
+                                )
+                            except Exception:
+                                pass
+                    auto_trader._store_snapshot()
+            except Exception as e:
+                logger.warning(f"[cycle] Auto-trader price update error: {e}")
 
             logger.info(f"[cycle] Full intelligence cycle complete for {symbol} on {exchange}")
 
