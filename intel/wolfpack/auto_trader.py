@@ -13,6 +13,13 @@ from wolfpack.config import settings
 
 logger = logging.getLogger(__name__)
 
+STRATEGY_ALLOCATIONS = {
+    "regime_momentum": 0.20,  # 20% of equity
+    "vol_breakout": 0.15,     # 15%
+    "ema_crossover": 0.15,    # 15%
+    # remaining 50% is Brief-driven (existing logic)
+}
+
 YOLO_PROFILES = {
     1: {  # Cautious
         "label": "Cautious",
@@ -23,6 +30,8 @@ YOLO_PROFILES = {
         "cooldown_seconds": 2700,  # 45 min
         "max_size_pct": 10,
         "rejection_cooldown_hours": 4,
+        "base_pct": 5,
+        "max_positions_per_symbol": 1,
     },
     2: {  # Balanced
         "label": "Balanced",
@@ -33,6 +42,8 @@ YOLO_PROFILES = {
         "cooldown_seconds": 1800,  # 30 min
         "max_size_pct": 15,
         "rejection_cooldown_hours": 2,
+        "base_pct": 10,
+        "max_positions_per_symbol": 1,
     },
     3: {  # Aggressive
         "label": "Aggressive",
@@ -43,6 +54,8 @@ YOLO_PROFILES = {
         "cooldown_seconds": 900,  # 15 min
         "max_size_pct": 20,
         "rejection_cooldown_hours": 0.5,
+        "base_pct": 12,
+        "max_positions_per_symbol": 2,
     },
     4: {  # YOLO
         "label": "YOLO",
@@ -53,6 +66,8 @@ YOLO_PROFILES = {
         "cooldown_seconds": 300,  # 5 min
         "max_size_pct": 25,
         "rejection_cooldown_hours": 0.25,
+        "base_pct": 15,
+        "max_positions_per_symbol": 3,
     },
     5: {  # Full Send
         "label": "Full Send",
@@ -63,6 +78,8 @@ YOLO_PROFILES = {
         "cooldown_seconds": 0,
         "max_size_pct": 25,
         "rejection_cooldown_hours": 0,
+        "base_pct": 20,
+        "max_positions_per_symbol": 4,
     },
 }
 
@@ -121,6 +138,10 @@ class AutoTrader:
                         unrealized_pnl=pos_data.get("unrealized_pnl", 0.0),
                         recommendation_id=pos_data.get("recommendation_id", "auto-restored"),
                         opened_at=pos_data.get("opened_at", "2026-01-01T00:00:00+00:00"),
+                        stop_loss=pos_data.get("stop_loss"),
+                        take_profit=pos_data.get("take_profit"),
+                        trailing_stop_pct=pos_data.get("trailing_stop_pct"),
+                        trailing_stop_peak=pos_data.get("trailing_stop_peak"),
                     ))
                 logger.info(f"[auto-trader] Restored from snapshot: equity=${p.equity}, {len(p.positions)} positions")
         except Exception as e:
@@ -154,6 +175,7 @@ class AutoTrader:
             conviction_floor=profile["veto_floor"],
             penalty_multiplier=profile["penalty_multiplier"],
             rejection_cooldown_hours=profile["rejection_cooldown_hours"],
+            require_stop_loss=(self.yolo_level < 4),
         )
 
         executed: list[dict] = []
@@ -200,7 +222,7 @@ class AutoTrader:
             # Size using SizingEngine
             try:
                 from wolfpack.modules.sizing import SizingEngine
-                sizer = SizingEngine(base_pct=rec.get("size_pct") or 10.0)
+                sizer = SizingEngine(base_pct=rec.get("size_pct") or profile.get("base_pct", 10.0))
                 sizing = sizer.compute(
                     conviction=veto_result.final_conviction,
                     vol_output=vol_output,
@@ -221,6 +243,7 @@ class AutoTrader:
                 current_price=round(entry_price, 2),
                 size_pct=min(size_pct, profile["max_size_pct"]),
                 recommendation_id=f"auto-{rec.get('id', 'unknown')}",
+                max_positions_per_symbol=profile.get("max_positions_per_symbol", 1),
             )
 
             if pos:
@@ -398,6 +421,111 @@ class AutoTrader:
             }).execute()
         except Exception as e:
             logger.error(f"[auto-trader] Failed to store snapshot: {e}")
+
+    def process_strategy_signals(
+        self,
+        candles: list,
+        symbol: str,
+    ) -> list[dict]:
+        """Run mechanical strategies and open/close positions from their signals.
+
+        Args:
+            candles: List of Candle objects (with .timestamp, .open, .high, .low, .close, .volume)
+            symbol: Asset symbol (e.g., "BTC")
+
+        Returns:
+            List of executed trade dicts from strategy signals.
+        """
+        if not self.enabled or not candles:
+            return []
+
+        self.restore_from_snapshot()
+
+        from wolfpack.strategies import STRATEGIES
+
+        profile = YOLO_PROFILES.get(self.yolo_level, YOLO_PROFILES[2])
+        executed: list[dict] = []
+        current_idx = len(candles) - 1
+        timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M")
+
+        for strategy_name, strategy_cls in STRATEGIES.items():
+            allocation = STRATEGY_ALLOCATIONS.get(strategy_name)
+            if allocation is None:
+                continue
+
+            try:
+                strategy = strategy_cls()
+                if current_idx < strategy.warmup_bars:
+                    continue
+
+                signal = strategy.evaluate(candles, current_idx)
+                if signal is None:
+                    continue
+
+                direction = signal.get("direction", "wait")
+                if direction == "wait":
+                    continue
+
+                rec_id = f"strat-{strategy_name}-{symbol}-{timestamp}"
+
+                # Handle close signals — close positions with matching strategy tag
+                if direction == "close":
+                    for pos in list(self.engine.portfolio.positions):
+                        if pos.symbol == symbol and pos.recommendation_id.startswith(f"strat-{strategy_name}-"):
+                            pnl = self.engine.close_position(symbol)
+                            executed.append({
+                                "symbol": symbol,
+                                "direction": "close",
+                                "strategy": strategy_name,
+                                "realized_pnl": pnl,
+                            })
+                    continue
+
+                # Size based on strategy allocation
+                size_pct = allocation * 100  # e.g. 0.20 -> 20%
+                size_pct = min(size_pct, profile["max_size_pct"])
+
+                pos = self.engine.open_position(
+                    symbol=symbol,
+                    direction=direction,
+                    current_price=round(signal.get("entry_price", candles[current_idx].close), 2),
+                    size_pct=size_pct,
+                    recommendation_id=rec_id,
+                    max_positions_per_symbol=profile.get("max_positions_per_symbol", 1),
+                )
+
+                if pos:
+                    # Set stop_loss/take_profit from strategy signal
+                    if signal.get("stop_loss"):
+                        pos.stop_loss = signal["stop_loss"]
+                    if signal.get("take_profit"):
+                        pos.take_profit = signal["take_profit"]
+
+                    # Default trailing stop of 3% if no stop_loss set
+                    if pos.stop_loss is None:
+                        self.engine.enable_trailing_stop(symbol, 3.0)
+
+                    trade = {
+                        "symbol": symbol,
+                        "direction": direction,
+                        "entry_price": pos.entry_price,
+                        "size_usd": pos.size_usd,
+                        "size_pct": size_pct,
+                        "conviction": signal.get("conviction", 75),
+                        "strategy": strategy_name,
+                    }
+                    executed.append(trade)
+                    self._store_trade(trade, rec_id)
+
+                    logger.info(f"[auto-trader] Strategy {strategy_name} executed {direction} {symbol} @ ${pos.entry_price:,.2f}, size ${pos.size_usd:,.0f}")
+
+            except Exception as e:
+                logger.warning(f"[auto-trader] Strategy {strategy_name} error for {symbol}: {e}")
+
+        if executed:
+            self._store_snapshot()
+
+        return executed
 
     def get_status(self) -> dict:
         """Return auto-trader status."""

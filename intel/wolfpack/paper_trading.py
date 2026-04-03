@@ -60,6 +60,7 @@ class PaperTradingEngine:
         current_price: float,
         size_pct: float,
         recommendation_id: str,
+        max_positions_per_symbol: int = 3,
     ) -> PaperPosition | None:
         """Open a new paper position.
 
@@ -69,11 +70,17 @@ class PaperTradingEngine:
             current_price: Current market price (used as entry)
             size_pct: Position size as % of equity (1-25)
             recommendation_id: ID of the approved recommendation
+            max_positions_per_symbol: Max concurrent positions allowed per symbol (pyramiding)
         """
-        # Check if already have a position in this symbol
-        for pos in self.portfolio.positions:
-            if pos.symbol == symbol:
-                logger.warning(f"Already have a {pos.direction} position in {symbol}")
+        # Check existing positions in this symbol
+        existing = [pos for pos in self.portfolio.positions if pos.symbol == symbol]
+        if len(existing) >= max_positions_per_symbol:
+            logger.warning(f"Already have {len(existing)} positions in {symbol} (max {max_positions_per_symbol})")
+            return None
+        # Block opposite-direction entries (no hedging) — only allow same-direction pyramiding
+        for pos in existing:
+            if pos.direction != direction:
+                logger.warning(f"Cannot open {direction} {symbol} — already have {pos.direction} position (no hedging)")
                 return None
 
         size_usd = self.portfolio.equity * (min(size_pct, 25) / 100.0)
@@ -307,6 +314,10 @@ class PaperTradingEngine:
                 "unrealized_pnl": round(p.unrealized_pnl, 2),
                 "recommendation_id": p.recommendation_id,
                 "opened_at": p.opened_at.isoformat(),
+                "stop_loss": p.stop_loss,
+                "take_profit": p.take_profit,
+                "trailing_stop_pct": p.trailing_stop_pct,
+                "trailing_stop_peak": p.trailing_stop_peak,
             }
             for p in self.portfolio.positions
         ]

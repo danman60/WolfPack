@@ -44,12 +44,14 @@ class BriefVeto:
         conviction_floor: int = 55,
         penalty_multiplier: float = 1.0,
         rejection_cooldown_hours: float = 2.0,
+        require_stop_loss: bool = True,
     ) -> None:
         # Track recent rejections: {symbol: datetime}
         self._recent_rejections: dict[str, datetime] = {}
         self._conviction_floor = conviction_floor
         self._penalty_multiplier = penalty_multiplier
         self._rejection_cooldown_hours = rejection_cooldown_hours
+        self._require_stop_loss = require_stop_loss
 
     def evaluate(
         self,
@@ -100,14 +102,19 @@ class BriefVeto:
             )
 
         if not stop_loss:
-            reasons.append("no stop_loss defined — risk unbounded")
-            self._record_rejection(symbol)
-            return VetoResult(
-                action="reject",
-                original_conviction=conviction,
-                final_conviction=0,
-                reasons=reasons,
-            )
+            if self._require_stop_loss:
+                reasons.append("no stop_loss defined — risk unbounded")
+                self._record_rejection(symbol)
+                return VetoResult(
+                    action="reject",
+                    original_conviction=conviction,
+                    final_conviction=0,
+                    reasons=reasons,
+                )
+            else:
+                # Soft penalty instead of hard reject
+                conviction -= 10
+                reasons.append("no stop_loss defined — soft penalty -10 conviction")
 
         if size_pct and size_pct > 25:
             reasons.append(f"size_pct {size_pct}% > 25% maximum")
