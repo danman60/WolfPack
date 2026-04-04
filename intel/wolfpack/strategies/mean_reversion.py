@@ -24,7 +24,7 @@ class MeanReversionStrategy(Strategy):
         },
         "threshold_atr_mult": {
             "type": "float",
-            "default": 2.0,
+            "default": 3.0,
             "min": 1.0,
             "max": 4.0,
             "desc": "Entry when price is N ATR units from mean",
@@ -53,7 +53,7 @@ class MeanReversionStrategy(Strategy):
         self, candles: list[Candle], current_idx: int, **params
     ) -> dict | None:
         mean_period = params.get("mean_period", 20)
-        threshold_atr_mult = params.get("threshold_atr_mult", 2.0)
+        threshold_atr_mult = params.get("threshold_atr_mult", 3.0)
         stop_atr_mult = params.get("stop_atr_mult", 1.0)
         size_pct = params.get("size_pct", 12.0)
 
