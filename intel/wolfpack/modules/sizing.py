@@ -13,6 +13,8 @@ from typing import Any
 
 from pydantic import BaseModel
 
+from wolfpack.risk_controls import HardLimits, SoftLimits
+
 
 class SizingOutput(BaseModel):
     """Result of the adaptive sizing computation."""
@@ -38,9 +40,13 @@ _REGIME_SIZING: dict[str, float] = {
     "low_vol_grind": 0.6,
 }
 
+# Sourced from unified risk policy
+_hard = HardLimits()
+_soft = SoftLimits()
+
 MIN_SIZE_PCT = 2.0
-MAX_SIZE_PCT = 25.0
-DEFAULT_BASE_PCT = 10.0
+MAX_SIZE_PCT = _hard.max_position_size_pct   # 25.0
+DEFAULT_BASE_PCT = _soft.base_pct            # 10.0
 
 
 class SizingEngine:

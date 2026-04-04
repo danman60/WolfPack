@@ -1,4 +1,4 @@
-"""Two-way Telegram bot — commands + inline approve/reject buttons.
+"""Two-way Telegram bot — commands + inline approve/reject buttons + LLM chat.
 
 Uses python-telegram-bot (PTB) v21+ with asyncio polling.
 Started from FastAPI lifespan; runs non-blocking alongside uvicorn.
@@ -13,7 +13,9 @@ from telegram.ext import (
     Application,
     CallbackQueryHandler,
     CommandHandler,
+    MessageHandler,
     ContextTypes,
+    filters,
 )
 
 from wolfpack.config import settings
@@ -50,7 +52,14 @@ class WolfPackBot:
         self._app.add_handler(CommandHandler("status", self._cmd_status))
         self._app.add_handler(CommandHandler("intel", self._cmd_intel))
         self._app.add_handler(CommandHandler("portfolio", self._cmd_portfolio))
+        self._app.add_handler(CommandHandler("permissions", self._cmd_permissions))
         self._app.add_handler(CallbackQueryHandler(self._callback_handler))
+        
+        # LLM chat handler - messages that are not commands
+        self._app.add_handler(MessageHandler(
+            filters.TEXT & ~filters.COMMAND,
+            self._handle_llm_chat
+        ))
 
         await self._app.initialize()
         await self._app.start()
@@ -246,6 +255,99 @@ class WolfPackBot:
             await update.message.reply_text("\n".join(lines), parse_mode="HTML")
         except Exception as e:
             await update.message.reply_text(f"Error: {e}")
+
+    async def _cmd_permissions(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Show and manage permissions."""
+        from wolfpack.bot_permissions import get_permissions_status, enable_tier2, disable_tier2
+        from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+
+        status = get_permissions_status()
+        tier2_status = "✅ ENABLED" if status["tier2"] else "❌ DISABLED"
+        
+        msg = (
+            f"<b>\U0001f512 WolfPack Permissions</b>\n\n"
+            f"Tier 1 (Read): {'✅ ENABLED' if status['tier1'] else '❌ DISABLED'}\n"
+            f"Tier 2 (Trade Execution): {tier2_status}\n\n"
+            f"Tier 2 allows: approve trades, place orders, control AutoBot"
+        )
+
+        keyboard = []
+        if not status["tier2"]:
+            keyboard.append([InlineKeyboardButton("Enable Tier 2", callback_data="perm_enable")])
+        else:
+            keyboard.append([InlineKeyboardButton("Disable Tier 2", callback_data="perm_disable")])
+        
+        reply_markup = InlineKeyboardMarkup(keyboard) if keyboard else None
+        
+        await update.message.reply_text(msg, parse_mode="HTML", reply_markup=reply_markup)
+
+    async def _handle_llm_chat(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Handle LLM chat messages."""
+        if not update.message or not update.message.text:
+            return
+
+        user_id = str(update.effective_user.id)
+        user_text = update.message.text.strip()
+
+        try:
+            # Import after handler registration to avoid circular imports
+            from wolfpack.llm_client import get_llm_response
+            from wolfpack.bot_memory import get_memory
+
+            # Add user message to memory
+            memory = get_memory()
+            memory.add_user_message(user_id, user_text)
+
+            # Get messages for LLM
+            messages = memory.get_messages_for_llm(user_id)
+
+            # Call LLM
+            response, tool_calls = await get_llm_response(messages, user_id=user_id)
+
+            # Add assistant response to memory
+            if tool_calls:
+                memory.add_assistant_message(user_id, response, tool_calls)
+            else:
+                memory.add_assistant_message(user_id, response)
+
+            # Send response to user
+            await update.message.reply_text(response)
+
+            # Handle tool calls if any
+            if tool_calls:
+                await self._handle_tool_calls(update, context, user_id, tool_calls)
+
+        except Exception as e:
+            logger.error(f"LLM chat error: {e}")
+            # Clean error message — no URLs or stack traces leaked to chat
+            err_msg = str(e)
+            if len(err_msg) > 150:
+                err_msg = err_msg[:150] + "..."
+            await update.message.reply_text(
+                f"\U0001f6a8 {err_msg}",
+                disable_web_page_preview=True,
+            )
+
+    async def _handle_tool_calls(self, update: Update, context: ContextTypes.DEFAULT_TYPE, user_id: str, tool_calls: list) -> None:
+        """Store tool execution results from LLM loop into memory.
+
+        tool_calls is the execution_log from call_llm_with_tool_loop:
+        each item: {"name": str, "success": bool, "result": dict | "error": str}
+        Tools are already executed — this just persists results to memory.
+        """
+        from wolfpack.bot_memory import get_memory
+
+        memory = get_memory()
+
+        for tool_call in tool_calls:
+            # execution_log format: {"name": ..., "success": ..., "result": ...} or {"error": ...}
+            tool_name = tool_call.get("name", "unknown")
+            if tool_call.get("success"):
+                result_str = str(tool_call.get("result", ""))
+            else:
+                result_str = f"Error: {tool_call.get('error', 'unknown error')}"
+
+            memory.add_tool_message(user_id, tool_name, result_str)
 
     # ── Callback Handler (inline buttons) ──
 

@@ -9,6 +9,7 @@ from typing import Any
 from pydantic import BaseModel
 
 from wolfpack.config import settings
+from wolfpack.response_parser import extract_json
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +32,46 @@ class Agent(ABC):
     Each agent receives market data and produces structured analysis
     using LLM reasoning combined with quantitative signals.
     """
+
+    # Shared token tracker — set at app startup via set_token_tracker()
+    _token_tracker = None
+    # Per-call context — set by analyze() implementations before LLM calls
+    _current_symbol: str | None = None
+
+    @classmethod
+    def set_token_tracker(cls, tracker) -> None:
+        """Set the shared TokenTracker instance for all agents."""
+        cls._token_tracker = tracker
+
+    def _record_tokens(self, model: str, response) -> None:
+        """Extract token usage from an LLM response and record it.
+
+        Handles both Anthropic and OpenAI/DeepSeek response formats.
+        Never raises — token tracking must not interrupt the pipeline.
+        """
+        if self._token_tracker is None:
+            return
+        try:
+            usage = getattr(response, "usage", None)
+            if usage is None:
+                return
+            # Anthropic format: input_tokens / output_tokens
+            prompt_tokens = getattr(usage, "input_tokens", None)
+            completion_tokens = getattr(usage, "output_tokens", None)
+            # OpenAI/DeepSeek format: prompt_tokens / completion_tokens
+            if prompt_tokens is None:
+                prompt_tokens = getattr(usage, "prompt_tokens", 0)
+            if completion_tokens is None:
+                completion_tokens = getattr(usage, "completion_tokens", 0)
+            self._token_tracker.record_usage(
+                agent_name=self.agent_key,
+                model=model,
+                prompt_tokens=prompt_tokens or 0,
+                completion_tokens=completion_tokens or 0,
+                symbol=self._current_symbol,
+            )
+        except Exception as e:
+            logger.debug(f"Token tracking failed for {self.agent_key}: {e}")
 
     @property
     @abstractmethod
@@ -118,6 +159,7 @@ class Agent(ABC):
                 system=self.system_prompt,
                 messages=[{"role": "user", "content": prompt}],
             )
+            self._record_tokens("claude-sonnet-4-20250514", response)
             return response.content[0].text
         except Exception as e:
             logger.error(f"{self.name} Anthropic error: {e}")
@@ -143,6 +185,7 @@ class Agent(ABC):
                 }],
                 tool_choice={"type": "tool", "name": tool_name},
             )
+            self._record_tokens("claude-sonnet-4-20250514", response)
             for block in response.content:
                 if block.type == "tool_use":
                     return block.input  # type: ignore[return-value]
@@ -178,6 +221,7 @@ class Agent(ABC):
             if model not in (settings.deepseek_reasoner_model, reasoner_model):
                 kwargs["temperature"] = 0.3
             response = await client.chat.completions.create(**kwargs)
+            self._record_tokens(model, response)
             return response.choices[0].message.content or ""
         except Exception as e:
             logger.error(f"{self.name} DeepSeek error: {e}")
@@ -201,6 +245,7 @@ class Agent(ABC):
                 temperature=0.3,
                 response_format={"type": "json_object"},
             )
+            self._record_tokens(model, response)
             text = response.choices[0].message.content or "{}"
             return self._parse_llm_json(text)
         except Exception as e:
@@ -229,6 +274,7 @@ class Agent(ABC):
                 ],
                 max_tokens=2048,
             )
+            self._record_tokens(reasoner_model, response)
             text = response.choices[0].message.content or "{}"
             return self._parse_llm_json(text)
         except Exception as e:
@@ -236,23 +282,24 @@ class Agent(ABC):
             raise
 
     def _parse_llm_json(self, text: str) -> dict:
-        """Try to parse JSON from LLM response, with fallback.
+        """Try to parse JSON from LLM response using resilient multi-strategy parser.
 
-        Handles markdown code fences (```json ... ```) that DeepSeek sometimes wraps around output.
+        Handles markdown code fences, <reasoning> tags, smart quotes, trailing
+        commas, invisible characters, and other common LLM output issues.
+        Extracted reasoning text is stored alongside the result.
         """
-        # Strip markdown code fences if present
-        import re
-        stripped = re.sub(r"^```(?:json)?\s*\n?", "", text.strip(), count=1)
-        stripped = re.sub(r"\n?```\s*$", "", stripped.strip(), count=1)
+        parsed, reasoning = extract_json(text)
+        if parsed is not None:
+            if isinstance(parsed, dict):
+                if reasoning:
+                    parsed["_reasoning"] = reasoning
+                return parsed
+            # If parsed is a list or other type, wrap it
+            result: dict = {"data": parsed}
+            if reasoning:
+                result["_reasoning"] = reasoning
+            return result
 
-        try:
-            return json.loads(stripped)
-        except (json.JSONDecodeError, TypeError):
-            start = stripped.find("{")
-            end = stripped.rfind("}") + 1
-            if start >= 0 and end > start:
-                try:
-                    return json.loads(stripped[start:end])
-                except json.JSONDecodeError:
-                    pass
-            return {"summary": text, "conviction": 30}
+        # Total failure — return a safe fallback so agents don't crash
+        logger.warning(f"{self.name}: JSON parse failed, returning fallback. Preview: {text[:200]}")
+        return {"summary": text, "conviction": 30}

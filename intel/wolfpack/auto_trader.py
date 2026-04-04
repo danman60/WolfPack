@@ -10,6 +10,7 @@ from datetime import datetime, timezone
 from typing import Any
 
 from wolfpack.config import settings
+from wolfpack.risk_controls import RISK_PRESETS, YOLO_LEVEL_MAP, get_preset
 
 logger = logging.getLogger(__name__)
 
@@ -25,68 +26,31 @@ STRATEGY_ALLOCATIONS = {
     # Brief-driven: remaining ~25%
 }
 
-YOLO_PROFILES = {
-    1: {  # Cautious
-        "label": "Cautious",
-        "conviction_threshold": 85,
-        "veto_floor": 60,
-        "max_trades_per_day": 3,
-        "penalty_multiplier": 1.5,
-        "cooldown_seconds": 2700,  # 45 min
-        "max_size_pct": 10,
-        "rejection_cooldown_hours": 4,
-        "base_pct": 5,
-        "max_positions_per_symbol": 1,
-    },
-    2: {  # Balanced
-        "label": "Balanced",
-        "conviction_threshold": 75,
-        "veto_floor": 55,
-        "max_trades_per_day": 4,
-        "penalty_multiplier": 1.0,
-        "cooldown_seconds": 1800,  # 30 min
-        "max_size_pct": 15,
-        "rejection_cooldown_hours": 2,
-        "base_pct": 10,
-        "max_positions_per_symbol": 1,
-    },
-    3: {  # Aggressive
-        "label": "Aggressive",
-        "conviction_threshold": 65,
-        "veto_floor": 45,
-        "max_trades_per_day": 8,
-        "penalty_multiplier": 0.5,
-        "cooldown_seconds": 900,  # 15 min
-        "max_size_pct": 20,
-        "rejection_cooldown_hours": 0.5,
-        "base_pct": 12,
-        "max_positions_per_symbol": 2,
-    },
-    4: {  # YOLO
-        "label": "YOLO",
-        "conviction_threshold": 55,
-        "veto_floor": 35,
-        "max_trades_per_day": 12,
-        "penalty_multiplier": 0.25,
-        "cooldown_seconds": 300,  # 5 min
-        "max_size_pct": 25,
-        "rejection_cooldown_hours": 0.25,
-        "base_pct": 15,
-        "max_positions_per_symbol": 3,
-    },
-    5: {  # Full Send
-        "label": "Full Send",
-        "conviction_threshold": 45,
-        "veto_floor": 25,
-        "max_trades_per_day": 20,
-        "penalty_multiplier": 0.0,
-        "cooldown_seconds": 0,
-        "max_size_pct": 25,
-        "rejection_cooldown_hours": 0,
-        "base_pct": 20,
-        "max_positions_per_symbol": 4,
-    },
-}
+# conviction_threshold is NOT part of risk_controls (it's auto_trader-specific)
+# because it gates whether the autotrader even considers a rec, before veto runs.
+_CONVICTION_THRESHOLDS = {1: 85, 2: 75, 3: 65, 4: 55, 5: 45}
+_LABELS = {1: "Cautious", 2: "Balanced", 3: "Aggressive", 4: "YOLO", 5: "Full Send"}
+
+def _build_yolo_profiles() -> dict:
+    """Build YOLO_PROFILES dict from RISK_PRESETS for backward compatibility."""
+    profiles = {}
+    for level, name in YOLO_LEVEL_MAP.items():
+        policy = RISK_PRESETS[name]
+        profiles[level] = {
+            "label": _LABELS[level],
+            "conviction_threshold": _CONVICTION_THRESHOLDS[level],
+            "veto_floor": policy.soft.conviction_floor,
+            "max_trades_per_day": policy.soft.max_trades_per_day,
+            "penalty_multiplier": policy.soft.penalty_multiplier,
+            "cooldown_seconds": int(policy.soft.cooldown_seconds),
+            "max_size_pct": int(policy.hard.max_position_size_pct),
+            "rejection_cooldown_hours": policy.soft.rejection_cooldown_hours,
+            "base_pct": int(policy.soft.base_pct),
+            "max_positions_per_symbol": policy.soft.max_positions_per_symbol,
+        }
+    return profiles
+
+YOLO_PROFILES = _build_yolo_profiles()
 
 
 class AutoTrader:

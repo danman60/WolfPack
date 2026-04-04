@@ -8,7 +8,13 @@ import logging
 from dataclasses import dataclass, field
 from datetime import datetime, timezone, timedelta
 
+from wolfpack.risk_controls import HardLimits, SoftLimits
+
 logger = logging.getLogger(__name__)
+
+# Default limits for parameter defaults
+_hard = HardLimits()
+_soft = SoftLimits()
 
 
 @dataclass
@@ -41,10 +47,10 @@ class BriefVeto:
 
     def __init__(
         self,
-        conviction_floor: int = 55,
-        penalty_multiplier: float = 1.0,
-        rejection_cooldown_hours: float = 2.0,
-        require_stop_loss: bool = True,
+        conviction_floor: int = _soft.conviction_floor,
+        penalty_multiplier: float = _soft.penalty_multiplier,
+        rejection_cooldown_hours: float = _soft.rejection_cooldown_hours,
+        require_stop_loss: bool = _hard.require_stop_loss,
     ) -> None:
         # Track recent rejections: {symbol: datetime}
         self._recent_rejections: dict[str, datetime] = {}
@@ -116,8 +122,8 @@ class BriefVeto:
                 conviction -= 10
                 reasons.append("no stop_loss defined — soft penalty -10 conviction")
 
-        if size_pct and size_pct > 25:
-            reasons.append(f"size_pct {size_pct}% > 25% maximum")
+        if size_pct and size_pct > _hard.max_position_size_pct:
+            reasons.append(f"size_pct {size_pct}% > {_hard.max_position_size_pct}% maximum")
             self._record_rejection(symbol)
             return VetoResult(
                 action="reject",

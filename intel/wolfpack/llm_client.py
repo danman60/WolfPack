@@ -79,7 +79,10 @@ async def call_llm(
             json=payload,
             timeout=60.0,
         )
-        response.raise_for_status()
+        if response.status_code != 200:
+            import logging
+            logging.getLogger(__name__).error(f"DeepSeek API error {response.status_code}: {response.text[:300]}")
+            raise RuntimeError(f"DeepSeek API returned {response.status_code}. Try again shortly.")
         result = response.json()
         return _parse_response(result)
 

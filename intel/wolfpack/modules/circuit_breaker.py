@@ -6,6 +6,8 @@ from typing import Literal
 
 from pydantic import BaseModel
 
+from wolfpack.risk_controls import HardLimits, SoftLimits
+
 
 CBState = Literal["ACTIVE", "SUSPENDED", "EMERGENCY_STOP"]
 
@@ -50,13 +52,17 @@ class CircuitBreaker:
     Trades-today counter resets at UTC midnight.
     """
 
-    MAX_DRAWDOWN_PCT = 10.0
-    MAX_TRADES_PER_DAY = 4
-    WORST_DAILY_PNL_PCT = -3.0
-    WORST_24H_PNL_PCT = -3.0
-    MAX_EXPOSURE_PCT = 50.0
-    COOLDOWN_SECONDS = 1800.0  # 30 minutes
-    MAX_DATA_AGE_S = 120.0
+    # All thresholds sourced from unified risk policy
+    _hard = HardLimits()
+    _soft = SoftLimits()
+
+    MAX_DRAWDOWN_PCT = _hard.max_drawdown_pct          # 10.0
+    MAX_TRADES_PER_DAY = _soft.max_trades_per_day      # 4
+    WORST_DAILY_PNL_PCT = _hard.daily_pnl_floor_pct   # -3.0
+    WORST_24H_PNL_PCT = _hard.rolling_24h_pnl_floor_pct  # -3.0
+    MAX_EXPOSURE_PCT = _soft.max_exposure_pct           # 50.0
+    COOLDOWN_SECONDS = _soft.cooldown_seconds           # 1800.0
+    MAX_DATA_AGE_S = _soft.max_data_age_s               # 120.0
 
     def __init__(self) -> None:
         self._state: CBState = "ACTIVE"

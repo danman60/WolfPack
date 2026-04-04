@@ -38,6 +38,15 @@ async def lifespan(app: FastAPI):
         except Exception as e:
             logger.warning(f"[lifespan] Telegram bot failed to start: {e}")
 
+    # Initialize PromptBuilder for configurable agent prompts
+    try:
+        from wolfpack.db import get_db
+        from wolfpack.prompt_builder import init_prompt_builder
+        init_prompt_builder(get_db())
+        logger.info("[lifespan] PromptBuilder initialized")
+    except Exception as e:
+        logger.warning(f"[lifespan] PromptBuilder init failed (agents will use hardcoded prompts): {e}")
+
     yield
 
     # Shutdown
@@ -103,6 +112,48 @@ _module_last_runs: dict[str, datetime | None] = {
 # Circuit breaker singleton (persists across cycles)
 _circuit_breaker: Any = None
 
+# Drawdown monitor singleton (peak equity tracking)
+_drawdown_monitor: Any = None
+
+# Data freshness tracker singleton
+_freshness_tracker: Any = None
+
+# Failure tracker singleton (consecutive agent failure → safe mode)
+_failure_tracker: Any = None
+
+# Token usage tracker singleton
+_token_tracker: Any = None
+
+
+def _get_freshness_tracker() -> Any:
+    """Get or create the freshness tracker singleton."""
+    global _freshness_tracker
+    if _freshness_tracker is None:
+        from wolfpack.data_freshness import FreshnessTracker
+        _freshness_tracker = FreshnessTracker()
+    return _freshness_tracker
+
+
+def _get_failure_tracker() -> Any:
+    """Get or create the failure tracker singleton."""
+    global _failure_tracker
+    if _failure_tracker is None:
+        from wolfpack.failure_tracker import FailureTracker
+        _failure_tracker = FailureTracker()
+    return _failure_tracker
+
+
+def _get_token_tracker() -> Any:
+    """Get or create the token tracker singleton. Also wires it into Agent base class."""
+    global _token_tracker
+    if _token_tracker is None:
+        from wolfpack.token_tracker import TokenTracker
+        from wolfpack.db import get_db
+        from wolfpack.agents.base import Agent
+        _token_tracker = TokenTracker(get_db())
+        Agent.set_token_tracker(_token_tracker)
+    return _token_tracker
+
 # Latest module outputs (updated each intelligence cycle)
 _latest_liquidity: Any = None
 _latest_regime: Any = None
@@ -127,9 +178,21 @@ def _get_circuit_breaker() -> Any:
     return _circuit_breaker
 
 
+def _get_drawdown_monitor() -> Any:
+    """Get or create the drawdown monitor singleton."""
+    global _drawdown_monitor
+    if _drawdown_monitor is None:
+        from wolfpack.drawdown_monitor import DrawdownMonitor
+        _drawdown_monitor = DrawdownMonitor()
+    return _drawdown_monitor
+
+
 @app.get("/health")
 async def health():
-    return {"status": "ok", "service": "wolfpack-intel"}
+    result = {"status": "ok", "service": "wolfpack-intel"}
+    if _token_tracker is not None:
+        result["token_usage_session"] = _token_tracker.get_session_totals()
+    return result
 
 
 @app.get("/health/deep")
@@ -167,6 +230,13 @@ async def deep_health_check():
         "ok": cb.state == "ACTIVE",
     }
 
+    # Per-symbol data freshness from tracker
+    tracker = _get_freshness_tracker()
+    checks["symbol_freshness"] = tracker.get_all_freshness()
+
+
+    # Agent failure tracker
+    checks["failure_tracker"] = _get_failure_tracker().get_status()
     # Last successful intel run
     brief_last = _last_runs.get("brief")
     checks["last_intel_run"] = {
@@ -178,10 +248,21 @@ async def deep_health_check():
         checks["data_freshness"]["ok"]
         and all(checks["api_keys"].values())
         and checks["circuit_breaker"]["ok"]
+        and not checks["failure_tracker"]["safe_mode"]
     )
     status = "healthy" if all_ok else "degraded"
 
     return {"status": status, "checks": checks}
+
+
+@app.get("/api/token-usage")
+async def token_usage():
+    """Return today's LLM token usage summary and session totals."""
+    tracker = _get_token_tracker()
+    return {
+        "daily": tracker.get_daily_summary(),
+        "session": tracker.get_session_totals(),
+    }
 
 
 @app.get("/agents/status")
@@ -213,7 +294,8 @@ async def agent_status():
                 "status": "running" if "brief" in _running else "idle",
                 "last_run": _last_runs["brief"].isoformat() if _last_runs["brief"] else None,
             },
-        ]
+        ],
+        "failure_tracker": _get_failure_tracker().get_status(),
     }
 
 
@@ -580,6 +662,11 @@ async def close_position(symbol: str, exchange: str = "hyperliquid", _auth: None
     """Close a paper trading position."""
     engine = _get_paper_engine()
     realized_pnl = engine.close_position(symbol.upper())
+    # Clear position peak tracking on close
+    try:
+        _get_drawdown_monitor().clear_position_peak(symbol.upper())
+    except Exception:
+        pass
     engine.store_snapshot(exchange)
     return {"status": "closed", "symbol": symbol.upper(), "realized_pnl": round(realized_pnl, 2)}
 
@@ -1176,6 +1263,10 @@ async def approve_position_action(action_id: str, exchange: str = "hyperliquid",
 
         if action == "close":
             pnl = engine.close_position(pa_symbol)
+            try:
+                _get_drawdown_monitor().clear_position_peak(pa_symbol)
+            except Exception:
+                pass
             engine.store_snapshot(exchange)
             db.table("wp_position_actions").update(
                 {"status": "approved", "acted_at": datetime.now(timezone.utc).isoformat()}
@@ -1279,13 +1370,6 @@ async def _process_position_actions(
 
         if action == "hold":
             logger.info(f"[position-action] HOLD {pa_symbol}: {pa.get('reason', 'thesis intact')}")
-            try:
-                from wolfpack.notifications import send_telegram
-                await send_telegram(
-                    f"<b>\U0001f43a HOLD {pa_symbol}</b>\n{pa.get('reason', 'Thesis intact')}"
-                )
-            except Exception:
-                pass
             continue
 
         # Compute current P&L % for the position
@@ -1316,18 +1400,28 @@ async def _process_position_actions(
 
             action_id = row.data[0]["id"] if row.data else None
 
-            # Telegram notification with inline buttons (skip when autobot handles it)
+            # Telegram notification — route through digest
             auto_trader = _get_auto_trader()
             if not auto_trader.enabled:
                 try:
-                    from wolfpack.notifications import notify_position_action
-                    await notify_position_action(
-                        symbol=pa_symbol,
-                        action=action,
-                        reason=pa.get("reason", ""),
-                        urgency=pa.get("urgency", "medium"),
-                        action_id=action_id,
-                    )
+                    from wolfpack.notification_digest import get_digest
+                    digest = get_digest()
+                    if digest.mode == "individual":
+                        from wolfpack.notifications import notify_position_action
+                        await notify_position_action(
+                            symbol=pa_symbol,
+                            action=action,
+                            reason=pa.get("reason", ""),
+                            urgency=pa.get("urgency", "medium"),
+                            action_id=action_id,
+                        )
+                    elif digest.mode != "disabled":
+                        digest.add({
+                            "type": "position_action",
+                            "symbol": pa_symbol,
+                            "action": action,
+                            "details": f"{action.upper()} {pa_symbol}: {pa.get('reason', '')}",
+                        })
                 except Exception:
                     pass
 
@@ -1358,6 +1452,12 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
     5. Extract trade recommendations from Brief and store to Supabase
     """
     try:
+        # Ensure token tracker is initialized before any LLM calls
+        _get_token_tracker()
+
+        from wolfpack.agents.base import Agent
+        Agent._current_symbol = symbol
+
         from wolfpack.agents.brief import BriefAgent
         from wolfpack.agents.quant import QuantAgent
         from wolfpack.agents.sage import SageAgent
@@ -1396,6 +1496,22 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                 eth_candles = await adapter.get_candles("ETH", interval="1h", limit=300)
             except Exception as e:
                 logger.warning(f"[cycle] Could not fetch ETH candles for correlation: {e}")
+
+        # ── Record data freshness ──
+        tracker = _get_freshness_tracker()
+        tracker.record_update(symbol, "candles")
+        tracker.record_update(symbol, "orderbook")
+        if funding_rates:
+            tracker.record_update(symbol, "funding")
+        # Record latest close price for freeze detection
+        if candles_1h:
+            tracker.record_close_price(symbol, candles_1h[-1].close)
+
+        # ── Check if symbol should be skipped (stale/frozen data) ──
+        skip, skip_reason = tracker.should_skip_symbol(symbol)
+        if skip:
+            logger.warning(f"[cycle] Skipping {symbol}: {skip_reason}")
+            return
 
         # ── Step 2: Run quantitative modules ──
         logger.info("[cycle] Running quantitative modules...")
@@ -1444,11 +1560,17 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
             store_module_output("funding_carry", exchange, funding_output.model_dump(), symbol)
             _module_last_runs["funding_carry"] = now_utc
 
-        # Volatility
+        # Drawdown monitor — auto-track peak equity and compute drawdown
+        dd_monitor = _get_drawdown_monitor()
+        engine_dd = _get_paper_engine()
+        dd_info = dd_monitor.update_peaks(exchange, engine_dd.portfolio.equity)
+        auto_drawdown_pct = dd_info["drawdown_pct"]
+
+        # Volatility (fed with auto-computed drawdown from monitor)
         global _latest_volatility
         closes = [c.close for c in candles_1h]
         vol_signal = VolatilitySignal()
-        vol_output = vol_signal.analyze(asset=symbol, closes=closes)
+        vol_output = vol_signal.analyze(asset=symbol, closes=closes, current_drawdown_pct=auto_drawdown_pct)
         _latest_volatility = vol_output
         store_module_output("volatility", exchange, vol_output.model_dump(), symbol)
         _module_last_runs["volatility"] = now_utc
@@ -1523,19 +1645,19 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                 whale_output = whale_result
                 store_module_output("whale_tracker", exchange, whale_output.model_dump(), symbol)
                 _module_last_runs["whale_tracker"] = now_utc
+                tracker.record_update(symbol, "whale_trades")
             else:
                 logger.warning(f"[cycle] Whale tracker failed: {whale_result}")
         except Exception as e:
             logger.warning(f"[cycle] Social/whale modules failed: {e}")
 
-        # Circuit breaker
+        # Circuit breaker (uses auto-tracked drawdown from drawdown monitor)
         cb = _get_circuit_breaker()
         engine = _get_paper_engine()
         portfolio = engine.portfolio
 
-        # Compute drawdown from peak
-        peak_equity = max(portfolio.starting_equity, portfolio.equity)
-        current_dd = ((peak_equity - portfolio.equity) / peak_equity * 100) if peak_equity > 0 else 0
+        # Use drawdown from monitor (auto-tracked peak, persisted across restarts)
+        current_dd = auto_drawdown_pct
         daily_pnl_pct = ((portfolio.equity - portfolio.starting_equity) / portfolio.starting_equity * 100)
         total_exposure = sum(p.size_usd for p in portfolio.positions) / portfolio.equity * 100 if portfolio.equity > 0 else 0
 
@@ -1544,6 +1666,7 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
             rolling_24h_pnl_pct=daily_pnl_pct,  # Approximate — same as daily for now
             current_drawdown_pct=current_dd,
             total_exposure_pct=total_exposure,
+            data_age_s=tracker.get_max_data_age(symbol),
         )
         store_module_output("circuit_breakers", exchange, cb_output.model_dump(), symbol)
         _module_last_runs["circuit_breakers"] = now_utc
@@ -1555,7 +1678,7 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                 state=cb_output.state,
                 triggers=cb_output.violations,
                 max_exposure_pct=cb_output.total_exposure_pct,
-                peak_equity=peak_equity,
+                peak_equity=dd_info["peak_equity"],
             )
         except Exception as e:
             logger.warning(f"[cycle] Failed to persist CB state: {e}")
@@ -1617,15 +1740,19 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
         _last_runs["snoop"] = datetime.now(timezone.utc)
         _last_runs["sage"] = datetime.now(timezone.utc)
 
-        # Log any agent failures but continue
+        # Log any agent failures but continue — track in failure tracker
+        ft = _get_failure_tracker()
         agent_outputs: dict[str, Any] = {}
         for name, result in [("quant", quant_out), ("snoop", snoop_out), ("sage", sage_out)]:
             if isinstance(result, Exception):
                 logger.error(f"[cycle] {name} agent failed: {result}")
-            elif isinstance(result, dict):
-                agent_outputs[name] = result
+                ft.record_failure(name, str(result))
             else:
-                agent_outputs[name] = result
+                ft.record_success(name)
+                if isinstance(result, dict):
+                    agent_outputs[name] = result
+                else:
+                    agent_outputs[name] = result
 
         # ── Step 4: Run Brief agent (consumes other agent outputs) ──
         logger.info("[cycle] Running Brief agent (synthesis)...")
@@ -1710,6 +1837,7 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
         brief = BriefAgent()
         try:
             brief_out = await brief.analyze(brief_data, exchange)
+            ft.record_success("brief")
 
             store_agent_output(
                 agent_name=brief_out.agent_name,
@@ -1726,6 +1854,12 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
             # Circuit breaker gate — skip new entry recs if not ACTIVE
             if not cb_output.allow_new_entry:
                 logger.warning(f"[cycle] Circuit breaker blocking new entries ({cb_output.state}), skipping {len(recs)} recs")
+                recs = []
+
+            # Safe mode gate — skip new entry recs if any agent is in consecutive failure
+            if ft.is_safe_mode():
+                failing = ft.get_failing_agents()
+                logger.warning(f"[cycle] SAFE MODE — agents failing: {failing}, skipping {len(recs)} new entry recs")
                 recs = []
 
             # Veto layer — filter and adjust recs before storing
@@ -1770,23 +1904,32 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                     if veto_result.action == "adjust":
                         logger.info(f"[veto] Adjusted {rec.get('symbol', symbol)}: {veto_result.original_conviction} -> {conviction} ({veto_result.reasons})")
 
-                    # Telegram notification for high-conviction recs
-                    # Skip approval buttons when autobot is enabled (it acts autonomously)
+                    # Telegram notification for high-conviction recs — route through digest
                     auto_trader = _get_auto_trader()
                     if conviction >= 70 and not auto_trader.enabled:
                         try:
-                            from wolfpack.notifications import notify_recommendation
-                            rec_id = stored_row.get("id")
-                            await notify_recommendation(
-                                symbol=rec.get("symbol", symbol),
-                                direction=rec.get("direction", "wait"),
-                                conviction=conviction,
-                                rationale=rec.get("rationale", ""),
-                                entry_price=rec.get("entry_price"),
-                                stop_loss=rec.get("stop_loss"),
-                                take_profit=rec.get("take_profit"),
-                                rec_id=rec_id,
-                            )
+                            from wolfpack.notification_digest import get_digest
+                            digest = get_digest()
+                            if digest.mode == "individual":
+                                from wolfpack.notifications import notify_recommendation
+                                rec_id = stored_row.get("id")
+                                await notify_recommendation(
+                                    symbol=rec.get("symbol", symbol),
+                                    direction=rec.get("direction", "wait"),
+                                    conviction=conviction,
+                                    rationale=rec.get("rationale", ""),
+                                    entry_price=rec.get("entry_price"),
+                                    stop_loss=rec.get("stop_loss"),
+                                    take_profit=rec.get("take_profit"),
+                                    rec_id=rec_id,
+                                )
+                            elif digest.mode != "disabled":
+                                digest.add({
+                                    "type": "recommendation",
+                                    "symbol": rec.get("symbol", symbol),
+                                    "direction": rec.get("direction", "wait"),
+                                    "details": f"{'⬆️' if rec.get('direction')=='long' else '⬇️'} {rec.get('direction','').upper()} {rec.get('symbol', symbol)} — conviction {conviction}%",
+                                })
                         except Exception:
                             pass  # Don't fail cycle on notification error
                 except Exception as e:
@@ -1871,6 +2014,35 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                 engine.store_snapshot(exchange)
                 logger.info(f"[cycle] Paper portfolio snapshot stored (equity: ${engine.portfolio.equity:.2f})")
 
+            # ── Step 6a: Track per-position peak P&L + check emergency exits ──
+            try:
+                for pos in engine.portfolio.positions:
+                    dd_monitor.update_position_peak(pos.symbol, pos.unrealized_pnl)
+
+                pos_dicts = [
+                    {"symbol": p.symbol, "unrealized_pnl": p.unrealized_pnl, "size_usd": p.size_usd}
+                    for p in engine.portfolio.positions
+                ]
+                emergency_exits = dd_monitor.check_emergency_exits(pos_dicts)
+                for exit_signal in emergency_exits:
+                    sym = exit_signal["symbol"]
+                    logger.warning(f"[drawdown] Emergency close: {sym} — {exit_signal['reason']}")
+                    realized = engine.close_position(sym)
+                    dd_monitor.clear_position_peak(sym)
+                    # Emergency closes ALWAYS send immediately — safety-critical
+                    try:
+                        from wolfpack.notifications import send_telegram
+                        await send_telegram(
+                            f"<b>\U0001f6a8 EMERGENCY CLOSE: {sym}</b>\n"
+                            f"{exit_signal['reason']}\n"
+                            f"Realized P&L: <code>${realized:,.2f}</code>"
+                        )
+                    except Exception:
+                        pass
+                    engine.store_snapshot(exchange)
+            except Exception as e:
+                logger.warning(f"[cycle] Drawdown position tracking error: {e}")
+
             # ── Step 6b: Update auto-trader prices + check stops ──
             try:
                 auto_trader = _get_auto_trader()
@@ -1919,6 +2091,7 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
 
         except Exception as e:
             logger.error(f"[cycle] Brief agent failed: {e}", exc_info=True)
+            ft.record_failure("brief", str(e))
         finally:
             _running.discard("brief")
 
@@ -1940,8 +2113,12 @@ async def circuit_breaker_status():
     cb = _get_circuit_breaker()
     engine = _get_paper_engine()
     portfolio = engine.portfolio
-    peak_equity = max(portfolio.starting_equity, portfolio.equity)
-    current_dd = ((peak_equity - portfolio.equity) / peak_equity * 100) if peak_equity > 0 else 0
+
+    # Use drawdown monitor for auto-tracked peak/drawdown
+    dd_monitor = _get_drawdown_monitor()
+    dd_info = dd_monitor.update_peaks("hyperliquid", portfolio.equity)
+    current_dd = dd_info["drawdown_pct"]
+
     daily_pnl_pct = ((portfolio.equity - portfolio.starting_equity) / portfolio.starting_equity * 100)
     total_exposure = sum(p.size_usd for p in portfolio.positions) / portfolio.equity * 100 if portfolio.equity > 0 else 0
     output = cb.check(
@@ -1950,7 +2127,9 @@ async def circuit_breaker_status():
         current_drawdown_pct=current_dd,
         total_exposure_pct=total_exposure,
     )
-    return output.model_dump()
+    result = output.model_dump()
+    result["peak_equity"] = dd_info["peak_equity"]
+    return result
 
 
 @app.post("/circuit-breaker/reset")
@@ -2538,3 +2717,86 @@ async def _run_multi_symbol(exchange: str, symbols: list[str]) -> None:
         except Exception as e:
             logger.error(f"[multi] Cycle failed for {symbol}: {e}")
     logger.info(f"[multi] Multi-symbol run complete: {len(symbols)} symbols")
+
+
+# ── Prompt Templates ──
+
+VALID_AGENTS = {"quant", "snoop", "sage", "brief"}
+VALID_SECTIONS = {"role", "input_format", "output_schema", "constraints", "reasoning_instructions", "examples"}
+
+
+@app.get("/prompt-templates/{agent_name}")
+async def get_prompt_templates(
+    agent_name: str,
+    _auth: None = Depends(require_auth),
+):
+    """Get current effective prompt sections for an agent (DB overrides merged with defaults)."""
+    if agent_name not in VALID_AGENTS:
+        raise HTTPException(status_code=400, detail=f"Invalid agent: {agent_name}. Must be one of {VALID_AGENTS}")
+
+    from wolfpack.prompt_builder import get_prompt_builder
+    pb = get_prompt_builder()
+    if not pb:
+        raise HTTPException(status_code=503, detail="PromptBuilder not initialized")
+
+    sections = pb.get_sections(agent_name)
+    token_estimate = pb.estimate_tokens(agent_name)
+
+    return {
+        "agent_name": agent_name,
+        "sections": sections,
+        "token_estimate": token_estimate,
+    }
+
+
+@app.post("/prompt-templates/{agent_name}/{section}")
+async def update_prompt_template(
+    agent_name: str,
+    section: str,
+    content: str = Body(..., embed=True),
+    _auth: None = Depends(require_auth),
+):
+    """Update a prompt section for an agent. Creates a new version in the DB."""
+    if agent_name not in VALID_AGENTS:
+        raise HTTPException(status_code=400, detail=f"Invalid agent: {agent_name}. Must be one of {VALID_AGENTS}")
+    if section not in VALID_SECTIONS:
+        raise HTTPException(status_code=400, detail=f"Invalid section: {section}. Must be one of {VALID_SECTIONS}")
+    if not content or not content.strip():
+        raise HTTPException(status_code=400, detail="Content cannot be empty")
+
+    from wolfpack.db import get_db
+    db = get_db()
+
+    try:
+        # Deactivate existing active version for this agent+section
+        db.table("wp_prompt_templates").update({"is_active": False}).eq(
+            "agent_name", agent_name
+        ).eq("section", section).eq("is_active", True).execute()
+
+        # Get next version number
+        existing = db.table("wp_prompt_templates").select("version").eq(
+            "agent_name", agent_name
+        ).eq("section", section).order("version", desc=True).limit(1).execute()
+
+        next_version = 1
+        if existing.data:
+            next_version = existing.data[0]["version"] + 1
+
+        # Insert new active version
+        result = db.table("wp_prompt_templates").insert({
+            "agent_name": agent_name,
+            "section": section,
+            "content": content.strip(),
+            "is_active": True,
+            "version": next_version,
+        }).execute()
+
+        return {
+            "status": "updated",
+            "agent_name": agent_name,
+            "section": section,
+            "version": next_version,
+        }
+    except Exception as e:
+        logger.error(f"Failed to update prompt template: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to update: {e}")
