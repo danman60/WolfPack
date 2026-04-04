@@ -19,11 +19,13 @@ class LPAutoTrader:
         from wolfpack.lp_paper_engine import PaperLPEngine
         from wolfpack.modules.lp_monitor import LPPositionMonitor
         from wolfpack.modules.lp_range_calculator import LPRangeCalculator
+        from wolfpack.modules.lp_fee_manager import LPFeeManager
 
         self._enabled = settings.lp_auto_enabled
         self.engine = PaperLPEngine(starting_equity=settings.lp_starting_equity)
         self.monitor = LPPositionMonitor()
         self.range_calc = LPRangeCalculator()
+        self.fee_manager = LPFeeManager()
         self._restored = False
         self._watched_pools: list[str] = []
 
@@ -153,6 +155,24 @@ class LPAutoTrader:
             p for p in self.engine.portfolio.positions if p.status in ("active", "out_of_range")
         ]
         alerts = self.monitor.check_alerts(active_positions)
+
+        # Fee harvesting — evaluate and auto-harvest for active positions
+        for pos in self.engine.portfolio.positions:
+            if pos.status == "active":
+                harvest = self.fee_manager.evaluate(pos, regime_macro=macro)
+                if harvest.should_harvest:
+                    result = self.fee_manager.execute_paper_harvest(pos)
+                    action = "compound" if harvest.compound else "sweep"
+                    alerts.append({
+                        "type": "fee_harvest",
+                        "pair": f"{pos.token0_symbol}/{pos.token1_symbol}",
+                        "message": f"Harvested ${result['harvested_usd']:.2f} fees ({harvest.reason}, {action})",
+                    })
+
+        # Check fee milestone
+        milestone_msg = self.fee_manager.check_milestone(self.engine.portfolio.total_fees_earned)
+        if milestone_msg:
+            alerts.append({"type": "fee_milestone", "message": milestone_msg})
 
         # Store snapshot
         self._store_snapshot()
