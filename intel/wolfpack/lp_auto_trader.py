@@ -97,16 +97,19 @@ class LPAutoTrader:
             vol_regime = vol_output.get("vol_regime", "normal") if isinstance(vol_output, dict) else getattr(vol_output, "vol_regime", "normal")
             realized_vol = vol_output.get("realized_vol_1d", 30) if isinstance(vol_output, dict) else getattr(vol_output, "realized_vol_1d", 30)
 
+        # Batch fetch all pool states (RPC + GeckoTerminal)
+        pool_states = await self.monitor.fetch_pool_states(self._watched_pools)
+
         for pool_address in self._watched_pools:
             try:
-                state = await self.monitor.fetch_pool_state(pool_address)
+                state = pool_states.get(pool_address)
                 if state is None:
                     continue
 
                 pools_checked += 1
 
-                # Compute price ratio from sqrtPrice
-                price_ratio = self.monitor.compute_price_ratio(state.sqrt_price)
+                # Compute price ratio from sqrtPriceX96
+                price_ratio = self.monitor.compute_price_ratio(state.sqrt_price_x96)
                 if price_ratio <= 0:
                     # Fallback: use USD prices if available
                     if state.token1_price_usd and state.token1_price_usd > 0:

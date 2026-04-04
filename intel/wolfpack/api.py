@@ -2650,14 +2650,17 @@ query Positions($owner: Bytes!, $first: Int!) {
 
 
 async def _fetch_subgraph(query: str, variables: dict) -> dict:
-    """Fetch from Uniswap V3 subgraph with fallback endpoints."""
+    """Fetch from Uniswap V3 subgraph with fallback endpoints.
+
+    Priority: Graph decentralized (API key) > Graph demo > Alchemy (dead, last resort).
+    """
     api_key = settings.subgraph_api_key
-    endpoints = [
-        "https://eth-mainnet.g.alchemy.com/api/subgraphs/id/uniswap-v3",
-    ]
+    endpoints = []
     if api_key:
         endpoints.append(f"https://gateway.thegraph.com/api/{api_key}/subgraphs/id/5zvR82QoaXYFyDEKLZ9t6v9adgnptxYpKpSbxtgVENFV")
     endpoints.append("https://gateway.thegraph.com/api/demo/subgraphs/id/5zvR82QoaXYFyDEKLZ9t6v9adgnptxYpKpSbxtgVENFV")
+    # Alchemy endpoint is dead (404) but kept as absolute last resort
+    endpoints.append("https://eth-mainnet.g.alchemy.com/api/subgraphs/id/uniswap-v3")
 
     for url in endpoints:
         try:
