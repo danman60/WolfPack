@@ -205,14 +205,14 @@ async def call_llm_with_tool_loop(
                         result = await executor(**tool_args)
                     else:
                         result = executor(**tool_args)
-                    execution_log.append({"name": tool_name, "success": True, "result": result})
+                    execution_log.append({"name": tool_name, "id": tc_id, "success": True, "result": result})
                     tool_response = json.dumps(result if isinstance(result, (dict, list)) else str(result))
                 except Exception as e:
-                    execution_log.append({"name": tool_name, "success": False, "error": str(e)})
+                    execution_log.append({"name": tool_name, "id": tc_id, "success": False, "error": str(e)})
                     tool_response = json.dumps({"error": str(e)})
             else:
                 error_msg = f"Tool '{tool_name}' has no executor"
-                execution_log.append({"name": tool_name, "success": False, "error": error_msg})
+                execution_log.append({"name": tool_name, "id": tc_id, "success": False, "error": error_msg})
                 tool_response = json.dumps({"error": error_msg})
 
             tool_results.append({

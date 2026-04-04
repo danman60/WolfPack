@@ -70,9 +70,25 @@ class BotMemory:
         """Add assistant message with optional tool calls."""
         self.add_message(user_id, "assistant", content, tool_calls)
 
-    def add_tool_message(self, user_id: str, tool_name: str, result: str) -> None:
-        """Add tool response."""
-        self.add_message(user_id, "tool", result)
+    def add_tool_message(self, user_id: str, tool_name: str, result: str, tool_call_id: str | None = None) -> None:
+        """Add tool response with tool_call_id for API compatibility."""
+        if user_id not in self.conversations:
+            self.conversations[user_id] = []
+
+        message = {
+            "role": "tool",
+            "content": result,
+            "timestamp": datetime.utcnow().isoformat(),
+        }
+        if tool_call_id:
+            message["tool_call_id"] = tool_call_id
+
+        self.conversations[user_id].append(message)
+
+        if len(self.conversations[user_id]) > 50:
+            self.conversations[user_id] = self.conversations[user_id][-50:]
+
+        self._save()
 
     def clear_conversation(self, user_id: str) -> None:
         """Clear a user's conversation."""
@@ -86,9 +102,44 @@ class BotMemory:
         return format_system_prompt()
 
     def get_messages_for_llm(self, user_id: str) -> list[dict]:
-        """Get all messages for LLM call including system prompt."""
+        """Get all messages for LLM call including system prompt.
+
+        Strips non-API fields (timestamp) and skips malformed tool_call
+        entries that would cause DeepSeek 400 errors (missing 'id' field).
+        """
         messages = [{"role": "system", "content": self.get_system_prompt()}]
-        messages.extend(self.get_conversation(user_id))
+
+        for msg in self.get_conversation(user_id):
+            clean = {"role": msg["role"], "content": msg.get("content", "")}
+
+            # Assistant messages with tool_calls need OpenAI-format ids
+            if msg.get("tool_calls") and msg["role"] == "assistant":
+                valid_calls = []
+                for tc in msg["tool_calls"]:
+                    # Only include if it has the required 'id' field
+                    if isinstance(tc, dict) and tc.get("id"):
+                        valid_calls.append({
+                            "id": tc["id"],
+                            "type": "function",
+                            "function": tc.get("function", {
+                                "name": tc.get("name", "unknown"),
+                                "arguments": json.dumps(tc.get("arguments", {})),
+                            }),
+                        })
+                if valid_calls:
+                    clean["tool_calls"] = valid_calls
+                    clean["content"] = clean["content"] or None
+
+            # Tool response messages need tool_call_id
+            if msg["role"] == "tool":
+                tc_id = msg.get("tool_call_id")
+                if not tc_id:
+                    # Skip orphaned tool messages — no valid id to reference
+                    continue
+                clean["tool_call_id"] = tc_id
+
+            messages.append(clean)
+
         return messages
 
 

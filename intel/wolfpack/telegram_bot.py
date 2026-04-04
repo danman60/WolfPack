@@ -340,14 +340,15 @@ class WolfPackBot:
         memory = get_memory()
 
         for tool_call in tool_calls:
-            # execution_log format: {"name": ..., "success": ..., "result": ...} or {"error": ...}
+            # execution_log format: {"name": ..., "id": ..., "success": ..., "result": ...}
             tool_name = tool_call.get("name", "unknown")
+            tc_id = tool_call.get("id")
             if tool_call.get("success"):
                 result_str = str(tool_call.get("result", ""))
             else:
                 result_str = f"Error: {tool_call.get('error', 'unknown error')}"
 
-            memory.add_tool_message(user_id, tool_name, result_str)
+            memory.add_tool_message(user_id, tool_name, result_str, tool_call_id=tc_id)
 
     # ── Callback Handler (inline buttons) ──
 
