@@ -1273,18 +1273,20 @@ async def _process_position_actions(
 
             action_id = row.data[0]["id"] if row.data else None
 
-            # Telegram notification with inline buttons
-            try:
-                from wolfpack.notifications import notify_position_action
-                await notify_position_action(
-                    symbol=pa_symbol,
-                    action=action,
-                    reason=pa.get("reason", ""),
-                    urgency=pa.get("urgency", "medium"),
-                    action_id=action_id,
-                )
-            except Exception:
-                pass
+            # Telegram notification with inline buttons (skip when autobot handles it)
+            auto_trader = _get_auto_trader()
+            if not auto_trader.enabled:
+                try:
+                    from wolfpack.notifications import notify_position_action
+                    await notify_position_action(
+                        symbol=pa_symbol,
+                        action=action,
+                        reason=pa.get("reason", ""),
+                        urgency=pa.get("urgency", "medium"),
+                        action_id=action_id,
+                    )
+                except Exception:
+                    pass
 
             # Auto-trader: auto-execute mechanical actions
             try:
@@ -1720,7 +1722,9 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                         logger.info(f"[veto] Adjusted {rec.get('symbol', symbol)}: {veto_result.original_conviction} -> {conviction} ({veto_result.reasons})")
 
                     # Telegram notification for high-conviction recs
-                    if conviction >= 70:
+                    # Skip approval buttons when autobot is enabled (it acts autonomously)
+                    auto_trader = _get_auto_trader()
+                    if conviction >= 70 and not auto_trader.enabled:
                         try:
                             from wolfpack.notifications import notify_recommendation
                             rec_id = stored_row.get("id")
