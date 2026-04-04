@@ -72,6 +72,41 @@ async def get_pnl_executor() -> dict:
     }
 
 
+async def get_profit_executor(hours: int = 24) -> dict:
+    """Get P&L for a time window from trade history DB."""
+    from wolfpack.db import get_db
+    db = get_db()
+    try:
+        result = db.table("wp_trade_history").select(
+            "symbol, direction, pnl_usd, size_usd, closed_at"
+        ).gte(
+            "closed_at", f"now() - interval '{int(hours)} hours'"
+        ).not_.is_("exit_price", "null").execute()
+
+        if not result.data:
+            return {"hours": hours, "total_pnl": 0, "trades": 0, "winners": 0, "losers": 0, "message": f"No closed trades in last {hours}h"}
+
+        trades = result.data
+        pnls = [float(t.get("pnl_usd", 0) or 0) for t in trades]
+        winners = [p for p in pnls if p > 0]
+        losers = [p for p in pnls if p < 0]
+
+        return {
+            "hours": hours,
+            "total_pnl": round(sum(pnls), 2),
+            "trades": len(trades),
+            "winners": len(winners),
+            "losers": len(losers),
+            "win_rate_pct": round(len(winners) / len(trades) * 100, 1) if trades else 0,
+            "avg_win": round(sum(winners) / len(winners), 2) if winners else 0,
+            "avg_loss": round(sum(losers) / len(losers), 2) if losers else 0,
+            "best_trade": round(max(pnls), 2) if pnls else 0,
+            "worst_trade": round(min(pnls), 2) if pnls else 0,
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+
 async def get_funding_rates_executor(exchange: str = "hyperliquid") -> dict:
     """Get funding rates from exchanges."""
     # Funding rates are embedded in the latest intelligence output
@@ -319,13 +354,29 @@ TOOLS = [
     },
     {
         "name": "get_pnl",
-        "description": "Get P&L summary: realized, unrealized, win rate.",
+        "description": "Get current session P&L summary: realized, unrealized, win rate.",
         "parameters": {
             "type": "object",
             "properties": {}
         },
         "permission": "tier1",
         "_executor": get_pnl_executor,
+    },
+    {
+        "name": "get_profit",
+        "description": "Get profit/loss for a time window (e.g. last 24h, 72h, 168h for 1 week). Queries closed trades from database.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "hours": {
+                    "type": "integer",
+                    "description": "Number of hours to look back (e.g. 24, 48, 72, 168 for 1 week)",
+                    "default": 24
+                }
+            }
+        },
+        "permission": "tier1",
+        "_executor": get_profit_executor,
     },
     {
         "name": "get_funding_rates",
