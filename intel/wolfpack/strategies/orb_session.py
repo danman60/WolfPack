@@ -2,6 +2,11 @@
 
 Defines observation windows around major session opens (NY, London, Asia).
 After the observation window, enters on breakout of the range high/low.
+
+With FVG filter enabled (default), requires:
+  1. Fair Value Gap (3-candle displacement) on breakout
+  2. Price retests the FVG zone
+  3. Engulfing confirmation candle before entry
 """
 
 from datetime import datetime, timezone, timedelta
@@ -64,7 +69,77 @@ class ORBSessionStrategy(Strategy):
             "max": 12,
             "desc": "Hours before session open to calculate overnight range",
         },
+        "require_fvg": {
+            "type": "bool",
+            "default": True,
+            "min": None,
+            "max": None,
+            "desc": "Require Fair Value Gap displacement + retest engulfing for entry",
+        },
+        "target_rr": {
+            "type": "float",
+            "default": 3.0,
+            "min": 1.0,
+            "max": 10.0,
+            "desc": "Risk:reward ratio for take-profit target",
+        },
     }
+
+    def __init__(self):
+        self._fvg_zone = None          # (fvg_high, fvg_low)
+        self._fvg_direction = None     # "long" or "short"
+        self._retest_candle = None     # candle that retested the FVG
+        self._awaiting_retest = False
+        self._awaiting_engulf = False
+        self._session_ts = None        # reset state per session
+        self._breakout_bar_idx = None
+        self._session_traded = False
+
+    def _reset_fvg_state(self):
+        """Clear all FVG tracking state."""
+        self._fvg_zone = None
+        self._fvg_direction = None
+        self._retest_candle = None
+        self._awaiting_retest = False
+        self._awaiting_engulf = False
+        self._breakout_bar_idx = None
+        self._session_traded = False
+
+    def _detect_fvg(self, candles, breakout_idx, direction, atr):
+        """Check if candles around breakout_idx form a Fair Value Gap.
+
+        Bullish FVG: candles[i-1].high < candles[i+1].low (gap above and below expansive middle candle)
+        Bearish FVG: candles[i-1].low > candles[i+1].high
+        Middle candle body must be > 0.5 * ATR (expansive).
+
+        Returns (fvg_high, fvg_low) or None.
+        """
+        if breakout_idx < 1 or breakout_idx + 1 >= len(candles):
+            return None
+
+        prev_c = candles[breakout_idx - 1]
+        mid_c = candles[breakout_idx]
+        next_c = candles[breakout_idx + 1]
+
+        # Middle candle must be expansive
+        body = abs(mid_c.close - mid_c.open)
+        if body < 0.5 * atr:
+            return None
+
+        if direction == "long":
+            # Bullish FVG: gap between prev high and next low
+            if prev_c.high < next_c.low:
+                fvg_high = next_c.low
+                fvg_low = prev_c.high
+                return (fvg_high, fvg_low)
+        else:
+            # Bearish FVG: gap between prev low and next high
+            if prev_c.low > next_c.high:
+                fvg_high = prev_c.low
+                fvg_low = next_c.high
+                return (fvg_high, fvg_low)
+
+        return None
 
     @property
     def warmup_bars(self) -> int:
@@ -85,6 +160,8 @@ class ORBSessionStrategy(Strategy):
         stop_atr_mult = params.get("stop_atr_mult", 1.5)
         use_anti_srs = params.get("use_anti_srs", True)
         overnight_hours = params.get("overnight_hours", 6)
+        require_fvg = params.get("require_fvg", True)
+        target_rr = params.get("target_rr", 3.0)
 
         visible = candles[: current_idx + 1]
         if len(visible) < self.warmup_bars:
@@ -106,6 +183,12 @@ class ORBSessionStrategy(Strategy):
             session_open_dt -= timedelta(days=1)
 
         observation_end_dt = session_open_dt + timedelta(minutes=observation_minutes)
+
+        # Reset FVG state on new session
+        session_key = session_open_dt.isoformat()
+        if self._session_ts != session_key:
+            self._session_ts = session_key
+            self._reset_fvg_state()
 
         # Only trade after observation window closes, within the session day
         if current_dt <= observation_end_dt:
@@ -129,21 +212,10 @@ class ORBSessionStrategy(Strategy):
         if range_high is None or range_low is None:
             return None
 
-        # Check if we already traded this session (look for a breakout bar after obs window)
-        for c in visible[:-1]:
-            c_dt = self._ts_to_dt(c.timestamp)
-            if c_dt > observation_end_dt and c_dt > session_open_dt:
-                if c.close > range_high or c.close < range_low:
-                    # Already had a breakout this session
-                    return None
-
         # Calculate ATR for stop distance
         atr = self._compute_atr(visible, 14)
         if atr <= 0:
             return None
-
-        stop_distance = atr * stop_atr_mult
-        tp_distance = stop_distance * 2  # 2R target
 
         # Anti-SRS: calculate overnight range and classify
         reverse_breakout = False
@@ -160,7 +232,6 @@ class ORBSessionStrategy(Strategy):
                         onr_low = c.low
 
             if onr_high is not None and onr_low is not None:
-                # Classify: ABOVE_ONR, BELOW_ONR, INSIDE_ONR
                 if range_low > onr_high:
                     pass  # ABOVE_ONR: standard breakout
                 elif range_high < onr_low:
@@ -168,6 +239,26 @@ class ORBSessionStrategy(Strategy):
                 else:
                     # INSIDE_ONR: reverse breakout direction
                     reverse_breakout = True
+
+        # --- FVG mode ---
+        if require_fvg:
+            return self._evaluate_fvg_mode(
+                visible, current, current_idx, current_dt,
+                observation_end_dt, session_open_dt,
+                range_high, range_low, atr,
+                reverse_breakout, size_pct, target_rr,
+            )
+
+        # --- Legacy mode (no FVG) ---
+        # Check if we already traded this session
+        for c in visible[:-1]:
+            c_dt = self._ts_to_dt(c.timestamp)
+            if c_dt > observation_end_dt and c_dt > session_open_dt:
+                if c.close > range_high or c.close < range_low:
+                    return None
+
+        stop_distance = atr * stop_atr_mult
+        tp_distance = stop_distance * target_rr
 
         # Check for breakout on current bar
         if current.close > range_high:
@@ -214,6 +305,119 @@ class ORBSessionStrategy(Strategy):
                     "take_profit": round(current.close + tp_distance, 2),
                     "size_pct": size_pct,
                 }
+
+        return None
+
+    def _evaluate_fvg_mode(
+        self, visible, current, current_idx, current_dt,
+        observation_end_dt, session_open_dt,
+        range_high, range_low, atr,
+        reverse_breakout, size_pct, target_rr,
+    ) -> dict | None:
+        """FVG displacement + retest engulfing entry logic."""
+
+        # Already completed an entry this session
+        if self._session_traded:
+            return None
+
+        # Timeout: >20 bars since breakout with no completed entry
+        if self._breakout_bar_idx is not None:
+            bars_since = current_idx - self._breakout_bar_idx
+            if bars_since > 20:
+                self._reset_fvg_state()
+                return None
+
+        # --- State: awaiting engulfing confirmation ---
+        if self._awaiting_engulf and self._retest_candle is not None:
+            if self._fvg_direction == "long":
+                if current.close > self._retest_candle.high:
+                    entry = current.close
+                    stop = round(self._retest_candle.low * 0.999, 2)
+                    risk = entry - stop
+                    tp = round(entry + risk * target_rr, 2)
+                    self._session_traded = True
+                    return {
+                        "symbol": "",
+                        "direction": "long",
+                        "conviction": 80,
+                        "entry_price": entry,
+                        "stop_loss": stop,
+                        "take_profit": tp,
+                        "size_pct": size_pct,
+                    }
+            else:  # short
+                if current.close < self._retest_candle.low:
+                    entry = current.close
+                    stop = round(self._retest_candle.high * 1.001, 2)
+                    risk = stop - entry
+                    tp = round(entry - risk * target_rr, 2)
+                    self._session_traded = True
+                    return {
+                        "symbol": "",
+                        "direction": "short",
+                        "conviction": 80,
+                        "entry_price": entry,
+                        "stop_loss": stop,
+                        "take_profit": tp,
+                        "size_pct": size_pct,
+                    }
+            return None
+
+        # --- State: awaiting retest ---
+        if self._awaiting_retest and self._fvg_zone is not None:
+            fvg_high, fvg_low = self._fvg_zone
+            if self._fvg_direction == "long":
+                # Price dips into FVG zone
+                if current.low <= fvg_high:
+                    self._retest_candle = current
+                    self._awaiting_retest = False
+                    self._awaiting_engulf = True
+            else:  # short
+                # Price rallies into FVG zone
+                if current.high >= fvg_low:
+                    self._retest_candle = current
+                    self._awaiting_retest = False
+                    self._awaiting_engulf = True
+            return None
+
+        # --- State: no FVG yet — look for breakout + FVG ---
+        # Check for breakout on current bar
+        is_breakout_high = current.close > range_high
+        is_breakout_low = current.close < range_low
+
+        if not is_breakout_high and not is_breakout_low:
+            return None
+
+        # Check we haven't already had a breakout bar earlier this session
+        for c in visible[:-1]:
+            c_dt = self._ts_to_dt(c.timestamp)
+            if c_dt > observation_end_dt and c_dt > session_open_dt:
+                if c.close > range_high or c.close < range_low:
+                    # Already had a breakout — mark session as done
+                    self._session_traded = True
+                    return None
+
+        if is_breakout_high:
+            direction = "short" if reverse_breakout else "long"
+        else:
+            direction = "long" if reverse_breakout else "short"
+
+        # Try to detect FVG around the breakout bar
+        # current_idx is the breakout bar; we need idx+1 to exist for FVG detection.
+        # Since we're evaluating bar-by-bar, check with the bars we have.
+        # Use visible indices: breakout is at len(visible)-1
+        bo_idx = len(visible) - 1
+        fvg = self._detect_fvg(visible, bo_idx - 1, direction, atr)
+        if fvg is None:
+            # Also try with breakout bar as middle
+            fvg = self._detect_fvg(visible, bo_idx, direction, atr)
+
+        if fvg is not None:
+            self._fvg_zone = fvg
+            self._fvg_direction = direction
+            self._awaiting_retest = True
+            self._breakout_bar_idx = current_idx
+        # If no FVG found, no trade — state stays reset, next bar can try again
 
         return None
 
