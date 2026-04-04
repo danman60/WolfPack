@@ -14,10 +14,15 @@ from wolfpack.config import settings
 logger = logging.getLogger(__name__)
 
 STRATEGY_ALLOCATIONS = {
-    "regime_momentum": 0.20,  # 20% of equity
-    "vol_breakout": 0.15,     # 15%
-    "ema_crossover": 0.15,    # 15%
-    # remaining 50% is Brief-driven (existing logic)
+    # Trending strategies
+    "ema_crossover": 0.15,
+    "turtle_donchian": 0.15,
+    "orb_session": 0.10,
+    "regime_momentum": 0.10,
+    # Ranging strategies
+    "mean_reversion": 0.15,
+    "measured_move": 0.10,
+    # Brief-driven: remaining ~25%
 }
 
 YOLO_PROFILES = {
@@ -95,6 +100,7 @@ class AutoTrader:
         self.engine = PaperTradingEngine(starting_equity=settings.auto_trade_equity)
         self._restored = False
         self.yolo_level = 4  # Default to YOLO for paper trading
+        self._last_strategy_signals: list[dict] = []
         self._apply_yolo_profile()
 
     def restore_from_snapshot(self) -> None:
@@ -232,6 +238,21 @@ class AutoTrader:
                 size_pct = sizing.final_size_pct
             except Exception:
                 size_pct = min(rec.get("size_pct", 10), profile["max_size_pct"])
+
+            # Check if mechanical strategies have a matching signal
+            has_mechanical = any(
+                s.get("symbol") == symbol and s.get("direction") == direction
+                for s in getattr(self, "_last_strategy_signals", [])
+            )
+
+            # Apply conviction multiplier based on mechanical confirmation
+            if has_mechanical:
+                size_multiplier = 1.0  # Full size -- Brief + mechanical agree
+                logger.info(f"[auto-trader] Brief+mechanical aligned for {symbol} {direction}")
+            else:
+                size_multiplier = 0.25  # Quarter size -- Brief only
+
+            size_pct = min(size_pct * size_multiplier, profile["max_size_pct"])
 
             if size_pct <= 0:
                 continue
@@ -426,12 +447,16 @@ class AutoTrader:
         self,
         candles: list,
         symbol: str,
+        regime_output=None,
+        vol_output=None,
     ) -> list[dict]:
         """Run mechanical strategies and open/close positions from their signals.
 
         Args:
             candles: List of Candle objects (with .timestamp, .open, .high, .low, .close, .volume)
             symbol: Asset symbol (e.g., "BTC")
+            regime_output: Regime detector output for routing (None = run all strategies)
+            vol_output: Volatility module output for routing
 
         Returns:
             List of executed trade dicts from strategy signals.
@@ -442,6 +467,19 @@ class AutoTrader:
         self.restore_from_snapshot()
 
         from wolfpack.strategies import STRATEGIES
+        from wolfpack.strategies.regime_router import route_strategies
+
+        routing = route_strategies(regime_output, vol_output)
+        allowed = routing.get("allowed")
+        logger.info(f"[auto-trader] Regime routing: {routing['macro_regime']} -- {routing['reason']}")
+
+        # VOLATILE: tighten trailing stops, no new entries
+        if routing["macro_regime"] == "VOLATILE":
+            for pos in self.engine.portfolio.positions:
+                if pos.trailing_stop_pct and pos.trailing_stop_pct > 1.5:
+                    pos.trailing_stop_pct = max(1.5, pos.trailing_stop_pct * 0.5)
+            self._store_snapshot()
+            return []
 
         profile = YOLO_PROFILES.get(self.yolo_level, YOLO_PROFILES[2])
         executed: list[dict] = []
@@ -451,6 +489,10 @@ class AutoTrader:
         for strategy_name, strategy_cls in STRATEGIES.items():
             allocation = STRATEGY_ALLOCATIONS.get(strategy_name)
             if allocation is None:
+                continue
+
+            # Regime-based strategy filter
+            if allowed is not None and strategy_name not in allowed:
                 continue
 
             try:
@@ -525,7 +567,44 @@ class AutoTrader:
         if executed:
             self._store_snapshot()
 
+        self._last_strategy_signals = executed
         return executed
+
+    def update_htf_trailing(self, candles_4h: list, symbol: str) -> None:
+        """Trail stops on 4h bar structure for all positions in symbol."""
+        if not candles_4h or len(candles_4h) < 2:
+            return
+
+        self.restore_from_snapshot()
+
+        current_bar = candles_4h[-1]
+        prev_bar = candles_4h[-2]
+        changed = False
+
+        for pos in self.engine.portfolio.positions:
+            if pos.symbol != symbol or pos.stop_loss is None:
+                continue
+
+            if pos.direction == "long":
+                if current_bar.high > prev_bar.high:
+                    buffer = current_bar.close * 0.005
+                    new_stop = current_bar.low - buffer
+                    if new_stop > pos.stop_loss:
+                        pos.stop_loss = round(new_stop, 2)
+                        changed = True
+                        logger.info(f"[auto-trader] HTF trailing: {symbol} long stop -> ${new_stop:,.2f}")
+
+            elif pos.direction == "short":
+                if current_bar.low < prev_bar.low:
+                    buffer = current_bar.close * 0.005
+                    new_stop = current_bar.high + buffer
+                    if new_stop < pos.stop_loss:
+                        pos.stop_loss = round(new_stop, 2)
+                        changed = True
+                        logger.info(f"[auto-trader] HTF trailing: {symbol} short stop -> ${new_stop:,.2f}")
+
+        if changed:
+            self._store_snapshot()
 
     def get_status(self) -> dict:
         """Return auto-trader status."""

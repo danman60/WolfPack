@@ -1334,6 +1334,8 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
         # ── Step 1: Fetch market data ──
         logger.info(f"[cycle] Fetching {symbol} data from {exchange}...")
         candles_1h = await adapter.get_candles(symbol, interval="1h", limit=300)
+        candles_4h = await adapter.get_candles(symbol, interval="4h", limit=100)
+        candles_1d = await adapter.get_candles(symbol, interval="1d", limit=100)
         orderbook = await adapter.get_orderbook(symbol, depth=20)
         funding_rates = await adapter.get_funding_rates()
 
@@ -1358,7 +1360,10 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
         # Regime detection
         global _latest_regime
         regime_detector = RegimeDetector()
-        regime_output = regime_detector.detect(candles_1h, asset=symbol)
+        regime_output = regime_detector.detect(
+            {"1h": candles_1h, "4h": candles_4h, "1d": candles_1d},
+            asset=symbol,
+        )
         _latest_regime = regime_output
         store_module_output("regime_detection", exchange, regime_output.model_dump(), symbol)
         _module_last_runs["regime_detection"] = now_utc
@@ -1736,7 +1741,40 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
 
             _last_runs["brief"] = datetime.now(timezone.utc)
 
-            # ── Step 5b: Auto-trader processes stored recs ──
+            # ── Step 5b: Run mechanical strategies BEFORE Brief recs (sets _last_strategy_signals for Brief sizing) ──
+            try:
+                auto_trader = _get_auto_trader()
+                if auto_trader.enabled:
+                    # 1h strategies use existing candles
+                    strat_executed = auto_trader.process_strategy_signals(
+                        candles_1h, symbol,
+                        regime_output=regime_output, vol_output=vol_output,
+                    )
+                    if strat_executed:
+                        logger.info(f"[cycle] Strategy signals executed {len(strat_executed)} trades")
+
+                    # 5m candles for ORB session strategy
+                    try:
+                        candles_5m = await adapter.get_candles(symbol, interval="5m", limit=100)
+                        if candles_5m:
+                            strat_5m = auto_trader.process_strategy_signals(
+                                candles_5m, symbol,
+                                regime_output=regime_output, vol_output=vol_output,
+                            )
+                            if strat_5m:
+                                logger.info(f"[cycle] 5m strategy signals executed {len(strat_5m)} trades")
+                    except Exception as e:
+                        logger.warning(f"[cycle] Failed to fetch 5m candles for strategies: {e}")
+
+                    # HTF trailing stop update on 4h bars
+                    try:
+                        auto_trader.update_htf_trailing(candles_4h, symbol)
+                    except Exception as e:
+                        logger.warning(f"[cycle] HTF trailing stop error: {e}")
+            except Exception as e:
+                logger.warning(f"[cycle] Strategy signals error: {e}")
+
+            # ── Step 5b2: Auto-trader processes stored recs (Brief as conviction multiplier) ──
             try:
                 auto_trader = _get_auto_trader()
                 if auto_trader.enabled and stored_recs:
@@ -1750,27 +1788,6 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                         logger.info(f"[cycle] Auto-trader executed {len(auto_executed)} trades")
             except Exception as e:
                 logger.warning(f"[cycle] Auto-trader error: {e}")
-
-            # ── Step 5b2: Run mechanical strategies (regime_momentum, vol_breakout, ema_crossover, orb_session) ──
-            try:
-                auto_trader = _get_auto_trader()
-                if auto_trader.enabled:
-                    # 1h strategies use existing candles
-                    strat_executed = auto_trader.process_strategy_signals(candles_1h, symbol)
-                    if strat_executed:
-                        logger.info(f"[cycle] Strategy signals executed {len(strat_executed)} trades")
-
-                    # 5m candles for ORB session strategy
-                    try:
-                        candles_5m = await adapter.get_candles(symbol, interval="5m", limit=100)
-                        if candles_5m:
-                            strat_5m = auto_trader.process_strategy_signals(candles_5m, symbol)
-                            if strat_5m:
-                                logger.info(f"[cycle] 5m strategy signals executed {len(strat_5m)} trades")
-                    except Exception as e:
-                        logger.warning(f"[cycle] Failed to fetch 5m candles for strategies: {e}")
-            except Exception as e:
-                logger.warning(f"[cycle] Strategy signals error: {e}")
 
             # ── Step 5c: Process position actions from Brief ──
             try:

@@ -50,6 +50,20 @@ class ORBSessionStrategy(Strategy):
             "max": 5.0,
             "desc": "ATR multiplier for stop loss distance",
         },
+        "use_anti_srs": {
+            "type": "bool",
+            "default": True,
+            "min": None,
+            "max": None,
+            "desc": "Enable Anti-SRS: reverse breakout direction when inside overnight range",
+        },
+        "overnight_hours": {
+            "type": "int",
+            "default": 6,
+            "min": 2,
+            "max": 12,
+            "desc": "Hours before session open to calculate overnight range",
+        },
     }
 
     @property
@@ -69,6 +83,8 @@ class ORBSessionStrategy(Strategy):
         session = params.get("session", "ny")
         size_pct = params.get("size_pct", 12.0)
         stop_atr_mult = params.get("stop_atr_mult", 1.5)
+        use_anti_srs = params.get("use_anti_srs", True)
+        overnight_hours = params.get("overnight_hours", 6)
 
         visible = candles[: current_idx + 1]
         if len(visible) < self.warmup_bars:
@@ -129,27 +145,75 @@ class ORBSessionStrategy(Strategy):
         stop_distance = atr * stop_atr_mult
         tp_distance = stop_distance * 2  # 2R target
 
+        # Anti-SRS: calculate overnight range and classify
+        reverse_breakout = False
+        if use_anti_srs:
+            onr_start_dt = session_open_dt - timedelta(hours=overnight_hours)
+            onr_high = None
+            onr_low = None
+            for c in visible:
+                c_dt = self._ts_to_dt(c.timestamp)
+                if onr_start_dt <= c_dt < session_open_dt:
+                    if onr_high is None or c.high > onr_high:
+                        onr_high = c.high
+                    if onr_low is None or c.low < onr_low:
+                        onr_low = c.low
+
+            if onr_high is not None and onr_low is not None:
+                # Classify: ABOVE_ONR, BELOW_ONR, INSIDE_ONR
+                if range_low > onr_high:
+                    pass  # ABOVE_ONR: standard breakout
+                elif range_high < onr_low:
+                    pass  # BELOW_ONR: standard breakout
+                else:
+                    # INSIDE_ONR: reverse breakout direction
+                    reverse_breakout = True
+
         # Check for breakout on current bar
         if current.close > range_high:
-            return {
-                "symbol": "",  # filled by caller
-                "direction": "long",
-                "conviction": 75,
-                "entry_price": current.close,
-                "stop_loss": round(current.close - stop_distance, 2),
-                "take_profit": round(current.close + tp_distance, 2),
-                "size_pct": size_pct,
-            }
+            direction = "short" if reverse_breakout else "long"
+            if direction == "long":
+                return {
+                    "symbol": "",
+                    "direction": "long",
+                    "conviction": 75,
+                    "entry_price": current.close,
+                    "stop_loss": round(current.close - stop_distance, 2),
+                    "take_profit": round(current.close + tp_distance, 2),
+                    "size_pct": size_pct,
+                }
+            else:
+                return {
+                    "symbol": "",
+                    "direction": "short",
+                    "conviction": 70,
+                    "entry_price": current.close,
+                    "stop_loss": round(current.close + stop_distance, 2),
+                    "take_profit": round(current.close - tp_distance, 2),
+                    "size_pct": size_pct,
+                }
         elif current.close < range_low:
-            return {
-                "symbol": "",  # filled by caller
-                "direction": "short",
-                "conviction": 75,
-                "entry_price": current.close,
-                "stop_loss": round(current.close + stop_distance, 2),
-                "take_profit": round(current.close - tp_distance, 2),
-                "size_pct": size_pct,
-            }
+            direction = "long" if reverse_breakout else "short"
+            if direction == "short":
+                return {
+                    "symbol": "",
+                    "direction": "short",
+                    "conviction": 75,
+                    "entry_price": current.close,
+                    "stop_loss": round(current.close + stop_distance, 2),
+                    "take_profit": round(current.close - tp_distance, 2),
+                    "size_pct": size_pct,
+                }
+            else:
+                return {
+                    "symbol": "",
+                    "direction": "long",
+                    "conviction": 70,
+                    "entry_price": current.close,
+                    "stop_loss": round(current.close - stop_distance, 2),
+                    "take_profit": round(current.close + tp_distance, 2),
+                    "size_pct": size_pct,
+                }
 
         return None
 
