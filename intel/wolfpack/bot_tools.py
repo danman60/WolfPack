@@ -73,12 +73,31 @@ async def get_pnl_executor() -> dict:
 
 
 async def get_profit_executor(hours: int = 24) -> dict:
-    """Get P&L for a time window from trade history DB."""
+    """Get P&L for a time window from trade history DB (deduplicated)."""
     from wolfpack.db import get_db
     db = get_db()
     try:
+        # Use raw SQL for deduplication — backtest reruns create duplicate rows
+        result = db.rpc("get_deduplicated_pnl", {"hours_back": int(hours)}).execute()
+
+        if result.data and len(result.data) == 1:
+            row = result.data[0]
+            return {
+                "hours": hours,
+                "total_pnl": float(row.get("total_pnl") or 0),
+                "trades": int(row.get("unique_trades") or 0),
+                "winners": int(row.get("winners") or 0),
+                "losers": int(row.get("losers") or 0),
+                "win_rate_pct": float(row.get("win_rate_pct") or 0),
+                "avg_win": float(row.get("avg_win") or 0),
+                "avg_loss": float(row.get("avg_loss") or 0),
+                "best_trade": float(row.get("best_trade") or 0),
+                "worst_trade": float(row.get("worst_trade") or 0),
+            }
+
+        # Fallback: client-side dedup if RPC not available
         result = db.table("wp_trade_history").select(
-            "symbol, direction, pnl_usd, size_usd, closed_at"
+            "symbol, direction, entry_price, exit_price, pnl_usd, size_usd, closed_at"
         ).gte(
             "closed_at", f"now() - interval '{int(hours)} hours'"
         ).not_.is_("exit_price", "null").execute()
@@ -86,18 +105,26 @@ async def get_profit_executor(hours: int = 24) -> dict:
         if not result.data:
             return {"hours": hours, "total_pnl": 0, "trades": 0, "winners": 0, "losers": 0, "message": f"No closed trades in last {hours}h"}
 
-        trades = result.data
-        pnls = [float(t.get("pnl_usd", 0) or 0) for t in trades]
+        # Deduplicate by (symbol, direction, entry_price, exit_price)
+        seen = set()
+        unique_trades = []
+        for t in result.data:
+            key = (t.get("symbol"), t.get("direction"), t.get("entry_price"), t.get("exit_price"))
+            if key not in seen:
+                seen.add(key)
+                unique_trades.append(t)
+
+        pnls = [float(t.get("pnl_usd", 0) or 0) for t in unique_trades]
         winners = [p for p in pnls if p > 0]
         losers = [p for p in pnls if p < 0]
 
         return {
             "hours": hours,
             "total_pnl": round(sum(pnls), 2),
-            "trades": len(trades),
+            "trades": len(unique_trades),
             "winners": len(winners),
             "losers": len(losers),
-            "win_rate_pct": round(len(winners) / len(trades) * 100, 1) if trades else 0,
+            "win_rate_pct": round(len(winners) / len(unique_trades) * 100, 1) if unique_trades else 0,
             "avg_win": round(sum(winners) / len(winners), 2) if winners else 0,
             "avg_loss": round(sum(losers) / len(losers), 2) if losers else 0,
             "best_trade": round(max(pnls), 2) if pnls else 0,

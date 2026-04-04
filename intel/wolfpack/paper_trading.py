@@ -47,8 +47,9 @@ class PaperPortfolio(BaseModel):
 class PaperTradingEngine:
     """Manages a simulated portfolio from approved trade recommendations."""
 
-    def __init__(self, starting_equity: float = 10000.0, commission_bps: float = 5.0):
+    def __init__(self, starting_equity: float = 10000.0, commission_bps: float = 5.0, persist_trades: bool = True):
         self.commission_bps = commission_bps
+        self.persist_trades = persist_trades  # False for backtest — avoids polluting wp_trade_history
         self.portfolio = PaperPortfolio(
             starting_equity=starting_equity,
             equity=starting_equity,
@@ -184,11 +185,13 @@ class PaperTradingEngine:
         return realized
 
     def _store_closed_trade(self, pos: PaperPosition, pnl: float) -> None:
-        """Store a closed trade to wp_trade_history."""
+        """Store a closed trade to wp_trade_history. Skipped in backtest mode."""
+        if not self.persist_trades:
+            return
         try:
             from wolfpack.db import get_db
             db = get_db()
-            db.table("wp_trade_history").insert({
+            db.table("wp_trade_history").upsert({
                 "symbol": pos.symbol,
                 "direction": pos.direction,
                 "entry_price": pos.entry_price,
@@ -198,7 +201,7 @@ class PaperTradingEngine:
                 "recommendation_id": pos.recommendation_id,
                 "source": "manual",
                 "opened_at": pos.opened_at.isoformat(),
-            }).execute()
+            }, on_conflict="recommendation_id").execute()
         except Exception as e:
             logger.warning(f"Failed to store closed trade: {e}")
 

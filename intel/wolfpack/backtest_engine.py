@@ -29,7 +29,7 @@ class BacktestEngine:
 
     def __init__(self, config: BacktestConfig):
         self.config = config
-        self.paper = PaperTradingEngine(starting_equity=config.starting_equity)
+        self.paper = PaperTradingEngine(starting_equity=config.starting_equity, persist_trades=False)
         strategy_cls = STRATEGIES.get(config.strategy)
         if strategy_cls is None:
             raise ValueError(f"Unknown strategy: {config.strategy}")
