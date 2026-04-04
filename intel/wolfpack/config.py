@@ -35,6 +35,7 @@ class Settings(BaseSettings):
     lp_auto_enabled: bool = False
     lp_starting_equity: float = 25000.0
     lp_paper_mode: bool = True
+    lp_watched_pools: str = ""  # comma-separated pool addresses
 
     # Pool screening
     subgraph_api_key: str = ""

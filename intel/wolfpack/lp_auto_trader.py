@@ -29,7 +29,12 @@ class LPAutoTrader:
         self.fee_manager = LPFeeManager()
         self.rebalance_engine = LPRebalanceEngine()
         self._restored = False
-        self._watched_pools: list[str] = []
+        # Load watched pools from config (persists across restarts)
+        self._watched_pools: list[str] = [
+            p.strip() for p in (settings.lp_watched_pools or "").split(",") if p.strip()
+        ]
+        if self._watched_pools:
+            logger.info(f"[lp-trader] Loaded {len(self._watched_pools)} watched pools from config")
 
     @property
     def enabled(self) -> bool:
