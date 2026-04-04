@@ -163,7 +163,7 @@ async def call_llm_with_tool_loop(
         response = await call_llm(
             messages=current_messages,
             tools=tools,
-            tool_choice="auto" if tools else "none",
+            tool_choice="required" if (tools and iteration == 0) else ("auto" if tools else "none"),
         )
         
         content = response.get("content", "")
