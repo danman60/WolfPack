@@ -277,9 +277,13 @@ The trader has set maximum aggressiveness. Adjust your behavior:
 - Still respect hard gates (liquidity, extreme vol, ruin probability) but be more aggressive on everything else
 - The trader wants to see trades, not "wait" signals — find opportunities even in uncertain markets"""
 
+        perf_section = ""
+        if context.get("performance_summary"):
+            perf_section = f"\n\n## Recent Performance\n{context['performance_summary']}\nUse this to calibrate conviction -- favor symbol/direction combos that are performing well.\n"
+
         prompt = f"""Synthesize the following intelligence for {symbol} on {exchange} into trade recommendations and position management actions:
 
-{json.dumps(context, indent=2, default=str)}{yolo_override}"""
+{json.dumps(context, indent=2, default=str)}{yolo_override}{perf_section}"""
 
         parsed = await self._call_llm_structured(prompt, BRIEF_SCHEMA)
 

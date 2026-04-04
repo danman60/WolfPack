@@ -1648,6 +1648,12 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
         # It's available when backtests have been run recently.
         if portfolio_context:
             brief_data["portfolio_context"] = portfolio_context
+        # Inject performance tracker summary
+        try:
+            if auto_trader.enabled:
+                brief_data["performance_summary"] = auto_trader._perf_tracker.get_performance_summary()
+        except Exception:
+            pass
         if "quant" in agent_outputs:
             out = agent_outputs["quant"]
             brief_data["quant_output"] = out.model_dump() if hasattr(out, "model_dump") else out

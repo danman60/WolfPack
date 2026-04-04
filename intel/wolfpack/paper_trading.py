@@ -38,6 +38,7 @@ class PaperPortfolio(BaseModel):
     free_collateral: float = 10000.0
     realized_pnl: float = 0.0
     unrealized_pnl: float = 0.0
+    total_fees: float = 0.0
     positions: list[PaperPosition] = []
     closed_trades: int = 0
     winning_trades: int = 0
@@ -46,7 +47,8 @@ class PaperPortfolio(BaseModel):
 class PaperTradingEngine:
     """Manages a simulated portfolio from approved trade recommendations."""
 
-    def __init__(self, starting_equity: float = 10000.0):
+    def __init__(self, starting_equity: float = 10000.0, commission_bps: float = 5.0):
+        self.commission_bps = commission_bps
         self.portfolio = PaperPortfolio(
             starting_equity=starting_equity,
             equity=starting_equity,
@@ -99,9 +101,14 @@ class PaperTradingEngine:
             opened_at=datetime.now(timezone.utc),
         )
 
+        # Deduct entry commission
+        fee = size_usd * (self.commission_bps / 10000.0)
+        self.portfolio.total_fees += fee
+        self.portfolio.free_collateral -= fee
+
         self.portfolio.positions.append(position)
         self.portfolio.free_collateral -= size_usd
-        logger.info(f"Opened paper {direction} {symbol} @ ${current_price:.2f}, size ${size_usd:.2f}")
+        logger.info(f"Opened paper {direction} {symbol} @ ${current_price:.2f}, size ${size_usd:.2f} (fee ${fee:.2f})")
         return position
 
     def update_prices(self, prices: dict[str, float]) -> None:
@@ -150,7 +157,10 @@ class PaperTradingEngine:
             logger.warning(f"No open position in {symbol}")
             return 0.0
 
-        realized = pos.unrealized_pnl
+        # Deduct exit commission
+        fee = pos.size_usd * (self.commission_bps / 10000.0)
+        self.portfolio.total_fees += fee
+        realized = pos.unrealized_pnl - fee
         self.portfolio.realized_pnl += realized
         self.portfolio.free_collateral += pos.size_usd + realized
         self.portfolio.positions.pop(idx)
@@ -328,6 +338,7 @@ class PaperTradingEngine:
             "free_collateral": round(self.portfolio.free_collateral, 2),
             "unrealized_pnl": round(self.portfolio.unrealized_pnl, 2),
             "realized_pnl": round(self.portfolio.realized_pnl, 2),
+            "total_fees": round(self.portfolio.total_fees, 2),
             "positions": positions_data,
         }
 

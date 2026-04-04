@@ -94,6 +94,7 @@ class AutoTrader:
 
     def __init__(self) -> None:
         from wolfpack.paper_trading import PaperTradingEngine
+        from wolfpack.performance_tracker import PerformanceTracker
 
         self.enabled = settings.auto_trade_enabled
         self.conviction_threshold = settings.auto_trade_conviction_threshold
@@ -101,6 +102,7 @@ class AutoTrader:
         self._restored = False
         self.yolo_level = 4  # Default to YOLO for paper trading
         self._last_strategy_signals: list[dict] = []
+        self._perf_tracker = PerformanceTracker(rolling_window=50)
         self._apply_yolo_profile()
 
     def restore_from_snapshot(self) -> None:
@@ -195,8 +197,10 @@ class AutoTrader:
             if direction == "wait":
                 continue
 
-            # Skip if below conviction threshold
-            if conviction < self.conviction_threshold:
+            # Dynamic threshold based on performance
+            dynamic_threshold = self._perf_tracker.get_threshold(symbol, direction, self.conviction_threshold)
+            if conviction < dynamic_threshold:
+                logger.info(f"[auto-trader] {symbol} {direction} conviction {conviction} < dynamic threshold {dynamic_threshold}, skipping")
                 continue
 
             # Veto check
@@ -253,6 +257,10 @@ class AutoTrader:
                 size_multiplier = 0.25  # Quarter size -- Brief only
 
             size_pct = min(size_pct * size_multiplier, profile["max_size_pct"])
+
+            # Apply performance-based size multiplier
+            perf_mult = self._perf_tracker.get_size_multiplier(symbol, direction)
+            size_pct = size_pct * perf_mult
 
             if size_pct <= 0:
                 continue
@@ -617,6 +625,7 @@ class AutoTrader:
             "starting_equity": p.starting_equity,
             "realized_pnl": round(p.realized_pnl, 2),
             "unrealized_pnl": round(p.unrealized_pnl, 2),
+            "total_fees": round(p.total_fees, 2),
             "open_positions": len(p.positions),
             "positions": [pos.model_dump(mode="json") for pos in p.positions],
             "yolo_level": self.yolo_level,
