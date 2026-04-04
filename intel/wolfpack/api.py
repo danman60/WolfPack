@@ -2651,9 +2651,13 @@ query Positions($owner: Bytes!, $first: Int!) {
 
 async def _fetch_subgraph(query: str, variables: dict) -> dict:
     """Fetch from Uniswap V3 subgraph with fallback endpoints."""
+    api_key = settings.subgraph_api_key
     endpoints = [
-        "https://gateway.thegraph.com/api/demo/subgraphs/id/5zvR82QoaXYFyDEKLZ9t6v9adgnptxYpKpSbxtgVENFV",
+        "https://eth-mainnet.g.alchemy.com/api/subgraphs/id/uniswap-v3",
     ]
+    if api_key:
+        endpoints.append(f"https://gateway.thegraph.com/api/{api_key}/subgraphs/id/5zvR82QoaXYFyDEKLZ9t6v9adgnptxYpKpSbxtgVENFV")
+    endpoints.append("https://gateway.thegraph.com/api/demo/subgraphs/id/5zvR82QoaXYFyDEKLZ9t6v9adgnptxYpKpSbxtgVENFV")
 
     for url in endpoints:
         try:
