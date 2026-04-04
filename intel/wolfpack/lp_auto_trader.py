@@ -18,10 +18,12 @@ class LPAutoTrader:
     def __init__(self) -> None:
         from wolfpack.lp_paper_engine import PaperLPEngine
         from wolfpack.modules.lp_monitor import LPPositionMonitor
+        from wolfpack.modules.lp_range_calculator import LPRangeCalculator
 
         self._enabled = settings.lp_auto_enabled
         self.engine = PaperLPEngine(starting_equity=settings.lp_starting_equity)
         self.monitor = LPPositionMonitor()
+        self.range_calc = LPRangeCalculator()
         self._restored = False
         self._watched_pools: list[str] = []
 
@@ -63,6 +65,29 @@ class LPAutoTrader:
         alerts: list[dict] = []
         pools_checked = 0
 
+        # Extract regime + vol context for range calculator
+        macro = "unknown"
+        ema_trend = 0.0
+        confidence = 0.5
+        vol_regime = "normal"
+        realized_vol = 30.0
+
+        if regime_output:
+            regime_str = regime_output.regime.value if hasattr(regime_output.regime, "value") else str(regime_output.regime)
+            agreement = regime_output.sub_signals.multi_tf_agreement if regime_output.sub_signals else 1.0
+            ema_trend = regime_output.sub_signals.ema_trend_score if regime_output.sub_signals else 0.0
+            confidence = regime_output.confidence
+            if regime_str == "panic":
+                macro = "VOLATILE"
+            elif regime_str in ("trending_up", "trending_down") and agreement >= 0.75:
+                macro = "TRENDING"
+            else:
+                macro = "RANGING"
+
+        if vol_output:
+            vol_regime = vol_output.get("vol_regime", "normal") if isinstance(vol_output, dict) else getattr(vol_output, "vol_regime", "normal")
+            realized_vol = vol_output.get("realized_vol_1d", 30) if isinstance(vol_output, dict) else getattr(vol_output, "realized_vol_1d", 30)
+
         for pool_address in self._watched_pools:
             try:
                 state = await self.monitor.fetch_pool_state(pool_address)
@@ -79,6 +104,37 @@ class LPAutoTrader:
                         price_ratio = state.token0_price_usd / state.token1_price_usd
                     else:
                         continue
+
+                # Auto-open: if no existing position in this pool, compute range and open
+                existing = [
+                    p for p in self.engine.portfolio.positions
+                    if p.pool_address == pool_address and p.status == "active"
+                ]
+                if not existing:
+                    recommendation = self.range_calc.compute_range(
+                        current_tick=state.current_tick,
+                        fee_tier=state.fee_tier,
+                        regime_macro=macro,
+                        vol_regime=vol_regime,
+                        realized_vol_1d=realized_vol,
+                        ema_trend_score=ema_trend,
+                        confidence=confidence,
+                    )
+                    if recommendation:
+                        safe_ratio = price_ratio if price_ratio > 0 else 1.0
+                        pos = self.engine.open_position(
+                            pool_address=pool_address,
+                            token0_symbol=state.token0_symbol,
+                            token1_symbol=state.token1_symbol,
+                            fee_tier=state.fee_tier,
+                            tick_lower=recommendation.tick_lower,
+                            tick_upper=recommendation.tick_upper,
+                            size_pct=recommendation.size_pct,
+                            current_tick=state.current_tick,
+                            current_price_ratio=safe_ratio,
+                        )
+                        if pos:
+                            logger.info(f"[lp-auto] Opened paper LP {state.token0_symbol}/{state.token1_symbol} {recommendation.reason}")
 
                 # Update paper engine positions for this pool
                 self.engine.update_position(
