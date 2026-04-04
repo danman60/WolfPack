@@ -299,16 +299,29 @@ class AutoTrader:
                 # Store to wp_auto_trades
                 self._store_trade(trade, rec.get("id"))
 
-                # Send Telegram notification
+                # Send notification via digest
                 try:
-                    from wolfpack.notifications import send_telegram
+                    from wolfpack.notification_digest import get_digest
+                    digest = get_digest()
                     arrow = "\u2b06\ufe0f" if direction == "long" else "\u2b07\ufe0f"
-                    await send_telegram(
-                        f"<b>{arrow} Auto-Bot {direction.upper()} {symbol}</b>\n"
-                        f"Entry: <code>${entry_price:,.2f}</code>\n"
-                        f"Size: <code>${pos.size_usd:,.0f}</code>\n"
-                        f"Conviction: {veto_result.final_conviction}%"
-                    )
+                    if digest.mode == "individual":
+                        from wolfpack.notifications import send_telegram
+                        await send_telegram(
+                            f"<b>{arrow} Auto-Bot {direction.upper()} {symbol}</b>\n"
+                            f"Entry: <code>${entry_price:,.2f}</code>\n"
+                            f"Size: <code>${pos.size_usd:,.0f}</code>\n"
+                            f"Conviction: {veto_result.final_conviction}%"
+                        )
+                    else:
+                        digest.add({
+                            "type": "trade_open",
+                            "symbol": symbol,
+                            "direction": direction,
+                            "size": pos.size_usd,
+                            "entry_price": entry_price,
+                            "conviction": veto_result.final_conviction,
+                            "details": f"{arrow} {direction.upper()} {symbol} @ ${entry_price:,.2f} (${pos.size_usd:,.0f})",
+                        })
                 except Exception:
                     pass
 
@@ -360,13 +373,24 @@ class AutoTrader:
                 executed.append({"action": "close", "symbol": pa_symbol, "realized_pnl": pnl})
 
                 try:
-                    from wolfpack.notifications import send_telegram
+                    from wolfpack.notification_digest import get_digest
+                    digest = get_digest()
                     pnl_str = f"+${pnl:,.2f}" if pnl >= 0 else f"-${abs(pnl):,.2f}"
-                    await send_telegram(
-                        f"<b>\U0001f916 Auto-bot CLOSED {pos.direction.upper()} {pa_symbol}</b>\n"
-                        f"P&L: <code>{pnl_str}</code>\n"
-                        f"Reason: {pa.get('reason', 'Brief recommended close')}"
-                    )
+                    if digest.mode == "individual":
+                        from wolfpack.notifications import send_telegram
+                        await send_telegram(
+                            f"<b>\U0001f916 Auto-bot CLOSED {pos.direction.upper()} {pa_symbol}</b>\n"
+                            f"P&L: <code>{pnl_str}</code>\n"
+                            f"Reason: {pa.get('reason', 'Brief recommended close')}"
+                        )
+                    else:
+                        digest.add({
+                            "type": "trade_close",
+                            "symbol": pa_symbol,
+                            "direction": pos.direction,
+                            "pnl": pnl,
+                            "details": f"CLOSED {pos.direction.upper()} {pa_symbol}: {pnl_str}",
+                        })
                 except Exception:
                     pass
 
@@ -377,12 +401,21 @@ class AutoTrader:
                     executed.append({"action": "adjust_stop", "symbol": pa_symbol, "new_stop": new_stop})
 
                     try:
-                        from wolfpack.notifications import send_telegram
-                        await send_telegram(
-                            f"<b>\U0001f916 Auto-bot adjusted stop for {pa_symbol}</b>\n"
-                            f"New stop: <code>${new_stop:,.2f}</code>\n"
-                            f"Reason: {pa.get('reason', 'Brief recommended adjustment')}"
-                        )
+                        from wolfpack.notification_digest import get_digest
+                        digest = get_digest()
+                        if digest.mode == "individual":
+                            from wolfpack.notifications import send_telegram
+                            await send_telegram(
+                                f"<b>\U0001f916 Auto-bot adjusted stop for {pa_symbol}</b>\n"
+                                f"New stop: <code>${new_stop:,.2f}</code>\n"
+                                f"Reason: {pa.get('reason', 'Brief recommended adjustment')}"
+                            )
+                        else:
+                            digest.add({
+                                "type": "stop_adjusted",
+                                "symbol": pa_symbol,
+                                "details": f"Stop adjusted to ${new_stop:,.2f} — {pa.get('reason', 'Brief recommended adjustment')}",
+                            })
                     except Exception:
                         pass
 
@@ -393,12 +426,21 @@ class AutoTrader:
                     executed.append({"action": "adjust_tp", "symbol": pa_symbol, "new_tp": new_tp})
 
                     try:
-                        from wolfpack.notifications import send_telegram
-                        await send_telegram(
-                            f"<b>\U0001f916 Auto-bot adjusted TP for {pa_symbol}</b>\n"
-                            f"New TP: <code>${new_tp:,.2f}</code>\n"
-                            f"Reason: {pa.get('reason', 'Brief recommended adjustment')}"
-                        )
+                        from wolfpack.notification_digest import get_digest
+                        digest = get_digest()
+                        if digest.mode == "individual":
+                            from wolfpack.notifications import send_telegram
+                            await send_telegram(
+                                f"<b>\U0001f916 Auto-bot adjusted TP for {pa_symbol}</b>\n"
+                                f"New TP: <code>${new_tp:,.2f}</code>\n"
+                                f"Reason: {pa.get('reason', 'Brief recommended adjustment')}"
+                            )
+                        else:
+                            digest.add({
+                                "type": "stop_adjusted",
+                                "symbol": pa_symbol,
+                                "details": f"TP adjusted to ${new_tp:,.2f} — {pa.get('reason', 'Brief recommended adjustment')}",
+                            })
                     except Exception:
                         pass
 

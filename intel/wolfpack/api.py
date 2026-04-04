@@ -882,6 +882,49 @@ async def auto_trader_trades(limit: int = 50):
         return {"trades": []}
 
 
+# ── Notification Digest Endpoints ──
+
+
+@app.get("/notifications/config")
+async def notification_config():
+    """Get current notification digest configuration."""
+    from wolfpack.notification_digest import get_digest
+    d = get_digest()
+    return {
+        "mode": d.mode,
+        "interval_minutes": d.interval_minutes,
+        "buffered_count": len(d._buffer),
+    }
+
+
+@app.post("/notifications/config")
+async def update_notification_config(
+    mode: str | None = None,
+    interval_minutes: int | None = None,
+    _auth: None = Depends(require_auth),
+):
+    """Update notification digest settings."""
+    from wolfpack.notification_digest import get_digest
+    d = get_digest()
+    if mode:
+        d.set_mode(mode)
+    if interval_minutes:
+        d.set_interval(interval_minutes)
+    return {
+        "mode": d.mode,
+        "interval_minutes": d.interval_minutes,
+    }
+
+
+@app.post("/notifications/flush")
+async def flush_notifications(_auth: None = Depends(require_auth)):
+    """Force flush notification digest now."""
+    from wolfpack.notification_digest import get_digest
+    d = get_digest()
+    await d.force_flush()
+    return {"status": "flushed"}
+
+
 # ── Market Data Endpoints ──
 
 
@@ -1838,11 +1881,20 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                         for sym, reason in triggered:
                             logger.info(f"[auto-trader] {reason} triggered for {sym}")
                             try:
-                                from wolfpack.notifications import send_telegram
-                                await send_telegram(
-                                    f"<b>\U0001f6a8 Auto-Bot {reason.upper()} hit for {sym}</b>\n"
-                                    f"Price: <code>${latest_price:,.2f}</code>"
-                                )
+                                from wolfpack.notification_digest import get_digest
+                                digest = get_digest()
+                                if digest.mode == "individual":
+                                    from wolfpack.notifications import send_telegram
+                                    await send_telegram(
+                                        f"<b>\U0001f6a8 Auto-Bot {reason.upper()} hit for {sym}</b>\n"
+                                        f"Price: <code>${latest_price:,.2f}</code>"
+                                    )
+                                else:
+                                    digest.add({
+                                        "type": "stop_triggered",
+                                        "symbol": sym,
+                                        "details": f"{reason.upper()} hit for {sym} @ ${latest_price:,.2f}",
+                                    })
                             except Exception:
                                 pass
                     auto_trader._store_snapshot()
@@ -1855,6 +1907,13 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                 cleanup_old_snapshots()
             except Exception as e:
                 logger.warning(f"[cycle] Snapshot cleanup error: {e}")
+
+            # Flush notification digest if interval elapsed
+            try:
+                from wolfpack.notification_digest import get_digest
+                await get_digest().maybe_flush()
+            except Exception:
+                pass
 
             logger.info(f"[cycle] Full intelligence cycle complete for {symbol} on {exchange}")
 

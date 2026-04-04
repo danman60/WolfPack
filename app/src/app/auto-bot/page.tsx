@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   useAutoTraderStatus,
   useToggleAutoTrader,
@@ -9,6 +9,7 @@ import {
   usePositionActions,
   useSetYoloLevel,
 } from "@/lib/hooks/useIntelligence";
+import { intelFetch } from "@/lib/intel";
 
 const YOLO_LABELS = [
   { level: 1, label: "Cautious", icon: "\u{1F6E1}\uFE0F", color: "text-[var(--wolf-emerald)]" },
@@ -39,6 +40,51 @@ export default function AutoBotPage() {
   const [editEquity, setEditEquity] = useState("");
   const [editThreshold, setEditThreshold] = useState("");
   const [configSaved, setConfigSaved] = useState(false);
+
+  // Notification digest state
+  const [notifMode, setNotifMode] = useState("individual");
+  const [notifInterval, setNotifInterval] = useState(60);
+  const [notifBuffered, setNotifBuffered] = useState(0);
+  const [notifSaving, setNotifSaving] = useState(false);
+  const [notifFlushing, setNotifFlushing] = useState(false);
+
+  useEffect(() => {
+    intelFetch("/intel/notifications/config")
+      .then((r) => r.json())
+      .then((data) => {
+        setNotifMode(data.mode ?? "individual");
+        setNotifInterval(data.interval_minutes ?? 60);
+        setNotifBuffered(data.buffered_count ?? 0);
+      })
+      .catch(() => {});
+  }, []);
+
+  const handleNotifSave = async (mode: string, interval?: number) => {
+    setNotifSaving(true);
+    try {
+      const params = new URLSearchParams();
+      params.set("mode", mode);
+      if (interval) params.set("interval_minutes", String(interval));
+      const res = await intelFetch(`/intel/notifications/config?${params.toString()}`, {
+        method: "POST",
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setNotifMode(data.mode);
+        setNotifInterval(data.interval_minutes);
+      }
+    } catch {}
+    setNotifSaving(false);
+  };
+
+  const handleNotifFlush = async () => {
+    setNotifFlushing(true);
+    try {
+      await intelFetch("/intel/notifications/flush", { method: "POST" });
+      setNotifBuffered(0);
+    } catch {}
+    setNotifFlushing(false);
+  };
 
   const currentYolo = pendingYolo ?? status?.yolo_level ?? 4;
 
@@ -267,6 +313,67 @@ export default function AutoBotPage() {
               </button>
             </div>
           </div>
+        </div>
+      </details>
+
+      {/* Notification Settings */}
+      <details className="wolf-card">
+        <summary className="p-5 cursor-pointer text-sm text-gray-400 hover:text-gray-300 transition select-none">
+          Notification Settings
+        </summary>
+        <div className="px-6 pb-6 pt-1">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+            <div>
+              <label className="text-xs text-gray-500 uppercase">Delivery Mode</label>
+              <select
+                value={notifMode}
+                onChange={(e) => {
+                  const mode = e.target.value;
+                  setNotifMode(mode);
+                  handleNotifSave(mode, notifInterval);
+                }}
+                disabled={notifSaving}
+                className="w-full mt-1 bg-[var(--surface)] border border-[var(--border)] rounded-md px-3 py-2 text-white text-sm"
+              >
+                <option value="individual">Individual (instant)</option>
+                <option value="hourly">Hourly Digest</option>
+                <option value="daily">Daily Digest</option>
+                <option value="disabled">Disabled</option>
+              </select>
+            </div>
+            {notifMode === "hourly" && (
+              <div>
+                <label className="text-xs text-gray-500 uppercase">Interval (minutes)</label>
+                <input
+                  type="number"
+                  min={5}
+                  max={1440}
+                  value={notifInterval}
+                  onChange={(e) => setNotifInterval(Number(e.target.value))}
+                  onBlur={() => handleNotifSave(notifMode, notifInterval)}
+                  className="w-full mt-1 bg-[var(--surface)] border border-[var(--border)] rounded-md px-3 py-2 text-white text-sm"
+                />
+              </div>
+            )}
+            <div>
+              <label className="text-xs text-gray-500 uppercase">Buffered</label>
+              <p className="mt-1 text-sm text-white font-mono py-2">
+                {notifBuffered} event{notifBuffered !== 1 ? "s" : ""}
+              </p>
+            </div>
+            <div>
+              <button
+                onClick={handleNotifFlush}
+                disabled={notifFlushing || notifBuffered === 0}
+                className="px-5 py-2 bg-[var(--wolf-cyan)]/20 text-[var(--wolf-cyan)] rounded-md text-sm font-semibold hover:bg-[var(--wolf-cyan)]/30 transition disabled:opacity-50"
+              >
+                {notifFlushing ? "Flushing..." : "Flush Now"}
+              </button>
+            </div>
+          </div>
+          <p className="text-[10px] text-gray-600 mt-3">
+            Individual sends each notification instantly. Hourly/Daily batches them into a single digest message.
+          </p>
         </div>
       </details>
 
