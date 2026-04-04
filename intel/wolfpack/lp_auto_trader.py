@@ -20,12 +20,14 @@ class LPAutoTrader:
         from wolfpack.modules.lp_monitor import LPPositionMonitor
         from wolfpack.modules.lp_range_calculator import LPRangeCalculator
         from wolfpack.modules.lp_fee_manager import LPFeeManager
+        from wolfpack.modules.lp_rebalance import LPRebalanceEngine
 
         self._enabled = settings.lp_auto_enabled
         self.engine = PaperLPEngine(starting_equity=settings.lp_starting_equity)
         self.monitor = LPPositionMonitor()
         self.range_calc = LPRangeCalculator()
         self.fee_manager = LPFeeManager()
+        self.rebalance_engine = LPRebalanceEngine()
         self._restored = False
         self._watched_pools: list[str] = []
 
@@ -150,6 +152,49 @@ class LPAutoTrader:
             except Exception as e:
                 logger.warning(f"[lp-trader] Error processing pool {pool_address[:10]}: {e}")
 
+        # Rebalance evaluation — check active positions against recommended ranges
+        for pos in list(self.engine.portfolio.positions):
+            if pos.status not in ("active", "out_of_range"):
+                continue
+            try:
+                recommendation = self.range_calc.compute_range(
+                    current_tick=pos.current_tick,
+                    fee_tier=pos.fee_tier,
+                    regime_macro=macro,
+                    vol_regime=vol_regime,
+                    realized_vol_1d=realized_vol,
+                    ema_trend_score=ema_trend,
+                    confidence=confidence,
+                )
+                action = self.rebalance_engine.evaluate(pos, recommendation)
+                if action and recommendation:
+                    # Close old position
+                    net_pnl = self.engine.close_position(pos.pool_address)
+                    # Open new at recommended range
+                    safe_ratio = pos.current_price_ratio if pos.current_price_ratio > 0 else 1.0
+                    new_pos = self.engine.open_position(
+                        pool_address=pos.pool_address,
+                        token0_symbol=pos.token0_symbol,
+                        token1_symbol=pos.token1_symbol,
+                        fee_tier=pos.fee_tier,
+                        tick_lower=recommendation.tick_lower,
+                        tick_upper=recommendation.tick_upper,
+                        size_pct=recommendation.size_pct,
+                        current_tick=pos.current_tick,
+                        current_price_ratio=safe_ratio,
+                    )
+                    self.rebalance_engine.record_rebalance(pos.position_id)
+                    # Log rebalance event to wp_lp_events
+                    self._store_rebalance_event(action, net_pnl)
+                    logger.info(f"[lp-auto] Rebalanced {action['pair']}: {action['reason']}, net PnL ${net_pnl:.2f}")
+                    alerts.append({
+                        "type": "rebalance",
+                        "pair": action["pair"],
+                        "message": f"Rebalanced: {action['reason']}, old={action['old_range']}, new={action['new_range']}, net ${net_pnl:.2f}",
+                    })
+            except Exception as e:
+                logger.warning(f"[lp-trader] Rebalance eval error for {pos.position_id}: {e}")
+
         # Check alerts on all active positions
         active_positions = [
             p for p in self.engine.portfolio.positions if p.status in ("active", "out_of_range")
@@ -183,6 +228,28 @@ class LPAutoTrader:
             "positions": len(active_positions),
             "equity": round(self.engine.portfolio.equity, 2),
         }
+
+    def _store_rebalance_event(self, action: dict, net_pnl: float) -> None:
+        """Store rebalance event to wp_lp_events."""
+        try:
+            from wolfpack.db import get_db
+            db = get_db()
+            db.table("wp_lp_events").insert({
+                "event_type": "rebalance",
+                "details": {
+                    "position_id": action["position_id"],
+                    "pool": action["pool_address"],
+                    "pair": action["pair"],
+                    "reason": action["reason"],
+                    "old_range": action["old_range"],
+                    "new_range": action["new_range"],
+                    "il_pct": action["il_pct"],
+                    "out_of_range_ticks": action["out_of_range_ticks"],
+                    "net_pnl": round(net_pnl, 2),
+                },
+            }).execute()
+        except Exception as e:
+            logger.warning(f"[lp-trader] Failed to store rebalance event: {e}")
 
     def _store_snapshot(self) -> None:
         """Persist portfolio state to wp_lp_snapshots."""
