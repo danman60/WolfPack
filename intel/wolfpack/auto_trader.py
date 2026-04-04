@@ -483,9 +483,10 @@ class AutoTrader:
         from wolfpack.strategies import STRATEGIES
         from wolfpack.strategies.regime_router import route_strategies
 
-        routing = route_strategies(regime_output, vol_output)
+        routing = route_strategies(regime_output, vol_output, symbol=symbol)
         allowed = routing.get("allowed")
-        logger.info(f"[auto-trader] Regime routing: {routing['macro_regime']} -- {routing['reason']}")
+        debounce = routing.get("debounce", "")
+        logger.info(f"[auto-trader] Regime routing: {routing['macro_regime']} -- {routing['reason']} [{debounce}]")
 
         # VOLATILE: tighten trailing stops, no new entries
         if routing["macro_regime"] == "VOLATILE":
