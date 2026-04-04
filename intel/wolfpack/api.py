@@ -894,6 +894,19 @@ def _get_auto_trader() -> Any:
     return _auto_trader
 
 
+# ── LP AutoTrader Singleton ──
+_lp_trader: Any = None
+
+
+def _get_lp_trader() -> Any:
+    """Get or create the LPAutoTrader singleton."""
+    global _lp_trader
+    if _lp_trader is None:
+        from wolfpack.lp_auto_trader import LPAutoTrader
+        _lp_trader = LPAutoTrader()
+    return _lp_trader
+
+
 @app.get("/auto-trader/status")
 async def auto_trader_status():
     """Return auto-trader status."""
@@ -2073,6 +2086,29 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
             except Exception as e:
                 logger.warning(f"[cycle] Auto-trader price update error: {e}")
 
+            # ── Step 6c: LP position monitoring ──
+            try:
+                lp_trader = _get_lp_trader()
+                if lp_trader.enabled:
+                    lp_result = await lp_trader.process_tick(
+                        regime_output=regime_output,
+                        vol_output=vol_output,
+                    )
+                    if lp_result and lp_result.get("alerts"):
+                        for alert in lp_result["alerts"]:
+                            try:
+                                from wolfpack.notification_digest import get_digest
+                                digest = get_digest()
+                                if digest.mode == "individual":
+                                    from wolfpack.notifications import send_telegram
+                                    await send_telegram(f"<b>{alert['message']}</b>")
+                                elif digest.mode != "disabled":
+                                    digest.add({"type": alert["type"], "symbol": alert.get("pair", "LP"), "details": alert["message"]})
+                            except Exception:
+                                pass
+            except Exception as e:
+                logger.warning(f"[cycle] LP auto-trader error: {e}")
+
             # Snapshot cleanup — runs once per process lifetime
             try:
                 from wolfpack.db import cleanup_old_snapshots
@@ -2675,6 +2711,63 @@ async def get_pool_positions(owner: str, first: int = 50):
     except Exception as e:
         logger.error(f"[pools/positions] Failed: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ── LP Automation Endpoints ──
+
+
+@app.get("/lp/status")
+async def lp_status():
+    """Get LP automation status."""
+    lp = _get_lp_trader()
+    return lp.get_status()
+
+
+@app.post("/lp/toggle")
+async def lp_toggle(enabled: bool = Body(..., embed=True)):
+    """Enable/disable LP automation."""
+    lp = _get_lp_trader()
+    lp._enabled = enabled
+    return {"enabled": lp._enabled}
+
+
+@app.get("/lp/positions")
+async def lp_positions():
+    """Get all LP positions from paper engine."""
+    lp = _get_lp_trader()
+    return {
+        "positions": [
+            {
+                "position_id": p.position_id,
+                "pool": p.pool_address,
+                "pair": f"{p.token0_symbol}/{p.token1_symbol}",
+                "fee_tier": p.fee_tier,
+                "ticks": [p.tick_lower, p.tick_upper],
+                "current_tick": p.current_tick,
+                "liquidity_usd": round(p.liquidity_usd, 2),
+                "fees_earned": round(p.fees_earned_usd, 2),
+                "il_pct": p.il_pct,
+                "status": p.status,
+                "out_of_range_ticks": p.out_of_range_ticks,
+            }
+            for p in lp.engine.portfolio.positions
+        ],
+        "portfolio": {
+            "equity": round(lp.engine.portfolio.equity, 2),
+            "free_collateral": round(lp.engine.portfolio.free_collateral, 2),
+            "total_fees": round(lp.engine.portfolio.total_fees_earned, 2),
+            "total_il": round(lp.engine.portfolio.total_il, 2),
+            "realized_pnl": round(lp.engine.portfolio.realized_pnl, 2),
+        },
+    }
+
+
+@app.post("/lp/watch")
+async def lp_watch_pool(pool_address: str = Body(..., embed=True)):
+    """Add a pool to the LP watch list."""
+    lp = _get_lp_trader()
+    lp.add_pool(pool_address)
+    return {"watched_pools": lp._watched_pools}
 
 
 # ── Multi-Symbol Intelligence ──

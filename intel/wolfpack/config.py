@@ -31,6 +31,11 @@ class Settings(BaseSettings):
     auto_trade_equity: float = 5000.0
     auto_trade_conviction_threshold: int = 75
 
+    # LP Auto-Trader
+    lp_auto_enabled: bool = False
+    lp_starting_equity: float = 25000.0
+    lp_paper_mode: bool = True
+
     # Pool screening
     subgraph_api_key: str = ""
 
