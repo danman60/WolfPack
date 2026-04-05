@@ -36,6 +36,7 @@ class Settings(BaseSettings):
     lp_starting_equity: float = 25000.0
     lp_paper_mode: bool = True
     lp_watched_pools: str = ""  # comma-separated pool addresses
+    lp_max_positions: int = 6   # LP_MAX_POSITIONS — max concurrent LP positions
 
     # Pool screening
     subgraph_api_key: str = ""

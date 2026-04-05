@@ -2,14 +2,20 @@
 
 Follows the AutoTrader pattern: singleton via api.py, restore from snapshot,
 process_tick() called from the main intelligence cycle.
+
+Pool rotation: scanner discovers high-yield pools every 6 cycles (3 hours),
+positions are rotated out when APR declines or better alternatives appear.
 """
 
 import logging
+from datetime import datetime, timezone
 from typing import Any, Optional
 
 from wolfpack.config import settings
 
 logger = logging.getLogger(__name__)
+
+MAX_POSITIONS = settings.lp_max_positions
 
 
 class LPAutoTrader:
@@ -21,6 +27,7 @@ class LPAutoTrader:
         from wolfpack.modules.lp_range_calculator import LPRangeCalculator
         from wolfpack.modules.lp_fee_manager import LPFeeManager
         from wolfpack.modules.lp_rebalance import LPRebalanceEngine
+        from wolfpack.modules.lp_pool_scanner import LPPoolScanner
 
         self._enabled = settings.lp_auto_enabled
         self.engine = PaperLPEngine(starting_equity=settings.lp_starting_equity)
@@ -28,13 +35,15 @@ class LPAutoTrader:
         self.range_calc = LPRangeCalculator()
         self.fee_manager = LPFeeManager()
         self.rebalance_engine = LPRebalanceEngine()
+        self.pool_scanner = LPPoolScanner()
         self._restored = False
-        # Load watched pools from config (persists across restarts)
-        self._watched_pools: list[str] = [
+        # Load watched pools from config as seeds (scanner adds dynamically)
+        self._config_pools: list[str] = [
             p.strip() for p in (settings.lp_watched_pools or "").split(",") if p.strip()
         ]
+        self._watched_pools: list[str] = list(self._config_pools)
         if self._watched_pools:
-            logger.info(f"[lp-trader] Loaded {len(self._watched_pools)} watched pools from config")
+            logger.info(f"[lp-trader] Loaded {len(self._watched_pools)} seed pools from config")
 
     @property
     def enabled(self) -> bool:
@@ -60,19 +69,26 @@ class LPAutoTrader:
         """Main entry point called from _run_full_cycle().
 
         1. Restore from snapshot (if first call)
-        2. For each watched pool: fetch pool state via monitor
-        3. Update paper engine with current ticks + prices
-        4. Check for alerts (out-of-range, IL warnings)
-        5. Store snapshot
-        6. Return summary dict
+        2. Periodic pool scan (every 6 cycles = 3 hours)
+        3. Rotation check — exit underperforming positions
+        4. For each watched pool: fetch pool state via monitor
+        5. Open positions in top-scoring pools (up to MAX_POSITIONS)
+        6. Rebalance, fee harvest, alerts
+        7. Store snapshot
         """
         self.restore_from_snapshot()
 
-        if not self._watched_pools:
-            return {"alerts": [], "pools_checked": 0, "positions": 0}
-
         alerts: list[dict] = []
         pools_checked = 0
+
+        # STEP 0: Periodic pool scan (every 6 cycles)
+        if self.pool_scanner.should_scan():
+            candidates = await self.pool_scanner.scan()
+            if candidates:
+                self._update_watch_list(candidates)
+
+        if not self._watched_pools:
+            return {"alerts": [], "pools_checked": 0, "positions": 0}
 
         # Extract regime + vol context for range calculator
         macro = "unknown"
@@ -97,10 +113,34 @@ class LPAutoTrader:
             vol_regime = vol_output.get("vol_regime", "normal") if isinstance(vol_output, dict) else getattr(vol_output, "vol_regime", "normal")
             realized_vol = vol_output.get("realized_vol_1d", 30) if isinstance(vol_output, dict) else getattr(vol_output, "realized_vol_1d", 30)
 
-        # Batch fetch all pool states (RPC + GeckoTerminal)
+        # STEP 1: Rotation check — exit underperforming positions
+        for pos in list(self.engine.portfolio.positions):
+            if pos.status != "active":
+                continue
+            should_exit, reason = self._should_exit_pool(pos)
+            if should_exit:
+                net_pnl = self.engine.close_position(pos.pool_address)
+                logger.info(f"[lp-auto] ROTATED OUT: {pos.token0_symbol}/{pos.token1_symbol} — {reason} (net PnL: ${net_pnl:.2f})")
+                self._store_rotation_event(pos, reason, net_pnl)
+                alerts.append({
+                    "type": "rotation_exit",
+                    "pair": f"{pos.token0_symbol}/{pos.token1_symbol}",
+                    "message": f"Rotated out: {reason}, net ${net_pnl:.2f}",
+                })
+
+        # STEP 2: Batch fetch all pool states (RPC + GeckoTerminal)
         pool_states = await self.monitor.fetch_pool_states(self._watched_pools)
 
-        for pool_address in self._watched_pools:
+        # STEP 3: Update existing positions + open in top-scoring pools
+        active_pools = {p.pool_address.lower() for p in self.engine.portfolio.positions if p.status == "active"}
+        active_count = len(active_pools)
+        candidates = self.pool_scanner.get_candidates()
+
+        # Build priority list: scanner candidates first (by score), then remaining watched pools
+        candidate_addresses = [c.address for c in candidates]
+        priority_pools = candidate_addresses + [p for p in self._watched_pools if p not in candidate_addresses]
+
+        for pool_address in priority_pools:
             try:
                 state = pool_states.get(pool_address)
                 if state is None:
@@ -117,12 +157,8 @@ class LPAutoTrader:
                     else:
                         continue
 
-                # Auto-open: if no existing position in this pool, compute range and open
-                existing = [
-                    p for p in self.engine.portfolio.positions
-                    if p.pool_address == pool_address and p.status == "active"
-                ]
-                if not existing:
+                # Auto-open: if no existing position and under MAX_POSITIONS
+                if pool_address.lower() not in active_pools and active_count < MAX_POSITIONS:
                     recommendation = self.range_calc.compute_range(
                         current_tick=state.current_tick,
                         fee_tier=state.fee_tier,
@@ -146,6 +182,8 @@ class LPAutoTrader:
                             current_price_ratio=safe_ratio,
                         )
                         if pos:
+                            active_pools.add(pool_address.lower())
+                            active_count += 1
                             logger.info(f"[lp-auto] Opened paper LP {state.token0_symbol}/{state.token1_symbol} {recommendation.reason}")
 
                 # Update paper engine positions for this pool
@@ -207,7 +245,7 @@ class LPAutoTrader:
         active_positions = [
             p for p in self.engine.portfolio.positions if p.status in ("active", "out_of_range")
         ]
-        alerts = self.monitor.check_alerts(active_positions)
+        alerts.extend(self.monitor.check_alerts(active_positions))
 
         # Fee harvesting — evaluate and auto-harvest for active positions
         for pos in self.engine.portfolio.positions:
@@ -235,7 +273,73 @@ class LPAutoTrader:
             "pools_checked": pools_checked,
             "positions": len(active_positions),
             "equity": round(self.engine.portfolio.equity, 2),
+            "scanner_candidates": len(self.pool_scanner.get_candidates()),
         }
+
+    def _update_watch_list(self, candidates) -> None:
+        """Update watched pools based on scanner results."""
+        # Config pools always stay watched (user overrides)
+        scanner_pools = [c.address for c in candidates[:MAX_POSITIONS]]
+
+        # Merge: config pools + top candidates (deduped, order preserved)
+        all_pools = list(dict.fromkeys(self._config_pools + scanner_pools))
+        self._watched_pools = all_pools
+        logger.info(f"[lp-auto] Watch list updated: {len(self._config_pools)} config + {len(scanner_pools)} scanner = {len(all_pools)} total")
+
+    def _should_exit_pool(self, position) -> tuple[bool, str]:
+        """Decide if we should exit a position and rotate capital elsewhere."""
+        candidates = self.pool_scanner.get_candidates()
+        if not candidates:
+            return False, ""
+
+        # Get this pool's current projected APR from scanner
+        current_candidate = next(
+            (c for c in candidates if c.address.lower() == position.pool_address.lower()),
+            None,
+        )
+
+        # If pool dropped out of top candidates entirely
+        if not current_candidate:
+            # Only exit if we've held for at least 2 hours (avoid churn)
+            hold_hours = (datetime.now(timezone.utc) - position.opened_at).total_seconds() / 3600
+            if hold_hours >= 2:
+                return True, "pool dropped from top candidates"
+            return False, ""
+
+        # If APR is declining
+        apr_trend = self.pool_scanner.get_apr_trend(position.pool_address)
+        if apr_trend == "declining":
+            # Check if there's a significantly better alternative
+            best = candidates[0]
+            if best.address.lower() != position.pool_address.lower() and best.fee_apr > current_candidate.fee_apr * 1.5:
+                return True, f"APR declining, better alternative: {best.name} ({best.fee_apr:.1f}% vs {current_candidate.fee_apr:.1f}%)"
+
+        # If IL is eating all the fees
+        if position.il_usd > position.fees_earned_usd * 2 and position.fees_earned_usd > 0:
+            return True, f"IL (${position.il_usd:.2f}) exceeding 2x fees (${position.fees_earned_usd:.2f})"
+
+        return False, ""
+
+    def _store_rotation_event(self, position, reason: str, net_pnl: float) -> None:
+        """Store rotation exit event to wp_lp_events."""
+        try:
+            from wolfpack.db import get_db
+            db = get_db()
+            db.table("wp_lp_events").insert({
+                "event_type": "rotation_exit",
+                "details": {
+                    "position_id": position.position_id,
+                    "pool": position.pool_address,
+                    "pair": f"{position.token0_symbol}/{position.token1_symbol}",
+                    "reason": reason,
+                    "fees_earned": round(position.fees_earned_usd, 2),
+                    "il_usd": round(position.il_usd, 2),
+                    "net_pnl": round(net_pnl, 2),
+                    "hold_hours": round((datetime.now(timezone.utc) - position.opened_at).total_seconds() / 3600, 1),
+                },
+            }).execute()
+        except Exception as e:
+            logger.warning(f"[lp-trader] Failed to store rotation event: {e}")
 
     def _store_rebalance_event(self, action: dict, net_pnl: float) -> None:
         """Store rebalance event to wp_lp_events."""
@@ -268,15 +372,22 @@ class LPAutoTrader:
 
     def get_status(self) -> dict:
         """Return current status for API endpoint."""
+        candidates = self.pool_scanner.get_candidates()
         return {
             "enabled": self._enabled,
             "paper_mode": True,
             "equity": round(self.engine.portfolio.equity, 2),
             "positions": len(self.engine.portfolio.positions),
+            "max_positions": MAX_POSITIONS,
             "total_fees": round(self.engine.portfolio.total_fees_earned, 2),
             "total_il": round(self.engine.portfolio.total_il, 2),
             "realized_pnl": round(self.engine.portfolio.realized_pnl, 2),
             "watched_pools": len(self._watched_pools),
+            "scanner_candidates": len(candidates),
+            "top_pools": [
+                {"name": c.name, "apr": c.fee_apr, "score": c.score}
+                for c in candidates[:5]
+            ],
         }
 
     def add_pool(self, pool_address: str) -> None:
