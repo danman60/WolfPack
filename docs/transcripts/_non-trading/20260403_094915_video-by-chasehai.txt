@@ -1,0 +1,39 @@
+# Transcript: Video by chase.h.ai
+# Source: https://www.instagram.com/reel/DWC9SRENq1v/
+# Project: WolfPack
+# Model: small | Language: en | Duration: 71.3s
+# Transcribed: 2026-04-03 09:49:18
+
+[0.0s - 2.8s] If someone tells you that you can run Claude code for free,
+[2.8s - 7.1s] then they are talking about using a open source model inside of Claude code.
+[7.1s - 9.6s] And that comes with some real trade-offs.
+[9.8s - 11.1s] So let's talk about what those are.
+[11.2s - 13.4s] Now, the first and most obvious trade-off are the models.
+[13.4s - 14.5s] Normally inside of Claude code,
+[14.5s - 17.8s] use Opus 4.6 and Sonnet 4.6. They're amazing.
+[17.8s - 19.1s] They can do any coding task.
+[19.1s - 20.8s] If you're using it for free locally,
+[20.8s - 23.6s] you have to use an open source local model.
+[24.0s - 27.5s] And the most powerful require powerful computers.
+[27.7s - 28.6s] Now, for most people,
+[28.6s - 30.1s] if you have something like a MacBook Pro,
+[30.1s - 32.9s] you can run something like GLM 4.7 Flash.
+[32.9s - 36.5s] But understand, when we compare that on something like the SWE bench verified,
+[36.8s - 40.2s] Opus does 80%, Flash does about 60%.
+[40.4s - 41.3s] What does that actually mean?
+[41.3s - 43.2s] What is 60 versus 80?
+[43.3s - 44.6s] Well, think of it this way.
+[44.7s - 47.2s] Sonnet 3.7, which came out a year ago,
+[47.2s - 50.2s] is pretty much the same as something like 4.7 Flash.
+[50.4s - 52.4s] So if you're using a local model today,
+[52.4s - 54.2s] you're essentially a year behind.
+[54.2s - 57.8s] Now, that's really not so bad when you consider the fact that it is completely free.
+[57.8s - 59.5s] And that's the huge benefit of doing locally.
+[59.6s - 61.3s] On top of that, you get data privacy, right?
+[61.3s - 64.8s] My data and my conversations aren't going to anthropic servers at all.
+[64.8s - 68.2s] So if I'm dealing with some sort of project that requires data privacy,
+[68.5s - 71.0s] having a local setup is a huge plus.
+
+---
+
+If someone tells you that you can run Claude code for free, then they are talking about using a open source model inside of Claude code. And that comes with some real trade-offs. So let's talk about what those are. Now, the first and most obvious trade-off are the models. Normally inside of Claude code, use Opus 4.6 and Sonnet 4.6. They're amazing. They can do any coding task. If you're using it for free locally, you have to use an open source local model. And the most powerful require powerful computers. Now, for most people, if you have something like a MacBook Pro, you can run something like GLM 4.7 Flash. But understand, when we compare that on something like the SWE bench verified, Opus does 80%, Flash does about 60%. What does that actually mean? What is 60 versus 80? Well, think of it this way. Sonnet 3.7, which came out a year ago, is pretty much the same as something like 4.7 Flash. So if you're using a local model today, you're essentially a year behind. Now, that's really not so bad when you consider the fact that it is completely free. And that's the huge benefit of doing locally. On top of that, you get data privacy, right? My data and my conversations aren't going to anthropic servers at all. So if I'm dealing with some sort of project that requires data privacy, having a local setup is a huge plus.

@@ -1,0 +1,23 @@
+# Transcript: Video by artem.novitckii
+# Source: https://www.instagram.com/reel/DWBaRqwDFWy/
+# Project: WolfPack
+# Model: small | Language: en | Duration: 57.0s
+# Transcribed: 2026-04-03 09:47:59
+
+[0.0s - 4.8s] Here's what almost everyone missed in Claude's latest update, and why I'll never use Canva again.
+[4.8s - 10.2s] A few days ago, Claude released an update that lets you build interactive visuals directly inside your chat.
+[10.2s - 14.8s] Most of the people thought it was just for basic diagrams or flowcharts, but I found a cheat code.
+[14.8s - 21.7s] If you use the right prompt, Claude will actually design a completely highly aesthetic on-brand Instagram carousels right inside the chat.
+[21.7s - 24.9s] And honestly, they look better than anything I've ever designed in Canva.
+[24.9s - 26.1s] And here's how it works.
+[26.1s - 29.5s] Inside my project, I asked Claude to generate an Instagram carousel.
+[29.5s - 36.1s] He created seven slides with all the images, text, and best practices like progress bar, arrows, and visual hierarchy.
+[36.1s - 43.8s] And the best part is, if you don't like something, just tell Claude to fix it, and that way you literally never have to touch a design tool again.
+[43.8s - 45.8s] All I do is save them and pause on Instagram.
+[45.8s - 49.9s] The whole process took me less than a minute, setting me hours of drag and drop on Canva.
+[49.9s - 55.0s] And if you want the exact custom instructions for the Claude project to do the same with your branding,
+[55.0s - 57.0s] comment the word Claude and I'll DM it to you.
+
+---
+
+Here's what almost everyone missed in Claude's latest update, and why I'll never use Canva again. A few days ago, Claude released an update that lets you build interactive visuals directly inside your chat. Most of the people thought it was just for basic diagrams or flowcharts, but I found a cheat code. If you use the right prompt, Claude will actually design a completely highly aesthetic on-brand Instagram carousels right inside the chat. And honestly, they look better than anything I've ever designed in Canva. And here's how it works. Inside my project, I asked Claude to generate an Instagram carousel. He created seven slides with all the images, text, and best practices like progress bar, arrows, and visual hierarchy. And the best part is, if you don't like something, just tell Claude to fix it, and that way you literally never have to touch a design tool again. All I do is save them and pause on Instagram. The whole process took me less than a minute, setting me hours of drag and drop on Canva. And if you want the exact custom instructions for the Claude project to do the same with your branding, comment the word Claude and I'll DM it to you.

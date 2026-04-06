@@ -1,0 +1,91 @@
+# Transcript: 50K views · 406 reactions | How to backtest any trading strategy with Claude! Practically whatever you can imagine, Claude can build it in seconds! Comment the word “Automate”’and we’ll send a step by step video showing you how to automate these trading strategies! Follow @thealphainsider to stay up to date on all things trading automating. #automatedtrading #claude #trading #trading #alphainsider | Alpha Insider
+# Source: https://www.facebook.com/share/v/1Fq7oMWg9T/
+# Project: WolfPack
+# Model: small | Language: en | Duration: 164.5s
+# Transcribed: 2026-04-03 09:55:05
+
+[0.0s - 2.8s] This is how we're gonna use Claude to backtest
+[2.8s - 4.9s] any trading strategy on TradingView.
+[4.9s - 7.8s] And no, we don't even need to have a paid plan of Claude.
+[7.8s - 10.3s] So I'm prompting Claude to create a code in PineScript
+[10.3s - 11.2s] for TradingView.
+[11.2s - 12.0s] All right, here we go.
+[12.0s - 13.4s] We've got a description of the code.
+[13.4s - 16.4s] Then I ask it to give me the code for me to copy over.
+[16.4s - 18.0s] It writes it out in PineScript.
+[18.0s - 21.3s] And all I'm gonna do now is grab this and copy it.
+[21.3s - 22.7s] I now go to TradingView.
+[22.7s - 24.0s] And on the right-hand side,
+[24.0s - 26.2s] there's a little PineTree icon that says Pine.
+[26.2s - 27.0s] Click on that.
+[27.0s - 27.9s] It's gonna open this window.
+[27.9s - 29.1s] I've got some old stuff in there.
+[29.1s - 30.8s] I'm gonna make a new strategy,
+[30.8s - 32.9s] then delete all that and paste over it
+[32.9s - 35.1s] with my new code that Claude just gave me.
+[35.1s - 36.2s] Click on Add to Chart.
+[36.2s - 37.8s] Now I'm gonna get rid of the coding window
+[37.8s - 39.9s] and I'm gonna open this up and we can see already,
+[39.9s - 43.3s] we have a profitable trading strategy based on the timeframe
+[43.3s - 45.2s] that I'm looking at on the backtest.
+[45.2s - 48.6s] It's up 426% and I did not optimize it at all.
+[48.6s - 51.3s] We can see all the trades being taken here on the chart.
+[51.3s - 53.9s] It's got a max drawdown of 36.37.
+[53.9s - 57.4s] It's got 176 trades, 52.84 profitable,
+[57.4s - 59.4s] and a 1.74 profit factor.
+[59.4s - 60.4s] Now that sounds great,
+[60.4s - 62.1s] but if you scroll down on TradingView,
+[62.1s - 64.0s] what you'll see is that the strategy
+[64.0s - 66.9s] actually didn't outperform the buy and hold.
+[66.9s - 69.7s] If you had bought and held during the timeframe on the chart,
+[69.7s - 72.7s] which I believe goes back to 1994,
+[72.7s - 75.8s] you actually would be up over 1300%
+[75.8s - 77.5s] just buying and holding spy.
+[77.5s - 79.5s] It didn't take long to start testing other charts.
+[79.5s - 81.5s] I now pulled up NVIDIA NVDA.
+[81.5s - 83.8s] We can see that until as of late,
+[83.8s - 85.3s] it made some massive gains
+[85.3s - 88.7s] and it's had a recent major run over the past 10 years or so,
+[88.7s - 93.5s] but it's actually up 700,000% on 117 trades.
+[93.5s - 96.4s] This one in this case actually does beat the buy and hold
+[96.4s - 99.2s] because the buy and hold return is up 300,000%
+[99.2s - 101.5s] and this strategy outperformed the buy and hold
+[101.5s - 102.4s] by a good margin.
+[102.4s - 103.8s] Now these strategies are simple
+[103.8s - 106.2s] and I am looking at assets that have gone up over time.
+[106.2s - 108.3s] So this is not going to be a guaranteed strategy
+[108.3s - 110.1s] that's going to automatically make you profitable
+[110.1s - 111.4s] and make you tons of money.
+[111.4s - 112.9s] But what you can do inside of that
+[112.9s - 114.5s] is go under the strategy report,
+[114.5s - 115.4s] click on the little dropdown.
+[115.4s - 117.0s] It then lets you go to the settings
+[117.0s - 119.5s] where you can customize the SMA, the RSI,
+[119.5s - 121.7s] over bought levels, over sold levels, properties,
+[121.7s - 124.4s] your order size, commissions, which it is accounting for.
+[124.4s - 125.6s] You can even account for slippage
+[125.6s - 127.0s] and your starting account balance.
+[127.0s - 128.1s] If you hit the strategy dropdown,
+[128.1s - 129.6s] you can even download an Excel file
+[129.6s - 131.2s] that you can go and use however you see fit.
+[131.2s - 132.6s] When I go up to the top of my chart
+[132.6s - 133.7s] and I click on the strategy
+[133.7s - 135.4s] and I go over to these three dots,
+[135.4s - 136.5s] there's a couple of things we can do.
+[136.5s - 138.1s] We can actually click on add alerts,
+[138.1s - 140.3s] which then allows us to set this alert
+[140.3s - 143.5s] so that every time this strategy were to fire or trigger,
+[143.5s - 145.4s] it's going to alert us on TradingView.
+[145.4s - 148.2s] But an even cooler thing is that there's actually a way
+[148.2s - 150.6s] by setting up the web hook to send these trades
+[150.6s - 153.7s] to a place like this that can automate with your own broker.
+[153.7s - 155.8s] Like in this case, these are actually live funds
+[155.8s - 156.6s] being traded.
+[156.6s - 157.8s] If you wanna see how that works
+[157.8s - 159.8s] and how you can connect TradingView strategies
+[159.8s - 162.4s] that you build right here and automate them,
+[162.4s - 165.1s] comment the word automate and we'll send that video over.
+
+---
+
+This is how we're gonna use Claude to backtest any trading strategy on TradingView. And no, we don't even need to have a paid plan of Claude. So I'm prompting Claude to create a code in PineScript for TradingView. All right, here we go. We've got a description of the code. Then I ask it to give me the code for me to copy over. It writes it out in PineScript. And all I'm gonna do now is grab this and copy it. I now go to TradingView. And on the right-hand side, there's a little PineTree icon that says Pine. Click on that. It's gonna open this window. I've got some old stuff in there. I'm gonna make a new strategy, then delete all that and paste over it with my new code that Claude just gave me. Click on Add to Chart. Now I'm gonna get rid of the coding window and I'm gonna open this up and we can see already, we have a profitable trading strategy based on the timeframe that I'm looking at on the backtest. It's up 426% and I did not optimize it at all. We can see all the trades being taken here on the chart. It's got a max drawdown of 36.37. It's got 176 trades, 52.84 profitable, and a 1.74 profit factor. Now that sounds great, but if you scroll down on TradingView, what you'll see is that the strategy actually didn't outperform the buy and hold. If you had bought and held during the timeframe on the chart, which I believe goes back to 1994, you actually would be up over 1300% just buying and holding spy. It didn't take long to start testing other charts. I now pulled up NVIDIA NVDA. We can see that until as of late, it made some massive gains and it's had a recent major run over the past 10 years or so, but it's actually up 700,000% on 117 trades. This one in this case actually does beat the buy and hold because the buy and hold return is up 300,000% and this strategy outperformed the buy and hold by a good margin. Now these strategies are simple and I am looking at assets that have gone up over time. So this is not going to be a guaranteed strategy that's going to automatically make you profitable and make you tons of money. But what you can do inside of that is go under the strategy report, click on the little dropdown. It then lets you go to the settings where you can customize the SMA, the RSI, over bought levels, over sold levels, properties, your order size, commissions, which it is accounting for. You can even account for slippage and your starting account balance. If you hit the strategy dropdown, you can even download an Excel file that you can go and use however you see fit. When I go up to the top of my chart and I click on the strategy and I go over to these three dots, there's a couple of things we can do. We can actually click on add alerts, which then allows us to set this alert so that every time this strategy were to fire or trigger, it's going to alert us on TradingView. But an even cooler thing is that there's actually a way by setting up the web hook to send these trades to a place like this that can automate with your own broker. Like in this case, these are actually live funds being traded. If you wanna see how that works and how you can connect TradingView strategies that you build right here and automate them, comment the word automate and we'll send that video over.

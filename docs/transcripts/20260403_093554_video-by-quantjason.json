@@ -1,0 +1,132 @@
+{
+  "title": "Video by quantjason",
+  "url": "https://www.instagram.com/reel/DU6X33KkS0q/",
+  "project": "WolfPack",
+  "model": "small",
+  "language": "en",
+  "language_probability": 1.0,
+  "duration_seconds": 113.9,
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 4.3,
+      "text": "you get into algorithmic day trading. Today I'm going to go over the most common algorithmic"
+    },
+    {
+      "start": 4.3,
+      "end": 8.0,
+      "text": "trading styles and I'm going to share with you the pros, the cons, and the ones that I personally"
+    },
+    {
+      "start": 8.0,
+      "end": 12.2,
+      "text": "use. Number one, trend following or momentum. In order for a trend following system to really"
+    },
+    {
+      "start": 12.2,
+      "end": 17.3,
+      "text": "work, you need some sort of survivorship bias. So it's common with gold and the S&P 500."
+    },
+    {
+      "start": 17.3,
+      "end": 20.3,
+      "text": "Particularly the asset you're trading is like this, you're constantly trading the way up to"
+    },
+    {
+      "start": 20.3,
+      "end": 25.6,
+      "text": "juice the returns. However, the second the market does this, there goes any cash flow you"
+    },
+    {
+      "start": 25.6,
+      "end": 30.5,
+      "text": "may hope to have had. Next is mean reversion, the most common. These systems can be either"
+    },
+    {
+      "start": 30.5,
+      "end": 34.6,
+      "text": "extremely profitable or extremely dangerous. You are trying to trade against the trend."
+    },
+    {
+      "start": 34.6,
+      "end": 38.7,
+      "text": "Mean reversion states that there has to be a norm of which the market usually trades in. If the"
+    },
+    {
+      "start": 38.7,
+      "end": 43.8,
+      "text": "market goes outside of that, you're trying to trade for it to go back to the mean version."
+    },
+    {
+      "start": 43.8,
+      "end": 47.8,
+      "text": "Number three, high-frequency trading. Unfortunately, I believe high-frequency"
+    },
+    {
+      "start": 47.8,
+      "end": 51.8,
+      "text": "trading is going to be a thing of the past. I personally know people who managed billions of"
+    },
+    {
+      "start": 51.8,
+      "end": 56.9,
+      "text": "dollars using high-frequency trading and no longer are in business. It is too competitive,"
+    },
+    {
+      "start": 56.9,
+      "end": 61.8,
+      "text": "is too expensive, and the edge just isn't there for most people. Last one I'm going to be going"
+    },
+    {
+      "start": 61.8,
+      "end": 65.8,
+      "text": "over is statistical arbitrage. And this is a really good one. You're trying to find two assets"
+    },
+    {
+      "start": 65.8,
+      "end": 71.8,
+      "text": "that should correlate in value. And if one of the values increases exponentially or one decreases,"
+    },
+    {
+      "start": 71.8,
+      "end": 78.0,
+      "text": "you're trying to trade for them to go back to a mean. Essentially, Coke and Pepsi, if Pepsi drops"
+    },
+    {
+      "start": 78.0,
+      "end": 83.1,
+      "text": "significantly due to earnings and Coke remains the same, you're probably going to go along Pepsi"
+    },
+    {
+      "start": 83.1,
+      "end": 88.6,
+      "text": "in theory. Now, for me, mean reversion is my home. I personally love mean reversion based systems."
+    },
+    {
+      "start": 88.6,
+      "end": 94.5,
+      "text": "It produces the best cash flow models you can possibly imagine. They do carry a form of risk."
+    },
+    {
+      "start": 94.5,
+      "end": 100.1,
+      "text": "So what is in your best interest is to have most of your assets probably trading a trend following"
+    },
+    {
+      "start": 100.1,
+      "end": 105.8,
+      "text": "system with survivorship bias with 20 to 40 percent of your income trading a mean revert system"
+    },
+    {
+      "start": 105.8,
+      "end": 111.0,
+      "text": "that's constantly being updated with a regime classification tool to make sure that you do"
+    },
+    {
+      "start": 111.0,
+      "end": 121.8,
+      "text": "not blow any of your accounts. Hopefully this helped."
+    }
+  ],
+  "full_text": "you get into algorithmic day trading. Today I'm going to go over the most common algorithmic trading styles and I'm going to share with you the pros, the cons, and the ones that I personally use. Number one, trend following or momentum. In order for a trend following system to really work, you need some sort of survivorship bias. So it's common with gold and the S&P 500. Particularly the asset you're trading is like this, you're constantly trading the way up to juice the returns. However, the second the market does this, there goes any cash flow you may hope to have had. Next is mean reversion, the most common. These systems can be either extremely profitable or extremely dangerous. You are trying to trade against the trend. Mean reversion states that there has to be a norm of which the market usually trades in. If the market goes outside of that, you're trying to trade for it to go back to the mean version. Number three, high-frequency trading. Unfortunately, I believe high-frequency trading is going to be a thing of the past. I personally know people who managed billions of dollars using high-frequency trading and no longer are in business. It is too competitive, is too expensive, and the edge just isn't there for most people. Last one I'm going to be going over is statistical arbitrage. And this is a really good one. You're trying to find two assets that should correlate in value. And if one of the values increases exponentially or one decreases, you're trying to trade for them to go back to a mean. Essentially, Coke and Pepsi, if Pepsi drops significantly due to earnings and Coke remains the same, you're probably going to go along Pepsi in theory. Now, for me, mean reversion is my home. I personally love mean reversion based systems. It produces the best cash flow models you can possibly imagine. They do carry a form of risk. So what is in your best interest is to have most of your assets probably trading a trend following system with survivorship bias with 20 to 40 percent of your income trading a mean revert system that's constantly being updated with a regime classification tool to make sure that you do not blow any of your accounts. Hopefully this helped."
+}

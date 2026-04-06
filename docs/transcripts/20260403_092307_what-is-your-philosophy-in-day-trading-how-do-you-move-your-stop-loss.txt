@@ -1,0 +1,116 @@
+# Transcript: What is your philosophy in day trading? How do you move your stop loss?
+# Source: https://www.youtube.com/watch?v=c5QOPOVn6KQ
+# Project: WolfPack
+# Model: small | Language: en | Duration: 877.1s
+# Transcribed: 2026-04-03 09:23:18
+
+[0.0s - 10.0s] I currently have a position open in the Dow Jones. I sold short the Dow at 26,630.
+[10.0s - 24.0s] I sold short at 17,4754. I kind of regret having not recorded this earlier.
+[30.0s - 52.0s] So, there's 17,45. If I show you on a two-minute chart, it might give it a better view.
+[52.0s - 72.0s] So, here's 17,45 to 46, and I'm selling short here.
+[72.0s - 93.0s] So, the lesson I would like to pass on here is that I'm not a big firm believer in candlestick formations such as dojis, hammers, spinning tops, etc.
+[93.0s - 103.0s] And the reason why I'm not a believer in that is because I don't think that the powers that be are using these kind of tools.
+[103.0s - 116.0s] I just don't think that institutional traders are getting their wires twisted because they see a doji or a hanging man.
+[117.0s - 123.0s] From my experience, a chart reflects what institutions are believing.
+[123.0s - 134.0s] In my experience, there's much more validity to simply observing support and resistance.
+[134.0s - 146.0s] And the way that this market at 1725 got sold off when it hit a double top around 26,640,
+[146.0s - 152.0s] made me think, well, I should really try and find a place where I can sell short.
+[152.0s - 163.0s] And I settled on 1745, which was about here. So, it was initiated at 1747.
+[163.0s - 181.0s] So, let me say it was sold short on this bar here. The reason why this bar is interesting to me is that it actually is the bar that I can come closest to an entry with a little risk as possible.
+[181.0s - 193.0s] Because if I sell short here, I sell it under the assumption that there are more sellers and the market is not about to push higher.
+[193.0s - 204.0s] If I look at what the big picture is saying, on a 30-minute chart, this is one of my favorite patterns.
+[204.0s - 212.0s] It's a market that has come into a congestion zone, which is what we're seeing here.
+[212.0s - 216.0s] But it's done so from a downtrend.
+[218.0s - 225.0s] Here's the bigger picture. Up here, we're seeing a top and then we've got secondary lower tops.
+[225.0s - 235.0s] This is all very simple. But notice how the market respects old support and resistance.
+[235.0s - 248.0s] So, when I then observe a pattern like this, my understanding is that until I get real confirmation, I should keep selling old tops.
+[248.0s - 259.0s] If it's a trading range, I can also buy old buttons, but I'm more interested in being a seller because I still think there's lower prices to come.
+[259.0s - 272.0s] So, now I sort of got the overall bigger picture. Now it's about trying to find the place where there's a little risk to my capital and I settled on this area here.
+[272.0s - 282.0s] So, what you have to understand here is that anyone that is watching this will understand what I'm saying because who doesn't understand support and resistance.
+[282.0s - 290.0s] But to have the patience to wait for the right moment, for the right opportunity, that's an entirely different proposition.
+[290.0s - 301.0s] Because you're going to battle your humaneness. You're going to battle your fear of missing out.
+[301.0s - 312.0s] You're going to battle your fear of getting on board the move, which is basically the fear of missing out.
+[312.0s - 331.0s] Once we then establish the position, I want to show you a good trick for being in the market for as long as possible.
+[331.0s - 336.0s] So, I executed this trade basis on a 5 minute chart.
+[337.0s - 346.0s] What's interesting about this bar here, this is a great trading platform, but the charting package really does annoy me.
+[346.0s - 354.0s] Sorry about this. I kind of wish I could get rid of this box with the numbers in.
+[354.0s - 359.0s] I don't think I can. No.
+[362.0s - 364.0s] Oh, I did. There you go.
+[366.0s - 369.0s] No, I just replaced it with something else.
+[369.0s - 373.0s] Okay, so I guess if I point on something, then you have to see it in the top left corner.
+[373.0s - 388.0s] What's interesting about this bar here is that this is the first bar for 1, 2, 3, 4, 5, 6, 7, 8, 9 bars, i.e. 9 times 10 minutes, an hour and 30 minutes,
+[388.0s - 392.0s] that actually closes below the low of a prior bar. And that's significant.
+[392.0s - 401.0s] And so the trick I would like to pass on to you is that if you are in a position that is initiated on a 5 minute chart,
+[402.0s - 413.0s] you should consider moving out to a 10 minute chart once your position is open and then place your stop loss according to the 10 minute chart.
+[413.0s - 421.0s] And so the way I like to do this is I say, well, this bar here is making a low below a prior bar.
+[421.0s - 427.0s] Therefore, I can place my stop loss above the high of this current bar.
+[427.0s - 439.0s] The next bar, if the next bar also makes a low that is lower than the previous low, then I can move my stop loss down to this point here,
+[439.0s - 442.0s] i.e. just above the high of the current bar.
+[442.0s - 453.0s] Now, if the next bar then takes out the low of this bar, then I can move my stop loss above the high of this bar.
+[454.0s - 465.0s] And so it goes. So as long as the current bar goes below the low of the previous bar, if you are short or vice versa, if you are long,
+[466.0s - 471.0s] then you can move your stop loss just above the high of the current bar.
+[471.0s - 478.0s] So you see the current bar here is 96 and you see here the current bar here is 97.5.
+[478.0s - 486.0s] I got a little lucky here that I wasn't stopped out because I placed my stop loss about five points above the high of the current bar.
+[486.0s - 492.0s] So I didn't get stopped out there, which was admittedly a little lucky because it could easily could have happened.
+[492.0s - 502.0s] And this bar here also makes a low below the low of the previous bar and so does the next one.
+[502.0s - 512.0s] And you'll see here that the high of this bar here is 83 and you'll see here the high of this bar is at 85.
+[512.0s - 516.0s] Well, if it got up to about 88, I would stop myself out.
+[516.0s - 519.0s] But for the time being, I am still in this trade.
+[519.0s - 523.0s] So that's how I move my stop loss down.
+[524.0s - 529.0s] Now, I often receive questions of what is your target?
+[529.0s - 543.0s] When you hear expressions like risk versus reward, risk to reward, it's so easy to get seduced by these flash statements.
+[543.0s - 550.0s] What is my risk to reward is X or I have an X times 2 or X times 3, my risk.
+[551.0s - 559.0s] And it's not that I am belittling it, but I do find it somewhat misleading because I don't have a crystal ball.
+[559.0s - 571.0s] And it is my job to try and let my open positions run for as long as I chart wise can or should I say humanly possible can.
+[571.0s - 585.0s] And not take profits unless there is some blinding obvious reason for taking profits such of a big spike down which often marks the determination of a trend.
+[585.0s - 587.0s] Let me see if I can show you here.
+[587.0s - 596.0s] For example, here you have a fantastic trend lower and as the trend matures, the bars actually gets lower and lower.
+[596.0s - 608.0s] And then you have a very voluminous spike lower which is then immediately followed by probably short covering and fresh buying.
+[608.0s - 623.0s] So although it's a difficult rule to define, you often see that markets will have a climactic end to a trend often but not always.
+[623.0s - 636.0s] So here we are. I'm in a position and I would never have let this position run for as long as I have had I not understand how to place my stop loss.
+[636.0s - 643.0s] So in my old days, I would sit and tell myself I can't go any further.
+[643.0s - 644.0s] Look at this one.
+[644.0s - 645.0s] It's a doji.
+[645.0s - 649.0s] I'm sure it's going to it's going to whatever this hamming hanging man.
+[649.0s - 657.0s] See, I'm rubbish at actually remembering all the names of the different candle candle patterns and candle formations.
+[657.0s - 659.0s] But I just know the implication.
+[659.0s - 672.0s] See, one of the one of the one of the major atrocities perpetrated to technical analysis is that new people think that they have to remember all these candlestick patterns.
+[672.0s - 682.0s] It's just not true.
+[682.0s - 698.0s] So here you have some of these candlestick patterns, bearish engulfing, tweezers, Buddhist tweezers, dojis, evening star, hammer, inverted hammer, morning star, free inside up, free white soldiers, free black crows.
+[698.0s - 701.0s] I mean, come on.
+[701.0s - 706.0s] What is that going to tell me?
+[706.0s - 710.0s] I need to understand the context of the market.
+[710.0s - 718.0s] I don't want to be I don't want to be an expert in 47 different kind of candlestick patterns.
+[718.0s - 720.0s] I want to be able to trade the market.
+[720.0s - 725.0s] I want to be able to understand what drives a market higher or lower.
+[725.0s - 736.0s] So if you're looking at a 10 minute chart now, you're thinking to yourself, well, it may be that there's some congestion here and that some support.
+[736.0s - 737.0s] Great.
+[737.0s - 742.0s] But then let the markets stop you out of your position.
+[742.0s - 750.0s] The five minute chart gives more evidence to the argument that there could be some support down here.
+[750.0s - 755.0s] And so you may have to sacrifice a handful of 10 points of your profits.
+[755.0s - 765.0s] But at this point here, you already have some 60 points in profit anyway, 53 to be exact.
+[765.0s - 771.0s] So that was the lesson I wanted to impart.
+[771.0s - 774.0s] Am I going to close my position right now?
+[774.0s - 776.0s] No.
+[776.0s - 780.0s] But I will place my stop loss up here.
+[780.0s - 782.0s] Because who knows?
+[782.0s - 795.0s] We may go all the way down here, which was at 518, in which case there are another 50 points, if not 60 points in this.
+[795.0s - 797.0s] So you may cry it right here.
+[797.0s - 800.0s] I argue, well, are you not afraid to lose some of the open profits?
+[800.0s - 802.0s] Sure.
+[802.0s - 805.0s] But it really boils down to what is your philosophy in trading?
+[805.0s - 808.0s] What hurts most?
+[808.0s - 823.0s] Does it hurt more to take your profits now and then seeing the market give you another 50, 60 points?
+[823.0s - 831.0s] Or does it hurt more to let some of your profits disappear in order to have a stop loss a little bit higher?
+[831.0s - 847.0s] And to me, it doesn't hurt nearly as much to sacrifice some of my profits points than it does to see the market move much, much further in my direction and I'm not on board.
+[847.0s - 850.0s] And that's the philosophy.
+[850.0s - 852.0s] I hope this helped.
+[852.0s - 858.0s] Have a nice weekend.
+[858.0s - 862.0s] Test, test, test, test.
+[862.0s - 865.0s] So of course, this is what you're hoping for.
+[865.0s - 869.0s] A good breakdown.
+[869.0s - 877.0s] So now is a good time.
+
+---
+
+I currently have a position open in the Dow Jones. I sold short the Dow at 26,630. I sold short at 17,4754. I kind of regret having not recorded this earlier. So, there's 17,45. If I show you on a two-minute chart, it might give it a better view. So, here's 17,45 to 46, and I'm selling short here. So, the lesson I would like to pass on here is that I'm not a big firm believer in candlestick formations such as dojis, hammers, spinning tops, etc. And the reason why I'm not a believer in that is because I don't think that the powers that be are using these kind of tools. I just don't think that institutional traders are getting their wires twisted because they see a doji or a hanging man. From my experience, a chart reflects what institutions are believing. In my experience, there's much more validity to simply observing support and resistance. And the way that this market at 1725 got sold off when it hit a double top around 26,640, made me think, well, I should really try and find a place where I can sell short. And I settled on 1745, which was about here. So, it was initiated at 1747. So, let me say it was sold short on this bar here. The reason why this bar is interesting to me is that it actually is the bar that I can come closest to an entry with a little risk as possible. Because if I sell short here, I sell it under the assumption that there are more sellers and the market is not about to push higher. If I look at what the big picture is saying, on a 30-minute chart, this is one of my favorite patterns. It's a market that has come into a congestion zone, which is what we're seeing here. But it's done so from a downtrend. Here's the bigger picture. Up here, we're seeing a top and then we've got secondary lower tops. This is all very simple. But notice how the market respects old support and resistance. So, when I then observe a pattern like this, my understanding is that until I get real confirmation, I should keep selling old tops. If it's a trading range, I can also buy old buttons, but I'm more interested in being a seller because I still think there's lower prices to come. So, now I sort of got the overall bigger picture. Now it's about trying to find the place where there's a little risk to my capital and I settled on this area here. So, what you have to understand here is that anyone that is watching this will understand what I'm saying because who doesn't understand support and resistance. But to have the patience to wait for the right moment, for the right opportunity, that's an entirely different proposition. Because you're going to battle your humaneness. You're going to battle your fear of missing out. You're going to battle your fear of getting on board the move, which is basically the fear of missing out. Once we then establish the position, I want to show you a good trick for being in the market for as long as possible. So, I executed this trade basis on a 5 minute chart. What's interesting about this bar here, this is a great trading platform, but the charting package really does annoy me. Sorry about this. I kind of wish I could get rid of this box with the numbers in. I don't think I can. No. Oh, I did. There you go. No, I just replaced it with something else. Okay, so I guess if I point on something, then you have to see it in the top left corner. What's interesting about this bar here is that this is the first bar for 1, 2, 3, 4, 5, 6, 7, 8, 9 bars, i.e. 9 times 10 minutes, an hour and 30 minutes, that actually closes below the low of a prior bar. And that's significant. And so the trick I would like to pass on to you is that if you are in a position that is initiated on a 5 minute chart, you should consider moving out to a 10 minute chart once your position is open and then place your stop loss according to the 10 minute chart. And so the way I like to do this is I say, well, this bar here is making a low below a prior bar. Therefore, I can place my stop loss above the high of this current bar. The next bar, if the next bar also makes a low that is lower than the previous low, then I can move my stop loss down to this point here, i.e. just above the high of the current bar. Now, if the next bar then takes out the low of this bar, then I can move my stop loss above the high of this bar. And so it goes. So as long as the current bar goes below the low of the previous bar, if you are short or vice versa, if you are long, then you can move your stop loss just above the high of the current bar. So you see the current bar here is 96 and you see here the current bar here is 97.5. I got a little lucky here that I wasn't stopped out because I placed my stop loss about five points above the high of the current bar. So I didn't get stopped out there, which was admittedly a little lucky because it could easily could have happened. And this bar here also makes a low below the low of the previous bar and so does the next one. And you'll see here that the high of this bar here is 83 and you'll see here the high of this bar is at 85. Well, if it got up to about 88, I would stop myself out. But for the time being, I am still in this trade. So that's how I move my stop loss down. Now, I often receive questions of what is your target? When you hear expressions like risk versus reward, risk to reward, it's so easy to get seduced by these flash statements. What is my risk to reward is X or I have an X times 2 or X times 3, my risk. And it's not that I am belittling it, but I do find it somewhat misleading because I don't have a crystal ball. And it is my job to try and let my open positions run for as long as I chart wise can or should I say humanly possible can. And not take profits unless there is some blinding obvious reason for taking profits such of a big spike down which often marks the determination of a trend. Let me see if I can show you here. For example, here you have a fantastic trend lower and as the trend matures, the bars actually gets lower and lower. And then you have a very voluminous spike lower which is then immediately followed by probably short covering and fresh buying. So although it's a difficult rule to define, you often see that markets will have a climactic end to a trend often but not always. So here we are. I'm in a position and I would never have let this position run for as long as I have had I not understand how to place my stop loss. So in my old days, I would sit and tell myself I can't go any further. Look at this one. It's a doji. I'm sure it's going to it's going to whatever this hamming hanging man. See, I'm rubbish at actually remembering all the names of the different candle candle patterns and candle formations. But I just know the implication. See, one of the one of the one of the major atrocities perpetrated to technical analysis is that new people think that they have to remember all these candlestick patterns. It's just not true. So here you have some of these candlestick patterns, bearish engulfing, tweezers, Buddhist tweezers, dojis, evening star, hammer, inverted hammer, morning star, free inside up, free white soldiers, free black crows. I mean, come on. What is that going to tell me? I need to understand the context of the market. I don't want to be I don't want to be an expert in 47 different kind of candlestick patterns. I want to be able to trade the market. I want to be able to understand what drives a market higher or lower. So if you're looking at a 10 minute chart now, you're thinking to yourself, well, it may be that there's some congestion here and that some support. Great. But then let the markets stop you out of your position. The five minute chart gives more evidence to the argument that there could be some support down here. And so you may have to sacrifice a handful of 10 points of your profits. But at this point here, you already have some 60 points in profit anyway, 53 to be exact. So that was the lesson I wanted to impart. Am I going to close my position right now? No. But I will place my stop loss up here. Because who knows? We may go all the way down here, which was at 518, in which case there are another 50 points, if not 60 points in this. So you may cry it right here. I argue, well, are you not afraid to lose some of the open profits? Sure. But it really boils down to what is your philosophy in trading? What hurts most? Does it hurt more to take your profits now and then seeing the market give you another 50, 60 points? Or does it hurt more to let some of your profits disappear in order to have a stop loss a little bit higher? And to me, it doesn't hurt nearly as much to sacrifice some of my profits points than it does to see the market move much, much further in my direction and I'm not on board. And that's the philosophy. I hope this helped. Have a nice weekend. Test, test, test, test. So of course, this is what you're hoping for. A good breakdown. So now is a good time.

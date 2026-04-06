@@ -1,0 +1,61 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - link "WolfPack" [ref=e5] [cursor=pointer]:
+          - /url: /
+          - img [ref=e7]
+          - generic [ref=e11]: WolfPack
+        - generic [ref=e12]:
+          - link "Dashboard" [ref=e13] [cursor=pointer]:
+            - /url: /
+          - link "Intelligence" [ref=e14] [cursor=pointer]:
+            - /url: /intelligence
+          - link "Trading" [ref=e15] [cursor=pointer]:
+            - /url: /trading
+          - link "Portfolio" [ref=e16] [cursor=pointer]:
+            - /url: /portfolio
+          - link "Backtest" [ref=e17] [cursor=pointer]:
+            - /url: /backtest
+          - link "Auto-Bot" [ref=e18] [cursor=pointer]:
+            - /url: /auto-bot
+          - link "LP Pools" [ref=e19] [cursor=pointer]:
+            - /url: /pools
+          - link "Settings" [ref=e20] [cursor=pointer]:
+            - /url: /settings
+      - generic [ref=e23]:
+        - button "Hyperliquid" [ref=e24] [cursor=pointer]
+        - button "dYdX" [ref=e25] [cursor=pointer]
+  - main [ref=e26]:
+    - generic [ref=e27]:
+      - generic [ref=e28]:
+        - heading "Portfolio" [level=1] [ref=e29]
+        - paragraph [ref=e30]: Paper trading performance on Hyperliquid
+      - generic [ref=e31]:
+        - generic [ref=e32]:
+          - paragraph [ref=e33]: Equity
+          - paragraph [ref=e34]: "--"
+        - generic [ref=e35]:
+          - paragraph [ref=e36]: Unrealized P&L
+          - paragraph [ref=e37]: "--"
+        - generic [ref=e38]:
+          - paragraph [ref=e39]: Realized P&L
+          - paragraph [ref=e40]: "--"
+        - generic [ref=e41]:
+          - paragraph [ref=e42]: Win Rate
+          - paragraph [ref=e43]: "--"
+        - generic [ref=e44]:
+          - paragraph [ref=e45]: Return
+          - paragraph [ref=e46]: "--"
+      - generic [ref=e47]:
+        - heading "Equity Curve" [level=2] [ref=e50]
+        - generic [ref=e51]: Start paper trading to see equity curve
+      - generic [ref=e52]:
+        - heading "Open Positions (0)" [level=2] [ref=e53]
+        - generic [ref=e54]: Paper trading engine not active. Run intelligence first.
+      - generic [ref=e55]:
+        - generic [ref=e56]:
+          - heading "Trade History" [level=2] [ref=e58]
+          - generic [ref=e59]: 0 closed trades
+        - generic [ref=e60]: No closed trades yet. Close a position to see trade history.
+  - alert [ref=e61]

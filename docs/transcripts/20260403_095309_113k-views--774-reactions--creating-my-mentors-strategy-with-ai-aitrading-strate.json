@@ -1,0 +1,117 @@
+{
+  "title": "113K views \u00b7 774 reactions | Creating my mentor's strategy with AI #aitrading #strategy #automated #trading #tradingview | Tradingwithmustafah",
+  "url": "https://www.facebook.com/share/r/1JYKmep2dr/",
+  "project": "WolfPack",
+  "model": "small",
+  "language": "en",
+  "language_probability": 1.0,
+  "duration_seconds": 44.4,
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 2.0,
+      "text": "Can you make Trader Tom's strategy"
+    },
+    {
+      "start": 2.0,
+      "end": 3.6,
+      "text": "into a Trading View indicator?"
+    },
+    {
+      "start": 3.6,
+      "end": 5.4,
+      "text": "Jump over to ChatGPT."
+    },
+    {
+      "start": 5.4,
+      "end": 7.8,
+      "text": "Do you know Trader Tom's strategy?"
+    },
+    {
+      "start": 7.8,
+      "end": 8.6,
+      "text": "Yes or no?"
+    },
+    {
+      "start": 8.6,
+      "end": 10.4,
+      "text": "Great, create a PineScript for me"
+    },
+    {
+      "start": 10.4,
+      "end": 13.0,
+      "text": "that I can use on Trading View as a strategy."
+    },
+    {
+      "start": 13.0,
+      "end": 15.7,
+      "text": "It created a PineScript, we copy the PineScript,"
+    },
+    {
+      "start": 15.7,
+      "end": 17.6,
+      "text": "we jump back to Trading View,"
+    },
+    {
+      "start": 17.6,
+      "end": 20.8,
+      "text": "and we press on Indicators, Create Script,"
+    },
+    {
+      "start": 20.8,
+      "end": 23.4,
+      "text": "and we insert the PineScript right here,"
+    },
+    {
+      "start": 23.4,
+      "end": 24.8,
+      "text": "and we add it to chart."
+    },
+    {
+      "start": 24.8,
+      "end": 25.8,
+      "text": "What happens?"
+    },
+    {
+      "start": 25.8,
+      "end": 28.9,
+      "text": "You can see the strategy developing right here."
+    },
+    {
+      "start": 28.9,
+      "end": 31.3,
+      "text": "Trader Tom's inspired breakout strategy."
+    },
+    {
+      "start": 31.3,
+      "end": 33.2,
+      "text": "You can see where you can enter longs,"
+    },
+    {
+      "start": 33.2,
+      "end": 35.2,
+      "text": "and you can see where you can enter shorts."
+    },
+    {
+      "start": 35.2,
+      "end": 37.6,
+      "text": "And if you want to know how to automate this,"
+    },
+    {
+      "start": 37.6,
+      "end": 39.6,
+      "text": "having it taking trades for you,"
+    },
+    {
+      "start": 39.6,
+      "end": 43.4,
+      "text": "I explain it step by step in my school community,"
+    },
+    {
+      "start": 43.4,
+      "end": 44.6,
+      "text": "The Lickism Bio."
+    }
+  ],
+  "full_text": "Can you make Trader Tom's strategy into a Trading View indicator? Jump over to ChatGPT. Do you know Trader Tom's strategy? Yes or no? Great, create a PineScript for me that I can use on Trading View as a strategy. It created a PineScript, we copy the PineScript, we jump back to Trading View, and we press on Indicators, Create Script, and we insert the PineScript right here, and we add it to chart. What happens? You can see the strategy developing right here. Trader Tom's inspired breakout strategy. You can see where you can enter longs, and you can see where you can enter shorts. And if you want to know how to automate this, having it taking trades for you, I explain it step by step in my school community, The Lickism Bio."
+}

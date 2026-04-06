@@ -1,0 +1,477 @@
+# Transcript: V58: OUT OF HOURS SRS REVIEW AND ANTI SRS
+# Source: https://www.youtube.com/watch?v=iAT6yRz2y6E
+# Project: WolfPack
+# Model: small | Language: en | Duration: 2851.4s
+# Transcribed: 2026-04-03 10:17:01
+
+[0.0s - 20.0s] One second.
+[20.0s - 45.0s] Alright. Good morning again ladies and gentlemen. I don't know if you are tuning into this.
+[45.0s - 51.0s] Obviously I hope that you are. If you are on my channel.
+[51.0s - 80.0s] I just want to make sure that I'm live.
+[80.0s - 93.0s] Let me just do an audio test.
+[93.0s - 116.0s] So ladies and gentlemen, this extraordinary broadcast is an extraordinary out of hours.
+[116.0s - 126.0s] I want to address some things that I received some messages from a couple of people.
+[126.0s - 137.0s] Now those messages, they were not complaints, but they were from traders who were frustrated with me.
+[137.0s - 147.0s] Or my teaching in particular school run. And when I read their messages, I could see exactly what the issue was.
+[147.0s - 154.0s] And I decided right then to try and rectify the situation.
+[154.0s - 169.0s] So let's start from scratch. Let's start right from scratch. Let's get rid of all the lines.
+[169.0s - 184.0s] And let's just take a box statement definition of what the school run is. Let's just start from scratch.
+[184.0s - 199.0s] So here it goes.
+[199.0s - 224.0s] Just want to, what I want to do is I want to just bear with me one second.
+[224.0s - 250.0s] Okay. Normal school run theory dictates that when we are trading the DAX index on a 15 minute chart.
+[250.0s - 269.0s] That 15 minute chart on my computer in where I am, actually not true where I am.
+[269.0s - 279.0s] But my computer clock is always set for UK time because that's where I did my career as a trader.
+[279.0s - 284.0s] And so for me, the markets will always open at eight o'clock in the morning.
+[284.0s - 291.0s] Even if I am in Dubai, where they open at midday, I'm still thinking it's eight o'clock in the morning.
+[291.0s - 302.0s] So just so we are on the same page. Or if I'm in Copenhagen and they open nine o'clock, I'm still operating with it's eight o'clock.
+[302.0s - 317.0s] So here's the, and I trust that you can follow my cursor. This bar that you're seeing here, that's the first 15 minute bar in the DAX.
+[317.0s - 333.0s] And I developed the school run strategy around the idea that the market will come to work in the morning and there will be people who needs to get things done quickly.
+[333.0s - 347.0s] It could be they need to buy or they need to sell. So often time, the first 30 minutes aren't indicative of the true trend of the day.
+[347.0s - 359.0s] And so I developed the strategy based on observation, purely observation going, I would like to be looking at the market after 30 minutes of trading.
+[359.0s - 369.0s] Specifically, I would like to be a buyer on a break of that second 15 minute candle.
+[369.0s - 376.0s] Yeah, that was the operating. That was the modus operandi.
+[376.0s - 383.0s] Now, I'll tell you some of the work that went on behind the scenes was that I was operating with.
+[383.0s - 398.0s] Okay, let me count rather than counting two 15 minute bars, change the timeframe to the five minute and then count one, two, three, four, five, six.
+[398.0s - 405.0s] And I operate with a six five minute candle and you are buying above and you're shorting below.
+[406.0s - 415.0s] But as it often is with mechanical strategies, when you narrow the timeframe, you will get more false signals.
+[415.0s - 430.0s] So I stuck to the second 15 minute candle as my tool, meaning that I want to be buying above and shorting below.
+[430.0s - 446.0s] So the conventional school run theory says you want to be a buyer above that school run bar and the school run bar is the second 15 minute candle.
+[446.0s - 456.0s] You buy above or you sell short below a typical breakout strategy, nothing more to it than that.
+[456.0s - 461.0s] And for a long time, that was the only thing I did.
+[461.0s - 466.0s] And it worked extremely well.
+[466.0s - 477.0s] I made significant sums of money trading school run from a point of view of performance.
+[477.0s - 487.0s] There were months of 20 to 22 trading days where I would have a hit rate around or above 70%.
+[487.0s - 501.0s] And what made it particularly compelling for someone like me was that I'm an aggressive trader, meaning that I add to my winning positions.
+[501.0s - 517.0s] However, whether it was a mean reversion taking place, or it was just my time to lose, but there became more and more frequently,
+[517.0s - 535.0s] there became times when the market would go above the school run, the second 15 minute high, and it would trigger me long, and then it would reverse.
+[535.0s - 544.0s] Or vice versa, I would be triggered short, and then it would reverse back into the range and stop me out on the other side.
+[544.0s - 559.0s] And so I began, as I think any trader who is worth their pinch of salt, I began to do serious work and contemplation on,
+[559.0s - 569.0s] well, under what circumstances is it that my school run succeeds, and under what circumstances do they fail?
+[569.0s - 576.0s] And I want to be very quick to point out here that you cannot reverse engineer your way out of losses.
+[576.0s - 588.0s] There will always be times when you do everything right, and you end up losing. It is just inevitable.
+[588.0s - 606.0s] However, if I was able to detect certain circumstances being present on the price chart, that would be indicative of perhaps not following conventional school run theory.
+[606.0s - 615.0s] Well, then I wanted to uncover it, and thus began the contemplation of the overnight range.
+[615.0s - 633.0s] The overnight range will be defined differently depending on the trader, but sort of on a, I think on a broad level, traders can roughly agree that the overnight range is from about midnight,
+[634.0s - 649.0s] Europe or midnight UK to about six o'clock. Some people will include seven o'clock, but I don't think that we need to split hairs or divide ourselves into two different camps.
+[649.0s - 658.0s] I think that roughly we can agree that the overnight range is from around midnight till around six o'clock in the morning.
+[658.0s - 671.0s] So roughly a six hour window where the market is open for trading, but it's by and large driven by probably computer driven, as most of it is anyway,
+[671.0s - 684.0s] but also sentiment in Asia, which is obviously trading whilst Europe and US is either asleep or late in the evening.
+[684.0s - 698.0s] And so the contemplation began to center around where does the school run bar, that second 15 minute bar, where is it actually taking place?
+[698.0s - 703.0s] Is it taking place within the context of the overnight range?
+[703.0s - 710.0s] Or is it taking place outside the overnight range, either above or below?
+[711.0s - 716.0s] Thus came to light a new theory.
+[716.0s - 732.0s] And that theory was that if the school run bar triggers a conventional long signal by going above the high,
+[732.0s - 739.0s] but that took place within the context of the overnight range.
+[739.0s - 751.0s] In other words, the school run bar is within or below the high of the overnight range, but above the low of the overnight range.
+[751.0s - 762.0s] Then the statistical research, and I use statistical research, knowing full well that there will be statisticians,
+[762.0s - 765.0s] they are laughing at me and I accept that.
+[765.0s - 778.0s] I am a very manual tester, meaning that I don't rely on massive broadcasting, but I go through each chart individually,
+[778.0s - 785.0s] which takes time, but it does have the added benefit of adding layers of perspective.
+[785.0s - 791.0s] And that's a really crucial element into what I'm about to say shortly.
+[791.0s - 803.0s] So this layering of complexity means that sometimes I will act perhaps subconsciously sensing I need to do this.
+[803.0s - 811.0s] But from within the framework of what I'm attempting to establish here is,
+[811.0s - 820.0s] if the school run bar takes place within the overnight range, instead of buying above the high, you sell short.
+[820.0s - 826.0s] And instead of selling short below, if it's within the overnight range,
+[826.0s - 836.0s] the parameters of high and low within the overnight range, don't sell short here by below.
+[836.0s - 845.0s] And then if the school run takes place above the overnight range,
+[845.0s - 858.0s] well then you buy school run as normal, but instead of selling short, you will buy again,
+[858.0s - 869.0s] which as you will remember from my trading, that is simply buying below prior bar low.
+[869.0s - 875.0s] So that's the new theory is that if the school run bar takes place above the overnight range,
+[875.0s - 878.0s] you buy above but you also buy below.
+[878.0s - 884.0s] And vice versa, if the school run bar takes place below the overnight range,
+[884.0s - 891.0s] you sell short below, but you also sell short above.
+[891.0s - 897.0s] Okay, so what I would like to do now is I'd like to go through some examples.
+[897.0s - 919.0s] Just wait while I remove this screen here.
+[919.0s - 921.0s] Okay, so I should be back now.
+[921.0s - 937.0s] So if we are now looking at today, let's attempt by drawing a box.
+[937.0s - 948.0s] Let's define the overnight range first.
+[948.0s - 952.0s] And I roughly define it as such.
+[952.0s - 961.0s] I hope that you are in agreement with me.
+[961.0s - 969.0s] And now let's highlight.
+[969.0s - 978.0s] Am I able to just do a...
+[978.0s - 982.0s] Okay, so that's squiggly-diggly there.
+[982.0s - 991.0s] That's the open, meaning that the school run bar is this bar here.
+[991.0s - 994.0s] Yeah, I think we can all agree on that.
+[994.0s - 997.0s] That is the school run bar.
+[997.0s - 1002.0s] Now, if we are looking at...
+[1002.0s - 1007.0s] Let's ignore the box theory first.
+[1007.0s - 1013.0s] Then what we're saying here is that the moment we trade above the school run high,
+[1013.0s - 1018.0s] which we are doing right here, we should be buying the DAX.
+[1018.0s - 1021.0s] That's the conventional theory.
+[1021.0s - 1027.0s] Now when we are introducing the overnight range, the box,
+[1027.0s - 1042.0s] and now we can see that the DAX triggers that long signal inside the context of the overnight range.
+[1042.0s - 1049.0s] So following the hypothesis that I have just shared with you moments ago,
+[1049.0s - 1055.0s] instead of buying here, we should sell short.
+[1055.0s - 1060.0s] Now if we are looking at the performance of that trade today,
+[1060.0s - 1064.0s] what it would mean is that the high of the school run bar,
+[1064.0s - 1069.0s] the second 15-minute candle after the open,
+[1069.0s - 1076.0s] then one that stretches from 8.15 a.m. to 8.30 a.m. UK time,
+[1076.0s - 1082.0s] or 9.15 to 9.30 Central European time,
+[1082.0s - 1088.0s] has a high of 22,559.30.
+[1088.0s - 1093.0s] You should be able to see that in the box that is currently being displayed.
+[1093.0s - 1103.0s] You will also see that the actual range of that bar is staggering 130 points.
+[1103.0s - 1106.0s] That's a big, big size.
+[1106.0s - 1107.0s] And why is that important?
+[1107.0s - 1115.0s] Well, because if I take a long position at 5.59 or above,
+[1115.0s - 1120.0s] I will need 130-point stop loss at least.
+[1120.0s - 1132.0s] However, because the school run trigger is inside the context of the overnight range,
+[1132.0s - 1136.0s] I argue that I should sell short here.
+[1136.0s - 1143.0s] Now today, it would have turned out to be a phenomenal trade.
+[1143.0s - 1148.0s] If you had sold short at, say, 22,560,
+[1148.0s - 1156.0s] at its best you would have had a profit of approximately 87 points.
+[1156.0s - 1162.0s] That's the absolute max profit potential you could have had.
+[1162.0s - 1167.0s] If you had executed a short here,
+[1167.0s - 1171.0s] the problem you would have is where would your stop loss have been?
+[1171.0s - 1175.0s] Now, different hypotheses have been suggested here,
+[1175.0s - 1182.0s] saying you will have a stop loss the size of the bar itself, i.e. 130 points.
+[1182.0s - 1186.0s] So you would have had to add 130 points on top of that.
+[1186.0s - 1189.0s] I'm doing a different strategy,
+[1189.0s - 1197.0s] which is approximately 70 points seems to be a reasonable stop loss.
+[1197.0s - 1202.0s] If you had bought the DAX here on a traditional school run,
+[1202.0s - 1210.0s] this is the brunch break, lines have just been identified here,
+[1210.0s - 1216.0s] you would have had to have a stop loss below this low.
+[1216.0s - 1220.0s] What I did today was neither.
+[1220.0s - 1226.0s] I said, right, there's something here that concerns me.
+[1227.0s - 1232.0s] And I think that's where the confusion lies.
+[1232.0s - 1237.0s] The DAX made a very sudden move lower,
+[1237.0s - 1241.0s] about 15 or so minutes into the session.
+[1241.0s - 1253.0s] And it went down and tested the low of the overnight range from yesterday.
+[1253.0s - 1254.0s] Do you see that?
+[1254.0s - 1256.0s] Over here is the overnight range.
+[1256.0s - 1258.0s] And do you see how over here?
+[1258.0s - 1260.0s] We're just going one tick below.
+[1260.0s - 1264.0s] It's so classic, absolutely classic.
+[1264.0s - 1269.0s] The old low over here was 433,
+[1269.0s - 1274.0s] and the low that we made today was 429.
+[1274.0s - 1278.0s] So my God feel, my trader instinct said,
+[1278.0s - 1281.0s] right, you want to be long today,
+[1281.0s - 1286.0s] because they cleared out, they basically fulfilled the price action.
+[1286.0s - 1292.0s] Shall we say hypothesis that you need to just go back and fill or retest,
+[1292.0s - 1296.0s] and it successfully did a retest by going a few points below
+[1296.0s - 1298.0s] and then trading back into the range.
+[1298.0s - 1303.0s] So that when we came up here,
+[1303.0s - 1307.0s] and we triggered a long signal,
+[1308.0s - 1311.0s] technically I should have been short here,
+[1311.0s - 1314.0s] because it takes place inside the overnight range,
+[1314.0s - 1318.0s] but in an added twist, I decided to do nothing.
+[1318.0s - 1321.0s] What I did instead was to say,
+[1321.0s - 1325.0s] I want to be long, but I'm not going to buy it now.
+[1325.0s - 1331.0s] If you go back to the review or the video of today's trading,
+[1331.0s - 1334.0s] you will hear me say, I want to be long today,
+[1334.0s - 1337.0s] but I'm not going to be long now.
+[1337.0s - 1344.0s] I want to see if I can buy the DAX at a better price.
+[1344.0s - 1349.0s] Then what I did was,
+[1349.0s - 1354.0s] as we're passing this bar here is the 830 bar,
+[1354.0s - 1358.0s] I'm attempting to be a buyer down here.
+[1358.0s - 1362.0s] So if you look at my last DAX fill,
+[1362.0s - 1369.0s] you will see that it takes place at 22,526.
+[1372.0s - 1376.0s] You see this low here is 22,516.
+[1376.0s - 1379.0s] That's the low I wanted to buy below,
+[1379.0s - 1382.0s] but my fill was really shit.
+[1382.0s - 1384.0s] It was a bad fill,
+[1384.0s - 1390.0s] but I wanted to be a buyer below this first reaction low
+[1390.0s - 1394.0s] after the DAX has just triggered a school run long.
+[1394.0s - 1395.0s] Why?
+[1395.0s - 1400.0s] Well, because I felt that touching yesterday's overnight range low
+[1400.0s - 1402.0s] was significant,
+[1402.0s - 1405.0s] significant in the sense that I think this market
+[1405.0s - 1407.0s] has just done a crucial test
+[1407.0s - 1411.0s] and that we are probably headed higher from here.
+[1411.0s - 1414.0s] Now, my fill was awful,
+[1414.0s - 1417.0s] and then I had to sit through the market
+[1417.0s - 1419.0s] actually doing a deeper retracement,
+[1419.0s - 1421.0s] like a two bar retracement.
+[1421.0s - 1423.0s] But what was interesting for me,
+[1423.0s - 1426.0s] and I, as you know, do not add to my losing position,
+[1426.0s - 1431.0s] but if I did see that two bar retracement on a five minute,
+[1431.0s - 1435.0s] so classic that the market reverses below the low
+[1435.0s - 1438.0s] of the second negative candle.
+[1438.0s - 1441.0s] And I wanted to be a buyer down here.
+[1441.0s - 1444.0s] I couldn't do it on my public account
+[1444.0s - 1451.0s] because I just don't want to be seen ever adding to a losing trade.
+[1451.0s - 1453.0s] The fuel saying,
+[1453.0s - 1456.0s] do as I say, don't do as I do, right?
+[1456.0s - 1458.0s] And as I think,
+[1458.0s - 1461.0s] for the benefit of your health and longevity,
+[1461.0s - 1465.0s] don't get into the habit of adding to losing trades
+[1465.0s - 1469.0s] because nothing good is going to come of it.
+[1469.0s - 1474.0s] Okay, that was a slight sidestep here.
+[1474.0s - 1482.0s] But now you know what my motors overrandy was today.
+[1482.0s - 1485.0s] Now let's go and look at yesterday.
+[1485.0s - 1488.0s] By the way, brunch break has taken a long.
+[1488.0s - 1491.0s] I hope that you are still along the market.
+[1491.0s - 1494.0s] I just had to leave and then I realized,
+[1494.0s - 1497.0s] actually I feel like I'm short changing people
+[1497.0s - 1501.0s] and that's why I decided to come back.
+[1501.0s - 1503.0s] Now let's look at yesterday.
+[1503.0s - 1516.0s] Just double double checking that there's no urgent questions here.
+[1516.0s - 1522.0s] Yeah, but Andy, I don't trade empty for that's the whole point
+[1522.0s - 1526.0s] because empty for ladies and gentlemen is not a good platform.
+[1526.0s - 1533.0s] You're trading on variable spreads.
+[1533.0s - 1541.0s] Just...
+[1541.0s - 1542.0s] Hang on.
+[1542.0s - 1550.0s] Just want to make sure that I am...
+[1550.0s - 1551.0s] You need to,
+[1551.0s - 1554.0s] you really do need to be mindful of the spreads
+[1554.0s - 1556.0s] that you are paying with your broker.
+[1556.0s - 1560.0s] It is just, it's no good if you are paying over the odds.
+[1560.0s - 1564.0s] Say that you're trading the DAX on a one and a half
+[1564.0s - 1568.0s] or the FTSE on one and you trade 10 pounds a point.
+[1568.0s - 1571.0s] Imagine what that does to your account over a year.
+[1571.0s - 1576.0s] You will add significant amount of cost to your execution.
+[1576.0s - 1578.0s] But you've heard me say this before
+[1578.0s - 1580.0s] and I'm not going to repeat myself.
+[1580.0s - 1586.0s] I'm just trying to protect you against unnecessary expenses.
+[1586.0s - 1593.0s] Now let's look at the overnight range from yesterday.
+[1593.0s - 1595.0s] See if we do my best on my ability.
+[1595.0s - 1597.0s] I can draw this.
+[1597.0s - 1600.0s] So here we go.
+[1600.0s - 1602.0s] This is roughly the overnight range.
+[1602.0s - 1607.0s] Okay, let's not get too dogmatic about it.
+[1607.0s - 1611.0s] This is the overnight range on a 15 minute candle yesterday.
+[1611.0s - 1616.0s] Now let's identify the school run bar.
+[1616.0s - 1620.0s] The school run bar comes here.
+[1620.0s - 1621.0s] See that?
+[1621.0s - 1625.0s] So that's the opening bar right here, 8am.
+[1625.0s - 1630.0s] Now the bar that we are interested in is this bar here.
+[1630.0s - 1642.0s] And again, yesterday I did something that goes contrary to what I just moments ago described.
+[1642.0s - 1644.0s] So let's go through it step by step.
+[1644.0s - 1647.0s] This is the school run bar.
+[1647.0s - 1652.0s] Conventional school run theory says you need to buy it above
+[1652.0s - 1654.0s] and you need to sell short below.
+[1654.0s - 1660.0s] That's conventional school run theory.
+[1660.0s - 1667.0s] However, the school run takes place within the context of the overnight range.
+[1667.0s - 1671.0s] So really you should sell short.
+[1671.0s - 1673.0s] What did I do yesterday?
+[1673.0s - 1678.0s] Well, I did the complete opposite.
+[1678.0s - 1688.0s] I decided that because this bar here and this bar here were practically overlapping each other.
+[1688.0s - 1701.0s] This is practically an inside bar and it is immediately bought up when we go below the prior bar low.
+[1701.0s - 1708.0s] You see how the second bar, the school run bar goes below and both of them are within the context of the overnight range.
+[1708.0s - 1710.0s] I decided, you know what?
+[1710.0s - 1721.0s] I'm not going to sell short here because I am absolute certain that this DAX is going to go up and hit the overnight range top.
+[1721.0s - 1732.0s] Now, how can someone like me who has spent 25 years of his professional adult life since?
+[1732.0s - 1738.0s] Basically, since 1998, I've barely missed a tick in the DAX.
+[1738.0s - 1747.0s] How can I explain that to someone who is new and make it rule-based?
+[1747.0s - 1754.0s] It's very difficult to teach our instinct in trading.
+[1754.0s - 1758.0s] But my trading instinct says, I don't want to sell short here.
+[1758.0s - 1765.0s] It feels to me as if this market wants to touch the high end of the range.
+[1765.0s - 1769.0s] And it did.
+[1769.0s - 1775.0s] And so sometimes you are so in sync with the market and other times you are completely out of sync.
+[1775.0s - 1780.0s] Don't ask me why sometimes you are and sometimes you are not.
+[1780.0s - 1785.0s] But conventional school run says, buy here.
+[1785.0s - 1791.0s] The ante says sell short here because we are inside the range of the overnight.
+[1791.0s - 1795.0s] But I'm thinking, well, we tested that overnight range down here.
+[1795.0s - 1800.0s] We came out of the box after 6am and it held again.
+[1800.0s - 1804.0s] And then it didn't even manage to go all the way down here.
+[1804.0s - 1809.0s] It just held here and buyers immediately stepped in below prior-bar low.
+[1809.0s - 1816.0s] And that to me is such an incredibly crucial key to understanding price action
+[1816.0s - 1821.0s] is when a market goes below prior-bar low and gets bought up.
+[1821.0s - 1826.0s] Goes below prior-bar low, gets bought up.
+[1826.0s - 1836.0s] If we go to the day before and again, let's draw the box
+[1836.0s - 1843.0s] because the day before I wasn't here, but it was a complex day.
+[1843.0s - 1852.0s] Let's draw it together.
+[1852.0s - 1862.0s] Oops.
+[1862.0s - 1868.0s] So here's the overnight range. I'm wondering if I could...
+[1868.0s - 1873.0s] Let me just... Yeah, you can actually. Great.
+[1873.0s - 1877.0s] This is a really, really good charting package.
+[1877.0s - 1883.0s] Absolutely brilliant.
+[1883.0s - 1888.0s] So yesterday... Sorry, not yesterday. The day before yesterday.
+[1888.0s - 1894.0s] This is the overnight range.
+[1894.0s - 1899.0s] And the market opens here.
+[1899.0s - 1903.0s] This is the first 15-minute candle.
+[1903.0s - 1909.0s] The second 15-minute candle is our school-run candle.
+[1909.0s - 1913.0s] And it triggers a long signal above.
+[1913.0s - 1917.0s] And for me, that's a plain vanilla school-run long.
+[1917.0s - 1923.0s] Why? Well, because it takes place above the overnight range.
+[1923.0s - 1928.0s] And do you see how it goes below over here about an hour later?
+[1928.0s - 1930.0s] One, two, three, four, five bars later.
+[1930.0s - 1933.0s] Do you see how it goes below?
+[1933.0s - 1940.0s] If I had been trading it, I would want to be a buyer here.
+[1940.0s - 1943.0s] Why? Well, because...
+[1943.0s - 1950.0s] I feel like I am pitching my voice like I'm getting really excited.
+[1950.0s - 1956.0s] Because, ladies and gentlemen, this bar here, which is the school-run bar,
+[1956.0s - 1962.0s] that breach below the school-run bar,
+[1962.0s - 1967.0s] it still takes place above the overnight range.
+[1967.0s - 1969.0s] So I want to be a buyer here.
+[1969.0s - 1975.0s] That low is 22,732.
+[1975.0s - 1977.0s] This market here goes to 25.
+[1977.0s - 1980.0s] So it goes about nine points below.
+[1980.0s - 1985.0s] And then it rallies about 70 points.
+[1985.0s - 1993.0s] See that? Buyers are stepping in below prior bar low on the school-run.
+[1993.0s - 1999.0s] And I'm saying that right there is also a buy signal.
+[1999.0s - 2001.0s] It's a buy up here.
+[2001.0s - 2007.0s] And you probably would have been moving your stop loss up on this spike here.
+[2007.0s - 2009.0s] It spikes about 50 points higher.
+[2009.0s - 2011.0s] You probably got stopped out for nothing.
+[2011.0s - 2014.0s] But you would want to be a buyer down here as well.
+[2014.0s - 2021.0s] I'm just going to check if there's any messages.
+[2044.0s - 2053.0s] Okay, there's some people just sending me strange messages.
+[2053.0s - 2055.0s] There you go.
+[2055.0s - 2063.0s] Man, it never fails me too.
+[2063.0s - 2066.0s] There's just some really strange people in this world.
+[2066.0s - 2068.0s] I'm not even going to show you, okay?
+[2068.0s - 2076.0s] I'm just not going to show you.
+[2076.0s - 2082.0s] There's just some obnoxious people in this world, ladies and gentlemen.
+[2082.0s - 2087.0s] So a gentleman here, can you just identify yourself?
+[2087.0s - 2096.0s] You have a red, I think it says sage, and then you have a bald eagle next to it.
+[2096.0s - 2102.0s] Yeah, I don't know what your name is, you don't say, but you're the one you write.
+[2102.0s - 2106.0s] I understand you take some trades basis on your experience,
+[2106.0s - 2109.0s] but it's making us hard, it's making it hard for us to learn.
+[2109.0s - 2111.0s] And then you have a sad face.
+[2111.0s - 2118.0s] And I'm doing this video because of you, because I felt that you deserved.
+[2118.0s - 2127.0s] I think I quite liked, I'm wondering if I'm going to get myself into trouble if I...
+[2127.0s - 2135.0s] I want to show you what this gentleman is writing because this is the reason why I am doing this.
+[2135.0s - 2139.0s] He's saying, I'm quite confused and sad with the trading of DAX.
+[2139.0s - 2144.0s] I thought we were supposed to follow the school run and the anti-school run using the overnight range,
+[2144.0s - 2149.0s] but nowadays it seems you don't always follow the trading principles for the DAX, SIS and anti.
+[2149.0s - 2154.0s] And I thought in trading you stick to the principle and make changes with necessary.
+[2154.0s - 2162.0s] And so I have deep felt sympathy for this gentleman here,
+[2162.0s - 2167.0s] because I am doing this to help exactly people like you,
+[2167.0s - 2173.0s] but I cannot completely override either how sometimes, rightly or wrongly,
+[2173.0s - 2177.0s] my instinct tells me to do something different.
+[2177.0s - 2184.0s] I mean, let's take the day before,
+[2184.0s - 2191.0s] which I think then by definition would have been Friday, right?
+[2191.0s - 2193.0s] No, Monday, sorry.
+[2193.0s - 2195.0s] So let me draw another box.
+[2195.0s - 2200.0s] Now I'm getting so bloody good at drawing these boxes with this exquisite software.
+[2200.0s - 2204.0s] Now, where it gets a little tricky here on the Sunday Mondays,
+[2204.0s - 2207.0s] I don't know whether to include the Sunday Monday range,
+[2207.0s - 2210.0s] but I don't think it makes much of a difference.
+[2210.0s - 2222.0s] So here's school run on Monday.
+[2222.0s - 2235.0s] And here's school run, the school run bar right here.
+[2235.0s - 2240.0s] And so whatever I did on Monday, I should have been short.
+[2240.0s - 2244.0s] There's no doubt about that.
+[2244.0s - 2251.0s] The trigger takes place outside of the trading range.
+[2252.0s - 2256.0s] Right here.
+[2256.0s - 2260.0s] And so if I didn't sell short there, I have to question,
+[2260.0s - 2263.0s] well, why did I not do that?
+[2263.0s - 2265.0s] That's just okay.
+[2265.0s - 2272.0s] You had to sell short there.
+[2272.0s - 2276.0s] I'm quite certain that I got myself into a bit of a sticky pot
+[2276.0s - 2279.0s] by being a buyer at the low end of the range.
+[2279.0s - 2281.0s] I don't think I did very well,
+[2281.0s - 2286.0s] but when you look at it after the fact in the cold night of day,
+[2286.0s - 2290.0s] you're going, yeah, that's a short.
+[2290.0s - 2296.0s] Especially also because I've been bearish on the Thursday, Friday, Monday pattern.
+[2296.0s - 2301.0s] Would you like to look at Friday last with me?
+[2301.0s - 2305.0s] I think that's perhaps a little bit more complicated.
+[2305.0s - 2318.0s] I'm hoping that by doing this, I am managing to achieve some degree of clarity.
+[2318.0s - 2326.0s] So here's the school run on Friday with the overnight range.
+[2326.0s - 2333.0s] The market opens here, so you can see that, opens here, this bar here.
+[2333.0s - 2342.0s] It triggers a short signal below the low of this bar here.
+[2342.0s - 2343.0s] Why?
+[2343.0s - 2345.0s] Well, because it's a traditional school run.
+[2345.0s - 2349.0s] It takes place below the low of the overnight range.
+[2349.0s - 2350.0s] So it's clear as day.
+[2350.0s - 2353.0s] This is a sell right here.
+[2363.0s - 2365.0s] Now you're welcome Sage.
+[2365.0s - 2371.0s] I did this for you amongst others.
+[2371.0s - 2374.0s] We can do one more example.
+[2374.0s - 2380.0s] And I'm hoping I'm bringing clarity to you as opposed to bringing confusion.
+[2380.0s - 2382.0s] Why don't we take this one here?
+[2382.0s - 2384.0s] It's a brilliant example.
+[2384.0s - 2386.0s] I love examples that fail.
+[2386.0s - 2389.0s] You might think, oh, how can that be brilliant?
+[2389.0s - 2397.0s] Well, because it is in our failures that we will modify our approach.
+[2397.0s - 2402.0s] So here's roughly the overnight range.
+[2402.0s - 2409.0s] And anybody can see, yes, the school run, the market opens well above.
+[2409.0s - 2415.0s] Do you see how the market opens well above the overnight range?
+[2415.0s - 2417.0s] And here's the school run bar.
+[2417.0s - 2420.0s] It triggers a long signal up here.
+[2420.0s - 2423.0s] Without a doubt, triggers a long.
+[2423.0s - 2426.0s] And not only that, it triggers another long here.
+[2426.0s - 2428.0s] Do you see that?
+[2428.0s - 2434.0s] And obviously you can also see, wow, that was a spectacular failure.
+[2434.0s - 2436.0s] Absolutely.
+[2436.0s - 2444.0s] Without a doubt, this had you followed conventional school run theory.
+[2444.0s - 2447.0s] You would have sold short here and you would have bought here.
+[2447.0s - 2468.0s] But if you factor in the overnight range, you would also have been a buyer here.
+[2468.0s - 2473.0s] Now, would I have been a buyer here, stopped out here and then bought again?
+[2473.0s - 2478.0s] Probably not.
+[2478.0s - 2484.0s] And so examples like this is probably where the confusion lies.
+[2484.0s - 2488.0s] School run triggers a short, but you're now saying I should be a buyer here
+[2488.0s - 2491.0s] because it takes a place above the overnight range.
+[2491.0s - 2495.0s] That's exactly right.
+[2495.0s - 2501.0s] Now, is there a lesson in this particular chart?
+[2501.0s - 2504.0s] I think so.
+[2504.0s - 2516.0s] What would concern me here is how you go a few points above this high here and then reverses.
+[2516.0s - 2526.0s] But anyway, traditional technical analysis will dictate that this is what we call an outside bar.
+[2526.0s - 2529.0s] See that how it encompasses the previous bar?
+[2529.0s - 2536.0s] That tends to be bearish, but I don't want to confuse conventional technical analysis
+[2536.0s - 2540.0s] with what I call situational analysis.
+[2540.0s - 2544.0s] My particular brand for technical analysis is called situational analysis.
+[2544.0s - 2546.0s] At least that's what I call it.
+[2546.0s - 2554.0s] And this situation here doesn't interact with conventional technical analysis.
+[2554.0s - 2558.0s] Oh, that's an outside range bar.
+[2558.0s - 2563.0s] But I have to acknowledge that we take out the high and then reverses.
+[2563.0s - 2566.0s] And that's rarely a bullish signal.
+[2566.0s - 2571.0s] And this has happened with opposite.
+[2571.0s - 2579.0s] If this had been a, we're taking out the lows and then we reverse and we close above the high.
+[2579.0s - 2583.0s] Very much like what you are seeing.
+[2583.0s - 2593.0s] Where was it?
+[2593.0s - 2597.0s] Where was that bar? Where does that?
+[2597.0s - 2602.0s] I think it was the inside the one where it's an inside bar.
+[2602.0s - 2604.0s] Let's see if I can find it.
+[2604.0s - 2609.0s] Can't find it.
+[2609.0s - 2611.0s] This one here.
+[2611.0s - 2612.0s] This one here.
+[2612.0s - 2613.0s] This one here.
+[2613.0s - 2614.0s] This one here.
+[2614.0s - 2615.0s] This one here.
+[2615.0s - 2616.0s] This one here.
+[2616.0s - 2617.0s] This one here.
+[2617.0s - 2618.0s] This one here.
+[2618.0s - 2622.0s] This one here.
+[2622.0s - 2626.0s] This one here.
+[2626.0s - 2636.0s] How we take out the low and very soon after we're trading above the high.
+[2636.0s - 2645.0s] It feels almost the same pattern just in reverse.
+[2645.0s - 2649.0s] Over here.
+[2649.0s - 2650.0s] Up here.
+[2650.0s - 2654.0s] Take out the high and reverse and trade below the low.
+[2654.0s - 2656.0s] Okay.
+[2656.0s - 2663.0s] I hope that that gave you some clarity.
+[2663.0s - 2669.0s] I'm very happy to do one more example.
+[2669.0s - 2675.0s] Do this one because I think this could also be a good example.
+[2675.0s - 2688.0s] And then I have to go.
+[2688.0s - 2693.0s] There's roughly the overnight range.
+[2693.0s - 2698.0s] The market.
+[2698.0s - 2700.0s] Opens here.
+[2700.0s - 2702.0s] This is the school run bar.
+[2702.0s - 2705.0s] It actually triggers a long.
+[2705.0s - 2707.0s] See that right here.
+[2707.0s - 2715.0s] And exactly the same situation happens as the day after we go below.
+[2715.0s - 2720.0s] And then it does a cruel reversal question.
+[2720.0s - 2723.0s] Would I have been long here?
+[2723.0s - 2725.0s] Stopped out here.
+[2725.0s - 2727.0s] And bought again.
+[2727.0s - 2731.0s] Unlikely.
+[2731.0s - 2733.0s] Unlikely.
+[2733.0s - 2737.0s] Do you follow me?
+[2737.0s - 2742.0s] But I wouldn't have sold short here either.
+[2742.0s - 2749.0s] And I think that's where I have yet to do some work on the money management angle of,
+[2749.0s - 2752.0s] okay, you're buying here because this is going to happen again.
+[2752.0s - 2753.0s] Trust me.
+[2753.0s - 2759.0s] And on this day and then it happened on the next day as well.
+[2759.0s - 2762.0s] See that?
+[2762.0s - 2765.0s] Here.
+[2765.0s - 2768.0s] Long and then I was supposed to be a long again.
+[2768.0s - 2771.0s] So while it definitely wouldn't have worked here,
+[2771.0s - 2774.0s] it would have worked here, but that's beside the point.
+[2774.0s - 2780.0s] The point here is I wouldn't want to be a buyer once more.
+[2780.0s - 2784.0s] It may be that I had decided to buy it once again.
+[2784.0s - 2793.0s] It breaks above once more.
+[2793.0s - 2796.0s] But it's always easy to talk about this after the fact.
+[2796.0s - 2802.0s] We're doing this in a live environment and we have to always make sure that we don't become reckless either.
+[2802.0s - 2807.0s] We have to make sure that we keep our emotions in check constantly.
+[2807.0s - 2810.0s] And if that means I'm buying here, I get stopped out.
+[2810.0s - 2812.0s] Oh, screw you, Dax.
+[2812.0s - 2820.0s] Maybe at times it's better than to walk away and come back with a fresh mindset and a fresh set of eyes.
+[2820.0s - 2832.0s] Okay, so I hope that this little impromptu review of the school run and the school run anti is of benefit to you.
+[2832.0s - 2842.0s] I will complete this lesson now and say thank you for tuning in.
+[2842.0s - 2845.0s] And I will see you for the US session.
+[2845.0s - 2847.0s] All the very best.
+[2847.0s - 2849.0s] Bye-bye for now.
+
+---
+
+One second. Alright. Good morning again ladies and gentlemen. I don't know if you are tuning into this. Obviously I hope that you are. If you are on my channel. I just want to make sure that I'm live. Let me just do an audio test. So ladies and gentlemen, this extraordinary broadcast is an extraordinary out of hours. I want to address some things that I received some messages from a couple of people. Now those messages, they were not complaints, but they were from traders who were frustrated with me. Or my teaching in particular school run. And when I read their messages, I could see exactly what the issue was. And I decided right then to try and rectify the situation. So let's start from scratch. Let's start right from scratch. Let's get rid of all the lines. And let's just take a box statement definition of what the school run is. Let's just start from scratch. So here it goes. Just want to, what I want to do is I want to just bear with me one second. Okay. Normal school run theory dictates that when we are trading the DAX index on a 15 minute chart. That 15 minute chart on my computer in where I am, actually not true where I am. But my computer clock is always set for UK time because that's where I did my career as a trader. And so for me, the markets will always open at eight o'clock in the morning. Even if I am in Dubai, where they open at midday, I'm still thinking it's eight o'clock in the morning. So just so we are on the same page. Or if I'm in Copenhagen and they open nine o'clock, I'm still operating with it's eight o'clock. So here's the, and I trust that you can follow my cursor. This bar that you're seeing here, that's the first 15 minute bar in the DAX. And I developed the school run strategy around the idea that the market will come to work in the morning and there will be people who needs to get things done quickly. It could be they need to buy or they need to sell. So often time, the first 30 minutes aren't indicative of the true trend of the day. And so I developed the strategy based on observation, purely observation going, I would like to be looking at the market after 30 minutes of trading. Specifically, I would like to be a buyer on a break of that second 15 minute candle. Yeah, that was the operating. That was the modus operandi. Now, I'll tell you some of the work that went on behind the scenes was that I was operating with. Okay, let me count rather than counting two 15 minute bars, change the timeframe to the five minute and then count one, two, three, four, five, six. And I operate with a six five minute candle and you are buying above and you're shorting below. But as it often is with mechanical strategies, when you narrow the timeframe, you will get more false signals. So I stuck to the second 15 minute candle as my tool, meaning that I want to be buying above and shorting below. So the conventional school run theory says you want to be a buyer above that school run bar and the school run bar is the second 15 minute candle. You buy above or you sell short below a typical breakout strategy, nothing more to it than that. And for a long time, that was the only thing I did. And it worked extremely well. I made significant sums of money trading school run from a point of view of performance. There were months of 20 to 22 trading days where I would have a hit rate around or above 70%. And what made it particularly compelling for someone like me was that I'm an aggressive trader, meaning that I add to my winning positions. However, whether it was a mean reversion taking place, or it was just my time to lose, but there became more and more frequently, there became times when the market would go above the school run, the second 15 minute high, and it would trigger me long, and then it would reverse. Or vice versa, I would be triggered short, and then it would reverse back into the range and stop me out on the other side. And so I began, as I think any trader who is worth their pinch of salt, I began to do serious work and contemplation on, well, under what circumstances is it that my school run succeeds, and under what circumstances do they fail? And I want to be very quick to point out here that you cannot reverse engineer your way out of losses. There will always be times when you do everything right, and you end up losing. It is just inevitable. However, if I was able to detect certain circumstances being present on the price chart, that would be indicative of perhaps not following conventional school run theory. Well, then I wanted to uncover it, and thus began the contemplation of the overnight range. The overnight range will be defined differently depending on the trader, but sort of on a, I think on a broad level, traders can roughly agree that the overnight range is from about midnight, Europe or midnight UK to about six o'clock. Some people will include seven o'clock, but I don't think that we need to split hairs or divide ourselves into two different camps. I think that roughly we can agree that the overnight range is from around midnight till around six o'clock in the morning. So roughly a six hour window where the market is open for trading, but it's by and large driven by probably computer driven, as most of it is anyway, but also sentiment in Asia, which is obviously trading whilst Europe and US is either asleep or late in the evening. And so the contemplation began to center around where does the school run bar, that second 15 minute bar, where is it actually taking place? Is it taking place within the context of the overnight range? Or is it taking place outside the overnight range, either above or below? Thus came to light a new theory. And that theory was that if the school run bar triggers a conventional long signal by going above the high, but that took place within the context of the overnight range. In other words, the school run bar is within or below the high of the overnight range, but above the low of the overnight range. Then the statistical research, and I use statistical research, knowing full well that there will be statisticians, they are laughing at me and I accept that. I am a very manual tester, meaning that I don't rely on massive broadcasting, but I go through each chart individually, which takes time, but it does have the added benefit of adding layers of perspective. And that's a really crucial element into what I'm about to say shortly. So this layering of complexity means that sometimes I will act perhaps subconsciously sensing I need to do this. But from within the framework of what I'm attempting to establish here is, if the school run bar takes place within the overnight range, instead of buying above the high, you sell short. And instead of selling short below, if it's within the overnight range, the parameters of high and low within the overnight range, don't sell short here by below. And then if the school run takes place above the overnight range, well then you buy school run as normal, but instead of selling short, you will buy again, which as you will remember from my trading, that is simply buying below prior bar low. So that's the new theory is that if the school run bar takes place above the overnight range, you buy above but you also buy below. And vice versa, if the school run bar takes place below the overnight range, you sell short below, but you also sell short above. Okay, so what I would like to do now is I'd like to go through some examples. Just wait while I remove this screen here. Okay, so I should be back now. So if we are now looking at today, let's attempt by drawing a box. Let's define the overnight range first. And I roughly define it as such. I hope that you are in agreement with me. And now let's highlight. Am I able to just do a... Okay, so that's squiggly-diggly there. That's the open, meaning that the school run bar is this bar here. Yeah, I think we can all agree on that. That is the school run bar. Now, if we are looking at... Let's ignore the box theory first. Then what we're saying here is that the moment we trade above the school run high, which we are doing right here, we should be buying the DAX. That's the conventional theory. Now when we are introducing the overnight range, the box, and now we can see that the DAX triggers that long signal inside the context of the overnight range. So following the hypothesis that I have just shared with you moments ago, instead of buying here, we should sell short. Now if we are looking at the performance of that trade today, what it would mean is that the high of the school run bar, the second 15-minute candle after the open, then one that stretches from 8.15 a.m. to 8.30 a.m. UK time, or 9.15 to 9.30 Central European time, has a high of 22,559.30. You should be able to see that in the box that is currently being displayed. You will also see that the actual range of that bar is staggering 130 points. That's a big, big size. And why is that important? Well, because if I take a long position at 5.59 or above, I will need 130-point stop loss at least. However, because the school run trigger is inside the context of the overnight range, I argue that I should sell short here. Now today, it would have turned out to be a phenomenal trade. If you had sold short at, say, 22,560, at its best you would have had a profit of approximately 87 points. That's the absolute max profit potential you could have had. If you had executed a short here, the problem you would have is where would your stop loss have been? Now, different hypotheses have been suggested here, saying you will have a stop loss the size of the bar itself, i.e. 130 points. So you would have had to add 130 points on top of that. I'm doing a different strategy, which is approximately 70 points seems to be a reasonable stop loss. If you had bought the DAX here on a traditional school run, this is the brunch break, lines have just been identified here, you would have had to have a stop loss below this low. What I did today was neither. I said, right, there's something here that concerns me. And I think that's where the confusion lies. The DAX made a very sudden move lower, about 15 or so minutes into the session. And it went down and tested the low of the overnight range from yesterday. Do you see that? Over here is the overnight range. And do you see how over here? We're just going one tick below. It's so classic, absolutely classic. The old low over here was 433, and the low that we made today was 429. So my God feel, my trader instinct said, right, you want to be long today, because they cleared out, they basically fulfilled the price action. Shall we say hypothesis that you need to just go back and fill or retest, and it successfully did a retest by going a few points below and then trading back into the range. So that when we came up here, and we triggered a long signal, technically I should have been short here, because it takes place inside the overnight range, but in an added twist, I decided to do nothing. What I did instead was to say, I want to be long, but I'm not going to buy it now. If you go back to the review or the video of today's trading, you will hear me say, I want to be long today, but I'm not going to be long now. I want to see if I can buy the DAX at a better price. Then what I did was, as we're passing this bar here is the 830 bar, I'm attempting to be a buyer down here. So if you look at my last DAX fill, you will see that it takes place at 22,526. You see this low here is 22,516. That's the low I wanted to buy below, but my fill was really shit. It was a bad fill, but I wanted to be a buyer below this first reaction low after the DAX has just triggered a school run long. Why? Well, because I felt that touching yesterday's overnight range low was significant, significant in the sense that I think this market has just done a crucial test and that we are probably headed higher from here. Now, my fill was awful, and then I had to sit through the market actually doing a deeper retracement, like a two bar retracement. But what was interesting for me, and I, as you know, do not add to my losing position, but if I did see that two bar retracement on a five minute, so classic that the market reverses below the low of the second negative candle. And I wanted to be a buyer down here. I couldn't do it on my public account because I just don't want to be seen ever adding to a losing trade. The fuel saying, do as I say, don't do as I do, right? And as I think, for the benefit of your health and longevity, don't get into the habit of adding to losing trades because nothing good is going to come of it. Okay, that was a slight sidestep here. But now you know what my motors overrandy was today. Now let's go and look at yesterday. By the way, brunch break has taken a long. I hope that you are still along the market. I just had to leave and then I realized, actually I feel like I'm short changing people and that's why I decided to come back. Now let's look at yesterday. Just double double checking that there's no urgent questions here. Yeah, but Andy, I don't trade empty for that's the whole point because empty for ladies and gentlemen is not a good platform. You're trading on variable spreads. Just... Hang on. Just want to make sure that I am... You need to, you really do need to be mindful of the spreads that you are paying with your broker. It is just, it's no good if you are paying over the odds. Say that you're trading the DAX on a one and a half or the FTSE on one and you trade 10 pounds a point. Imagine what that does to your account over a year. You will add significant amount of cost to your execution. But you've heard me say this before and I'm not going to repeat myself. I'm just trying to protect you against unnecessary expenses. Now let's look at the overnight range from yesterday. See if we do my best on my ability. I can draw this. So here we go. This is roughly the overnight range. Okay, let's not get too dogmatic about it. This is the overnight range on a 15 minute candle yesterday. Now let's identify the school run bar. The school run bar comes here. See that? So that's the opening bar right here, 8am. Now the bar that we are interested in is this bar here. And again, yesterday I did something that goes contrary to what I just moments ago described. So let's go through it step by step. This is the school run bar. Conventional school run theory says you need to buy it above and you need to sell short below. That's conventional school run theory. However, the school run takes place within the context of the overnight range. So really you should sell short. What did I do yesterday? Well, I did the complete opposite. I decided that because this bar here and this bar here were practically overlapping each other. This is practically an inside bar and it is immediately bought up when we go below the prior bar low. You see how the second bar, the school run bar goes below and both of them are within the context of the overnight range. I decided, you know what? I'm not going to sell short here because I am absolute certain that this DAX is going to go up and hit the overnight range top. Now, how can someone like me who has spent 25 years of his professional adult life since? Basically, since 1998, I've barely missed a tick in the DAX. How can I explain that to someone who is new and make it rule-based? It's very difficult to teach our instinct in trading. But my trading instinct says, I don't want to sell short here. It feels to me as if this market wants to touch the high end of the range. And it did. And so sometimes you are so in sync with the market and other times you are completely out of sync. Don't ask me why sometimes you are and sometimes you are not. But conventional school run says, buy here. The ante says sell short here because we are inside the range of the overnight. But I'm thinking, well, we tested that overnight range down here. We came out of the box after 6am and it held again. And then it didn't even manage to go all the way down here. It just held here and buyers immediately stepped in below prior-bar low. And that to me is such an incredibly crucial key to understanding price action is when a market goes below prior-bar low and gets bought up. Goes below prior-bar low, gets bought up. If we go to the day before and again, let's draw the box because the day before I wasn't here, but it was a complex day. Let's draw it together. Oops. So here's the overnight range. I'm wondering if I could... Let me just... Yeah, you can actually. Great. This is a really, really good charting package. Absolutely brilliant. So yesterday... Sorry, not yesterday. The day before yesterday. This is the overnight range. And the market opens here. This is the first 15-minute candle. The second 15-minute candle is our school-run candle. And it triggers a long signal above. And for me, that's a plain vanilla school-run long. Why? Well, because it takes place above the overnight range. And do you see how it goes below over here about an hour later? One, two, three, four, five bars later. Do you see how it goes below? If I had been trading it, I would want to be a buyer here. Why? Well, because... I feel like I am pitching my voice like I'm getting really excited. Because, ladies and gentlemen, this bar here, which is the school-run bar, that breach below the school-run bar, it still takes place above the overnight range. So I want to be a buyer here. That low is 22,732. This market here goes to 25. So it goes about nine points below. And then it rallies about 70 points. See that? Buyers are stepping in below prior bar low on the school-run. And I'm saying that right there is also a buy signal. It's a buy up here. And you probably would have been moving your stop loss up on this spike here. It spikes about 50 points higher. You probably got stopped out for nothing. But you would want to be a buyer down here as well. I'm just going to check if there's any messages. Okay, there's some people just sending me strange messages. There you go. Man, it never fails me too. There's just some really strange people in this world. I'm not even going to show you, okay? I'm just not going to show you. There's just some obnoxious people in this world, ladies and gentlemen. So a gentleman here, can you just identify yourself? You have a red, I think it says sage, and then you have a bald eagle next to it. Yeah, I don't know what your name is, you don't say, but you're the one you write. I understand you take some trades basis on your experience, but it's making us hard, it's making it hard for us to learn. And then you have a sad face. And I'm doing this video because of you, because I felt that you deserved. I think I quite liked, I'm wondering if I'm going to get myself into trouble if I... I want to show you what this gentleman is writing because this is the reason why I am doing this. He's saying, I'm quite confused and sad with the trading of DAX. I thought we were supposed to follow the school run and the anti-school run using the overnight range, but nowadays it seems you don't always follow the trading principles for the DAX, SIS and anti. And I thought in trading you stick to the principle and make changes with necessary. And so I have deep felt sympathy for this gentleman here, because I am doing this to help exactly people like you, but I cannot completely override either how sometimes, rightly or wrongly, my instinct tells me to do something different. I mean, let's take the day before, which I think then by definition would have been Friday, right? No, Monday, sorry. So let me draw another box. Now I'm getting so bloody good at drawing these boxes with this exquisite software. Now, where it gets a little tricky here on the Sunday Mondays, I don't know whether to include the Sunday Monday range, but I don't think it makes much of a difference. So here's school run on Monday. And here's school run, the school run bar right here. And so whatever I did on Monday, I should have been short. There's no doubt about that. The trigger takes place outside of the trading range. Right here. And so if I didn't sell short there, I have to question, well, why did I not do that? That's just okay. You had to sell short there. I'm quite certain that I got myself into a bit of a sticky pot by being a buyer at the low end of the range. I don't think I did very well, but when you look at it after the fact in the cold night of day, you're going, yeah, that's a short. Especially also because I've been bearish on the Thursday, Friday, Monday pattern. Would you like to look at Friday last with me? I think that's perhaps a little bit more complicated. I'm hoping that by doing this, I am managing to achieve some degree of clarity. So here's the school run on Friday with the overnight range. The market opens here, so you can see that, opens here, this bar here. It triggers a short signal below the low of this bar here. Why? Well, because it's a traditional school run. It takes place below the low of the overnight range. So it's clear as day. This is a sell right here. Now you're welcome Sage. I did this for you amongst others. We can do one more example. And I'm hoping I'm bringing clarity to you as opposed to bringing confusion. Why don't we take this one here? It's a brilliant example. I love examples that fail. You might think, oh, how can that be brilliant? Well, because it is in our failures that we will modify our approach. So here's roughly the overnight range. And anybody can see, yes, the school run, the market opens well above. Do you see how the market opens well above the overnight range? And here's the school run bar. It triggers a long signal up here. Without a doubt, triggers a long. And not only that, it triggers another long here. Do you see that? And obviously you can also see, wow, that was a spectacular failure. Absolutely. Without a doubt, this had you followed conventional school run theory. You would have sold short here and you would have bought here. But if you factor in the overnight range, you would also have been a buyer here. Now, would I have been a buyer here, stopped out here and then bought again? Probably not. And so examples like this is probably where the confusion lies. School run triggers a short, but you're now saying I should be a buyer here because it takes a place above the overnight range. That's exactly right. Now, is there a lesson in this particular chart? I think so. What would concern me here is how you go a few points above this high here and then reverses. But anyway, traditional technical analysis will dictate that this is what we call an outside bar. See that how it encompasses the previous bar? That tends to be bearish, but I don't want to confuse conventional technical analysis with what I call situational analysis. My particular brand for technical analysis is called situational analysis. At least that's what I call it. And this situation here doesn't interact with conventional technical analysis. Oh, that's an outside range bar. But I have to acknowledge that we take out the high and then reverses. And that's rarely a bullish signal. And this has happened with opposite. If this had been a, we're taking out the lows and then we reverse and we close above the high. Very much like what you are seeing. Where was it? Where was that bar? Where does that? I think it was the inside the one where it's an inside bar. Let's see if I can find it. Can't find it. This one here. This one here. This one here. This one here. This one here. This one here. This one here. This one here. This one here. This one here. How we take out the low and very soon after we're trading above the high. It feels almost the same pattern just in reverse. Over here. Up here. Take out the high and reverse and trade below the low. Okay. I hope that that gave you some clarity. I'm very happy to do one more example. Do this one because I think this could also be a good example. And then I have to go. There's roughly the overnight range. The market. Opens here. This is the school run bar. It actually triggers a long. See that right here. And exactly the same situation happens as the day after we go below. And then it does a cruel reversal question. Would I have been long here? Stopped out here. And bought again. Unlikely. Unlikely. Do you follow me? But I wouldn't have sold short here either. And I think that's where I have yet to do some work on the money management angle of, okay, you're buying here because this is going to happen again. Trust me. And on this day and then it happened on the next day as well. See that? Here. Long and then I was supposed to be a long again. So while it definitely wouldn't have worked here, it would have worked here, but that's beside the point. The point here is I wouldn't want to be a buyer once more. It may be that I had decided to buy it once again. It breaks above once more. But it's always easy to talk about this after the fact. We're doing this in a live environment and we have to always make sure that we don't become reckless either. We have to make sure that we keep our emotions in check constantly. And if that means I'm buying here, I get stopped out. Oh, screw you, Dax. Maybe at times it's better than to walk away and come back with a fresh mindset and a fresh set of eyes. Okay, so I hope that this little impromptu review of the school run and the school run anti is of benefit to you. I will complete this lesson now and say thank you for tuning in. And I will see you for the US session. All the very best. Bye-bye for now.

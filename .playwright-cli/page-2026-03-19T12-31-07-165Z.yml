@@ -1,0 +1,315 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - text: 
+        - link "Kraken / AI" [ref=e5] [cursor=pointer]:
+          - /url: "#page-top"
+      - list [ref=e7]:
+        - listitem [ref=e8]:
+          - link "Summary" [ref=e9] [cursor=pointer]:
+            - /url: "#about"
+        - listitem [ref=e10]:
+          - link "Kraken" [ref=e11] [cursor=pointer]:
+            - /url: "#kraken"
+        - listitem [ref=e12]:
+          - link "Artificial Intelligence" [ref=e13] [cursor=pointer]:
+            - /url: "#ai"
+        - listitem [ref=e14]:
+          - link "Availability" [ref=e15] [cursor=pointer]:
+            - /url: "#demo"
+        - listitem [ref=e16]:
+          - link "Technology" [ref=e17] [cursor=pointer]:
+            - /url: "#technology"
+        - listitem [ref=e18]:
+          - link "Contact" [ref=e19] [cursor=pointer]:
+            - /url: "#contact"
+  - banner [ref=e20]:
+    - generic [ref=e27]:
+      - heading "Kraken / AI" [level=1] [ref=e28]
+      - paragraph [ref=e29]: Crypto currency price movement predictions based on hundreds of information sources, enhanced by machine learning
+      - paragraph [ref=e30]: Massively parallel data scraping capabilities combined with powerful data analysis
+      - link "" [ref=e31] [cursor=pointer]:
+        - /url: "#about"
+        - generic [ref=e32]: 
+  - generic [ref=e36]:
+    - img [ref=e37]
+    - paragraph [ref=e38]: Kraken/AI reads hundreds of news articles, tweets, etc. in parallel and real time. It compares this data with occurrences and patterns which its machine learning algorithms have learned from historic data and predicts how the affected stock value will change in the near future.
+    - paragraph [ref=e39]:
+      - text: This allows to
+      - text: • aggregate and analyze hundreds of websites, feeds and tweets in one place,
+      - text: • anticipate and manage volatility risks early,
+      - text: • identify course defining events in advance,
+      - text: • minimize risk exposure and protect your assets against losses.
+    - generic [ref=e40]:
+      - paragraph [ref=e41]: How it works
+      - link [ref=e44] [cursor=pointer]:
+        - /url: img/KAI_watermark.png
+        - img [ref=e45]
+    - generic [ref=e46]:
+      - paragraph
+      - paragraph [ref=e47]: Screenshots
+      - link [ref=e50] [cursor=pointer]:
+        - /url: img/screenshots/bitcoin1.png
+        - img [ref=e51]
+      - link [ref=e54] [cursor=pointer]:
+        - /url: img/screenshots/bitcoin2.png
+        - img [ref=e55]
+      - link [ref=e58] [cursor=pointer]:
+        - /url: img/screenshots/bitcoin3.png
+        - img [ref=e59]
+      - link [ref=e62] [cursor=pointer]:
+        - /url: img/screenshots/bitcoin7.png
+        - img [ref=e63]
+    - separator [ref=e64]
+    - heading "We have partnered up with CoinAnalyst.tech Contact us for more information or questions" [level=4] [ref=e65]:
+      - link "We have partnered up with CoinAnalyst.tech Contact us for more information or questions" [ref=e66] [cursor=pointer]:
+        - /url: mailto:info@krakenai.io
+        - text: We have partnered up with CoinAnalyst.tech
+        - text: Contact us for more information or questions
+    - separator [ref=e67]
+    - heading "Abstract" [level=2] [ref=e68]
+    - paragraph [ref=e69]:
+      - text: Information determines more than ever today's stock markets; this is even more true for new technologies like blockchain based crypto currencies (bitcoin, ether, litecoin, etc).
+      - text: While it is certain that these currencies and technologies will be ubiquitous in the future, their potential is yet to be fully understood.
+      - text: There is a lot of uncertainty about the impact and value they will have and their exact worth. This is also reflected in the high volatility and large price drops / peaks of bitcoin, ether, litecoin and alike.
+      - text: The main driver for the value of these crypto currencies is their market capitalization (distribution), their adaptation by large corporations and banks, their security, their features, etc.
+      - text: All this information can be publicly found online. It is just shattered around hundreds of websites, twitter, rss feeds and cluttered with a ton of other, useless information. Big data and machine learning techniques like deep learning can be used to filter out the noise and help predict changes.
+    - paragraph [ref=e70]: Kraken/AI uses a combination of data mining (Kraken) and machine learning techniques (AI) to analyze stock behavior. This is not to be confused with high frequency trading, simple sentiment analysis or trading bots.
+    - paragraph [ref=e71]: The utilized methods do not rely on superior connection, speed or quality of information. Instead, a variety of heterogeneous raw sources with thousands of data points are combined into multiple massive prediction schemes.
+    - paragraph [ref=e72]:
+      - text: Kraken/AI cannot predict or forecast stock development; instead it identifies points in time that represent a high statistical correlation to a course change within a defined time span.
+      - text: The combination of several classifiers, time spans and course deltas can be used to further minimize uncertainty / statistical error.
+  - generic [ref=e76]:
+    - heading "Kraken" [level=2] [ref=e77]
+    - paragraph [ref=e78]: Kraken collects big data from multiple sources, similar to a human analyst, but in a much broader and parallel approach. The data is gathered asynchronously and massively parallel from hundreds of heterogeneous sources.
+    - paragraph [ref=e79]: All gathered data is non proprietary and freely available on the net, like public APIs or RSS / twitter feeds. Kraken can distinguish and handle multiple languages and data formats.
+    - paragraph [ref=e80]: The data is then normalized and roughly structured, but not further filtered or biased. Instead, the raw amount of data builds a basis for model creation and statistical analysis.
+  - generic [ref=e84]:
+    - heading "AI / Artificial Intelligence" [level=2] [ref=e85]
+    - heading "idea:" [level=4] [ref=e86]
+    - paragraph [ref=e87]: To have a program that allows a user to predict the future value of a resource based on the monitoring of different sources of textual information on the internet. Such resources can be crypto currencies and stocks. These sources of information can be online news or tweets and other social media sources.
+    - heading "pipeline:" [level=4] [ref=e88]
+    - paragraph [ref=e89]: Incoming information is parsed and transformed into a computer understandable representation that allows the software to work with it. AI then uses its different machine learning tools to assign meaning to the incoming information and identify the implications for the value of resources that are being monitored. The learning itself is facilitated by the fact that a prediction is made and its correctness can be evaluated as soon as the point in time for which the prediction was made is reached. This way a feedback loop is created and continuous learning is assured by adapting models to minimize the error.
+    - heading "potential:" [level=4] [ref=e90]
+    - paragraph [ref=e91]: Making predictions like this allows for early detection of negative as well as potentially positive effects that news can have on prices. It is meant as an early warning system and allows its users to trade resources with less of a risk.
+  - generic [ref=e93]:
+    - generic [ref=e95]:
+      - heading "Availability" [level=2] [ref=e96]
+      - paragraph [ref=e97]: "Here are a few screenshots from our test servers (please note that these are work in progress and subject to change):"
+      - generic [ref=e98]:
+        - link [ref=e101] [cursor=pointer]:
+          - /url: img/screenshots/bitcoin1.png
+          - img [ref=e102]
+        - link [ref=e105] [cursor=pointer]:
+          - /url: img/screenshots/bitcoin2.png
+          - img [ref=e106]
+        - link [ref=e109] [cursor=pointer]:
+          - /url: img/screenshots/bitcoin3.png
+          - img [ref=e110]
+        - link [ref=e113] [cursor=pointer]:
+          - /url: img/screenshots/bitcoin7.png
+          - img [ref=e114]
+      - separator [ref=e115]
+      - generic [ref=e116]: Older / alternative visualizations
+      - generic [ref=e117]:
+        - link "Analytics" [ref=e120] [cursor=pointer]:
+          - /url: img/screenshots/2018_07_23_multianalytics.png
+          - img "Analytics" [ref=e121]
+        - link "Analytics" [ref=e124] [cursor=pointer]:
+          - /url: img/screenshots/multi_analytics.jpg
+          - img "Analytics" [ref=e125]
+        - link "Analytics" [ref=e128] [cursor=pointer]:
+          - /url: img/screenshots/2018_4_Evaluations_2.png
+          - img "Analytics" [ref=e129]
+        - link "Analytics" [ref=e132] [cursor=pointer]:
+          - /url: img/screenshots/sc2.png
+          - img "Analytics" [ref=e133]
+        - link "Administration" [ref=e136] [cursor=pointer]:
+          - /url: img/screenshots/2018_4_Administration.png
+          - img "Administration" [ref=e137]
+        - link "Model Creation" [ref=e140] [cursor=pointer]:
+          - /url: img/screenshots/creation.jpg
+          - img "Model Creation" [ref=e141]
+      - paragraph [ref=e142]:
+        - text: We are currently in an internal testing stage and are now opening up for the first closed alpha testers. If you wish to receive status updates or gain access to our closed test servers,
+        - link "register your email and we will notify you" [ref=e143] [cursor=pointer]:
+          - /url: "#contact"
+        - text: ", when a spot opens up."
+      - paragraph [ref=e144]:
+        - text: Please note, that at this point capacity is very limited and access is restricted. We will send out personalized access codes according to our resources (first come, first serve).
+        - text: Partners may access our testserver
+        - link "here" [ref=e145] [cursor=pointer]:
+          - /url: testserver.php
+        - text: (authorization required).
+      - separator [ref=e146]
+      - heading "Timeline" [level=2] [ref=e147]
+    - heading "New milestone mid 2019 Collaboration with CoinAnalyst.tech" [level=4] [ref=e150]:
+      - text: New milestone mid 2019
+      - text: Collaboration with
+      - link "CoinAnalyst.tech" [ref=e151] [cursor=pointer]:
+        - /url: https://coinanalyst.tech
+    - generic [ref=e154]:
+      - article [ref=e155]:
+        - generic [ref=e156]:
+          - time [ref=e157]:
+            - text: Mid 2019
+            - generic [ref=e158]: Today
+          - generic [ref=e160]:
+            - heading "Today" [level=2] [ref=e161]
+            - list [ref=e162]:
+              - listitem [ref=e163]: Fine tune learning algorithms for more precise predictions and higher accuracy
+              - listitem [ref=e164]: Evaluate roll-out for end users
+              - listitem [ref=e165]: Add more data sources and learning algorithms
+              - listitem [ref=e166]: Add more backtesting and evaluation functionality
+      - article [ref=e167]:
+        - generic [ref=e168]:
+          - time [ref=e169]: Late 2018
+          - generic [ref=e171]:
+            - heading "New user-experience centered user interface" [level=2] [ref=e172]
+            - list [ref=e173]:
+              - listitem [ref=e174]: complete rework with focus on simplicity
+              - listitem [ref=e175]: works on mobile, tablets, desktop, etc
+              - listitem [ref=e176]: more data insights and tooling
+              - listitem [ref=e177]: faster
+      - article [ref=e178]:
+        - generic [ref=e179]:
+          - time [ref=e180]: Early 2018
+          - generic [ref=e182]:
+            - heading "Public project reveal" [level=2] [ref=e183]
+            - list [ref=e184]:
+              - listitem [ref=e185]: Release of project website (this page)
+              - listitem [ref=e186]: Opening registration for potential customers / testers
+              - listitem [ref=e187]: Access to test servers for a few potential partners / press
+            - paragraph
+      - article [ref=e188]:
+        - generic [ref=e189]:
+          - time [ref=e190]: Early 2017
+          - generic [ref=e192]:
+            - heading "Enhancement and feature implementation" [level=2] [ref=e193]
+            - list [ref=e194]:
+              - listitem [ref=e195]: Hardening of codebase to allow 24/7 parallel data gathering and processing
+              - listitem [ref=e196]: Incremental adding of new data sources and data source types
+              - listitem [ref=e197]: Adding of additional machine learning frameworks and multiple algorithms
+              - listitem [ref=e198]: Adding of several data processing mechanisms
+              - listitem [ref=e199]: Introduction of prediction and analytics user interfaces
+      - article [ref=e200]:
+        - generic [ref=e201]:
+          - time [ref=e202]: Mid 2016
+          - generic [ref=e204]:
+            - heading "Stable prototype & dedicated test server" [level=2] [ref=e205]
+            - paragraph [ref=e206]:
+              - text: Creation of basic data scraper (kraken) and learning (artificial intelligence) functionality that runs 24 / 7, collecting data and creating predictions.
+              - text: Started gathering of DAX 30 (Deutscher Aktien Index 30) news and stock data, later addition of crypto currency stocks (bitcoin, ethereum, litecoin).
+      - article [ref=e207]:
+        - generic [ref=e208]:
+          - time [ref=e209]: Early 2016
+          - generic [ref=e211]:
+            - heading "Basic poc evaluation and tests" [level=2] [ref=e212]
+            - paragraph [ref=e213]:
+              - text: "Creation and tests with proof of concept prototypes for architectural design and scalability. Tests with implementations of several technologies like elasticsearch, different databases, etc. Architectural decision to have two central parts:"
+              - text: "- data collector / preprocessor (kraken) and"
+              - text: "- machine learning prediction framework (artificial intelligence / brain)"
+      - article [ref=e214]:
+        - generic [ref=e215]:
+          - time [ref=e216]: Early 2015
+          - generic [ref=e218]:
+            - heading "Initial idea & team setup" [level=2] [ref=e219]
+            - paragraph [ref=e220]: Research of algorithmic capabilities and potential data sources. Analysis of existing approaches and similar systems. Team setup.
+      - article [ref=e221]
+  - generic [ref=e227]:
+    - heading "Technology" [level=2] [ref=e228]
+    - paragraph [ref=e229]: Since starting data collection in late 2016, we have gathered, processed and stored more then 8+ million data points (news articles, stock values, etc) from 350+ different data sources.
+    - text: "This is an exemplary statistics snapshot:"
+    - generic [ref=e230]: "Statistics created 2018/10/15 15:00:19 (230 min ago, every 1440 min) Source change during last 24 hours Last code update 2 days 5 hours 16 minutes Articles Total : 5,769,750 Stocks Total : 2,447,256 Articles Since Last Run : 2,442 Stocks Since Last Run : 722 Articles Last Update : 2018/10/16 06:10:02 Stocks Last Update : 2018/10/15 13:53:00 Articles Crypto Total Count : 318,761 Articles Bitcoin Total Count : 165,787 Articles Ethereum Total Count : 69,370 Articles Dax Total Count : 5,450,989"
+    - heading "Technologies utilized" [level=3] [ref=e232]
+    - generic [ref=e233]:
+      - img [ref=e234]
+      - text: Java
+      - img [ref=e235]
+      - text: Scala
+    - generic [ref=e236]:
+      - img [ref=e237]
+      - text: RSS
+      - img [ref=e238]
+      - text: Twitter
+    - generic [ref=e239]:
+      - img [ref=e240]
+      - text: MySql
+      - img [ref=e241]
+      - text: Distributed
+    - generic [ref=e242]:
+      - img [ref=e243]
+      - text: Multi OS
+      - img [ref=e244]
+    - generic [ref=e245]:
+      - img [ref=e246]
+      - img [ref=e247]
+  - generic [ref=e251]:
+    - heading "Contact & Authors" [level=2] [ref=e252]
+    - paragraph [ref=e253]: Partners and press please use email ✉ info (at) krakenai (dot) io . Legal and impressum can be found at the bottom of the page.
+    - separator [ref=e254]
+    - heading "Authors" [level=4] [ref=e255]
+    - paragraph [ref=e256]:
+      - img [ref=e257]
+      - text: Hans Katzenberger
+      - text: 10 years of software development experience, currently working for Agfa HealthCare (Germany’s leading Hospital Software provider) as lead developer eHealth / CDM, Recommind / OpenText (Predictive Analytics / Machine Learning) and German Liturgical Institute. Holds a Master's Degree in Computer Science (German Diplom Informatik), subsidiary subject Finance (founder)
+      - link "" [ref=e258] [cursor=pointer]:
+        - /url: https://www.linkedin.com/in/hans-katzenberger-a2307a129/
+        - generic [ref=e259]: 
+      - link "" [ref=e260] [cursor=pointer]:
+        - /url: https://www.xing.com/profile/Hans_Katzenberger
+        - generic [ref=e261]: 
+    - paragraph [ref=e262]:
+      - text: Kalle Fischer ( † 2019 )
+      - text: 10 years of relevant experiences in the field of Artificial Intelligence working for Turtle Entertainment Technology, Douglas, Recommind / OpenText (Predictive Analytics / Machine Learning). Holds a Master of Sciences degree in Artificial Intelligence (co-founder, † 2019)
+      - link "" [ref=e263] [cursor=pointer]:
+        - /url: https://www.linkedin.com/in/kalle-fischer-23461127/
+        - generic [ref=e264]: 
+      - link "" [ref=e265] [cursor=pointer]:
+        - /url: https://www.xing.com/profile/Kalle_Fischer2
+        - generic [ref=e266]: 
+  - generic [ref=e270]:
+    - heading "Abstract" [level=2] [ref=e271]
+    - paragraph [ref=e272]:
+      - generic [ref=e273]:
+        - text: Below the thunders of the upper deep;
+        - text: Far far beneath in the abysmal sea,
+        - text: His ancient, dreamless, uninvaded sleep
+        - text: "The Kraken sleepeth: faintest sunlights flee"
+    - paragraph [ref=e274]:
+      - generic [ref=e275]:
+        - text: About his shadowy sides; above him swell
+        - text: Huge sponges of millennial growth and height;
+        - text: And far away into the sickly light,
+        - text: From many a wondrous grot and secret cell
+    - paragraph [ref=e276]:
+      - generic [ref=e277]:
+        - text: Unnumber'd and enormous polypi
+        - text: Winnow with giant arms the slumbering green.
+        - text: There hath he lain for ages, and will lie
+    - paragraph [ref=e278]:
+      - generic [ref=e279]:
+        - text: Battening upon huge seaworms in his sleep,
+        - text: Until the latter fire shall heat the deep;
+        - text: Then once by man and angels to be seen,
+        - text: In roaring he shall rise and on the surface die.
+    - paragraph [ref=e280]: 1830 Alfred Tennyson
+    - img [ref=e281]
+  - text: 
+  - tooltip "Click to return on the top page" [ref=e282]:
+    - generic [ref=e284]: Click to return on the top page
+  - contentinfo [ref=e285]:
+    - generic [ref=e286]:
+      - paragraph [ref=e287]: Copyright © Kraken/AI 2016
+      - link "Website based on Bootstrap grayscale template" [ref=e288] [cursor=pointer]:
+        - /url: http://startbootstrap.com/template-overviews/grayscale/
+      - text: "-"
+      - link "Some Icons from Icons8.com" [ref=e289] [cursor=pointer]:
+        - /url: https://icons8.com
+      - text: "-"
+      - link "Using particles.js" [ref=e290] [cursor=pointer]:
+        - /url: https://github.com/VincentGarreau/particles.js/
+      - text: "-"
+      - link "Impressum / Legal" [ref=e291] [cursor=pointer]:
+        - /url: impressum.html

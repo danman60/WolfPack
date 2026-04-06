@@ -47,6 +47,23 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.warning(f"[lifespan] PromptBuilder init failed (agents will use hardcoded prompts): {e}")
 
+    # Ensure default watchlist symbols exist
+    try:
+        from wolfpack.db import get_db, add_to_watchlist, get_watchlist
+        existing = {w["symbol"] for w in get_watchlist("hyperliquid")}
+        default_symbols = ["BTC", "ETH", "SOL", "AVAX", "DOGE", "ARB"]
+        added = []
+        for sym in default_symbols:
+            if sym not in existing:
+                add_to_watchlist(sym, "hyperliquid")
+                added.append(sym)
+        if added:
+            logger.info(f"[lifespan] Added default watchlist symbols: {added}")
+        else:
+            logger.info(f"[lifespan] All default watchlist symbols present ({len(existing)} total)")
+    except Exception as e:
+        logger.warning(f"[lifespan] Failed to ensure default watchlist: {e}")
+
     yield
 
     # Shutdown
@@ -2070,18 +2087,11 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                             try:
                                 from wolfpack.notification_digest import get_digest
                                 digest = get_digest()
-                                if digest.mode == "individual":
-                                    from wolfpack.notifications import send_telegram
-                                    await send_telegram(
-                                        f"<b>\U0001f6a8 Auto-Bot {reason.upper()} hit for {sym}</b>\n"
-                                        f"Price: <code>${latest_price:,.2f}</code>"
-                                    )
-                                else:
-                                    digest.add({
-                                        "type": "stop_triggered",
-                                        "symbol": sym,
-                                        "details": f"{reason.upper()} hit for {sym} @ ${latest_price:,.2f}",
-                                    })
+                                digest.add({
+                                    "type": "stop_triggered",
+                                    "symbol": sym,
+                                    "details": f"{reason.upper()} hit for {sym} @ ${latest_price:,.2f}",
+                                })
                             except Exception:
                                 pass
                     auto_trader._store_snapshot()
@@ -2101,11 +2111,14 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                             try:
                                 from wolfpack.notification_digest import get_digest
                                 digest = get_digest()
-                                if digest.mode == "individual":
-                                    from wolfpack.notifications import send_telegram
-                                    await send_telegram(f"<b>{alert['message']}</b>")
-                                elif digest.mode != "disabled":
-                                    digest.add({"type": alert["type"], "symbol": alert.get("pair", "LP"), "details": alert["message"]})
+                                if digest.mode != "disabled":
+                                    digest.add({
+                                        "type": alert["type"],
+                                        "symbol": alert.get("pair", "LP"),
+                                        "pair": alert.get("pair", ""),
+                                        "message": alert.get("message", ""),
+                                        "details": alert.get("message", ""),
+                                    })
                             except Exception:
                                 pass
             except Exception as e:
@@ -2118,10 +2131,39 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
             except Exception as e:
                 logger.warning(f"[cycle] Snapshot cleanup error: {e}")
 
-            # Flush notification digest if interval elapsed
+            # Flush notification digest if interval elapsed — pass portfolio context
             try:
                 from wolfpack.notification_digest import get_digest
-                await get_digest().maybe_flush()
+                digest = get_digest()
+                # Attach current portfolio snapshot for the unified report
+                try:
+                    perp_snap = None
+                    perp_engine = _get_paper_engine()
+                    if perp_engine.portfolio.positions:
+                        perp_snap = {
+                            "positions": [
+                                {"symbol": p.symbol, "direction": p.direction, "unrealized_pnl": p.unrealized_pnl, "size_usd": p.size_usd}
+                                for p in perp_engine.portfolio.positions
+                            ],
+                            "equity": perp_engine.portfolio.equity,
+                            "unrealized_pnl": perp_engine.portfolio.unrealized_pnl,
+                        }
+                    lp_snap = None
+                    lp_tr = _get_lp_trader()
+                    if lp_tr.enabled and lp_tr.engine.portfolio.positions:
+                        lp_snap = {
+                            "positions": [
+                                {"pair": f"{p.token0_symbol}/{p.token1_symbol}", "liquidity_usd": p.liquidity_usd, "fees_earned": p.fees_earned_usd, "il_pct": p.il_pct}
+                                for p in lp_tr.engine.portfolio.positions
+                            ],
+                            "total_fees": lp_tr.engine.portfolio.total_fees_earned,
+                            "total_il": lp_tr.engine.portfolio.total_il,
+                            "equity": lp_tr.engine.portfolio.equity,
+                        }
+                    digest.set_portfolio_snapshot(perp=perp_snap, lp=lp_snap)
+                except Exception:
+                    pass
+                await digest.maybe_flush()
             except Exception:
                 pass
 

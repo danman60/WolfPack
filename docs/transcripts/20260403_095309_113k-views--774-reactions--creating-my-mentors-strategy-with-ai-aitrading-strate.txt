@@ -1,0 +1,31 @@
+# Transcript: 113K views · 774 reactions | Creating my mentor's strategy with AI #aitrading #strategy #automated #trading #tradingview | Tradingwithmustafah
+# Source: https://www.facebook.com/share/r/1JYKmep2dr/
+# Project: WolfPack
+# Model: small | Language: en | Duration: 44.4s
+# Transcribed: 2026-04-03 09:53:14
+
+[0.0s - 2.0s] Can you make Trader Tom's strategy
+[2.0s - 3.6s] into a Trading View indicator?
+[3.6s - 5.4s] Jump over to ChatGPT.
+[5.4s - 7.8s] Do you know Trader Tom's strategy?
+[7.8s - 8.6s] Yes or no?
+[8.6s - 10.4s] Great, create a PineScript for me
+[10.4s - 13.0s] that I can use on Trading View as a strategy.
+[13.0s - 15.7s] It created a PineScript, we copy the PineScript,
+[15.7s - 17.6s] we jump back to Trading View,
+[17.6s - 20.8s] and we press on Indicators, Create Script,
+[20.8s - 23.4s] and we insert the PineScript right here,
+[23.4s - 24.8s] and we add it to chart.
+[24.8s - 25.8s] What happens?
+[25.8s - 28.9s] You can see the strategy developing right here.
+[28.9s - 31.3s] Trader Tom's inspired breakout strategy.
+[31.3s - 33.2s] You can see where you can enter longs,
+[33.2s - 35.2s] and you can see where you can enter shorts.
+[35.2s - 37.6s] And if you want to know how to automate this,
+[37.6s - 39.6s] having it taking trades for you,
+[39.6s - 43.4s] I explain it step by step in my school community,
+[43.4s - 44.6s] The Lickism Bio.
+
+---
+
+Can you make Trader Tom's strategy into a Trading View indicator? Jump over to ChatGPT. Do you know Trader Tom's strategy? Yes or no? Great, create a PineScript for me that I can use on Trading View as a strategy. It created a PineScript, we copy the PineScript, we jump back to Trading View, and we press on Indicators, Create Script, and we insert the PineScript right here, and we add it to chart. What happens? You can see the strategy developing right here. Trader Tom's inspired breakout strategy. You can see where you can enter longs, and you can see where you can enter shorts. And if you want to know how to automate this, having it taking trades for you, I explain it step by step in my school community, The Lickism Bio.

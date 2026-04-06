@@ -1,0 +1,1427 @@
+{
+  "title": "Trading Isn\u2019t Hard, It\u2019s Basic Math (Start Winning With This 3-Step Formula)",
+  "url": "https://www.youtube.com/watch?v=b9a8qAGgvmA",
+  "project": "WolfPack",
+  "model": "small",
+  "language": "en",
+  "language_probability": 1.0,
+  "duration_seconds": 1604.2,
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 4.7,
+      "text": "In today's video, I'm going to show you how something as simple as just basic math can help"
+    },
+    {
+      "start": 4.7,
+      "end": 10.2,
+      "text": "you increase the quality of your winning trades, reduce the pain and size of your losing trades,"
+    },
+    {
+      "start": 10.2,
+      "end": 14.7,
+      "text": "but more importantly, let you know if the trade is even worth you taking in the first place."
+    },
+    {
+      "start": 14.7,
+      "end": 18.3,
+      "text": "And what I'm going to show you today is something that we call the measured move."
+    },
+    {
+      "start": 18.3,
+      "end": 23.3,
+      "text": "This right here is the secret weapon of all professional traders. And if you ever want to"
+    },
+    {
+      "start": 23.3,
+      "end": 28.3,
+      "text": "get to that level, you've got to be using some form of the measured move. Otherwise,"
+    },
+    {
+      "start": 28.3,
+      "end": 33.3,
+      "text": "you're never going to be consistently profitable. Let me explain. How many times have you been in"
+    },
+    {
+      "start": 33.3,
+      "end": 38.7,
+      "text": "a winning trade, but you were unsure just how much of a winner it could become? You're staring up at"
+    },
+    {
+      "start": 38.7,
+      "end": 44.6,
+      "text": "that bright green P&L, you look back at the charts back up at that P&L and you say, I want that money"
+    },
+    {
+      "start": 44.6,
+      "end": 48.9,
+      "text": "when you take it. Then the next thing you know, it just keeps on going the whole entire day."
+    },
+    {
+      "start": 48.9,
+      "end": 53.7,
+      "text": "And you just left all that money on the table. Or how many times have you been staring up at a"
+    },
+    {
+      "start": 53.7,
+      "end": 58.6,
+      "text": "bright red loss? You look back at the charts, then back up at the loss and you say, there just"
+    },
+    {
+      "start": 58.6,
+      "end": 63.1,
+      "text": "ain't no way this trade is going to work. So you go ahead and accept the loss. Then moments later,"
+    },
+    {
+      "start": 63.1,
+      "end": 68.6,
+      "text": "the asset starts moving in the direction that you thought it would. And there you sit empty handed,"
+    },
+    {
+      "start": 68.6,
+      "end": 74.2,
+      "text": "taking an unnecessary loss. Or how many times have you been in a trade and you just wished"
+    },
+    {
+      "start": 74.2,
+      "end": 79.0,
+      "text": "somebody would have stopped you from pushing the button because ever since you've been in this trade,"
+    },
+    {
+      "start": 79.0,
+      "end": 83.9,
+      "text": "it's done nothing but drain your emotional energy dry. Now, if these are real problems that you're"
+    },
+    {
+      "start": 83.9,
+      "end": 89.1,
+      "text": "suffering from right now, the measured move is a real solution. Now, my name is Doug and I've"
+    },
+    {
+      "start": 89.1,
+      "end": 93.4,
+      "text": "been a professional trader now for 26 years. In today's video, I'm going to show you how to use"
+    },
+    {
+      "start": 93.4,
+      "end": 97.8,
+      "text": "the measured move to your advantage, how you are going to increase the quality of your winning"
+    },
+    {
+      "start": 97.8,
+      "end": 103.4,
+      "text": "trades, reduce the pain and size of your losing trades. And more importantly, avoid those trades"
+    },
+    {
+      "start": 103.4,
+      "end": 108.6,
+      "text": "that continue to drain your mental energy dry. And as always, everything I say in today's video,"
+    },
+    {
+      "start": 108.6,
+      "end": 113.8,
+      "text": "I will back it up with a series of live trades in a live market. That way you know the measured"
+    },
+    {
+      "start": 113.8,
+      "end": 120.9,
+      "text": "move is for real. So let's get started. So what exactly is a measured move? A measured move is"
+    },
+    {
+      "start": 120.9,
+      "end": 127.6,
+      "text": "a belief that all assets move in predictable price patterns like rhythmic sequences. And all future"
+    },
+    {
+      "start": 127.6,
+      "end": 134.6,
+      "text": "price moves of a particular asset can be accurately predicted by understanding the price moves that"
+    },
+    {
+      "start": 134.6,
+      "end": 138.9,
+      "text": "happened beforehand. Now, let me take what I just said there and kind of simplify it for everyone"
+    },
+    {
+      "start": 138.9,
+      "end": 144.2,
+      "text": "who is watching. So everything that you ever trade is going to have an opening price and a closing"
+    },
+    {
+      "start": 144.2,
+      "end": 149.4,
+      "text": "price. And let's say for today's example, the price of the asset that you were trading opened up"
+    },
+    {
+      "start": 149.4,
+      "end": 155.1,
+      "text": "here and it closed the day all the way up here. Now, based on this example, it's easy to see that"
+    },
+    {
+      "start": 155.1,
+      "end": 159.5,
+      "text": "the price of the asset you were trading had gone up in value for the day. And if you were looking"
+    },
+    {
+      "start": 159.5,
+      "end": 165.8,
+      "text": "at only a daily chart, that price actually would be reflected by one singular green candle."
+    },
+    {
+      "start": 165.8,
+      "end": 170.0,
+      "text": "However, if you've done any intraday trading and you're using smaller time frame charts,"
+    },
+    {
+      "start": 170.0,
+      "end": 174.0,
+      "text": "you know, nothing just looks like it. It doesn't go straight up from open to close."
+    },
+    {
+      "start": 174.0,
+      "end": 180.2,
+      "text": "What happens in the real world is that price is reflected through multiple changes of price and"
+    },
+    {
+      "start": 180.2,
+      "end": 185.4,
+      "text": "momentum, a series of up and down moves throughout the entire day. And it will look very similar"
+    },
+    {
+      "start": 185.4,
+      "end": 190.7,
+      "text": "to something that I've drawn here, correct? Now, this right here is one of the biggest problems"
+    },
+    {
+      "start": 190.7,
+      "end": 196.5,
+      "text": "newer traders will face because when they see these abrupt changes of price and momentum,"
+    },
+    {
+      "start": 196.5,
+      "end": 203.0,
+      "text": "it naturally leads them to becoming confused because they don't know for sure what the following"
+    },
+    {
+      "start": 203.0,
+      "end": 208.8,
+      "text": "moves in that asset is going to be. This obviously leads to a lack of confidence. And of course,"
+    },
+    {
+      "start": 208.8,
+      "end": 213.4,
+      "text": "once you lose confidence or don't have any confidence, it leads to all of these chronic"
+    },
+    {
+      "start": 213.5,
+      "end": 218.6,
+      "text": "problems, the major problems that affect traders on a day-to-day basis, like taking your gains too"
+    },
+    {
+      "start": 218.6,
+      "end": 224.6,
+      "text": "soon, getting stopped out too soon, and just feeling like you're always a step behind and you're just"
+    },
+    {
+      "start": 224.6,
+      "end": 230.3,
+      "text": "entering the unknown. This is where professional traders differ because when they see this type"
+    },
+    {
+      "start": 230.3,
+      "end": 237.8,
+      "text": "of price action, they already know what the future moves of that asset is most likely going to be."
+    },
+    {
+      "start": 237.8,
+      "end": 242.5,
+      "text": "And let me show you how this works. So here's how a professional would look at this type of price"
+    },
+    {
+      "start": 242.5,
+      "end": 248.6,
+      "text": "action. Each one of these short-term bursts of momentum, in this case, it is upward, is referred"
+    },
+    {
+      "start": 248.6,
+      "end": 255.7,
+      "text": "to as a price wave or a leg. And you will get about three to five of these any given day on"
+    },
+    {
+      "start": 255.7,
+      "end": 263.0,
+      "text": "average, each one representing a great opportunity to make money. Now, they're normally separated"
+    },
+    {
+      "start": 263.0,
+      "end": 268.9,
+      "text": "by short-term periods of consolidation, right? You may have heard that term as well. Now,"
+    },
+    {
+      "start": 268.9,
+      "end": 274.3,
+      "text": "where the measured move comes in and how it's accurately able to predict these types of price"
+    },
+    {
+      "start": 274.3,
+      "end": 280.6,
+      "text": "waves is the measured move works on the very opening move because there is a value to this move."
+    },
+    {
+      "start": 280.6,
+      "end": 287.9,
+      "text": "And the size of this move should be repeated multiple times per day. Now, let me break down"
+    },
+    {
+      "start": 287.9,
+      "end": 292.9,
+      "text": "exactly what I said. So anything that you ever trade is going to do one of two things at the open."
+    },
+    {
+      "start": 292.9,
+      "end": 297.6,
+      "text": "This is a guarantee. The asset you're trading is either going to move up at the open or it's going"
+    },
+    {
+      "start": 297.6,
+      "end": 301.8,
+      "text": "to move down. Now, just for this demonstration, we're going to stick with an upward moment to"
+    },
+    {
+      "start": 301.8,
+      "end": 305.9,
+      "text": "move because that's what we started drawing. The asset you're trading, though, is not going"
+    },
+    {
+      "start": 305.9,
+      "end": 311.0,
+      "text": "to go sideways, maybe for 30 or 40 seconds, but it's going to make a short-term price move up"
+    },
+    {
+      "start": 311.0,
+      "end": 316.9,
+      "text": "or down. Now, sometimes that move is extremely aggressive. Sometimes it's mild, but nonetheless,"
+    },
+    {
+      "start": 316.9,
+      "end": 323.0,
+      "text": "that is what you're going to get. Now, shortly after the market opens, this price is going to"
+    },
+    {
+      "start": 323.1,
+      "end": 328.8,
+      "text": "slow down in speed and aggression and seem to come to a standstill. Now, that might look like"
+    },
+    {
+      "start": 328.8,
+      "end": 334.8,
+      "text": "slight decreasing prices, slight increasing prices, but nonetheless, it's just going to kind of slow"
+    },
+    {
+      "start": 334.8,
+      "end": 341.2,
+      "text": "down its speed, pace, and momentum. Now, the very bottom part to the top part of this opening move"
+    },
+    {
+      "start": 341.2,
+      "end": 345.8,
+      "text": "is something that we call the opening range. Now, you may have heard that term used before,"
+    },
+    {
+      "start": 345.8,
+      "end": 351.8,
+      "text": "and of course, the sideways price actions refer to as consolidation. Here's the beauty. The very"
+    },
+    {
+      "start": 351.8,
+      "end": 357.6,
+      "text": "base of this opening move to the top, there's a numerical value attached to this. So, if you're"
+    },
+    {
+      "start": 357.6,
+      "end": 362.1,
+      "text": "trading stocks, that would be dollars per share. If you're trading foreign currency, that would be"
+    },
+    {
+      "start": 362.1,
+      "end": 367.4,
+      "text": "pips. If you're trading something like futures, that would be points. So, this moved a certain"
+    },
+    {
+      "start": 367.4,
+      "end": 371.8,
+      "text": "distance. So, to make today's example easy, let's say I'm trading futures contracts,"
+    },
+    {
+      "start": 371.8,
+      "end": 378.3,
+      "text": "and those are points, and the base of this move to the top of that move equal 10 total points."
+    },
+    {
+      "start": 378.3,
+      "end": 384.6,
+      "text": "The 10 total points becomes the measured move, and here's where that comes into play. Here's a"
+    },
+    {
+      "start": 384.6,
+      "end": 390.7,
+      "text": "guarantee. At some point during the day, the asset you're trading will attempt to make another price"
+    },
+    {
+      "start": 390.7,
+      "end": 397.7,
+      "text": "leg. It will either move outside of this consolidation and create a new wave of price up, or this will"
+    },
+    {
+      "start": 397.7,
+      "end": 406.4,
+      "text": "fail, and it will create a new wave of price down. Now, the size and speed of this next move"
+    },
+    {
+      "start": 406.4,
+      "end": 414.3,
+      "text": "will most likely mirror the size and speed of the first move, which this would be 10 points up"
+    },
+    {
+      "start": 414.3,
+      "end": 423.5,
+      "text": "or 10 points down. This gives us an extreme edge on knowing exactly what we stand to gain or lose"
+    },
+    {
+      "start": 423.5,
+      "end": 428.6,
+      "text": "before a move ever happens. Now, you might not know this, but this is actually something you're"
+    },
+    {
+      "start": 428.6,
+      "end": 433.6,
+      "text": "probably involved in already, because if I pull up something like a standard chart pattern cheat"
+    },
+    {
+      "start": 433.7,
+      "end": 438.6,
+      "text": "sheet that you can just pull off of the internet, I mean, all of us start out learning these patterns,"
+    },
+    {
+      "start": 438.6,
+      "end": 444.6,
+      "text": "but this same three step formula is what they are. Notice that each one of these have the same"
+    },
+    {
+      "start": 444.6,
+      "end": 450.4,
+      "text": "makeup to them. There's an opening thrust move, which is the opening range, then the asset goes"
+    },
+    {
+      "start": 450.4,
+      "end": 457.6,
+      "text": "through a consolidated period, and then there is another wave of price momentum. Now, the wave of"
+    },
+    {
+      "start": 457.6,
+      "end": 464.6,
+      "text": "price momentum over here is most likely going to be the same size of the original opening move,"
+    },
+    {
+      "start": 464.6,
+      "end": 471.4,
+      "text": "and this is what you and I are after. We're looking to trade that second wave of momentum,"
+    },
+    {
+      "start": 471.4,
+      "end": 475.8,
+      "text": "but more importantly, we know exactly what it's worth. So what we're going to do now is I'm going"
+    },
+    {
+      "start": 475.8,
+      "end": 481.1,
+      "text": "to show you what this looks like on a live chart and how you can quickly calculate the opening range"
+    },
+    {
+      "start": 481.1,
+      "end": 485.9,
+      "text": "move. Now, where we need to begin with this is we must first determine what is our opening range,"
+    },
+    {
+      "start": 485.9,
+      "end": 489.6,
+      "text": "that way we can quickly calculate what the measured move is. Now, this is very easy to do,"
+    },
+    {
+      "start": 489.6,
+      "end": 493.4,
+      "text": "and here's how we're going to do it. Take whatever asset you are trading, don't care what it is,"
+    },
+    {
+      "start": 493.4,
+      "end": 497.9,
+      "text": "and I want you to move it immediately to an intraday 15 minute timeframe. Now, for reference,"
+    },
+    {
+      "start": 497.9,
+      "end": 501.7,
+      "text": "I'm going to be using the stock Tesla today, but I'll switch to some other ones here in just a"
+    },
+    {
+      "start": 501.7,
+      "end": 506.6,
+      "text": "minute, but it is important that you start with a 15 minute timeframe. You want to allow the very"
+    },
+    {
+      "start": 506.6,
+      "end": 512.5,
+      "text": "first 15 minutes of each market session to pass before you do anything at all, and we'll talk"
+    },
+    {
+      "start": 512.5,
+      "end": 516.1,
+      "text": "about that in a minute. So whatever market you're trading, wherever you are in the world,"
+    },
+    {
+      "start": 516.1,
+      "end": 521.4,
+      "text": "there's official opening ceremony, let the first 15 minutes of each day pass before you do anything"
+    },
+    {
+      "start": 521.4,
+      "end": 526.3,
+      "text": "and let this candle close. Once this candle has closed, you want to grab any type of drawing"
+    },
+    {
+      "start": 526.3,
+      "end": 531.1,
+      "text": "software that you may have within your platform, and you want to connect the very highest price"
+    },
+    {
+      "start": 531.1,
+      "end": 536.3,
+      "text": "point of that candle, WIC included, and the very low price point of that candle. Now,"
+    },
+    {
+      "start": 536.3,
+      "end": 541.5,
+      "text": "longtime followers of the channel who like the box theory as much as I do, you can use the box here,"
+    },
+    {
+      "start": 541.5,
+      "end": 545.2,
+      "text": "but for today, I just want to use these lines because it's going to keep our charts just a"
+    },
+    {
+      "start": 545.2,
+      "end": 550.6,
+      "text": "little bit cleaner. Now, once you have done this, the next step is to take any measuring tool and"
+    },
+    {
+      "start": 550.6,
+      "end": 555.9,
+      "text": "measure the entire distance of that candle from the bottom to the top, and you see in Tesla's case,"
+    },
+    {
+      "start": 555.9,
+      "end": 563.3,
+      "text": "that's going to give us a number of $5 and that $5 becomes our measured move. Simple as that,"
+    },
+    {
+      "start": 563.3,
+      "end": 567.3,
+      "text": "that's how we find our measured move. Now, at this point in the video, there are three major"
+    },
+    {
+      "start": 567.3,
+      "end": 573.2,
+      "text": "takeaways that you need to understand right here at this point, and here they are. Number one is the"
+    },
+    {
+      "start": 573.2,
+      "end": 578.8,
+      "text": "line at the top of the candle represents the opening range's strongest and most influential"
+    },
+    {
+      "start": 578.8,
+      "end": 584.4,
+      "text": "seller, and the bottom of that candle stick where the line is represents the opening range's most"
+    },
+    {
+      "start": 584.4,
+      "end": 589.6,
+      "text": "influential strongest buyer. Now, that might be different than the previous days, high and low"
+    },
+    {
+      "start": 589.6,
+      "end": 595.0,
+      "text": "buyer and seller, but this is the opening range, high and low buyer and seller. What you need to"
+    },
+    {
+      "start": 595.0,
+      "end": 600.6,
+      "text": "know about that for right now is when we enter our trades, what we want to do is make sure that our"
+    },
+    {
+      "start": 600.6,
+      "end": 606.2,
+      "text": "entries are as close to those lines as possible, and we want to stay out of the middle of the chart."
+    },
+    {
+      "start": 606.8,
+      "end": 615.1,
+      "text": "The next is the $5 worth of measured move. This is our money. So when we enter this trade and if we"
+    },
+    {
+      "start": 615.1,
+      "end": 623.4,
+      "text": "take a trade on Tesla, we expect to be paid $5 in value. So if we put a thousand shares on the table,"
+    },
+    {
+      "start": 623.4,
+      "end": 631.1,
+      "text": "we're looking for five grand. So we've got to do our very best to just hold that trade and collect"
+    },
+    {
+      "start": 631.1,
+      "end": 637.6,
+      "text": "that five bucks, right? And then the next thing you need to take away is do me a favor, don't trade"
+    },
+    {
+      "start": 637.6,
+      "end": 643.4,
+      "text": "in the first 15 minutes of any session. And here's why. The very first 15 minutes of each day is the"
+    },
+    {
+      "start": 643.4,
+      "end": 648.6,
+      "text": "most erratic session that you could imagine. It's got the most volume, the most market participants,"
+    },
+    {
+      "start": 648.6,
+      "end": 654.2,
+      "text": "therefore it has the most sketchy and inconsistent price action. And in order for someone to be"
+    },
+    {
+      "start": 654.2,
+      "end": 658.6,
+      "text": "successful there, and trust me, there's a lot of people, but in order for you to be very successful"
+    },
+    {
+      "start": 658.6,
+      "end": 662.6,
+      "text": "there, you must have a strategy that you're extremely comfortable with. That's been back"
+    },
+    {
+      "start": 662.6,
+      "end": 669.4,
+      "text": "tested forever. But more importantly, you better be fast. You have any moments of doubt or sluggish"
+    },
+    {
+      "start": 669.4,
+      "end": 673.7,
+      "text": "price action reading with a lot, which a lot of us amateurs did. It was like that when I started."
+    },
+    {
+      "start": 673.7,
+      "end": 677.5,
+      "text": "It's just no place for you. It's like the death zone for traders."
+    },
+    {
+      "start": 677.5,
+      "end": 682.6,
+      "text": "Stay out of it. Let everyone else have their fun and then we're going to strike later. Now,"
+    },
+    {
+      "start": 682.6,
+      "end": 687.1,
+      "text": "once we've done that, what we want to do here is go ahead and move this 15 minutes down to an"
+    },
+    {
+      "start": 687.1,
+      "end": 693.4,
+      "text": "intraday five minutes. This will help us dial in the perfect entry that we are looking for here"
+    },
+    {
+      "start": 693.4,
+      "end": 699.2,
+      "text": "on this chart. Now, once we've moved to a five minute chart, we can now shift into three rolls."
+    },
+    {
+      "start": 699.2,
+      "end": 704.3,
+      "text": "This is all you need to do. Just follow these three rules here. And that's it."
+    },
+    {
+      "start": 704.3,
+      "end": 712.2,
+      "text": "Rule number one, we are only looking to trade the asset that we're trading here out of consolidation."
+    },
+    {
+      "start": 712.2,
+      "end": 718.2,
+      "text": "So if you go back to the whiteboard, Tesla looks much like that. We've had an impulse of price"
+    },
+    {
+      "start": 718.2,
+      "end": 725.9,
+      "text": "upward, but we cannot trade it until it slows its momentum down, then makes another price"
+    },
+    {
+      "start": 725.9,
+      "end": 732.2,
+      "text": "leg. This is very important. Do not ever under any circumstances chase into price,"
+    },
+    {
+      "start": 732.2,
+      "end": 740.1,
+      "text": "whether it's a buy or sell, we need this consolidation. Rule number two is this $5"
+    },
+    {
+      "start": 740.1,
+      "end": 745.1,
+      "text": "measured move. We've already determined that we need to hold this as long as possible."
+    },
+    {
+      "start": 745.1,
+      "end": 752.8,
+      "text": "Therefore, we should not risk anymore than 30% of that amount on this trade."
+    },
+    {
+      "start": 752.8,
+      "end": 759.2,
+      "text": "So if I take 30% of the $5 measured move, that's going to leave me with roughly $150."
+    },
+    {
+      "start": 759.2,
+      "end": 764.1,
+      "text": "Now, it doesn't always have to be to the penny, but you have a definitive number."
+    },
+    {
+      "start": 764.1,
+      "end": 769.2,
+      "text": "So think about what the measured moves doing here for you. You've got an exact target."
+    },
+    {
+      "start": 769.2,
+      "end": 774.2,
+      "text": "You've got an exact strategy. You've got an exact risk. And under these rules,"
+    },
+    {
+      "start": 774.7,
+      "end": 781.1,
+      "text": "there is no gray area. It's just straight forward. Okay. And rule number three,"
+    },
+    {
+      "start": 782.0,
+      "end": 787.4,
+      "text": "if we're fortunate enough to pick up this $5 of a measured move, we're going to take it."
+    },
+    {
+      "start": 787.4,
+      "end": 794.9,
+      "text": "I don't care if Tesla goes up $72, we came for five, we get five, we leave. That's the deal."
+    },
+    {
+      "start": 794.9,
+      "end": 799.8,
+      "text": "That's the risk. That's the reward. It's either one of the other. So let's move a couple of bars"
+    },
+    {
+      "start": 799.8,
+      "end": 804.9,
+      "text": "forward and see what we get. So notice Tesla starts to build a consolidated formation. So let"
+    },
+    {
+      "start": 804.9,
+      "end": 810.0,
+      "text": "me just kind of draw it for you. You have your impulse up. And now you get this sideways box"
+    },
+    {
+      "start": 810.0,
+      "end": 814.6,
+      "text": "of consolidation just like this. Okay. So what I'm going to do to make this look clean is I'm"
+    },
+    {
+      "start": 814.6,
+      "end": 819.4,
+      "text": "just going to grab this line right here. And I'm going to move it to the top portion of this"
+    },
+    {
+      "start": 819.4,
+      "end": 824.6,
+      "text": "consolidation. And I'm going to grab this line to the bottom port. Here's what we're going to do."
+    },
+    {
+      "start": 824.6,
+      "end": 829.7,
+      "text": "If the price of Tesla hits this line, we're going to buy it. And we're going to look to"
+    },
+    {
+      "start": 829.8,
+      "end": 834.9,
+      "text": "get $5 up here. If it breaks the bottom part of this line, we're going to sell it and we're going"
+    },
+    {
+      "start": 834.9,
+      "end": 841.4,
+      "text": "to look to get $5 here. And our risk is going to be under the next candle or $1.50. So if I move"
+    },
+    {
+      "start": 841.4,
+      "end": 848.9,
+      "text": "the next bar forward, what do we have? We have a test of that early morning seller. So we're going"
+    },
+    {
+      "start": 848.9,
+      "end": 855.1,
+      "text": "to buy this. Now the next step is to get the risk dialed in, which is $1.50. And that's going to be"
+    },
+    {
+      "start": 855.1,
+      "end": 861.4,
+      "text": "just right underneath those candles are very close to it. And the next is we're going to"
+    },
+    {
+      "start": 861.4,
+      "end": 867.9,
+      "text": "measure up $5. Now from here, what I like to do is not measure up $5 where we entered,"
+    },
+    {
+      "start": 867.9,
+      "end": 873.5,
+      "text": "but $5 from the base of the candle where the move started. And that's going to put us to about right,"
+    },
+    {
+      "start": 875.0,
+      "end": 878.9,
+      "text": "yeah, let's say right there. Let's just get close enough. Okay. That's good enough right up there."
+    },
+    {
+      "start": 878.9,
+      "end": 885.5,
+      "text": "Okay. That's going to be $5. So the target price goes right up here into that $5 range."
+    },
+    {
+      "start": 885.5,
+      "end": 889.6,
+      "text": "There's your trade. There isn't anything else to it. It either hits one of those numbers,"
+    },
+    {
+      "start": 889.6,
+      "end": 893.6,
+      "text": "you either get paid or you don't get paid. So if we kind of move forward, you see that Tesla"
+    },
+    {
+      "start": 893.6,
+      "end": 899.5,
+      "text": "immediately moves right into that. Now, if I kind of go a couple of candlesticks here forward and"
+    },
+    {
+      "start": 899.5,
+      "end": 905.4,
+      "text": "take a look at what we have, I want you to just think about this chart. Notice a couple of nuances."
+    },
+    {
+      "start": 905.4,
+      "end": 911.7,
+      "text": "Notice that the very second move in this wave that we just traded was almost identical to the"
+    },
+    {
+      "start": 911.7,
+      "end": 917.1,
+      "text": "first wave, correct? Just like the measure move that the theory is price patterns will be repeated."
+    },
+    {
+      "start": 917.1,
+      "end": 924.3,
+      "text": "So if price patterns are going to be repeated and after $5 up here, you tapered off into a"
+    },
+    {
+      "start": 924.3,
+      "end": 931.6,
+      "text": "consolidated period, do you or do you not have another trade? Think about it. I think you do,"
+    },
+    {
+      "start": 931.6,
+      "end": 938.5,
+      "text": "right? So if I put a line above the high of this price point and one right here into the"
+    },
+    {
+      "start": 938.5,
+      "end": 946.4,
+      "text": "consolidation, I believe I'm breaking consolidation here to the downside, which means I have a"
+    },
+    {
+      "start": 946.4,
+      "end": 951.5,
+      "text": "short sell here. So based off of what happened earlier, if we're following the measured move,"
+    },
+    {
+      "start": 952.1,
+      "end": 957.2,
+      "text": "that's a sell. The stop loss goes right back above. And now the next step from here is just to put"
+    },
+    {
+      "start": 957.3,
+      "end": 962.7,
+      "text": "our target price down there at about $5, the measured move, right? It's like the same trade"
+    },
+    {
+      "start": 962.7,
+      "end": 967.1,
+      "text": "just inverse. So if I just kind of play this through, what do we end up with? This Tesla"
+    },
+    {
+      "start": 967.1,
+      "end": 972.2,
+      "text": "finally makes its way down there following the path of this measured move. Now I want this chart to"
+    },
+    {
+      "start": 972.2,
+      "end": 975.4,
+      "text": "kind of just finish out for the day because I want to show you something, especially you really"
+    },
+    {
+      "start": 975.4,
+      "end": 979.9,
+      "text": "truly understand just how powerful this measured move is. And I'm going to stop it about right there."
+    },
+    {
+      "start": 980.9,
+      "end": 988.7,
+      "text": "What do you see? Notice that once this $5 move was over, it recreated yet again"
+    },
+    {
+      "start": 988.7,
+      "end": 993.3,
+      "text": "another $5 move. Actually, this one was just a little bit further. And there was another trade"
+    },
+    {
+      "start": 993.3,
+      "end": 999.9,
+      "text": "coming out of consolidation back there. So this one asset using the measured move, the $5 measured"
+    },
+    {
+      "start": 999.9,
+      "end": 1010.5,
+      "text": "move from the open gave you $1, $2, $3 different $5 trades. Simple as that. So the next asset"
+    },
+    {
+      "start": 1010.5,
+      "end": 1015.2,
+      "text": "we're going to look at is going to be the NASDAQ In-Q Futures. I already got the 15-minute chart"
+    },
+    {
+      "start": 1015.2,
+      "end": 1019.6,
+      "text": "set up and the bar has already closed. So we're going to walk through this step by step, see if"
+    },
+    {
+      "start": 1019.6,
+      "end": 1023.8,
+      "text": "you can figure out the steps. And if you need to rewind it, please do so. So the first thing we do"
+    },
+    {
+      "start": 1023.8,
+      "end": 1027.9,
+      "text": "is what? We want to grab some sort of drawing tool marked the very highest price point and the very"
+    },
+    {
+      "start": 1027.9,
+      "end": 1033.0,
+      "text": "lowest price point of that opening candle. And that's where we want to position ourselves. We"
+    },
+    {
+      "start": 1033.0,
+      "end": 1037.2,
+      "text": "also want to stay out of trading that first 15 minutes. We want to try to enter at one of these"
+    },
+    {
+      "start": 1037.2,
+      "end": 1041.4,
+      "text": "lines. The next is we want to grab a measuring tool. We want to measure the bottom to the top"
+    },
+    {
+      "start": 1041.4,
+      "end": 1047.4,
+      "text": "or the top to the bottom. And you're going to see in this case, we have about 280 NASDAQ points."
+    },
+    {
+      "start": 1047.4,
+      "end": 1053.0,
+      "text": "That's a lot of NASDAQ points. So that's our measured move. So somewhere as crazy as it may"
+    },
+    {
+      "start": 1053.0,
+      "end": 1059.1,
+      "text": "sound, there's going to be another 280 point move somewhere on the right side of this chart."
+    },
+    {
+      "start": 1059.1,
+      "end": 1066.2,
+      "text": "We just don't know where. So we can calculate our risk too. We can take that 30%. And that gives us"
+    },
+    {
+      "start": 1066.2,
+      "end": 1072.8,
+      "text": "about 84 points. So we're looking for 84 points of risk, 280 point gains. Now after that, all we"
+    },
+    {
+      "start": 1072.8,
+      "end": 1077.8,
+      "text": "got to do is just dial it down to the intraday five minutes so we can get that perfect consolidation,"
+    },
+    {
+      "start": 1077.8,
+      "end": 1082.5,
+      "text": "look for that perfect move. And all we need is just one of these candles to break that"
+    },
+    {
+      "start": 1082.5,
+      "end": 1088.3,
+      "text": "consolidation. So any one of these candles that get taken out right here, that's going to be good."
+    },
+    {
+      "start": 1088.3,
+      "end": 1093.6,
+      "text": "You just need a break. Sometimes these consolidations are a minute or two long. Sometimes they're"
+    },
+    {
+      "start": 1093.6,
+      "end": 1100.6,
+      "text": "an hour long. So you'll see right here is that's a good enough confirmation. I'm going to fast"
+    },
+    {
+      "start": 1100.6,
+      "end": 1106.1,
+      "text": "forward it to the next bar. Now after this one, the stop loss is going to be about 84 points."
+    },
+    {
+      "start": 1106.1,
+      "end": 1112.2,
+      "text": "That's going to be pretty tight. That's going to be about right to the top of the closing spot."
+    },
+    {
+      "start": 1112.2,
+      "end": 1118.1,
+      "text": "And what we're going to do is measure down about 280. I'm going to need a tool to get down 280."
+    },
+    {
+      "start": 1118.1,
+      "end": 1123.4,
+      "text": "That's going to be all the way down here at the bottom of the screen. Wow, that's a long,"
+    },
+    {
+      "start": 1123.4,
+      "end": 1128.8,
+      "text": "long way up. That's going to be our target price right there. Okay. So again, the bigger the measure"
+    },
+    {
+      "start": 1128.8,
+      "end": 1133.7,
+      "text": "of move, the bigger the opportunity. I want to move one bar forward and just show you something here."
+    },
+    {
+      "start": 1133.7,
+      "end": 1139.8,
+      "text": "In a real environment for a newer trader, the entry probably would have been a little bit better"
+    },
+    {
+      "start": 1139.8,
+      "end": 1146.6,
+      "text": "on this candlestick right here with a tighter stop right here. I probably would have waited"
+    },
+    {
+      "start": 1146.6,
+      "end": 1151.4,
+      "text": "for that and just hit that candle while it was in motion. When you do these playbacks like this,"
+    },
+    {
+      "start": 1151.4,
+      "end": 1158.2,
+      "text": "it won't let you do it. Okay. But still rules are rules. We've got an 84 point stop. We've got a"
+    },
+    {
+      "start": 1158.3,
+      "end": 1163.2,
+      "text": "humongously large target here at 280. I'm going to go ahead and play it through. And while it's"
+    },
+    {
+      "start": 1163.2,
+      "end": 1169.6,
+      "text": "crazy as it sounds, that's exactly what happens. It gets that. Now, if we can continue to follow"
+    },
+    {
+      "start": 1169.6,
+      "end": 1174.9,
+      "text": "along with the theory of the measured move, notice that later on it produces yet again,"
+    },
+    {
+      "start": 1174.9,
+      "end": 1181.9,
+      "text": "another impulsive upward move. Now these consolidated periods like this can get pretty messy at times,"
+    },
+    {
+      "start": 1181.9,
+      "end": 1186.7,
+      "text": "right? And even if you would have entered back here and got shaken or bacon or whatever,"
+    },
+    {
+      "start": 1186.7,
+      "end": 1192.9,
+      "text": "that's okay. You stick to your stop loss and you believe in the measured move. So there could be"
+    },
+    {
+      "start": 1192.9,
+      "end": 1200.0,
+      "text": "some chop zones, but just believe in it that at some point that thing will break out of that"
+    },
+    {
+      "start": 1200.0,
+      "end": 1206.9,
+      "text": "consolidation and it's going to drive you up 280 or drive you down 280. At least you have an idea."
+    },
+    {
+      "start": 1206.9,
+      "end": 1213.8,
+      "text": "You're not trading blindly. Okay. So I decided to throw a live trade in here and I apologize"
+    },
+    {
+      "start": 1213.8,
+      "end": 1219.8,
+      "text": "ahead of time because I wasn't able to get the screen recorder up fast enough, but I am now"
+    },
+    {
+      "start": 1219.8,
+      "end": 1224.6,
+      "text": "short the YM and what I want to do is I just want you to take a look at this chart right now"
+    },
+    {
+      "start": 1224.6,
+      "end": 1229.8,
+      "text": "based off of what we said. And I want you to see if you can see anything that I saw, if you can see"
+    },
+    {
+      "start": 1229.8,
+      "end": 1233.9,
+      "text": "how the measured move worked, and then I'm going to freeze frame this so I can just kind of walk"
+    },
+    {
+      "start": 1233.9,
+      "end": 1240.2,
+      "text": "right through it. But you can see I am short the YM. So just think about YMI short and what did I"
+    },
+    {
+      "start": 1240.2,
+      "end": 1247.1,
+      "text": "actually do here? So what I wanted to do is just take a snapshot of where the chart is right now."
+    },
+    {
+      "start": 1247.1,
+      "end": 1251.2,
+      "text": "That way you get a good understanding of why did I even go short in the first place. I think most"
+    },
+    {
+      "start": 1251.2,
+      "end": 1255.3,
+      "text": "of you understand, but everything's just moving so fast today. I got the room going, I've got a"
+    },
+    {
+      "start": 1255.3,
+      "end": 1259.8,
+      "text": "couple of other trades going, and I just couldn't fire up this screen recording fast enough to do"
+    },
+    {
+      "start": 1259.8,
+      "end": 1267.1,
+      "text": "it ahead of time. But here it is. Now I've got this set at a five minute timeframe. So this would"
+    },
+    {
+      "start": 1267.4,
+      "end": 1272.8,
+      "text": "be three bars would represent the opening range. It would be these three bars. So to make this video"
+    },
+    {
+      "start": 1272.8,
+      "end": 1279.0,
+      "text": "really easy at this point is we're going to measure the very bottom of price we see, which is this"
+    },
+    {
+      "start": 1279.0,
+      "end": 1285.0,
+      "text": "tail wick and the very top wick right here, which is about 215 points. So I'm just going to put that"
+    },
+    {
+      "start": 1285.0,
+      "end": 1290.4,
+      "text": "215 points up there because that's our measured move. So what did we learn about the measured move"
+    },
+    {
+      "start": 1290.5,
+      "end": 1297.3,
+      "text": "is this is what we're looking to collect in terms of gain. Now quickly we can assess that we're"
+    },
+    {
+      "start": 1297.3,
+      "end": 1302.9,
+      "text": "probably going to need to risk about 75 points. I would say my mental math is telling me here real"
+    },
+    {
+      "start": 1302.9,
+      "end": 1307.2,
+      "text": "quick because I have to use mental math when the markets are moving this fast. That's going to be"
+    },
+    {
+      "start": 1307.2,
+      "end": 1314.6,
+      "text": "about 75 points of a stop loss looking for a 215 point target. Now if we take a better look at this"
+    },
+    {
+      "start": 1314.6,
+      "end": 1320.0,
+      "text": "chart and kind of expose it, there's a few other keys that I didn't really get a chance to mention"
+    },
+    {
+      "start": 1320.0,
+      "end": 1326.4,
+      "text": "during this video. So notice after this 15 minute point bar, the third five minute bar,"
+    },
+    {
+      "start": 1326.4,
+      "end": 1330.2,
+      "text": "you enter this consolidated period. Remember that's what we're looking for and sometimes"
+    },
+    {
+      "start": 1330.2,
+      "end": 1334.5,
+      "text": "they'll last quite a bit, maybe 30 minutes and give you ample time. Sometimes they're just a"
+    },
+    {
+      "start": 1334.5,
+      "end": 1341.3,
+      "text": "couple candles like it was here. But notice we built a nice little base right there and you"
+    },
+    {
+      "start": 1341.3,
+      "end": 1347.8,
+      "text": "can see in this area here we just broke that base. Now there's something else special about"
+    },
+    {
+      "start": 1347.8,
+      "end": 1352.5,
+      "text": "these some of these three wicks right here. If you kind of look right over there to the left,"
+    },
+    {
+      "start": 1352.5,
+      "end": 1358.6,
+      "text": "you'll see the opening bottom was right nudged up against that strong buyer from the morning."
+    },
+    {
+      "start": 1358.6,
+      "end": 1364.8,
+      "text": "Remember we talked about that? So this is kind of where we want to place our entries. Now the real"
+    },
+    {
+      "start": 1364.8,
+      "end": 1370.3,
+      "text": "entry should have been right there, but like I mentioned earlier, sometimes we miss much like"
+    },
+    {
+      "start": 1370.3,
+      "end": 1376.1,
+      "text": "I think it was the Tesla demonstration. I kind of missed that entry. So what I waited to do here,"
+    },
+    {
+      "start": 1376.1,
+      "end": 1381.1,
+      "text": "if you take a good look, I'm going to scoot this over. Let me open it up just a little bit more so"
+    },
+    {
+      "start": 1381.1,
+      "end": 1388.6,
+      "text": "everyone can see it. It tried to go green here. It kind of pushed up price and as soon as it started"
+    },
+    {
+      "start": 1388.6,
+      "end": 1394.2,
+      "text": "to fail, I just put that short in there. So even though I missed that initial entry, it gave me a"
+    },
+    {
+      "start": 1394.2,
+      "end": 1402.0,
+      "text": "second chance here. So for this trade, it's going to be pretty simple. I can use the tool here to"
+    },
+    {
+      "start": 1402.0,
+      "end": 1408.2,
+      "text": "measure while I've gotten the whole thing. We're going to be looking for, since it's a short position,"
+    },
+    {
+      "start": 1409.0,
+      "end": 1413.6,
+      "text": "we're going to be looking at an entry. This is here. So the stop loss is going to be up to"
+    },
+    {
+      "start": 1413.6,
+      "end": 1421.8,
+      "text": "be 75 points. So we're looking, that's going to be just a little bit over 700, maybe about 720"
+    },
+    {
+      "start": 1421.8,
+      "end": 1428.5,
+      "text": "around the top portion of this candle. And again, as crazy as it sounds, this is a big move. Look"
+    },
+    {
+      "start": 1428.5,
+      "end": 1433.7,
+      "text": "where the YM has been, we're going to look to collect 200 points. So that's going to be all the way"
+    },
+    {
+      "start": 1433.7,
+      "end": 1440.8,
+      "text": "down here to 450. So remember the bigger the measured move, the bigger the opportunity, that's"
+    },
+    {
+      "start": 1440.8,
+      "end": 1447.1,
+      "text": "incredibly wide, but that is the anatomy of the trade. Now we're just going to let this play out."
+    },
+    {
+      "start": 1448.1,
+      "end": 1453.3,
+      "text": "Sometimes they go right there. Other times they take a little bit of effort, but we're going to see."
+    },
+    {
+      "start": 1454.2,
+      "end": 1460.6,
+      "text": "So here's the real live chart. And just to kind of ignore my drawing, that's just for my reference."
+    },
+    {
+      "start": 1460.6,
+      "end": 1465.0,
+      "text": "The target is right, but the stop loss isn't that high. I just showed it to you there on the drawing,"
+    },
+    {
+      "start": 1465.0,
+      "end": 1471.4,
+      "text": "but just take a look. It's just continuing to break down. I know it has a long way to go,"
+    },
+    {
+      "start": 1471.4,
+      "end": 1477.8,
+      "text": "but we need to believe in this measured move. So just get a good look at that chart. In an event"
+    },
+    {
+      "start": 1477.8,
+      "end": 1482.8,
+      "text": "like this, if you wanted to, you could trail down the stop and completely get out of the risk. This"
+    },
+    {
+      "start": 1483.0,
+      "end": 1489.1,
+      "text": "is a pretty decent move, but I just want for this live trade, everyone just to see, this is what"
+    },
+    {
+      "start": 1489.1,
+      "end": 1495.2,
+      "text": "we're looking for. How did we make that trade? And what is it that we're ultimately after in terms"
+    },
+    {
+      "start": 1495.2,
+      "end": 1500.8,
+      "text": "of targets and risk? Okay. So I went ahead just for the sake of time and fast forwarded the whole"
+    },
+    {
+      "start": 1500.8,
+      "end": 1508.6,
+      "text": "entire thing. Target already hit, money already collected. This, this right here is what you're"
+    },
+    {
+      "start": 1508.6,
+      "end": 1516.6,
+      "text": "looking for. I hope everyone understands the power of the measured move. It may not seem realistic"
+    },
+    {
+      "start": 1516.6,
+      "end": 1522.9,
+      "text": "at the time when you're in it, but the measure of moves should continue to play out for you in"
+    },
+    {
+      "start": 1522.9,
+      "end": 1529.3,
+      "text": "the future. So you can take any strategy you have, any kind of setup that you have and immediately"
+    },
+    {
+      "start": 1529.3,
+      "end": 1535.8,
+      "text": "figure out what that trade is worth. You have a specific target, you have a specific risk,"
+    },
+    {
+      "start": 1535.8,
+      "end": 1539.0,
+      "text": "and you know exactly what you're after, and that makes all the difference."
+    },
+    {
+      "start": 1539.5,
+      "end": 1544.9,
+      "text": "So guys, I want to thank you for watching today's video. I hope you see value in the measured move,"
+    },
+    {
+      "start": 1544.9,
+      "end": 1548.6,
+      "text": "and it is exactly what you're looking for to help you start making better trades."
+    },
+    {
+      "start": 1548.6,
+      "end": 1553.4,
+      "text": "Two things I want to say in closing. First, if you're looking for quality trade ideas,"
+    },
+    {
+      "start": 1553.4,
+      "end": 1558.5,
+      "text": "every weekend, my wife and I put together a watch list. It's called the Gains Guide. It's free."
+    },
+    {
+      "start": 1558.5,
+      "end": 1562.6,
+      "text": "There's a link down in the description. If that's something you're interested in is getting quality"
+    },
+    {
+      "start": 1562.6,
+      "end": 1566.8,
+      "text": "ideas each and every week to begin the week with, that's what you need. Now, if you're looking for"
+    },
+    {
+      "start": 1566.8,
+      "end": 1572.1,
+      "text": "a little bit more hands-on care, you want to see live trades in a real market, you want to see us"
+    },
+    {
+      "start": 1572.1,
+      "end": 1578.2,
+      "text": "do things just like this and just kind of handhold you through the entire process and help you really"
+    },
+    {
+      "start": 1578.2,
+      "end": 1584.1,
+      "text": "become the successful trader that you want to be, join our live squad. Every day we're trading live"
+    },
+    {
+      "start": 1584.1,
+      "end": 1590.2,
+      "text": "on screen. It's not a discord. It's not a chat. It's a live broadcasted Zoom session where all"
+    },
+    {
+      "start": 1590.2,
+      "end": 1594.4,
+      "text": "of our trades are right there on the screen. It's the best way to learn. So if that's something"
+    },
+    {
+      "start": 1594.4,
+      "end": 1598.5,
+      "text": "that you're interested in, it's down there in the description box. So on that note, let me say thank"
+    },
+    {
+      "start": 1598.5,
+      "end": 1604.0,
+      "text": "you very much for watching today's video. Until next time, take care, trade well, and cheers."
+    }
+  ],
+  "full_text": "In today's video, I'm going to show you how something as simple as just basic math can help you increase the quality of your winning trades, reduce the pain and size of your losing trades, but more importantly, let you know if the trade is even worth you taking in the first place. And what I'm going to show you today is something that we call the measured move. This right here is the secret weapon of all professional traders. And if you ever want to get to that level, you've got to be using some form of the measured move. Otherwise, you're never going to be consistently profitable. Let me explain. How many times have you been in a winning trade, but you were unsure just how much of a winner it could become? You're staring up at that bright green P&L, you look back at the charts back up at that P&L and you say, I want that money when you take it. Then the next thing you know, it just keeps on going the whole entire day. And you just left all that money on the table. Or how many times have you been staring up at a bright red loss? You look back at the charts, then back up at the loss and you say, there just ain't no way this trade is going to work. So you go ahead and accept the loss. Then moments later, the asset starts moving in the direction that you thought it would. And there you sit empty handed, taking an unnecessary loss. Or how many times have you been in a trade and you just wished somebody would have stopped you from pushing the button because ever since you've been in this trade, it's done nothing but drain your emotional energy dry. Now, if these are real problems that you're suffering from right now, the measured move is a real solution. Now, my name is Doug and I've been a professional trader now for 26 years. In today's video, I'm going to show you how to use the measured move to your advantage, how you are going to increase the quality of your winning trades, reduce the pain and size of your losing trades. And more importantly, avoid those trades that continue to drain your mental energy dry. And as always, everything I say in today's video, I will back it up with a series of live trades in a live market. That way you know the measured move is for real. So let's get started. So what exactly is a measured move? A measured move is a belief that all assets move in predictable price patterns like rhythmic sequences. And all future price moves of a particular asset can be accurately predicted by understanding the price moves that happened beforehand. Now, let me take what I just said there and kind of simplify it for everyone who is watching. So everything that you ever trade is going to have an opening price and a closing price. And let's say for today's example, the price of the asset that you were trading opened up here and it closed the day all the way up here. Now, based on this example, it's easy to see that the price of the asset you were trading had gone up in value for the day. And if you were looking at only a daily chart, that price actually would be reflected by one singular green candle. However, if you've done any intraday trading and you're using smaller time frame charts, you know, nothing just looks like it. It doesn't go straight up from open to close. What happens in the real world is that price is reflected through multiple changes of price and momentum, a series of up and down moves throughout the entire day. And it will look very similar to something that I've drawn here, correct? Now, this right here is one of the biggest problems newer traders will face because when they see these abrupt changes of price and momentum, it naturally leads them to becoming confused because they don't know for sure what the following moves in that asset is going to be. This obviously leads to a lack of confidence. And of course, once you lose confidence or don't have any confidence, it leads to all of these chronic problems, the major problems that affect traders on a day-to-day basis, like taking your gains too soon, getting stopped out too soon, and just feeling like you're always a step behind and you're just entering the unknown. This is where professional traders differ because when they see this type of price action, they already know what the future moves of that asset is most likely going to be. And let me show you how this works. So here's how a professional would look at this type of price action. Each one of these short-term bursts of momentum, in this case, it is upward, is referred to as a price wave or a leg. And you will get about three to five of these any given day on average, each one representing a great opportunity to make money. Now, they're normally separated by short-term periods of consolidation, right? You may have heard that term as well. Now, where the measured move comes in and how it's accurately able to predict these types of price waves is the measured move works on the very opening move because there is a value to this move. And the size of this move should be repeated multiple times per day. Now, let me break down exactly what I said. So anything that you ever trade is going to do one of two things at the open. This is a guarantee. The asset you're trading is either going to move up at the open or it's going to move down. Now, just for this demonstration, we're going to stick with an upward moment to move because that's what we started drawing. The asset you're trading, though, is not going to go sideways, maybe for 30 or 40 seconds, but it's going to make a short-term price move up or down. Now, sometimes that move is extremely aggressive. Sometimes it's mild, but nonetheless, that is what you're going to get. Now, shortly after the market opens, this price is going to slow down in speed and aggression and seem to come to a standstill. Now, that might look like slight decreasing prices, slight increasing prices, but nonetheless, it's just going to kind of slow down its speed, pace, and momentum. Now, the very bottom part to the top part of this opening move is something that we call the opening range. Now, you may have heard that term used before, and of course, the sideways price actions refer to as consolidation. Here's the beauty. The very base of this opening move to the top, there's a numerical value attached to this. So, if you're trading stocks, that would be dollars per share. If you're trading foreign currency, that would be pips. If you're trading something like futures, that would be points. So, this moved a certain distance. So, to make today's example easy, let's say I'm trading futures contracts, and those are points, and the base of this move to the top of that move equal 10 total points. The 10 total points becomes the measured move, and here's where that comes into play. Here's a guarantee. At some point during the day, the asset you're trading will attempt to make another price leg. It will either move outside of this consolidation and create a new wave of price up, or this will fail, and it will create a new wave of price down. Now, the size and speed of this next move will most likely mirror the size and speed of the first move, which this would be 10 points up or 10 points down. This gives us an extreme edge on knowing exactly what we stand to gain or lose before a move ever happens. Now, you might not know this, but this is actually something you're probably involved in already, because if I pull up something like a standard chart pattern cheat sheet that you can just pull off of the internet, I mean, all of us start out learning these patterns, but this same three step formula is what they are. Notice that each one of these have the same makeup to them. There's an opening thrust move, which is the opening range, then the asset goes through a consolidated period, and then there is another wave of price momentum. Now, the wave of price momentum over here is most likely going to be the same size of the original opening move, and this is what you and I are after. We're looking to trade that second wave of momentum, but more importantly, we know exactly what it's worth. So what we're going to do now is I'm going to show you what this looks like on a live chart and how you can quickly calculate the opening range move. Now, where we need to begin with this is we must first determine what is our opening range, that way we can quickly calculate what the measured move is. Now, this is very easy to do, and here's how we're going to do it. Take whatever asset you are trading, don't care what it is, and I want you to move it immediately to an intraday 15 minute timeframe. Now, for reference, I'm going to be using the stock Tesla today, but I'll switch to some other ones here in just a minute, but it is important that you start with a 15 minute timeframe. You want to allow the very first 15 minutes of each market session to pass before you do anything at all, and we'll talk about that in a minute. So whatever market you're trading, wherever you are in the world, there's official opening ceremony, let the first 15 minutes of each day pass before you do anything and let this candle close. Once this candle has closed, you want to grab any type of drawing software that you may have within your platform, and you want to connect the very highest price point of that candle, WIC included, and the very low price point of that candle. Now, longtime followers of the channel who like the box theory as much as I do, you can use the box here, but for today, I just want to use these lines because it's going to keep our charts just a little bit cleaner. Now, once you have done this, the next step is to take any measuring tool and measure the entire distance of that candle from the bottom to the top, and you see in Tesla's case, that's going to give us a number of $5 and that $5 becomes our measured move. Simple as that, that's how we find our measured move. Now, at this point in the video, there are three major takeaways that you need to understand right here at this point, and here they are. Number one is the line at the top of the candle represents the opening range's strongest and most influential seller, and the bottom of that candle stick where the line is represents the opening range's most influential strongest buyer. Now, that might be different than the previous days, high and low buyer and seller, but this is the opening range, high and low buyer and seller. What you need to know about that for right now is when we enter our trades, what we want to do is make sure that our entries are as close to those lines as possible, and we want to stay out of the middle of the chart. The next is the $5 worth of measured move. This is our money. So when we enter this trade and if we take a trade on Tesla, we expect to be paid $5 in value. So if we put a thousand shares on the table, we're looking for five grand. So we've got to do our very best to just hold that trade and collect that five bucks, right? And then the next thing you need to take away is do me a favor, don't trade in the first 15 minutes of any session. And here's why. The very first 15 minutes of each day is the most erratic session that you could imagine. It's got the most volume, the most market participants, therefore it has the most sketchy and inconsistent price action. And in order for someone to be successful there, and trust me, there's a lot of people, but in order for you to be very successful there, you must have a strategy that you're extremely comfortable with. That's been back tested forever. But more importantly, you better be fast. You have any moments of doubt or sluggish price action reading with a lot, which a lot of us amateurs did. It was like that when I started. It's just no place for you. It's like the death zone for traders. Stay out of it. Let everyone else have their fun and then we're going to strike later. Now, once we've done that, what we want to do here is go ahead and move this 15 minutes down to an intraday five minutes. This will help us dial in the perfect entry that we are looking for here on this chart. Now, once we've moved to a five minute chart, we can now shift into three rolls. This is all you need to do. Just follow these three rules here. And that's it. Rule number one, we are only looking to trade the asset that we're trading here out of consolidation. So if you go back to the whiteboard, Tesla looks much like that. We've had an impulse of price upward, but we cannot trade it until it slows its momentum down, then makes another price leg. This is very important. Do not ever under any circumstances chase into price, whether it's a buy or sell, we need this consolidation. Rule number two is this $5 measured move. We've already determined that we need to hold this as long as possible. Therefore, we should not risk anymore than 30% of that amount on this trade. So if I take 30% of the $5 measured move, that's going to leave me with roughly $150. Now, it doesn't always have to be to the penny, but you have a definitive number. So think about what the measured moves doing here for you. You've got an exact target. You've got an exact strategy. You've got an exact risk. And under these rules, there is no gray area. It's just straight forward. Okay. And rule number three, if we're fortunate enough to pick up this $5 of a measured move, we're going to take it. I don't care if Tesla goes up $72, we came for five, we get five, we leave. That's the deal. That's the risk. That's the reward. It's either one of the other. So let's move a couple of bars forward and see what we get. So notice Tesla starts to build a consolidated formation. So let me just kind of draw it for you. You have your impulse up. And now you get this sideways box of consolidation just like this. Okay. So what I'm going to do to make this look clean is I'm just going to grab this line right here. And I'm going to move it to the top portion of this consolidation. And I'm going to grab this line to the bottom port. Here's what we're going to do. If the price of Tesla hits this line, we're going to buy it. And we're going to look to get $5 up here. If it breaks the bottom part of this line, we're going to sell it and we're going to look to get $5 here. And our risk is going to be under the next candle or $1.50. So if I move the next bar forward, what do we have? We have a test of that early morning seller. So we're going to buy this. Now the next step is to get the risk dialed in, which is $1.50. And that's going to be just right underneath those candles are very close to it. And the next is we're going to measure up $5. Now from here, what I like to do is not measure up $5 where we entered, but $5 from the base of the candle where the move started. And that's going to put us to about right, yeah, let's say right there. Let's just get close enough. Okay. That's good enough right up there. Okay. That's going to be $5. So the target price goes right up here into that $5 range. There's your trade. There isn't anything else to it. It either hits one of those numbers, you either get paid or you don't get paid. So if we kind of move forward, you see that Tesla immediately moves right into that. Now, if I kind of go a couple of candlesticks here forward and take a look at what we have, I want you to just think about this chart. Notice a couple of nuances. Notice that the very second move in this wave that we just traded was almost identical to the first wave, correct? Just like the measure move that the theory is price patterns will be repeated. So if price patterns are going to be repeated and after $5 up here, you tapered off into a consolidated period, do you or do you not have another trade? Think about it. I think you do, right? So if I put a line above the high of this price point and one right here into the consolidation, I believe I'm breaking consolidation here to the downside, which means I have a short sell here. So based off of what happened earlier, if we're following the measured move, that's a sell. The stop loss goes right back above. And now the next step from here is just to put our target price down there at about $5, the measured move, right? It's like the same trade just inverse. So if I just kind of play this through, what do we end up with? This Tesla finally makes its way down there following the path of this measured move. Now I want this chart to kind of just finish out for the day because I want to show you something, especially you really truly understand just how powerful this measured move is. And I'm going to stop it about right there. What do you see? Notice that once this $5 move was over, it recreated yet again another $5 move. Actually, this one was just a little bit further. And there was another trade coming out of consolidation back there. So this one asset using the measured move, the $5 measured move from the open gave you $1, $2, $3 different $5 trades. Simple as that. So the next asset we're going to look at is going to be the NASDAQ In-Q Futures. I already got the 15-minute chart set up and the bar has already closed. So we're going to walk through this step by step, see if you can figure out the steps. And if you need to rewind it, please do so. So the first thing we do is what? We want to grab some sort of drawing tool marked the very highest price point and the very lowest price point of that opening candle. And that's where we want to position ourselves. We also want to stay out of trading that first 15 minutes. We want to try to enter at one of these lines. The next is we want to grab a measuring tool. We want to measure the bottom to the top or the top to the bottom. And you're going to see in this case, we have about 280 NASDAQ points. That's a lot of NASDAQ points. So that's our measured move. So somewhere as crazy as it may sound, there's going to be another 280 point move somewhere on the right side of this chart. We just don't know where. So we can calculate our risk too. We can take that 30%. And that gives us about 84 points. So we're looking for 84 points of risk, 280 point gains. Now after that, all we got to do is just dial it down to the intraday five minutes so we can get that perfect consolidation, look for that perfect move. And all we need is just one of these candles to break that consolidation. So any one of these candles that get taken out right here, that's going to be good. You just need a break. Sometimes these consolidations are a minute or two long. Sometimes they're an hour long. So you'll see right here is that's a good enough confirmation. I'm going to fast forward it to the next bar. Now after this one, the stop loss is going to be about 84 points. That's going to be pretty tight. That's going to be about right to the top of the closing spot. And what we're going to do is measure down about 280. I'm going to need a tool to get down 280. That's going to be all the way down here at the bottom of the screen. Wow, that's a long, long way up. That's going to be our target price right there. Okay. So again, the bigger the measure of move, the bigger the opportunity. I want to move one bar forward and just show you something here. In a real environment for a newer trader, the entry probably would have been a little bit better on this candlestick right here with a tighter stop right here. I probably would have waited for that and just hit that candle while it was in motion. When you do these playbacks like this, it won't let you do it. Okay. But still rules are rules. We've got an 84 point stop. We've got a humongously large target here at 280. I'm going to go ahead and play it through. And while it's crazy as it sounds, that's exactly what happens. It gets that. Now, if we can continue to follow along with the theory of the measured move, notice that later on it produces yet again, another impulsive upward move. Now these consolidated periods like this can get pretty messy at times, right? And even if you would have entered back here and got shaken or bacon or whatever, that's okay. You stick to your stop loss and you believe in the measured move. So there could be some chop zones, but just believe in it that at some point that thing will break out of that consolidation and it's going to drive you up 280 or drive you down 280. At least you have an idea. You're not trading blindly. Okay. So I decided to throw a live trade in here and I apologize ahead of time because I wasn't able to get the screen recorder up fast enough, but I am now short the YM and what I want to do is I just want you to take a look at this chart right now based off of what we said. And I want you to see if you can see anything that I saw, if you can see how the measured move worked, and then I'm going to freeze frame this so I can just kind of walk right through it. But you can see I am short the YM. So just think about YMI short and what did I actually do here? So what I wanted to do is just take a snapshot of where the chart is right now. That way you get a good understanding of why did I even go short in the first place. I think most of you understand, but everything's just moving so fast today. I got the room going, I've got a couple of other trades going, and I just couldn't fire up this screen recording fast enough to do it ahead of time. But here it is. Now I've got this set at a five minute timeframe. So this would be three bars would represent the opening range. It would be these three bars. So to make this video really easy at this point is we're going to measure the very bottom of price we see, which is this tail wick and the very top wick right here, which is about 215 points. So I'm just going to put that 215 points up there because that's our measured move. So what did we learn about the measured move is this is what we're looking to collect in terms of gain. Now quickly we can assess that we're probably going to need to risk about 75 points. I would say my mental math is telling me here real quick because I have to use mental math when the markets are moving this fast. That's going to be about 75 points of a stop loss looking for a 215 point target. Now if we take a better look at this chart and kind of expose it, there's a few other keys that I didn't really get a chance to mention during this video. So notice after this 15 minute point bar, the third five minute bar, you enter this consolidated period. Remember that's what we're looking for and sometimes they'll last quite a bit, maybe 30 minutes and give you ample time. Sometimes they're just a couple candles like it was here. But notice we built a nice little base right there and you can see in this area here we just broke that base. Now there's something else special about these some of these three wicks right here. If you kind of look right over there to the left, you'll see the opening bottom was right nudged up against that strong buyer from the morning. Remember we talked about that? So this is kind of where we want to place our entries. Now the real entry should have been right there, but like I mentioned earlier, sometimes we miss much like I think it was the Tesla demonstration. I kind of missed that entry. So what I waited to do here, if you take a good look, I'm going to scoot this over. Let me open it up just a little bit more so everyone can see it. It tried to go green here. It kind of pushed up price and as soon as it started to fail, I just put that short in there. So even though I missed that initial entry, it gave me a second chance here. So for this trade, it's going to be pretty simple. I can use the tool here to measure while I've gotten the whole thing. We're going to be looking for, since it's a short position, we're going to be looking at an entry. This is here. So the stop loss is going to be up to be 75 points. So we're looking, that's going to be just a little bit over 700, maybe about 720 around the top portion of this candle. And again, as crazy as it sounds, this is a big move. Look where the YM has been, we're going to look to collect 200 points. So that's going to be all the way down here to 450. So remember the bigger the measured move, the bigger the opportunity, that's incredibly wide, but that is the anatomy of the trade. Now we're just going to let this play out. Sometimes they go right there. Other times they take a little bit of effort, but we're going to see. So here's the real live chart. And just to kind of ignore my drawing, that's just for my reference. The target is right, but the stop loss isn't that high. I just showed it to you there on the drawing, but just take a look. It's just continuing to break down. I know it has a long way to go, but we need to believe in this measured move. So just get a good look at that chart. In an event like this, if you wanted to, you could trail down the stop and completely get out of the risk. This is a pretty decent move, but I just want for this live trade, everyone just to see, this is what we're looking for. How did we make that trade? And what is it that we're ultimately after in terms of targets and risk? Okay. So I went ahead just for the sake of time and fast forwarded the whole entire thing. Target already hit, money already collected. This, this right here is what you're looking for. I hope everyone understands the power of the measured move. It may not seem realistic at the time when you're in it, but the measure of moves should continue to play out for you in the future. So you can take any strategy you have, any kind of setup that you have and immediately figure out what that trade is worth. You have a specific target, you have a specific risk, and you know exactly what you're after, and that makes all the difference. So guys, I want to thank you for watching today's video. I hope you see value in the measured move, and it is exactly what you're looking for to help you start making better trades. Two things I want to say in closing. First, if you're looking for quality trade ideas, every weekend, my wife and I put together a watch list. It's called the Gains Guide. It's free. There's a link down in the description. If that's something you're interested in is getting quality ideas each and every week to begin the week with, that's what you need. Now, if you're looking for a little bit more hands-on care, you want to see live trades in a real market, you want to see us do things just like this and just kind of handhold you through the entire process and help you really become the successful trader that you want to be, join our live squad. Every day we're trading live on screen. It's not a discord. It's not a chat. It's a live broadcasted Zoom session where all of our trades are right there on the screen. It's the best way to learn. So if that's something that you're interested in, it's down there in the description box. So on that note, let me say thank you very much for watching today's video. Until next time, take care, trade well, and cheers."
+}

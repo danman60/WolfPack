@@ -1,0 +1,26 @@
+# Transcript: Video by chase.h.ai
+# Source: https://www.instagram.com/reel/DWA8qG8NeyJ/
+# Project: WolfPack
+# Model: small | Language: en | Duration: 47.7s
+# Transcribed: 2026-04-03 10:09:03
+
+[0.0s - 4.1s] Here is my favorite free cloud code add-on that is super easy to integrate.
+[4.2s - 5.3s] Well, it's not really an add-on.
+[5.3s - 6.8s] It's really just Obsidian.
+[6.8s - 11.0s] I love using Obsidian and cloud code these days, especially in my one
+[11.0s - 14.4s] directory that I use exclusively for personal assistant type tasks.
+[14.4s - 17.8s] Things of things like research or just like general back and forth.
+[18.1s - 23.1s] Obsidian makes it really easy for me to dump all of my stuff from cloud
+[23.1s - 26.7s] code into markdown files and have it organized in a way I can actually see them.
+[26.9s - 29.4s] Plus, I'd like the cool vector diagrams you get with Obsidian.
+[29.4s - 32.1s] But Obsidian and cloud code are such a nice tandem together
+[32.1s - 35.7s] because I would never set up a actual directory like this myself.
+[35.9s - 38.4s] And I certainly wouldn't do all the backlinks either and cloud
+[38.4s - 39.9s] code handles all of it for me.
+[39.9s - 41.7s] And again, the best part is it's free.
+[41.8s - 44.8s] I wouldn't use it for actual like coding projects and coding
+[44.8s - 47.5s] directories, but for personal assistant type thing, it's perfect.
+
+---
+
+Here is my favorite free cloud code add-on that is super easy to integrate. Well, it's not really an add-on. It's really just Obsidian. I love using Obsidian and cloud code these days, especially in my one directory that I use exclusively for personal assistant type tasks. Things of things like research or just like general back and forth. Obsidian makes it really easy for me to dump all of my stuff from cloud code into markdown files and have it organized in a way I can actually see them. Plus, I'd like the cool vector diagrams you get with Obsidian. But Obsidian and cloud code are such a nice tandem together because I would never set up a actual directory like this myself. And I certainly wouldn't do all the backlinks either and cloud code handles all of it for me. And again, the best part is it's free. I wouldn't use it for actual like coding projects and coding directories, but for personal assistant type thing, it's perfect.

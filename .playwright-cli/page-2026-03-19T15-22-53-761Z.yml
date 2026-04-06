@@ -1,0 +1,83 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - link "WolfPack" [ref=e5] [cursor=pointer]:
+          - /url: /
+          - img [ref=e7]
+          - generic [ref=e11]: WolfPack
+        - generic [ref=e12]:
+          - link "Dashboard" [ref=e13] [cursor=pointer]:
+            - /url: /
+          - link "Intelligence" [ref=e14] [cursor=pointer]:
+            - /url: /intelligence
+          - link "Trading" [ref=e15] [cursor=pointer]:
+            - /url: /trading
+          - link "Portfolio" [ref=e16] [cursor=pointer]:
+            - /url: /portfolio
+          - link "Backtest" [ref=e17] [cursor=pointer]:
+            - /url: /backtest
+          - link "Auto-Bot" [ref=e18] [cursor=pointer]:
+            - /url: /auto-bot
+          - link "LP Pools" [ref=e19] [cursor=pointer]:
+            - /url: /pools
+          - link "Settings" [ref=e20] [cursor=pointer]:
+            - /url: /settings
+      - generic [ref=e23]:
+        - button "Hyperliquid" [ref=e24] [cursor=pointer]
+        - button "dYdX" [ref=e25] [cursor=pointer]
+        - button "Kraken" [ref=e26] [cursor=pointer]
+  - main [ref=e27]:
+    - generic [ref=e649]:
+      - generic [ref=e650]:
+        - generic [ref=e651]:
+          - heading "Auto-Bot" [level=1] [ref=e652]
+          - paragraph [ref=e653]: Autonomous trading powered by Brief intelligence
+        - generic [ref=e654]:
+          - generic [ref=e655]: Paused
+          - button "Enable" [ref=e656] [cursor=pointer]
+      - paragraph [ref=e658]: "How it works: The Auto-Bot follows Brief intelligence — when Brief recommends a trade above the conviction threshold, the bot executes it automatically. It also manages positions by auto-executing close, stop-loss, and take-profit adjustments. Operates a separate equity bucket from manual trading."
+      - generic [ref=e659]:
+        - generic [ref=e660]:
+          - paragraph [ref=e661]: Equity
+          - paragraph [ref=e662]: $5,000
+        - generic [ref=e663]:
+          - paragraph [ref=e664]: Starting
+          - paragraph [ref=e665]: $5,000
+        - generic [ref=e666]:
+          - paragraph [ref=e667]: Realized P&L
+          - paragraph [ref=e668]: +$0.00
+        - generic [ref=e669]:
+          - paragraph [ref=e670]: Unrealized P&L
+          - paragraph [ref=e671]: +$0.00
+        - generic [ref=e672]:
+          - paragraph [ref=e673]: Return
+          - paragraph [ref=e674]: +0.00%
+      - generic [ref=e675]:
+        - heading "Configuration" [level=2] [ref=e678]
+        - generic [ref=e679]:
+          - generic [ref=e680]:
+            - text: Conviction Threshold
+            - generic [ref=e681]:
+              - spinbutton [ref=e682]: "80"
+              - generic [ref=e683]: "%"
+            - paragraph [ref=e684]: "Current: 75% — Only executes recs above this level"
+          - generic [ref=e685]:
+            - text: Equity Allocation
+            - generic [ref=e686]:
+              - generic [ref=e687]: $
+              - spinbutton [ref=e688]
+            - paragraph [ref=e689]: Resets equity if no open positions
+          - button "Save Config" [ref=e691] [cursor=pointer]
+      - generic [ref=e692]:
+        - generic [ref=e693]:
+          - heading "Open Positions" [level=2] [ref=e695]
+          - generic [ref=e696]: 0 active
+        - generic [ref=e697]: No open auto-bot positions
+      - generic [ref=e698]:
+        - generic [ref=e699]:
+          - heading "Activity Log" [level=2] [ref=e701]
+          - generic [ref=e702]: 0 trades
+        - generic [ref=e703]: No auto-bot trades yet. Enable the bot and run intelligence to start.
+  - alert [ref=e103]
+  - generic [ref=e506]: $10,000

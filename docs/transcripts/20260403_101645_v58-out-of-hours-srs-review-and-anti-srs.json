@@ -1,0 +1,2347 @@
+{
+  "title": "V58: OUT OF HOURS SRS REVIEW AND ANTI SRS",
+  "url": "https://www.youtube.com/watch?v=iAT6yRz2y6E",
+  "project": "WolfPack",
+  "model": "small",
+  "language": "en",
+  "language_probability": 0.77,
+  "duration_seconds": 2851.4,
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 20.0,
+      "text": "One second."
+    },
+    {
+      "start": 20.0,
+      "end": 45.0,
+      "text": "Alright. Good morning again ladies and gentlemen. I don't know if you are tuning into this."
+    },
+    {
+      "start": 45.0,
+      "end": 51.0,
+      "text": "Obviously I hope that you are. If you are on my channel."
+    },
+    {
+      "start": 51.0,
+      "end": 80.0,
+      "text": "I just want to make sure that I'm live."
+    },
+    {
+      "start": 80.0,
+      "end": 93.0,
+      "text": "Let me just do an audio test."
+    },
+    {
+      "start": 93.0,
+      "end": 116.0,
+      "text": "So ladies and gentlemen, this extraordinary broadcast is an extraordinary out of hours."
+    },
+    {
+      "start": 116.0,
+      "end": 126.0,
+      "text": "I want to address some things that I received some messages from a couple of people."
+    },
+    {
+      "start": 126.0,
+      "end": 137.0,
+      "text": "Now those messages, they were not complaints, but they were from traders who were frustrated with me."
+    },
+    {
+      "start": 137.0,
+      "end": 147.0,
+      "text": "Or my teaching in particular school run. And when I read their messages, I could see exactly what the issue was."
+    },
+    {
+      "start": 147.0,
+      "end": 154.0,
+      "text": "And I decided right then to try and rectify the situation."
+    },
+    {
+      "start": 154.0,
+      "end": 169.0,
+      "text": "So let's start from scratch. Let's start right from scratch. Let's get rid of all the lines."
+    },
+    {
+      "start": 169.0,
+      "end": 184.0,
+      "text": "And let's just take a box statement definition of what the school run is. Let's just start from scratch."
+    },
+    {
+      "start": 184.0,
+      "end": 199.0,
+      "text": "So here it goes."
+    },
+    {
+      "start": 199.0,
+      "end": 224.0,
+      "text": "Just want to, what I want to do is I want to just bear with me one second."
+    },
+    {
+      "start": 224.0,
+      "end": 250.0,
+      "text": "Okay. Normal school run theory dictates that when we are trading the DAX index on a 15 minute chart."
+    },
+    {
+      "start": 250.0,
+      "end": 269.0,
+      "text": "That 15 minute chart on my computer in where I am, actually not true where I am."
+    },
+    {
+      "start": 269.0,
+      "end": 279.0,
+      "text": "But my computer clock is always set for UK time because that's where I did my career as a trader."
+    },
+    {
+      "start": 279.0,
+      "end": 284.0,
+      "text": "And so for me, the markets will always open at eight o'clock in the morning."
+    },
+    {
+      "start": 284.0,
+      "end": 291.0,
+      "text": "Even if I am in Dubai, where they open at midday, I'm still thinking it's eight o'clock in the morning."
+    },
+    {
+      "start": 291.0,
+      "end": 302.0,
+      "text": "So just so we are on the same page. Or if I'm in Copenhagen and they open nine o'clock, I'm still operating with it's eight o'clock."
+    },
+    {
+      "start": 302.0,
+      "end": 317.0,
+      "text": "So here's the, and I trust that you can follow my cursor. This bar that you're seeing here, that's the first 15 minute bar in the DAX."
+    },
+    {
+      "start": 317.0,
+      "end": 333.0,
+      "text": "And I developed the school run strategy around the idea that the market will come to work in the morning and there will be people who needs to get things done quickly."
+    },
+    {
+      "start": 333.0,
+      "end": 347.0,
+      "text": "It could be they need to buy or they need to sell. So often time, the first 30 minutes aren't indicative of the true trend of the day."
+    },
+    {
+      "start": 347.0,
+      "end": 359.0,
+      "text": "And so I developed the strategy based on observation, purely observation going, I would like to be looking at the market after 30 minutes of trading."
+    },
+    {
+      "start": 359.0,
+      "end": 369.0,
+      "text": "Specifically, I would like to be a buyer on a break of that second 15 minute candle."
+    },
+    {
+      "start": 369.0,
+      "end": 376.0,
+      "text": "Yeah, that was the operating. That was the modus operandi."
+    },
+    {
+      "start": 376.0,
+      "end": 383.0,
+      "text": "Now, I'll tell you some of the work that went on behind the scenes was that I was operating with."
+    },
+    {
+      "start": 383.0,
+      "end": 398.0,
+      "text": "Okay, let me count rather than counting two 15 minute bars, change the timeframe to the five minute and then count one, two, three, four, five, six."
+    },
+    {
+      "start": 398.0,
+      "end": 405.0,
+      "text": "And I operate with a six five minute candle and you are buying above and you're shorting below."
+    },
+    {
+      "start": 406.0,
+      "end": 415.0,
+      "text": "But as it often is with mechanical strategies, when you narrow the timeframe, you will get more false signals."
+    },
+    {
+      "start": 415.0,
+      "end": 430.0,
+      "text": "So I stuck to the second 15 minute candle as my tool, meaning that I want to be buying above and shorting below."
+    },
+    {
+      "start": 430.0,
+      "end": 446.0,
+      "text": "So the conventional school run theory says you want to be a buyer above that school run bar and the school run bar is the second 15 minute candle."
+    },
+    {
+      "start": 446.0,
+      "end": 456.0,
+      "text": "You buy above or you sell short below a typical breakout strategy, nothing more to it than that."
+    },
+    {
+      "start": 456.0,
+      "end": 461.0,
+      "text": "And for a long time, that was the only thing I did."
+    },
+    {
+      "start": 461.0,
+      "end": 466.0,
+      "text": "And it worked extremely well."
+    },
+    {
+      "start": 466.0,
+      "end": 477.0,
+      "text": "I made significant sums of money trading school run from a point of view of performance."
+    },
+    {
+      "start": 477.0,
+      "end": 487.0,
+      "text": "There were months of 20 to 22 trading days where I would have a hit rate around or above 70%."
+    },
+    {
+      "start": 487.0,
+      "end": 501.0,
+      "text": "And what made it particularly compelling for someone like me was that I'm an aggressive trader, meaning that I add to my winning positions."
+    },
+    {
+      "start": 501.0,
+      "end": 517.0,
+      "text": "However, whether it was a mean reversion taking place, or it was just my time to lose, but there became more and more frequently,"
+    },
+    {
+      "start": 517.0,
+      "end": 535.0,
+      "text": "there became times when the market would go above the school run, the second 15 minute high, and it would trigger me long, and then it would reverse."
+    },
+    {
+      "start": 535.0,
+      "end": 544.0,
+      "text": "Or vice versa, I would be triggered short, and then it would reverse back into the range and stop me out on the other side."
+    },
+    {
+      "start": 544.0,
+      "end": 559.0,
+      "text": "And so I began, as I think any trader who is worth their pinch of salt, I began to do serious work and contemplation on,"
+    },
+    {
+      "start": 559.0,
+      "end": 569.0,
+      "text": "well, under what circumstances is it that my school run succeeds, and under what circumstances do they fail?"
+    },
+    {
+      "start": 569.0,
+      "end": 576.0,
+      "text": "And I want to be very quick to point out here that you cannot reverse engineer your way out of losses."
+    },
+    {
+      "start": 576.0,
+      "end": 588.0,
+      "text": "There will always be times when you do everything right, and you end up losing. It is just inevitable."
+    },
+    {
+      "start": 588.0,
+      "end": 606.0,
+      "text": "However, if I was able to detect certain circumstances being present on the price chart, that would be indicative of perhaps not following conventional school run theory."
+    },
+    {
+      "start": 606.0,
+      "end": 615.0,
+      "text": "Well, then I wanted to uncover it, and thus began the contemplation of the overnight range."
+    },
+    {
+      "start": 615.0,
+      "end": 633.0,
+      "text": "The overnight range will be defined differently depending on the trader, but sort of on a, I think on a broad level, traders can roughly agree that the overnight range is from about midnight,"
+    },
+    {
+      "start": 634.0,
+      "end": 649.0,
+      "text": "Europe or midnight UK to about six o'clock. Some people will include seven o'clock, but I don't think that we need to split hairs or divide ourselves into two different camps."
+    },
+    {
+      "start": 649.0,
+      "end": 658.0,
+      "text": "I think that roughly we can agree that the overnight range is from around midnight till around six o'clock in the morning."
+    },
+    {
+      "start": 658.0,
+      "end": 671.0,
+      "text": "So roughly a six hour window where the market is open for trading, but it's by and large driven by probably computer driven, as most of it is anyway,"
+    },
+    {
+      "start": 671.0,
+      "end": 684.0,
+      "text": "but also sentiment in Asia, which is obviously trading whilst Europe and US is either asleep or late in the evening."
+    },
+    {
+      "start": 684.0,
+      "end": 698.0,
+      "text": "And so the contemplation began to center around where does the school run bar, that second 15 minute bar, where is it actually taking place?"
+    },
+    {
+      "start": 698.0,
+      "end": 703.0,
+      "text": "Is it taking place within the context of the overnight range?"
+    },
+    {
+      "start": 703.0,
+      "end": 710.0,
+      "text": "Or is it taking place outside the overnight range, either above or below?"
+    },
+    {
+      "start": 711.0,
+      "end": 716.0,
+      "text": "Thus came to light a new theory."
+    },
+    {
+      "start": 716.0,
+      "end": 732.0,
+      "text": "And that theory was that if the school run bar triggers a conventional long signal by going above the high,"
+    },
+    {
+      "start": 732.0,
+      "end": 739.0,
+      "text": "but that took place within the context of the overnight range."
+    },
+    {
+      "start": 739.0,
+      "end": 751.0,
+      "text": "In other words, the school run bar is within or below the high of the overnight range, but above the low of the overnight range."
+    },
+    {
+      "start": 751.0,
+      "end": 762.0,
+      "text": "Then the statistical research, and I use statistical research, knowing full well that there will be statisticians,"
+    },
+    {
+      "start": 762.0,
+      "end": 765.0,
+      "text": "they are laughing at me and I accept that."
+    },
+    {
+      "start": 765.0,
+      "end": 778.0,
+      "text": "I am a very manual tester, meaning that I don't rely on massive broadcasting, but I go through each chart individually,"
+    },
+    {
+      "start": 778.0,
+      "end": 785.0,
+      "text": "which takes time, but it does have the added benefit of adding layers of perspective."
+    },
+    {
+      "start": 785.0,
+      "end": 791.0,
+      "text": "And that's a really crucial element into what I'm about to say shortly."
+    },
+    {
+      "start": 791.0,
+      "end": 803.0,
+      "text": "So this layering of complexity means that sometimes I will act perhaps subconsciously sensing I need to do this."
+    },
+    {
+      "start": 803.0,
+      "end": 811.0,
+      "text": "But from within the framework of what I'm attempting to establish here is,"
+    },
+    {
+      "start": 811.0,
+      "end": 820.0,
+      "text": "if the school run bar takes place within the overnight range, instead of buying above the high, you sell short."
+    },
+    {
+      "start": 820.0,
+      "end": 826.0,
+      "text": "And instead of selling short below, if it's within the overnight range,"
+    },
+    {
+      "start": 826.0,
+      "end": 836.0,
+      "text": "the parameters of high and low within the overnight range, don't sell short here by below."
+    },
+    {
+      "start": 836.0,
+      "end": 845.0,
+      "text": "And then if the school run takes place above the overnight range,"
+    },
+    {
+      "start": 845.0,
+      "end": 858.0,
+      "text": "well then you buy school run as normal, but instead of selling short, you will buy again,"
+    },
+    {
+      "start": 858.0,
+      "end": 869.0,
+      "text": "which as you will remember from my trading, that is simply buying below prior bar low."
+    },
+    {
+      "start": 869.0,
+      "end": 875.0,
+      "text": "So that's the new theory is that if the school run bar takes place above the overnight range,"
+    },
+    {
+      "start": 875.0,
+      "end": 878.0,
+      "text": "you buy above but you also buy below."
+    },
+    {
+      "start": 878.0,
+      "end": 884.0,
+      "text": "And vice versa, if the school run bar takes place below the overnight range,"
+    },
+    {
+      "start": 884.0,
+      "end": 891.0,
+      "text": "you sell short below, but you also sell short above."
+    },
+    {
+      "start": 891.0,
+      "end": 897.0,
+      "text": "Okay, so what I would like to do now is I'd like to go through some examples."
+    },
+    {
+      "start": 897.0,
+      "end": 919.0,
+      "text": "Just wait while I remove this screen here."
+    },
+    {
+      "start": 919.0,
+      "end": 921.0,
+      "text": "Okay, so I should be back now."
+    },
+    {
+      "start": 921.0,
+      "end": 937.0,
+      "text": "So if we are now looking at today, let's attempt by drawing a box."
+    },
+    {
+      "start": 937.0,
+      "end": 948.0,
+      "text": "Let's define the overnight range first."
+    },
+    {
+      "start": 948.0,
+      "end": 952.0,
+      "text": "And I roughly define it as such."
+    },
+    {
+      "start": 952.0,
+      "end": 961.0,
+      "text": "I hope that you are in agreement with me."
+    },
+    {
+      "start": 961.0,
+      "end": 969.0,
+      "text": "And now let's highlight."
+    },
+    {
+      "start": 969.0,
+      "end": 978.0,
+      "text": "Am I able to just do a..."
+    },
+    {
+      "start": 978.0,
+      "end": 982.0,
+      "text": "Okay, so that's squiggly-diggly there."
+    },
+    {
+      "start": 982.0,
+      "end": 991.0,
+      "text": "That's the open, meaning that the school run bar is this bar here."
+    },
+    {
+      "start": 991.0,
+      "end": 994.0,
+      "text": "Yeah, I think we can all agree on that."
+    },
+    {
+      "start": 994.0,
+      "end": 997.0,
+      "text": "That is the school run bar."
+    },
+    {
+      "start": 997.0,
+      "end": 1002.0,
+      "text": "Now, if we are looking at..."
+    },
+    {
+      "start": 1002.0,
+      "end": 1007.0,
+      "text": "Let's ignore the box theory first."
+    },
+    {
+      "start": 1007.0,
+      "end": 1013.0,
+      "text": "Then what we're saying here is that the moment we trade above the school run high,"
+    },
+    {
+      "start": 1013.0,
+      "end": 1018.0,
+      "text": "which we are doing right here, we should be buying the DAX."
+    },
+    {
+      "start": 1018.0,
+      "end": 1021.0,
+      "text": "That's the conventional theory."
+    },
+    {
+      "start": 1021.0,
+      "end": 1027.0,
+      "text": "Now when we are introducing the overnight range, the box,"
+    },
+    {
+      "start": 1027.0,
+      "end": 1042.0,
+      "text": "and now we can see that the DAX triggers that long signal inside the context of the overnight range."
+    },
+    {
+      "start": 1042.0,
+      "end": 1049.0,
+      "text": "So following the hypothesis that I have just shared with you moments ago,"
+    },
+    {
+      "start": 1049.0,
+      "end": 1055.0,
+      "text": "instead of buying here, we should sell short."
+    },
+    {
+      "start": 1055.0,
+      "end": 1060.0,
+      "text": "Now if we are looking at the performance of that trade today,"
+    },
+    {
+      "start": 1060.0,
+      "end": 1064.0,
+      "text": "what it would mean is that the high of the school run bar,"
+    },
+    {
+      "start": 1064.0,
+      "end": 1069.0,
+      "text": "the second 15-minute candle after the open,"
+    },
+    {
+      "start": 1069.0,
+      "end": 1076.0,
+      "text": "then one that stretches from 8.15 a.m. to 8.30 a.m. UK time,"
+    },
+    {
+      "start": 1076.0,
+      "end": 1082.0,
+      "text": "or 9.15 to 9.30 Central European time,"
+    },
+    {
+      "start": 1082.0,
+      "end": 1088.0,
+      "text": "has a high of 22,559.30."
+    },
+    {
+      "start": 1088.0,
+      "end": 1093.0,
+      "text": "You should be able to see that in the box that is currently being displayed."
+    },
+    {
+      "start": 1093.0,
+      "end": 1103.0,
+      "text": "You will also see that the actual range of that bar is staggering 130 points."
+    },
+    {
+      "start": 1103.0,
+      "end": 1106.0,
+      "text": "That's a big, big size."
+    },
+    {
+      "start": 1106.0,
+      "end": 1107.0,
+      "text": "And why is that important?"
+    },
+    {
+      "start": 1107.0,
+      "end": 1115.0,
+      "text": "Well, because if I take a long position at 5.59 or above,"
+    },
+    {
+      "start": 1115.0,
+      "end": 1120.0,
+      "text": "I will need 130-point stop loss at least."
+    },
+    {
+      "start": 1120.0,
+      "end": 1132.0,
+      "text": "However, because the school run trigger is inside the context of the overnight range,"
+    },
+    {
+      "start": 1132.0,
+      "end": 1136.0,
+      "text": "I argue that I should sell short here."
+    },
+    {
+      "start": 1136.0,
+      "end": 1143.0,
+      "text": "Now today, it would have turned out to be a phenomenal trade."
+    },
+    {
+      "start": 1143.0,
+      "end": 1148.0,
+      "text": "If you had sold short at, say, 22,560,"
+    },
+    {
+      "start": 1148.0,
+      "end": 1156.0,
+      "text": "at its best you would have had a profit of approximately 87 points."
+    },
+    {
+      "start": 1156.0,
+      "end": 1162.0,
+      "text": "That's the absolute max profit potential you could have had."
+    },
+    {
+      "start": 1162.0,
+      "end": 1167.0,
+      "text": "If you had executed a short here,"
+    },
+    {
+      "start": 1167.0,
+      "end": 1171.0,
+      "text": "the problem you would have is where would your stop loss have been?"
+    },
+    {
+      "start": 1171.0,
+      "end": 1175.0,
+      "text": "Now, different hypotheses have been suggested here,"
+    },
+    {
+      "start": 1175.0,
+      "end": 1182.0,
+      "text": "saying you will have a stop loss the size of the bar itself, i.e. 130 points."
+    },
+    {
+      "start": 1182.0,
+      "end": 1186.0,
+      "text": "So you would have had to add 130 points on top of that."
+    },
+    {
+      "start": 1186.0,
+      "end": 1189.0,
+      "text": "I'm doing a different strategy,"
+    },
+    {
+      "start": 1189.0,
+      "end": 1197.0,
+      "text": "which is approximately 70 points seems to be a reasonable stop loss."
+    },
+    {
+      "start": 1197.0,
+      "end": 1202.0,
+      "text": "If you had bought the DAX here on a traditional school run,"
+    },
+    {
+      "start": 1202.0,
+      "end": 1210.0,
+      "text": "this is the brunch break, lines have just been identified here,"
+    },
+    {
+      "start": 1210.0,
+      "end": 1216.0,
+      "text": "you would have had to have a stop loss below this low."
+    },
+    {
+      "start": 1216.0,
+      "end": 1220.0,
+      "text": "What I did today was neither."
+    },
+    {
+      "start": 1220.0,
+      "end": 1226.0,
+      "text": "I said, right, there's something here that concerns me."
+    },
+    {
+      "start": 1227.0,
+      "end": 1232.0,
+      "text": "And I think that's where the confusion lies."
+    },
+    {
+      "start": 1232.0,
+      "end": 1237.0,
+      "text": "The DAX made a very sudden move lower,"
+    },
+    {
+      "start": 1237.0,
+      "end": 1241.0,
+      "text": "about 15 or so minutes into the session."
+    },
+    {
+      "start": 1241.0,
+      "end": 1253.0,
+      "text": "And it went down and tested the low of the overnight range from yesterday."
+    },
+    {
+      "start": 1253.0,
+      "end": 1254.0,
+      "text": "Do you see that?"
+    },
+    {
+      "start": 1254.0,
+      "end": 1256.0,
+      "text": "Over here is the overnight range."
+    },
+    {
+      "start": 1256.0,
+      "end": 1258.0,
+      "text": "And do you see how over here?"
+    },
+    {
+      "start": 1258.0,
+      "end": 1260.0,
+      "text": "We're just going one tick below."
+    },
+    {
+      "start": 1260.0,
+      "end": 1264.0,
+      "text": "It's so classic, absolutely classic."
+    },
+    {
+      "start": 1264.0,
+      "end": 1269.0,
+      "text": "The old low over here was 433,"
+    },
+    {
+      "start": 1269.0,
+      "end": 1274.0,
+      "text": "and the low that we made today was 429."
+    },
+    {
+      "start": 1274.0,
+      "end": 1278.0,
+      "text": "So my God feel, my trader instinct said,"
+    },
+    {
+      "start": 1278.0,
+      "end": 1281.0,
+      "text": "right, you want to be long today,"
+    },
+    {
+      "start": 1281.0,
+      "end": 1286.0,
+      "text": "because they cleared out, they basically fulfilled the price action."
+    },
+    {
+      "start": 1286.0,
+      "end": 1292.0,
+      "text": "Shall we say hypothesis that you need to just go back and fill or retest,"
+    },
+    {
+      "start": 1292.0,
+      "end": 1296.0,
+      "text": "and it successfully did a retest by going a few points below"
+    },
+    {
+      "start": 1296.0,
+      "end": 1298.0,
+      "text": "and then trading back into the range."
+    },
+    {
+      "start": 1298.0,
+      "end": 1303.0,
+      "text": "So that when we came up here,"
+    },
+    {
+      "start": 1303.0,
+      "end": 1307.0,
+      "text": "and we triggered a long signal,"
+    },
+    {
+      "start": 1308.0,
+      "end": 1311.0,
+      "text": "technically I should have been short here,"
+    },
+    {
+      "start": 1311.0,
+      "end": 1314.0,
+      "text": "because it takes place inside the overnight range,"
+    },
+    {
+      "start": 1314.0,
+      "end": 1318.0,
+      "text": "but in an added twist, I decided to do nothing."
+    },
+    {
+      "start": 1318.0,
+      "end": 1321.0,
+      "text": "What I did instead was to say,"
+    },
+    {
+      "start": 1321.0,
+      "end": 1325.0,
+      "text": "I want to be long, but I'm not going to buy it now."
+    },
+    {
+      "start": 1325.0,
+      "end": 1331.0,
+      "text": "If you go back to the review or the video of today's trading,"
+    },
+    {
+      "start": 1331.0,
+      "end": 1334.0,
+      "text": "you will hear me say, I want to be long today,"
+    },
+    {
+      "start": 1334.0,
+      "end": 1337.0,
+      "text": "but I'm not going to be long now."
+    },
+    {
+      "start": 1337.0,
+      "end": 1344.0,
+      "text": "I want to see if I can buy the DAX at a better price."
+    },
+    {
+      "start": 1344.0,
+      "end": 1349.0,
+      "text": "Then what I did was,"
+    },
+    {
+      "start": 1349.0,
+      "end": 1354.0,
+      "text": "as we're passing this bar here is the 830 bar,"
+    },
+    {
+      "start": 1354.0,
+      "end": 1358.0,
+      "text": "I'm attempting to be a buyer down here."
+    },
+    {
+      "start": 1358.0,
+      "end": 1362.0,
+      "text": "So if you look at my last DAX fill,"
+    },
+    {
+      "start": 1362.0,
+      "end": 1369.0,
+      "text": "you will see that it takes place at 22,526."
+    },
+    {
+      "start": 1372.0,
+      "end": 1376.0,
+      "text": "You see this low here is 22,516."
+    },
+    {
+      "start": 1376.0,
+      "end": 1379.0,
+      "text": "That's the low I wanted to buy below,"
+    },
+    {
+      "start": 1379.0,
+      "end": 1382.0,
+      "text": "but my fill was really shit."
+    },
+    {
+      "start": 1382.0,
+      "end": 1384.0,
+      "text": "It was a bad fill,"
+    },
+    {
+      "start": 1384.0,
+      "end": 1390.0,
+      "text": "but I wanted to be a buyer below this first reaction low"
+    },
+    {
+      "start": 1390.0,
+      "end": 1394.0,
+      "text": "after the DAX has just triggered a school run long."
+    },
+    {
+      "start": 1394.0,
+      "end": 1395.0,
+      "text": "Why?"
+    },
+    {
+      "start": 1395.0,
+      "end": 1400.0,
+      "text": "Well, because I felt that touching yesterday's overnight range low"
+    },
+    {
+      "start": 1400.0,
+      "end": 1402.0,
+      "text": "was significant,"
+    },
+    {
+      "start": 1402.0,
+      "end": 1405.0,
+      "text": "significant in the sense that I think this market"
+    },
+    {
+      "start": 1405.0,
+      "end": 1407.0,
+      "text": "has just done a crucial test"
+    },
+    {
+      "start": 1407.0,
+      "end": 1411.0,
+      "text": "and that we are probably headed higher from here."
+    },
+    {
+      "start": 1411.0,
+      "end": 1414.0,
+      "text": "Now, my fill was awful,"
+    },
+    {
+      "start": 1414.0,
+      "end": 1417.0,
+      "text": "and then I had to sit through the market"
+    },
+    {
+      "start": 1417.0,
+      "end": 1419.0,
+      "text": "actually doing a deeper retracement,"
+    },
+    {
+      "start": 1419.0,
+      "end": 1421.0,
+      "text": "like a two bar retracement."
+    },
+    {
+      "start": 1421.0,
+      "end": 1423.0,
+      "text": "But what was interesting for me,"
+    },
+    {
+      "start": 1423.0,
+      "end": 1426.0,
+      "text": "and I, as you know, do not add to my losing position,"
+    },
+    {
+      "start": 1426.0,
+      "end": 1431.0,
+      "text": "but if I did see that two bar retracement on a five minute,"
+    },
+    {
+      "start": 1431.0,
+      "end": 1435.0,
+      "text": "so classic that the market reverses below the low"
+    },
+    {
+      "start": 1435.0,
+      "end": 1438.0,
+      "text": "of the second negative candle."
+    },
+    {
+      "start": 1438.0,
+      "end": 1441.0,
+      "text": "And I wanted to be a buyer down here."
+    },
+    {
+      "start": 1441.0,
+      "end": 1444.0,
+      "text": "I couldn't do it on my public account"
+    },
+    {
+      "start": 1444.0,
+      "end": 1451.0,
+      "text": "because I just don't want to be seen ever adding to a losing trade."
+    },
+    {
+      "start": 1451.0,
+      "end": 1453.0,
+      "text": "The fuel saying,"
+    },
+    {
+      "start": 1453.0,
+      "end": 1456.0,
+      "text": "do as I say, don't do as I do, right?"
+    },
+    {
+      "start": 1456.0,
+      "end": 1458.0,
+      "text": "And as I think,"
+    },
+    {
+      "start": 1458.0,
+      "end": 1461.0,
+      "text": "for the benefit of your health and longevity,"
+    },
+    {
+      "start": 1461.0,
+      "end": 1465.0,
+      "text": "don't get into the habit of adding to losing trades"
+    },
+    {
+      "start": 1465.0,
+      "end": 1469.0,
+      "text": "because nothing good is going to come of it."
+    },
+    {
+      "start": 1469.0,
+      "end": 1474.0,
+      "text": "Okay, that was a slight sidestep here."
+    },
+    {
+      "start": 1474.0,
+      "end": 1482.0,
+      "text": "But now you know what my motors overrandy was today."
+    },
+    {
+      "start": 1482.0,
+      "end": 1485.0,
+      "text": "Now let's go and look at yesterday."
+    },
+    {
+      "start": 1485.0,
+      "end": 1488.0,
+      "text": "By the way, brunch break has taken a long."
+    },
+    {
+      "start": 1488.0,
+      "end": 1491.0,
+      "text": "I hope that you are still along the market."
+    },
+    {
+      "start": 1491.0,
+      "end": 1494.0,
+      "text": "I just had to leave and then I realized,"
+    },
+    {
+      "start": 1494.0,
+      "end": 1497.0,
+      "text": "actually I feel like I'm short changing people"
+    },
+    {
+      "start": 1497.0,
+      "end": 1501.0,
+      "text": "and that's why I decided to come back."
+    },
+    {
+      "start": 1501.0,
+      "end": 1503.0,
+      "text": "Now let's look at yesterday."
+    },
+    {
+      "start": 1503.0,
+      "end": 1516.0,
+      "text": "Just double double checking that there's no urgent questions here."
+    },
+    {
+      "start": 1516.0,
+      "end": 1522.0,
+      "text": "Yeah, but Andy, I don't trade empty for that's the whole point"
+    },
+    {
+      "start": 1522.0,
+      "end": 1526.0,
+      "text": "because empty for ladies and gentlemen is not a good platform."
+    },
+    {
+      "start": 1526.0,
+      "end": 1533.0,
+      "text": "You're trading on variable spreads."
+    },
+    {
+      "start": 1533.0,
+      "end": 1541.0,
+      "text": "Just..."
+    },
+    {
+      "start": 1541.0,
+      "end": 1542.0,
+      "text": "Hang on."
+    },
+    {
+      "start": 1542.0,
+      "end": 1550.0,
+      "text": "Just want to make sure that I am..."
+    },
+    {
+      "start": 1550.0,
+      "end": 1551.0,
+      "text": "You need to,"
+    },
+    {
+      "start": 1551.0,
+      "end": 1554.0,
+      "text": "you really do need to be mindful of the spreads"
+    },
+    {
+      "start": 1554.0,
+      "end": 1556.0,
+      "text": "that you are paying with your broker."
+    },
+    {
+      "start": 1556.0,
+      "end": 1560.0,
+      "text": "It is just, it's no good if you are paying over the odds."
+    },
+    {
+      "start": 1560.0,
+      "end": 1564.0,
+      "text": "Say that you're trading the DAX on a one and a half"
+    },
+    {
+      "start": 1564.0,
+      "end": 1568.0,
+      "text": "or the FTSE on one and you trade 10 pounds a point."
+    },
+    {
+      "start": 1568.0,
+      "end": 1571.0,
+      "text": "Imagine what that does to your account over a year."
+    },
+    {
+      "start": 1571.0,
+      "end": 1576.0,
+      "text": "You will add significant amount of cost to your execution."
+    },
+    {
+      "start": 1576.0,
+      "end": 1578.0,
+      "text": "But you've heard me say this before"
+    },
+    {
+      "start": 1578.0,
+      "end": 1580.0,
+      "text": "and I'm not going to repeat myself."
+    },
+    {
+      "start": 1580.0,
+      "end": 1586.0,
+      "text": "I'm just trying to protect you against unnecessary expenses."
+    },
+    {
+      "start": 1586.0,
+      "end": 1593.0,
+      "text": "Now let's look at the overnight range from yesterday."
+    },
+    {
+      "start": 1593.0,
+      "end": 1595.0,
+      "text": "See if we do my best on my ability."
+    },
+    {
+      "start": 1595.0,
+      "end": 1597.0,
+      "text": "I can draw this."
+    },
+    {
+      "start": 1597.0,
+      "end": 1600.0,
+      "text": "So here we go."
+    },
+    {
+      "start": 1600.0,
+      "end": 1602.0,
+      "text": "This is roughly the overnight range."
+    },
+    {
+      "start": 1602.0,
+      "end": 1607.0,
+      "text": "Okay, let's not get too dogmatic about it."
+    },
+    {
+      "start": 1607.0,
+      "end": 1611.0,
+      "text": "This is the overnight range on a 15 minute candle yesterday."
+    },
+    {
+      "start": 1611.0,
+      "end": 1616.0,
+      "text": "Now let's identify the school run bar."
+    },
+    {
+      "start": 1616.0,
+      "end": 1620.0,
+      "text": "The school run bar comes here."
+    },
+    {
+      "start": 1620.0,
+      "end": 1621.0,
+      "text": "See that?"
+    },
+    {
+      "start": 1621.0,
+      "end": 1625.0,
+      "text": "So that's the opening bar right here, 8am."
+    },
+    {
+      "start": 1625.0,
+      "end": 1630.0,
+      "text": "Now the bar that we are interested in is this bar here."
+    },
+    {
+      "start": 1630.0,
+      "end": 1642.0,
+      "text": "And again, yesterday I did something that goes contrary to what I just moments ago described."
+    },
+    {
+      "start": 1642.0,
+      "end": 1644.0,
+      "text": "So let's go through it step by step."
+    },
+    {
+      "start": 1644.0,
+      "end": 1647.0,
+      "text": "This is the school run bar."
+    },
+    {
+      "start": 1647.0,
+      "end": 1652.0,
+      "text": "Conventional school run theory says you need to buy it above"
+    },
+    {
+      "start": 1652.0,
+      "end": 1654.0,
+      "text": "and you need to sell short below."
+    },
+    {
+      "start": 1654.0,
+      "end": 1660.0,
+      "text": "That's conventional school run theory."
+    },
+    {
+      "start": 1660.0,
+      "end": 1667.0,
+      "text": "However, the school run takes place within the context of the overnight range."
+    },
+    {
+      "start": 1667.0,
+      "end": 1671.0,
+      "text": "So really you should sell short."
+    },
+    {
+      "start": 1671.0,
+      "end": 1673.0,
+      "text": "What did I do yesterday?"
+    },
+    {
+      "start": 1673.0,
+      "end": 1678.0,
+      "text": "Well, I did the complete opposite."
+    },
+    {
+      "start": 1678.0,
+      "end": 1688.0,
+      "text": "I decided that because this bar here and this bar here were practically overlapping each other."
+    },
+    {
+      "start": 1688.0,
+      "end": 1701.0,
+      "text": "This is practically an inside bar and it is immediately bought up when we go below the prior bar low."
+    },
+    {
+      "start": 1701.0,
+      "end": 1708.0,
+      "text": "You see how the second bar, the school run bar goes below and both of them are within the context of the overnight range."
+    },
+    {
+      "start": 1708.0,
+      "end": 1710.0,
+      "text": "I decided, you know what?"
+    },
+    {
+      "start": 1710.0,
+      "end": 1721.0,
+      "text": "I'm not going to sell short here because I am absolute certain that this DAX is going to go up and hit the overnight range top."
+    },
+    {
+      "start": 1721.0,
+      "end": 1732.0,
+      "text": "Now, how can someone like me who has spent 25 years of his professional adult life since?"
+    },
+    {
+      "start": 1732.0,
+      "end": 1738.0,
+      "text": "Basically, since 1998, I've barely missed a tick in the DAX."
+    },
+    {
+      "start": 1738.0,
+      "end": 1747.0,
+      "text": "How can I explain that to someone who is new and make it rule-based?"
+    },
+    {
+      "start": 1747.0,
+      "end": 1754.0,
+      "text": "It's very difficult to teach our instinct in trading."
+    },
+    {
+      "start": 1754.0,
+      "end": 1758.0,
+      "text": "But my trading instinct says, I don't want to sell short here."
+    },
+    {
+      "start": 1758.0,
+      "end": 1765.0,
+      "text": "It feels to me as if this market wants to touch the high end of the range."
+    },
+    {
+      "start": 1765.0,
+      "end": 1769.0,
+      "text": "And it did."
+    },
+    {
+      "start": 1769.0,
+      "end": 1775.0,
+      "text": "And so sometimes you are so in sync with the market and other times you are completely out of sync."
+    },
+    {
+      "start": 1775.0,
+      "end": 1780.0,
+      "text": "Don't ask me why sometimes you are and sometimes you are not."
+    },
+    {
+      "start": 1780.0,
+      "end": 1785.0,
+      "text": "But conventional school run says, buy here."
+    },
+    {
+      "start": 1785.0,
+      "end": 1791.0,
+      "text": "The ante says sell short here because we are inside the range of the overnight."
+    },
+    {
+      "start": 1791.0,
+      "end": 1795.0,
+      "text": "But I'm thinking, well, we tested that overnight range down here."
+    },
+    {
+      "start": 1795.0,
+      "end": 1800.0,
+      "text": "We came out of the box after 6am and it held again."
+    },
+    {
+      "start": 1800.0,
+      "end": 1804.0,
+      "text": "And then it didn't even manage to go all the way down here."
+    },
+    {
+      "start": 1804.0,
+      "end": 1809.0,
+      "text": "It just held here and buyers immediately stepped in below prior-bar low."
+    },
+    {
+      "start": 1809.0,
+      "end": 1816.0,
+      "text": "And that to me is such an incredibly crucial key to understanding price action"
+    },
+    {
+      "start": 1816.0,
+      "end": 1821.0,
+      "text": "is when a market goes below prior-bar low and gets bought up."
+    },
+    {
+      "start": 1821.0,
+      "end": 1826.0,
+      "text": "Goes below prior-bar low, gets bought up."
+    },
+    {
+      "start": 1826.0,
+      "end": 1836.0,
+      "text": "If we go to the day before and again, let's draw the box"
+    },
+    {
+      "start": 1836.0,
+      "end": 1843.0,
+      "text": "because the day before I wasn't here, but it was a complex day."
+    },
+    {
+      "start": 1843.0,
+      "end": 1852.0,
+      "text": "Let's draw it together."
+    },
+    {
+      "start": 1852.0,
+      "end": 1862.0,
+      "text": "Oops."
+    },
+    {
+      "start": 1862.0,
+      "end": 1868.0,
+      "text": "So here's the overnight range. I'm wondering if I could..."
+    },
+    {
+      "start": 1868.0,
+      "end": 1873.0,
+      "text": "Let me just... Yeah, you can actually. Great."
+    },
+    {
+      "start": 1873.0,
+      "end": 1877.0,
+      "text": "This is a really, really good charting package."
+    },
+    {
+      "start": 1877.0,
+      "end": 1883.0,
+      "text": "Absolutely brilliant."
+    },
+    {
+      "start": 1883.0,
+      "end": 1888.0,
+      "text": "So yesterday... Sorry, not yesterday. The day before yesterday."
+    },
+    {
+      "start": 1888.0,
+      "end": 1894.0,
+      "text": "This is the overnight range."
+    },
+    {
+      "start": 1894.0,
+      "end": 1899.0,
+      "text": "And the market opens here."
+    },
+    {
+      "start": 1899.0,
+      "end": 1903.0,
+      "text": "This is the first 15-minute candle."
+    },
+    {
+      "start": 1903.0,
+      "end": 1909.0,
+      "text": "The second 15-minute candle is our school-run candle."
+    },
+    {
+      "start": 1909.0,
+      "end": 1913.0,
+      "text": "And it triggers a long signal above."
+    },
+    {
+      "start": 1913.0,
+      "end": 1917.0,
+      "text": "And for me, that's a plain vanilla school-run long."
+    },
+    {
+      "start": 1917.0,
+      "end": 1923.0,
+      "text": "Why? Well, because it takes place above the overnight range."
+    },
+    {
+      "start": 1923.0,
+      "end": 1928.0,
+      "text": "And do you see how it goes below over here about an hour later?"
+    },
+    {
+      "start": 1928.0,
+      "end": 1930.0,
+      "text": "One, two, three, four, five bars later."
+    },
+    {
+      "start": 1930.0,
+      "end": 1933.0,
+      "text": "Do you see how it goes below?"
+    },
+    {
+      "start": 1933.0,
+      "end": 1940.0,
+      "text": "If I had been trading it, I would want to be a buyer here."
+    },
+    {
+      "start": 1940.0,
+      "end": 1943.0,
+      "text": "Why? Well, because..."
+    },
+    {
+      "start": 1943.0,
+      "end": 1950.0,
+      "text": "I feel like I am pitching my voice like I'm getting really excited."
+    },
+    {
+      "start": 1950.0,
+      "end": 1956.0,
+      "text": "Because, ladies and gentlemen, this bar here, which is the school-run bar,"
+    },
+    {
+      "start": 1956.0,
+      "end": 1962.0,
+      "text": "that breach below the school-run bar,"
+    },
+    {
+      "start": 1962.0,
+      "end": 1967.0,
+      "text": "it still takes place above the overnight range."
+    },
+    {
+      "start": 1967.0,
+      "end": 1969.0,
+      "text": "So I want to be a buyer here."
+    },
+    {
+      "start": 1969.0,
+      "end": 1975.0,
+      "text": "That low is 22,732."
+    },
+    {
+      "start": 1975.0,
+      "end": 1977.0,
+      "text": "This market here goes to 25."
+    },
+    {
+      "start": 1977.0,
+      "end": 1980.0,
+      "text": "So it goes about nine points below."
+    },
+    {
+      "start": 1980.0,
+      "end": 1985.0,
+      "text": "And then it rallies about 70 points."
+    },
+    {
+      "start": 1985.0,
+      "end": 1993.0,
+      "text": "See that? Buyers are stepping in below prior bar low on the school-run."
+    },
+    {
+      "start": 1993.0,
+      "end": 1999.0,
+      "text": "And I'm saying that right there is also a buy signal."
+    },
+    {
+      "start": 1999.0,
+      "end": 2001.0,
+      "text": "It's a buy up here."
+    },
+    {
+      "start": 2001.0,
+      "end": 2007.0,
+      "text": "And you probably would have been moving your stop loss up on this spike here."
+    },
+    {
+      "start": 2007.0,
+      "end": 2009.0,
+      "text": "It spikes about 50 points higher."
+    },
+    {
+      "start": 2009.0,
+      "end": 2011.0,
+      "text": "You probably got stopped out for nothing."
+    },
+    {
+      "start": 2011.0,
+      "end": 2014.0,
+      "text": "But you would want to be a buyer down here as well."
+    },
+    {
+      "start": 2014.0,
+      "end": 2021.0,
+      "text": "I'm just going to check if there's any messages."
+    },
+    {
+      "start": 2044.0,
+      "end": 2053.0,
+      "text": "Okay, there's some people just sending me strange messages."
+    },
+    {
+      "start": 2053.0,
+      "end": 2055.0,
+      "text": "There you go."
+    },
+    {
+      "start": 2055.0,
+      "end": 2063.0,
+      "text": "Man, it never fails me too."
+    },
+    {
+      "start": 2063.0,
+      "end": 2066.0,
+      "text": "There's just some really strange people in this world."
+    },
+    {
+      "start": 2066.0,
+      "end": 2068.0,
+      "text": "I'm not even going to show you, okay?"
+    },
+    {
+      "start": 2068.0,
+      "end": 2076.0,
+      "text": "I'm just not going to show you."
+    },
+    {
+      "start": 2076.0,
+      "end": 2082.0,
+      "text": "There's just some obnoxious people in this world, ladies and gentlemen."
+    },
+    {
+      "start": 2082.0,
+      "end": 2087.0,
+      "text": "So a gentleman here, can you just identify yourself?"
+    },
+    {
+      "start": 2087.0,
+      "end": 2096.0,
+      "text": "You have a red, I think it says sage, and then you have a bald eagle next to it."
+    },
+    {
+      "start": 2096.0,
+      "end": 2102.0,
+      "text": "Yeah, I don't know what your name is, you don't say, but you're the one you write."
+    },
+    {
+      "start": 2102.0,
+      "end": 2106.0,
+      "text": "I understand you take some trades basis on your experience,"
+    },
+    {
+      "start": 2106.0,
+      "end": 2109.0,
+      "text": "but it's making us hard, it's making it hard for us to learn."
+    },
+    {
+      "start": 2109.0,
+      "end": 2111.0,
+      "text": "And then you have a sad face."
+    },
+    {
+      "start": 2111.0,
+      "end": 2118.0,
+      "text": "And I'm doing this video because of you, because I felt that you deserved."
+    },
+    {
+      "start": 2118.0,
+      "end": 2127.0,
+      "text": "I think I quite liked, I'm wondering if I'm going to get myself into trouble if I..."
+    },
+    {
+      "start": 2127.0,
+      "end": 2135.0,
+      "text": "I want to show you what this gentleman is writing because this is the reason why I am doing this."
+    },
+    {
+      "start": 2135.0,
+      "end": 2139.0,
+      "text": "He's saying, I'm quite confused and sad with the trading of DAX."
+    },
+    {
+      "start": 2139.0,
+      "end": 2144.0,
+      "text": "I thought we were supposed to follow the school run and the anti-school run using the overnight range,"
+    },
+    {
+      "start": 2144.0,
+      "end": 2149.0,
+      "text": "but nowadays it seems you don't always follow the trading principles for the DAX, SIS and anti."
+    },
+    {
+      "start": 2149.0,
+      "end": 2154.0,
+      "text": "And I thought in trading you stick to the principle and make changes with necessary."
+    },
+    {
+      "start": 2154.0,
+      "end": 2162.0,
+      "text": "And so I have deep felt sympathy for this gentleman here,"
+    },
+    {
+      "start": 2162.0,
+      "end": 2167.0,
+      "text": "because I am doing this to help exactly people like you,"
+    },
+    {
+      "start": 2167.0,
+      "end": 2173.0,
+      "text": "but I cannot completely override either how sometimes, rightly or wrongly,"
+    },
+    {
+      "start": 2173.0,
+      "end": 2177.0,
+      "text": "my instinct tells me to do something different."
+    },
+    {
+      "start": 2177.0,
+      "end": 2184.0,
+      "text": "I mean, let's take the day before,"
+    },
+    {
+      "start": 2184.0,
+      "end": 2191.0,
+      "text": "which I think then by definition would have been Friday, right?"
+    },
+    {
+      "start": 2191.0,
+      "end": 2193.0,
+      "text": "No, Monday, sorry."
+    },
+    {
+      "start": 2193.0,
+      "end": 2195.0,
+      "text": "So let me draw another box."
+    },
+    {
+      "start": 2195.0,
+      "end": 2200.0,
+      "text": "Now I'm getting so bloody good at drawing these boxes with this exquisite software."
+    },
+    {
+      "start": 2200.0,
+      "end": 2204.0,
+      "text": "Now, where it gets a little tricky here on the Sunday Mondays,"
+    },
+    {
+      "start": 2204.0,
+      "end": 2207.0,
+      "text": "I don't know whether to include the Sunday Monday range,"
+    },
+    {
+      "start": 2207.0,
+      "end": 2210.0,
+      "text": "but I don't think it makes much of a difference."
+    },
+    {
+      "start": 2210.0,
+      "end": 2222.0,
+      "text": "So here's school run on Monday."
+    },
+    {
+      "start": 2222.0,
+      "end": 2235.0,
+      "text": "And here's school run, the school run bar right here."
+    },
+    {
+      "start": 2235.0,
+      "end": 2240.0,
+      "text": "And so whatever I did on Monday, I should have been short."
+    },
+    {
+      "start": 2240.0,
+      "end": 2244.0,
+      "text": "There's no doubt about that."
+    },
+    {
+      "start": 2244.0,
+      "end": 2251.0,
+      "text": "The trigger takes place outside of the trading range."
+    },
+    {
+      "start": 2252.0,
+      "end": 2256.0,
+      "text": "Right here."
+    },
+    {
+      "start": 2256.0,
+      "end": 2260.0,
+      "text": "And so if I didn't sell short there, I have to question,"
+    },
+    {
+      "start": 2260.0,
+      "end": 2263.0,
+      "text": "well, why did I not do that?"
+    },
+    {
+      "start": 2263.0,
+      "end": 2265.0,
+      "text": "That's just okay."
+    },
+    {
+      "start": 2265.0,
+      "end": 2272.0,
+      "text": "You had to sell short there."
+    },
+    {
+      "start": 2272.0,
+      "end": 2276.0,
+      "text": "I'm quite certain that I got myself into a bit of a sticky pot"
+    },
+    {
+      "start": 2276.0,
+      "end": 2279.0,
+      "text": "by being a buyer at the low end of the range."
+    },
+    {
+      "start": 2279.0,
+      "end": 2281.0,
+      "text": "I don't think I did very well,"
+    },
+    {
+      "start": 2281.0,
+      "end": 2286.0,
+      "text": "but when you look at it after the fact in the cold night of day,"
+    },
+    {
+      "start": 2286.0,
+      "end": 2290.0,
+      "text": "you're going, yeah, that's a short."
+    },
+    {
+      "start": 2290.0,
+      "end": 2296.0,
+      "text": "Especially also because I've been bearish on the Thursday, Friday, Monday pattern."
+    },
+    {
+      "start": 2296.0,
+      "end": 2301.0,
+      "text": "Would you like to look at Friday last with me?"
+    },
+    {
+      "start": 2301.0,
+      "end": 2305.0,
+      "text": "I think that's perhaps a little bit more complicated."
+    },
+    {
+      "start": 2305.0,
+      "end": 2318.0,
+      "text": "I'm hoping that by doing this, I am managing to achieve some degree of clarity."
+    },
+    {
+      "start": 2318.0,
+      "end": 2326.0,
+      "text": "So here's the school run on Friday with the overnight range."
+    },
+    {
+      "start": 2326.0,
+      "end": 2333.0,
+      "text": "The market opens here, so you can see that, opens here, this bar here."
+    },
+    {
+      "start": 2333.0,
+      "end": 2342.0,
+      "text": "It triggers a short signal below the low of this bar here."
+    },
+    {
+      "start": 2342.0,
+      "end": 2343.0,
+      "text": "Why?"
+    },
+    {
+      "start": 2343.0,
+      "end": 2345.0,
+      "text": "Well, because it's a traditional school run."
+    },
+    {
+      "start": 2345.0,
+      "end": 2349.0,
+      "text": "It takes place below the low of the overnight range."
+    },
+    {
+      "start": 2349.0,
+      "end": 2350.0,
+      "text": "So it's clear as day."
+    },
+    {
+      "start": 2350.0,
+      "end": 2353.0,
+      "text": "This is a sell right here."
+    },
+    {
+      "start": 2363.0,
+      "end": 2365.0,
+      "text": "Now you're welcome Sage."
+    },
+    {
+      "start": 2365.0,
+      "end": 2371.0,
+      "text": "I did this for you amongst others."
+    },
+    {
+      "start": 2371.0,
+      "end": 2374.0,
+      "text": "We can do one more example."
+    },
+    {
+      "start": 2374.0,
+      "end": 2380.0,
+      "text": "And I'm hoping I'm bringing clarity to you as opposed to bringing confusion."
+    },
+    {
+      "start": 2380.0,
+      "end": 2382.0,
+      "text": "Why don't we take this one here?"
+    },
+    {
+      "start": 2382.0,
+      "end": 2384.0,
+      "text": "It's a brilliant example."
+    },
+    {
+      "start": 2384.0,
+      "end": 2386.0,
+      "text": "I love examples that fail."
+    },
+    {
+      "start": 2386.0,
+      "end": 2389.0,
+      "text": "You might think, oh, how can that be brilliant?"
+    },
+    {
+      "start": 2389.0,
+      "end": 2397.0,
+      "text": "Well, because it is in our failures that we will modify our approach."
+    },
+    {
+      "start": 2397.0,
+      "end": 2402.0,
+      "text": "So here's roughly the overnight range."
+    },
+    {
+      "start": 2402.0,
+      "end": 2409.0,
+      "text": "And anybody can see, yes, the school run, the market opens well above."
+    },
+    {
+      "start": 2409.0,
+      "end": 2415.0,
+      "text": "Do you see how the market opens well above the overnight range?"
+    },
+    {
+      "start": 2415.0,
+      "end": 2417.0,
+      "text": "And here's the school run bar."
+    },
+    {
+      "start": 2417.0,
+      "end": 2420.0,
+      "text": "It triggers a long signal up here."
+    },
+    {
+      "start": 2420.0,
+      "end": 2423.0,
+      "text": "Without a doubt, triggers a long."
+    },
+    {
+      "start": 2423.0,
+      "end": 2426.0,
+      "text": "And not only that, it triggers another long here."
+    },
+    {
+      "start": 2426.0,
+      "end": 2428.0,
+      "text": "Do you see that?"
+    },
+    {
+      "start": 2428.0,
+      "end": 2434.0,
+      "text": "And obviously you can also see, wow, that was a spectacular failure."
+    },
+    {
+      "start": 2434.0,
+      "end": 2436.0,
+      "text": "Absolutely."
+    },
+    {
+      "start": 2436.0,
+      "end": 2444.0,
+      "text": "Without a doubt, this had you followed conventional school run theory."
+    },
+    {
+      "start": 2444.0,
+      "end": 2447.0,
+      "text": "You would have sold short here and you would have bought here."
+    },
+    {
+      "start": 2447.0,
+      "end": 2468.0,
+      "text": "But if you factor in the overnight range, you would also have been a buyer here."
+    },
+    {
+      "start": 2468.0,
+      "end": 2473.0,
+      "text": "Now, would I have been a buyer here, stopped out here and then bought again?"
+    },
+    {
+      "start": 2473.0,
+      "end": 2478.0,
+      "text": "Probably not."
+    },
+    {
+      "start": 2478.0,
+      "end": 2484.0,
+      "text": "And so examples like this is probably where the confusion lies."
+    },
+    {
+      "start": 2484.0,
+      "end": 2488.0,
+      "text": "School run triggers a short, but you're now saying I should be a buyer here"
+    },
+    {
+      "start": 2488.0,
+      "end": 2491.0,
+      "text": "because it takes a place above the overnight range."
+    },
+    {
+      "start": 2491.0,
+      "end": 2495.0,
+      "text": "That's exactly right."
+    },
+    {
+      "start": 2495.0,
+      "end": 2501.0,
+      "text": "Now, is there a lesson in this particular chart?"
+    },
+    {
+      "start": 2501.0,
+      "end": 2504.0,
+      "text": "I think so."
+    },
+    {
+      "start": 2504.0,
+      "end": 2516.0,
+      "text": "What would concern me here is how you go a few points above this high here and then reverses."
+    },
+    {
+      "start": 2516.0,
+      "end": 2526.0,
+      "text": "But anyway, traditional technical analysis will dictate that this is what we call an outside bar."
+    },
+    {
+      "start": 2526.0,
+      "end": 2529.0,
+      "text": "See that how it encompasses the previous bar?"
+    },
+    {
+      "start": 2529.0,
+      "end": 2536.0,
+      "text": "That tends to be bearish, but I don't want to confuse conventional technical analysis"
+    },
+    {
+      "start": 2536.0,
+      "end": 2540.0,
+      "text": "with what I call situational analysis."
+    },
+    {
+      "start": 2540.0,
+      "end": 2544.0,
+      "text": "My particular brand for technical analysis is called situational analysis."
+    },
+    {
+      "start": 2544.0,
+      "end": 2546.0,
+      "text": "At least that's what I call it."
+    },
+    {
+      "start": 2546.0,
+      "end": 2554.0,
+      "text": "And this situation here doesn't interact with conventional technical analysis."
+    },
+    {
+      "start": 2554.0,
+      "end": 2558.0,
+      "text": "Oh, that's an outside range bar."
+    },
+    {
+      "start": 2558.0,
+      "end": 2563.0,
+      "text": "But I have to acknowledge that we take out the high and then reverses."
+    },
+    {
+      "start": 2563.0,
+      "end": 2566.0,
+      "text": "And that's rarely a bullish signal."
+    },
+    {
+      "start": 2566.0,
+      "end": 2571.0,
+      "text": "And this has happened with opposite."
+    },
+    {
+      "start": 2571.0,
+      "end": 2579.0,
+      "text": "If this had been a, we're taking out the lows and then we reverse and we close above the high."
+    },
+    {
+      "start": 2579.0,
+      "end": 2583.0,
+      "text": "Very much like what you are seeing."
+    },
+    {
+      "start": 2583.0,
+      "end": 2593.0,
+      "text": "Where was it?"
+    },
+    {
+      "start": 2593.0,
+      "end": 2597.0,
+      "text": "Where was that bar? Where does that?"
+    },
+    {
+      "start": 2597.0,
+      "end": 2602.0,
+      "text": "I think it was the inside the one where it's an inside bar."
+    },
+    {
+      "start": 2602.0,
+      "end": 2604.0,
+      "text": "Let's see if I can find it."
+    },
+    {
+      "start": 2604.0,
+      "end": 2609.0,
+      "text": "Can't find it."
+    },
+    {
+      "start": 2609.0,
+      "end": 2611.0,
+      "text": "This one here."
+    },
+    {
+      "start": 2611.0,
+      "end": 2612.0,
+      "text": "This one here."
+    },
+    {
+      "start": 2612.0,
+      "end": 2613.0,
+      "text": "This one here."
+    },
+    {
+      "start": 2613.0,
+      "end": 2614.0,
+      "text": "This one here."
+    },
+    {
+      "start": 2614.0,
+      "end": 2615.0,
+      "text": "This one here."
+    },
+    {
+      "start": 2615.0,
+      "end": 2616.0,
+      "text": "This one here."
+    },
+    {
+      "start": 2616.0,
+      "end": 2617.0,
+      "text": "This one here."
+    },
+    {
+      "start": 2617.0,
+      "end": 2618.0,
+      "text": "This one here."
+    },
+    {
+      "start": 2618.0,
+      "end": 2622.0,
+      "text": "This one here."
+    },
+    {
+      "start": 2622.0,
+      "end": 2626.0,
+      "text": "This one here."
+    },
+    {
+      "start": 2626.0,
+      "end": 2636.0,
+      "text": "How we take out the low and very soon after we're trading above the high."
+    },
+    {
+      "start": 2636.0,
+      "end": 2645.0,
+      "text": "It feels almost the same pattern just in reverse."
+    },
+    {
+      "start": 2645.0,
+      "end": 2649.0,
+      "text": "Over here."
+    },
+    {
+      "start": 2649.0,
+      "end": 2650.0,
+      "text": "Up here."
+    },
+    {
+      "start": 2650.0,
+      "end": 2654.0,
+      "text": "Take out the high and reverse and trade below the low."
+    },
+    {
+      "start": 2654.0,
+      "end": 2656.0,
+      "text": "Okay."
+    },
+    {
+      "start": 2656.0,
+      "end": 2663.0,
+      "text": "I hope that that gave you some clarity."
+    },
+    {
+      "start": 2663.0,
+      "end": 2669.0,
+      "text": "I'm very happy to do one more example."
+    },
+    {
+      "start": 2669.0,
+      "end": 2675.0,
+      "text": "Do this one because I think this could also be a good example."
+    },
+    {
+      "start": 2675.0,
+      "end": 2688.0,
+      "text": "And then I have to go."
+    },
+    {
+      "start": 2688.0,
+      "end": 2693.0,
+      "text": "There's roughly the overnight range."
+    },
+    {
+      "start": 2693.0,
+      "end": 2698.0,
+      "text": "The market."
+    },
+    {
+      "start": 2698.0,
+      "end": 2700.0,
+      "text": "Opens here."
+    },
+    {
+      "start": 2700.0,
+      "end": 2702.0,
+      "text": "This is the school run bar."
+    },
+    {
+      "start": 2702.0,
+      "end": 2705.0,
+      "text": "It actually triggers a long."
+    },
+    {
+      "start": 2705.0,
+      "end": 2707.0,
+      "text": "See that right here."
+    },
+    {
+      "start": 2707.0,
+      "end": 2715.0,
+      "text": "And exactly the same situation happens as the day after we go below."
+    },
+    {
+      "start": 2715.0,
+      "end": 2720.0,
+      "text": "And then it does a cruel reversal question."
+    },
+    {
+      "start": 2720.0,
+      "end": 2723.0,
+      "text": "Would I have been long here?"
+    },
+    {
+      "start": 2723.0,
+      "end": 2725.0,
+      "text": "Stopped out here."
+    },
+    {
+      "start": 2725.0,
+      "end": 2727.0,
+      "text": "And bought again."
+    },
+    {
+      "start": 2727.0,
+      "end": 2731.0,
+      "text": "Unlikely."
+    },
+    {
+      "start": 2731.0,
+      "end": 2733.0,
+      "text": "Unlikely."
+    },
+    {
+      "start": 2733.0,
+      "end": 2737.0,
+      "text": "Do you follow me?"
+    },
+    {
+      "start": 2737.0,
+      "end": 2742.0,
+      "text": "But I wouldn't have sold short here either."
+    },
+    {
+      "start": 2742.0,
+      "end": 2749.0,
+      "text": "And I think that's where I have yet to do some work on the money management angle of,"
+    },
+    {
+      "start": 2749.0,
+      "end": 2752.0,
+      "text": "okay, you're buying here because this is going to happen again."
+    },
+    {
+      "start": 2752.0,
+      "end": 2753.0,
+      "text": "Trust me."
+    },
+    {
+      "start": 2753.0,
+      "end": 2759.0,
+      "text": "And on this day and then it happened on the next day as well."
+    },
+    {
+      "start": 2759.0,
+      "end": 2762.0,
+      "text": "See that?"
+    },
+    {
+      "start": 2762.0,
+      "end": 2765.0,
+      "text": "Here."
+    },
+    {
+      "start": 2765.0,
+      "end": 2768.0,
+      "text": "Long and then I was supposed to be a long again."
+    },
+    {
+      "start": 2768.0,
+      "end": 2771.0,
+      "text": "So while it definitely wouldn't have worked here,"
+    },
+    {
+      "start": 2771.0,
+      "end": 2774.0,
+      "text": "it would have worked here, but that's beside the point."
+    },
+    {
+      "start": 2774.0,
+      "end": 2780.0,
+      "text": "The point here is I wouldn't want to be a buyer once more."
+    },
+    {
+      "start": 2780.0,
+      "end": 2784.0,
+      "text": "It may be that I had decided to buy it once again."
+    },
+    {
+      "start": 2784.0,
+      "end": 2793.0,
+      "text": "It breaks above once more."
+    },
+    {
+      "start": 2793.0,
+      "end": 2796.0,
+      "text": "But it's always easy to talk about this after the fact."
+    },
+    {
+      "start": 2796.0,
+      "end": 2802.0,
+      "text": "We're doing this in a live environment and we have to always make sure that we don't become reckless either."
+    },
+    {
+      "start": 2802.0,
+      "end": 2807.0,
+      "text": "We have to make sure that we keep our emotions in check constantly."
+    },
+    {
+      "start": 2807.0,
+      "end": 2810.0,
+      "text": "And if that means I'm buying here, I get stopped out."
+    },
+    {
+      "start": 2810.0,
+      "end": 2812.0,
+      "text": "Oh, screw you, Dax."
+    },
+    {
+      "start": 2812.0,
+      "end": 2820.0,
+      "text": "Maybe at times it's better than to walk away and come back with a fresh mindset and a fresh set of eyes."
+    },
+    {
+      "start": 2820.0,
+      "end": 2832.0,
+      "text": "Okay, so I hope that this little impromptu review of the school run and the school run anti is of benefit to you."
+    },
+    {
+      "start": 2832.0,
+      "end": 2842.0,
+      "text": "I will complete this lesson now and say thank you for tuning in."
+    },
+    {
+      "start": 2842.0,
+      "end": 2845.0,
+      "text": "And I will see you for the US session."
+    },
+    {
+      "start": 2845.0,
+      "end": 2847.0,
+      "text": "All the very best."
+    },
+    {
+      "start": 2847.0,
+      "end": 2849.0,
+      "text": "Bye-bye for now."
+    }
+  ],
+  "full_text": "One second. Alright. Good morning again ladies and gentlemen. I don't know if you are tuning into this. Obviously I hope that you are. If you are on my channel. I just want to make sure that I'm live. Let me just do an audio test. So ladies and gentlemen, this extraordinary broadcast is an extraordinary out of hours. I want to address some things that I received some messages from a couple of people. Now those messages, they were not complaints, but they were from traders who were frustrated with me. Or my teaching in particular school run. And when I read their messages, I could see exactly what the issue was. And I decided right then to try and rectify the situation. So let's start from scratch. Let's start right from scratch. Let's get rid of all the lines. And let's just take a box statement definition of what the school run is. Let's just start from scratch. So here it goes. Just want to, what I want to do is I want to just bear with me one second. Okay. Normal school run theory dictates that when we are trading the DAX index on a 15 minute chart. That 15 minute chart on my computer in where I am, actually not true where I am. But my computer clock is always set for UK time because that's where I did my career as a trader. And so for me, the markets will always open at eight o'clock in the morning. Even if I am in Dubai, where they open at midday, I'm still thinking it's eight o'clock in the morning. So just so we are on the same page. Or if I'm in Copenhagen and they open nine o'clock, I'm still operating with it's eight o'clock. So here's the, and I trust that you can follow my cursor. This bar that you're seeing here, that's the first 15 minute bar in the DAX. And I developed the school run strategy around the idea that the market will come to work in the morning and there will be people who needs to get things done quickly. It could be they need to buy or they need to sell. So often time, the first 30 minutes aren't indicative of the true trend of the day. And so I developed the strategy based on observation, purely observation going, I would like to be looking at the market after 30 minutes of trading. Specifically, I would like to be a buyer on a break of that second 15 minute candle. Yeah, that was the operating. That was the modus operandi. Now, I'll tell you some of the work that went on behind the scenes was that I was operating with. Okay, let me count rather than counting two 15 minute bars, change the timeframe to the five minute and then count one, two, three, four, five, six. And I operate with a six five minute candle and you are buying above and you're shorting below. But as it often is with mechanical strategies, when you narrow the timeframe, you will get more false signals. So I stuck to the second 15 minute candle as my tool, meaning that I want to be buying above and shorting below. So the conventional school run theory says you want to be a buyer above that school run bar and the school run bar is the second 15 minute candle. You buy above or you sell short below a typical breakout strategy, nothing more to it than that. And for a long time, that was the only thing I did. And it worked extremely well. I made significant sums of money trading school run from a point of view of performance. There were months of 20 to 22 trading days where I would have a hit rate around or above 70%. And what made it particularly compelling for someone like me was that I'm an aggressive trader, meaning that I add to my winning positions. However, whether it was a mean reversion taking place, or it was just my time to lose, but there became more and more frequently, there became times when the market would go above the school run, the second 15 minute high, and it would trigger me long, and then it would reverse. Or vice versa, I would be triggered short, and then it would reverse back into the range and stop me out on the other side. And so I began, as I think any trader who is worth their pinch of salt, I began to do serious work and contemplation on, well, under what circumstances is it that my school run succeeds, and under what circumstances do they fail? And I want to be very quick to point out here that you cannot reverse engineer your way out of losses. There will always be times when you do everything right, and you end up losing. It is just inevitable. However, if I was able to detect certain circumstances being present on the price chart, that would be indicative of perhaps not following conventional school run theory. Well, then I wanted to uncover it, and thus began the contemplation of the overnight range. The overnight range will be defined differently depending on the trader, but sort of on a, I think on a broad level, traders can roughly agree that the overnight range is from about midnight, Europe or midnight UK to about six o'clock. Some people will include seven o'clock, but I don't think that we need to split hairs or divide ourselves into two different camps. I think that roughly we can agree that the overnight range is from around midnight till around six o'clock in the morning. So roughly a six hour window where the market is open for trading, but it's by and large driven by probably computer driven, as most of it is anyway, but also sentiment in Asia, which is obviously trading whilst Europe and US is either asleep or late in the evening. And so the contemplation began to center around where does the school run bar, that second 15 minute bar, where is it actually taking place? Is it taking place within the context of the overnight range? Or is it taking place outside the overnight range, either above or below? Thus came to light a new theory. And that theory was that if the school run bar triggers a conventional long signal by going above the high, but that took place within the context of the overnight range. In other words, the school run bar is within or below the high of the overnight range, but above the low of the overnight range. Then the statistical research, and I use statistical research, knowing full well that there will be statisticians, they are laughing at me and I accept that. I am a very manual tester, meaning that I don't rely on massive broadcasting, but I go through each chart individually, which takes time, but it does have the added benefit of adding layers of perspective. And that's a really crucial element into what I'm about to say shortly. So this layering of complexity means that sometimes I will act perhaps subconsciously sensing I need to do this. But from within the framework of what I'm attempting to establish here is, if the school run bar takes place within the overnight range, instead of buying above the high, you sell short. And instead of selling short below, if it's within the overnight range, the parameters of high and low within the overnight range, don't sell short here by below. And then if the school run takes place above the overnight range, well then you buy school run as normal, but instead of selling short, you will buy again, which as you will remember from my trading, that is simply buying below prior bar low. So that's the new theory is that if the school run bar takes place above the overnight range, you buy above but you also buy below. And vice versa, if the school run bar takes place below the overnight range, you sell short below, but you also sell short above. Okay, so what I would like to do now is I'd like to go through some examples. Just wait while I remove this screen here. Okay, so I should be back now. So if we are now looking at today, let's attempt by drawing a box. Let's define the overnight range first. And I roughly define it as such. I hope that you are in agreement with me. And now let's highlight. Am I able to just do a... Okay, so that's squiggly-diggly there. That's the open, meaning that the school run bar is this bar here. Yeah, I think we can all agree on that. That is the school run bar. Now, if we are looking at... Let's ignore the box theory first. Then what we're saying here is that the moment we trade above the school run high, which we are doing right here, we should be buying the DAX. That's the conventional theory. Now when we are introducing the overnight range, the box, and now we can see that the DAX triggers that long signal inside the context of the overnight range. So following the hypothesis that I have just shared with you moments ago, instead of buying here, we should sell short. Now if we are looking at the performance of that trade today, what it would mean is that the high of the school run bar, the second 15-minute candle after the open, then one that stretches from 8.15 a.m. to 8.30 a.m. UK time, or 9.15 to 9.30 Central European time, has a high of 22,559.30. You should be able to see that in the box that is currently being displayed. You will also see that the actual range of that bar is staggering 130 points. That's a big, big size. And why is that important? Well, because if I take a long position at 5.59 or above, I will need 130-point stop loss at least. However, because the school run trigger is inside the context of the overnight range, I argue that I should sell short here. Now today, it would have turned out to be a phenomenal trade. If you had sold short at, say, 22,560, at its best you would have had a profit of approximately 87 points. That's the absolute max profit potential you could have had. If you had executed a short here, the problem you would have is where would your stop loss have been? Now, different hypotheses have been suggested here, saying you will have a stop loss the size of the bar itself, i.e. 130 points. So you would have had to add 130 points on top of that. I'm doing a different strategy, which is approximately 70 points seems to be a reasonable stop loss. If you had bought the DAX here on a traditional school run, this is the brunch break, lines have just been identified here, you would have had to have a stop loss below this low. What I did today was neither. I said, right, there's something here that concerns me. And I think that's where the confusion lies. The DAX made a very sudden move lower, about 15 or so minutes into the session. And it went down and tested the low of the overnight range from yesterday. Do you see that? Over here is the overnight range. And do you see how over here? We're just going one tick below. It's so classic, absolutely classic. The old low over here was 433, and the low that we made today was 429. So my God feel, my trader instinct said, right, you want to be long today, because they cleared out, they basically fulfilled the price action. Shall we say hypothesis that you need to just go back and fill or retest, and it successfully did a retest by going a few points below and then trading back into the range. So that when we came up here, and we triggered a long signal, technically I should have been short here, because it takes place inside the overnight range, but in an added twist, I decided to do nothing. What I did instead was to say, I want to be long, but I'm not going to buy it now. If you go back to the review or the video of today's trading, you will hear me say, I want to be long today, but I'm not going to be long now. I want to see if I can buy the DAX at a better price. Then what I did was, as we're passing this bar here is the 830 bar, I'm attempting to be a buyer down here. So if you look at my last DAX fill, you will see that it takes place at 22,526. You see this low here is 22,516. That's the low I wanted to buy below, but my fill was really shit. It was a bad fill, but I wanted to be a buyer below this first reaction low after the DAX has just triggered a school run long. Why? Well, because I felt that touching yesterday's overnight range low was significant, significant in the sense that I think this market has just done a crucial test and that we are probably headed higher from here. Now, my fill was awful, and then I had to sit through the market actually doing a deeper retracement, like a two bar retracement. But what was interesting for me, and I, as you know, do not add to my losing position, but if I did see that two bar retracement on a five minute, so classic that the market reverses below the low of the second negative candle. And I wanted to be a buyer down here. I couldn't do it on my public account because I just don't want to be seen ever adding to a losing trade. The fuel saying, do as I say, don't do as I do, right? And as I think, for the benefit of your health and longevity, don't get into the habit of adding to losing trades because nothing good is going to come of it. Okay, that was a slight sidestep here. But now you know what my motors overrandy was today. Now let's go and look at yesterday. By the way, brunch break has taken a long. I hope that you are still along the market. I just had to leave and then I realized, actually I feel like I'm short changing people and that's why I decided to come back. Now let's look at yesterday. Just double double checking that there's no urgent questions here. Yeah, but Andy, I don't trade empty for that's the whole point because empty for ladies and gentlemen is not a good platform. You're trading on variable spreads. Just... Hang on. Just want to make sure that I am... You need to, you really do need to be mindful of the spreads that you are paying with your broker. It is just, it's no good if you are paying over the odds. Say that you're trading the DAX on a one and a half or the FTSE on one and you trade 10 pounds a point. Imagine what that does to your account over a year. You will add significant amount of cost to your execution. But you've heard me say this before and I'm not going to repeat myself. I'm just trying to protect you against unnecessary expenses. Now let's look at the overnight range from yesterday. See if we do my best on my ability. I can draw this. So here we go. This is roughly the overnight range. Okay, let's not get too dogmatic about it. This is the overnight range on a 15 minute candle yesterday. Now let's identify the school run bar. The school run bar comes here. See that? So that's the opening bar right here, 8am. Now the bar that we are interested in is this bar here. And again, yesterday I did something that goes contrary to what I just moments ago described. So let's go through it step by step. This is the school run bar. Conventional school run theory says you need to buy it above and you need to sell short below. That's conventional school run theory. However, the school run takes place within the context of the overnight range. So really you should sell short. What did I do yesterday? Well, I did the complete opposite. I decided that because this bar here and this bar here were practically overlapping each other. This is practically an inside bar and it is immediately bought up when we go below the prior bar low. You see how the second bar, the school run bar goes below and both of them are within the context of the overnight range. I decided, you know what? I'm not going to sell short here because I am absolute certain that this DAX is going to go up and hit the overnight range top. Now, how can someone like me who has spent 25 years of his professional adult life since? Basically, since 1998, I've barely missed a tick in the DAX. How can I explain that to someone who is new and make it rule-based? It's very difficult to teach our instinct in trading. But my trading instinct says, I don't want to sell short here. It feels to me as if this market wants to touch the high end of the range. And it did. And so sometimes you are so in sync with the market and other times you are completely out of sync. Don't ask me why sometimes you are and sometimes you are not. But conventional school run says, buy here. The ante says sell short here because we are inside the range of the overnight. But I'm thinking, well, we tested that overnight range down here. We came out of the box after 6am and it held again. And then it didn't even manage to go all the way down here. It just held here and buyers immediately stepped in below prior-bar low. And that to me is such an incredibly crucial key to understanding price action is when a market goes below prior-bar low and gets bought up. Goes below prior-bar low, gets bought up. If we go to the day before and again, let's draw the box because the day before I wasn't here, but it was a complex day. Let's draw it together. Oops. So here's the overnight range. I'm wondering if I could... Let me just... Yeah, you can actually. Great. This is a really, really good charting package. Absolutely brilliant. So yesterday... Sorry, not yesterday. The day before yesterday. This is the overnight range. And the market opens here. This is the first 15-minute candle. The second 15-minute candle is our school-run candle. And it triggers a long signal above. And for me, that's a plain vanilla school-run long. Why? Well, because it takes place above the overnight range. And do you see how it goes below over here about an hour later? One, two, three, four, five bars later. Do you see how it goes below? If I had been trading it, I would want to be a buyer here. Why? Well, because... I feel like I am pitching my voice like I'm getting really excited. Because, ladies and gentlemen, this bar here, which is the school-run bar, that breach below the school-run bar, it still takes place above the overnight range. So I want to be a buyer here. That low is 22,732. This market here goes to 25. So it goes about nine points below. And then it rallies about 70 points. See that? Buyers are stepping in below prior bar low on the school-run. And I'm saying that right there is also a buy signal. It's a buy up here. And you probably would have been moving your stop loss up on this spike here. It spikes about 50 points higher. You probably got stopped out for nothing. But you would want to be a buyer down here as well. I'm just going to check if there's any messages. Okay, there's some people just sending me strange messages. There you go. Man, it never fails me too. There's just some really strange people in this world. I'm not even going to show you, okay? I'm just not going to show you. There's just some obnoxious people in this world, ladies and gentlemen. So a gentleman here, can you just identify yourself? You have a red, I think it says sage, and then you have a bald eagle next to it. Yeah, I don't know what your name is, you don't say, but you're the one you write. I understand you take some trades basis on your experience, but it's making us hard, it's making it hard for us to learn. And then you have a sad face. And I'm doing this video because of you, because I felt that you deserved. I think I quite liked, I'm wondering if I'm going to get myself into trouble if I... I want to show you what this gentleman is writing because this is the reason why I am doing this. He's saying, I'm quite confused and sad with the trading of DAX. I thought we were supposed to follow the school run and the anti-school run using the overnight range, but nowadays it seems you don't always follow the trading principles for the DAX, SIS and anti. And I thought in trading you stick to the principle and make changes with necessary. And so I have deep felt sympathy for this gentleman here, because I am doing this to help exactly people like you, but I cannot completely override either how sometimes, rightly or wrongly, my instinct tells me to do something different. I mean, let's take the day before, which I think then by definition would have been Friday, right? No, Monday, sorry. So let me draw another box. Now I'm getting so bloody good at drawing these boxes with this exquisite software. Now, where it gets a little tricky here on the Sunday Mondays, I don't know whether to include the Sunday Monday range, but I don't think it makes much of a difference. So here's school run on Monday. And here's school run, the school run bar right here. And so whatever I did on Monday, I should have been short. There's no doubt about that. The trigger takes place outside of the trading range. Right here. And so if I didn't sell short there, I have to question, well, why did I not do that? That's just okay. You had to sell short there. I'm quite certain that I got myself into a bit of a sticky pot by being a buyer at the low end of the range. I don't think I did very well, but when you look at it after the fact in the cold night of day, you're going, yeah, that's a short. Especially also because I've been bearish on the Thursday, Friday, Monday pattern. Would you like to look at Friday last with me? I think that's perhaps a little bit more complicated. I'm hoping that by doing this, I am managing to achieve some degree of clarity. So here's the school run on Friday with the overnight range. The market opens here, so you can see that, opens here, this bar here. It triggers a short signal below the low of this bar here. Why? Well, because it's a traditional school run. It takes place below the low of the overnight range. So it's clear as day. This is a sell right here. Now you're welcome Sage. I did this for you amongst others. We can do one more example. And I'm hoping I'm bringing clarity to you as opposed to bringing confusion. Why don't we take this one here? It's a brilliant example. I love examples that fail. You might think, oh, how can that be brilliant? Well, because it is in our failures that we will modify our approach. So here's roughly the overnight range. And anybody can see, yes, the school run, the market opens well above. Do you see how the market opens well above the overnight range? And here's the school run bar. It triggers a long signal up here. Without a doubt, triggers a long. And not only that, it triggers another long here. Do you see that? And obviously you can also see, wow, that was a spectacular failure. Absolutely. Without a doubt, this had you followed conventional school run theory. You would have sold short here and you would have bought here. But if you factor in the overnight range, you would also have been a buyer here. Now, would I have been a buyer here, stopped out here and then bought again? Probably not. And so examples like this is probably where the confusion lies. School run triggers a short, but you're now saying I should be a buyer here because it takes a place above the overnight range. That's exactly right. Now, is there a lesson in this particular chart? I think so. What would concern me here is how you go a few points above this high here and then reverses. But anyway, traditional technical analysis will dictate that this is what we call an outside bar. See that how it encompasses the previous bar? That tends to be bearish, but I don't want to confuse conventional technical analysis with what I call situational analysis. My particular brand for technical analysis is called situational analysis. At least that's what I call it. And this situation here doesn't interact with conventional technical analysis. Oh, that's an outside range bar. But I have to acknowledge that we take out the high and then reverses. And that's rarely a bullish signal. And this has happened with opposite. If this had been a, we're taking out the lows and then we reverse and we close above the high. Very much like what you are seeing. Where was it? Where was that bar? Where does that? I think it was the inside the one where it's an inside bar. Let's see if I can find it. Can't find it. This one here. This one here. This one here. This one here. This one here. This one here. This one here. This one here. This one here. This one here. How we take out the low and very soon after we're trading above the high. It feels almost the same pattern just in reverse. Over here. Up here. Take out the high and reverse and trade below the low. Okay. I hope that that gave you some clarity. I'm very happy to do one more example. Do this one because I think this could also be a good example. And then I have to go. There's roughly the overnight range. The market. Opens here. This is the school run bar. It actually triggers a long. See that right here. And exactly the same situation happens as the day after we go below. And then it does a cruel reversal question. Would I have been long here? Stopped out here. And bought again. Unlikely. Unlikely. Do you follow me? But I wouldn't have sold short here either. And I think that's where I have yet to do some work on the money management angle of, okay, you're buying here because this is going to happen again. Trust me. And on this day and then it happened on the next day as well. See that? Here. Long and then I was supposed to be a long again. So while it definitely wouldn't have worked here, it would have worked here, but that's beside the point. The point here is I wouldn't want to be a buyer once more. It may be that I had decided to buy it once again. It breaks above once more. But it's always easy to talk about this after the fact. We're doing this in a live environment and we have to always make sure that we don't become reckless either. We have to make sure that we keep our emotions in check constantly. And if that means I'm buying here, I get stopped out. Oh, screw you, Dax. Maybe at times it's better than to walk away and come back with a fresh mindset and a fresh set of eyes. Okay, so I hope that this little impromptu review of the school run and the school run anti is of benefit to you. I will complete this lesson now and say thank you for tuning in. And I will see you for the US session. All the very best. Bye-bye for now."
+}

@@ -1,0 +1,130 @@
+# Transcript: 💥Reacting to Tom Hougaard’s School Run Strategy – Genius or Gamble?
+# Source: https://www.youtube.com/watch?v=Si7J5VG3lYQ
+# Project: WolfPack
+# Model: small | Language: en | Duration: 840.1s
+# Transcribed: 2026-04-03 09:21:21
+
+[0.0s - 7.0s] In this video, I break down Tom Hogaard's famous school run strategy, a trading approach
+[7.0s - 13.4s] designed around the early morning volatility, often near the London Open. I'll explain
+[13.4s - 20.2s] how it works, the rules behind it, and test it out on real charts to see if it still holds
+[20.2s - 26.6s] weight today in the forex market. But more importantly, I'm going to show you how I have
+[26.6s - 33.1s] simplified it and optimized it for better performance, so stay tuned for that. Whether
+[33.1s - 38.7s] you're new to Hogaard's methods or you've tried this one yourself, this video will provide a
+[38.7s - 45.7s] different and fresh approach to this strategy, and we will look at some examples on the charts.
+[45.7s - 51.1s] Don't forget to subscribe and like, and please drop your thoughts in the comments. Let us know
+[51.1s - 56.9s] if you've traded this strategy before. So to start, let's take a look at the strategy to
+[56.9s - 63.7s] better understand it. Okay, so let's listen to Tom Hogaard explain his school run strategy
+[63.7s - 75.0s] in his own words. Okay, normal school run theory dictates that when we are trading the DAX index
+[75.5s - 82.7s] on a 15 minute chart, that 15 minute chart, this bar that you're seeing here, that's the first
+[82.7s - 90.2s] 15 minute bar in the DAX. And I developed the school run strategy around the idea that the market
+[90.2s - 96.2s] will come to work in the morning, and there will be people who need to get things done quickly.
+[96.2s - 103.0s] It could be they need to buy or they need to sell. So oftentimes, the first 30 minutes aren't
+[103.0s - 110.0s] indicative of the true trend of the day. And so I developed the strategy based on observation,
+[110.0s - 116.4s] purely observation going, I would like to be looking at the market after 30 minutes of trading.
+[116.4s - 124.6s] Specifically, I would like to be a buyer on a break of that second 15 minute candle. So I stuck to
+[124.6s - 132.1s] the second 15 minute candle as my tool, meaning that I want to be buying above and shorting below.
+[132.6s - 138.3s] Okay, so pretty self-explanatory, right? He's waiting for the markets to open at 8am,
+[138.3s - 144.6s] and then he waits for the first 15 minute candle, and then the second 15 minute candle.
+[144.6s - 151.4s] So basically, he's interested in trading after the first half hour of the open. He trades the DAX,
+[151.4s - 157.4s] we're actually going to use the pound US dollar. And it's as simple as this, he buys on the break
+[157.4s - 165.0s] of this candle, or he sells on the break of the low of this candle. All right, but let's carry on
+[165.0s - 174.6s] and listen to the rest of the video and shorting below. So the conventional school run theory says
+[174.6s - 182.6s] you want to be a buyer above that school run bar. And the school run bar is the second 15 minute
+[182.6s - 190.2s] candle. You buy above or you sell short below. A typical breakout strategy, nothing more to it
+[190.2s - 198.2s] than that. And for a long time, that was the only thing I did. And it worked extremely well. I made
+[198.2s - 206.2s] significant sums of money trading school run. However, whether it was a mean reversion taking
+[206.2s - 214.8s] place, or it was just my time to lose, but there became more and more frequently times when the
+[214.8s - 222.0s] market would go above the school run, the second 15 minute high, and it would trigger me long,
+[222.0s - 226.7s] and then they would reverse or vice versa, I would be triggered short, and then it would
+[226.7s - 233.8s] reverse back into the range and stop me out on the other side. And so I began as I think any trader
+[233.8s - 241.6s] who is worth their their pinch of salt, I began to do serious work and contemplation on, well,
+[241.6s - 249.5s] under what circumstances is it that my school run succeeds? And under what circumstances do they fail?
+[250.9s - 256.0s] I'm going to stop it there, guys, because he actually goes on to talk about the Asian range,
+[256.0s - 262.6s] and he only trades above the Asian range or below the Asian range. But without optimized
+[262.6s - 268.5s] strategy that I'm about to show you guys, we don't need to worry about that. And he also explains
+[268.5s - 275.0s] how we had some candles once he entered close back into the candle and eventually take him out.
+[275.0s - 280.1s] But again, we've optimized this strategy. So we don't need to worry about that. And we've
+[280.1s - 285.4s] actually simplified it guys. So let's get into it. Traders, before I show you our optimized
+[285.4s - 290.5s] version of this strategy, please don't forget to subscribe to the channel, smash the notification
+[290.5s - 296.1s] button and please smash the like button. Also, please don't forget to join our free,
+[296.1s - 302.2s] this called channel, you can join talk to like minded traders, share knowledge, trade ideas,
+[302.2s - 307.3s] please come join our community. Also, guys, if you want access to all of our premium trading
+[307.3s - 313.8s] education, including the course, the mentorship program, the VIP Academy and the price action
+[313.8s - 322.5s] indicator, then go check out our website, www.simply-4x.com. All the information are in the
+[322.5s - 328.1s] links below. Also, guys, please leave a comment if you enjoyed this strategy or you've traded it
+[328.1s - 334.1s] before, we would love to hear about it. Alright, guys, let's get into the strategy. So Thomas was
+[334.1s - 340.3s] using the DAX and he was using the 15 minute chart, we're actually going to use pound US dollar and
+[340.4s - 346.9s] the 30 minute chart. Thomas does actually explain how he uses that strategy with pound US dollar
+[346.9s - 353.8s] and euro US dollar and euro pound. But we found pound US dollar gave us the best results. Now,
+[353.8s - 360.8s] let's understand the criteria for the entry. Now, it's still looking at the London Open and
+[360.8s - 367.9s] taking advantage of that initial volume and that push we see in the market. But that's exactly what
+[367.9s - 374.6s] we need to see that push, right? If we don't see it, we don't trade. So let me explain the rules.
+[375.4s - 381.1s] Now, this is the 30 minute chart. So we need to find the 8am candle. And as you can see here,
+[381.1s - 388.6s] we're going to start on Friday and work our way back. So this is Friday and this is the 8am candle.
+[390.0s - 397.5s] And then the rules are as simple as this. We are looking for the next 30 minute candle,
+[397.5s - 405.8s] the body of the candle to close above the previous high of the previous candle,
+[405.8s - 413.0s] or the low of the previous candle. And then we can enter. It might happen on the next candle.
+[413.0s - 419.7s] It may be the following candle or the one after that. But it must happen before 10am.
+[420.2s - 425.7s] All right. So to understand these rules, let me just go for a few examples, right?
+[425.7s - 432.7s] So we've pinpointed our 8am candle. We just let that finish, right? We let it finish.
+[432.7s - 438.6s] And then we see what happens afterwards. Now, as you can see, literally the next candle,
+[439.5s - 448.9s] the body of the candle closes below the low of that candle. So that is our criteria met.
+[448.9s - 456.2s] And we can start selling this pair, right? We put our stop three pips above the high of this
+[456.2s - 462.6s] candle. Okay, so we start selling here on the close of the candle. Our stop loss is up here.
+[462.6s - 468.3s] And we're looking for one is to one, and then leave some profits to run. As you can see,
+[468.3s - 473.9s] a very nice trade, right? So we're just going to go along and look at a few examples of this.
+[474.7s - 480.5s] Right, let's find our next 8am candle. Here we are, this big red one right here.
+[481.8s - 488.2s] Okay, so this is a good example. So this is our 8am candle right here.
+[489.2s - 492.3s] And remember what we're looking for, we're looking for the break
+[493.3s - 499.1s] of the high or the low of that candle or the previous candle. Now, this candle,
+[499.7s - 506.6s] the body of the candle doesn't break below this low. Okay, it closes back in, so no trade.
+[507.3s - 514.2s] So we can look at the next candle and this candle only just, but the body of this candle
+[514.2s - 520.9s] breaks the low of this candle. So we can take the trade, then it doesn't have to be the first
+[520.9s - 527.4s] candle. It can be the next candle or the following candle. But remember, it must happen before 10am.
+[528.3s - 535.3s] So we can start on this red candle. The body of the candle has broken the low of that. We can
+[535.3s - 542.7s] start selling, stops three pips above the high of this candle, and we come lower. Okay, you can
+[542.7s - 549.6s] see it would have been a very nice trade. Let's find the next example. Okay, so let's zoom in.
+[550.6s - 556.2s] 8am, here we go. This is a really good example, guys, actually. Let's zoom in so you can see it.
+[557.2s - 567.7s] So this candle right here is the 8am candle. Make this green dojo right here. Now, as you can see,
+[568.4s - 576.8s] this candle doesn't break the low. Right, so we don't have a trade. This candle doesn't break the
+[576.8s - 585.6s] high or low of this candle. Right, so no trade. But this candle, the body of the candle breaks the
+[585.6s - 594.4s] high of the previous candle. Right, it breaks this high right here. Therefore, this is our
+[594.4s - 603.8s] entry candle. It meets the criteria. So we can start buying here. Right, stop loss, three pips
+[603.8s - 613.7s] below that low. And as you can see, nice trade again. Okay. And we're waiting for the break of
+[613.7s - 621.5s] that candle or the previous candle, because that suggests to us that there's enough momentum. Right,
+[621.5s - 627.0s] there's enough buyers or sellers to start pushing it. We don't want candles that are closing back
+[627.0s - 635.0s] into each other. Okay, and it doesn't matter how long after 8am that happens, as long as it happens
+[635.0s - 642.7s] before 10am. And you can see here with this candle right here, guys, that was 9.30. So that is okay.
+[642.8s - 649.5s] It happened before 10 o'clock. Right, just before when it finishes forming. But the 10am candle
+[649.5s - 659.5s] onwards, we cannot take. Okay. So let's carry along. Let's find the next 8am candle. Here we go.
+[659.5s - 669.3s] Right, this candle right here is the 8am candle. This candle doesn't close above the high or the
+[669.3s - 676.2s] low, as in the body of the candle, no trade. But the next candle does. You can see this candle.
+[676.2s - 682.8s] Right, the body of the candle breaks the high of the previous candle. We can start buying in here.
+[683.4s - 689.4s] Okay, stop loss, three pips below there. Okay, and we get our one is to one.
+[691.4s - 696.7s] All right, let's see if we, okay, let's have a look at this example now, guys. Right, so
+[697.4s - 702.2s] this is a losing trade. Right, and as with any strategy, we're going to have losing trade. So
+[702.2s - 708.8s] let's take a look at an example. So let's zoom in. Right, where's the 8am candle? There it is.
+[709.4s - 717.3s] Okay, so that candle right there is the 8am candle, this one here. And you can see the next candle,
+[717.3s - 723.8s] the body of the candle breaks the low of this candle. So we would start selling, put our stop
+[723.8s - 730.6s] three pips above here. Right, and eventually, maybe if this candle doesn't knock us out,
+[730.6s - 736.3s] we definitely get knocked out later. So a losing trade. Right, no problem, we will have losing
+[736.3s - 743.0s] trades as part of any strategy. But that is the first losing trade out of four trades. I mean,
+[743.0s - 748.8s] when was this? Yeah, this was Monday. Ever since Friday, Friday, Thursday, Wednesday, Tuesday,
+[748.8s - 754.5s] we have had winning trades, Monday wasn't. Let's have a look at one more example.
+[755.2s - 762.5s] Let's find the eight o'clock candle. Here we are. Right, that is the 8am candle right here.
+[763.1s - 769.8s] Remember, we're looking for the next 30 minute candle that breaks the previous high or low
+[769.8s - 776.2s] with its body. You can see the body of this candle breaks the low, we can start selling here,
+[776.8s - 782.4s] stop loss three pips above here. And again, we have a really nice trade.
+[783.4s - 789.8s] All right, guys, so you can see how we've taken a well established strategy that lots of traders
+[789.8s - 795.8s] have looked at and probably used. And we've simplified it and optimized it. And we've made
+[795.8s - 803.3s] it a forex strategy, right, because he was using it on the DAX. And it's super simple, right? So
+[804.2s - 810.2s] just to recap, guys, we are looking at the 8am candle to finish. We are then looking for the
+[810.2s - 818.2s] next 30 minute candle, the body of the candle to break the previous high or low of the previous
+[818.2s - 826.3s] candle. Okay, and it must happen before 10am's candle starts forming. All right, guys, and we
+[826.3s - 832.3s] take the trade. It's as simple as that. So guys, if you've enjoyed this video, please don't forget
+[832.6s - 837.8s] to subscribe to the channel, smash the notification button, and please smash that like button.
+[837.8s - 840.1s] And I will see you next time.
+
+---
+
+In this video, I break down Tom Hogaard's famous school run strategy, a trading approach designed around the early morning volatility, often near the London Open. I'll explain how it works, the rules behind it, and test it out on real charts to see if it still holds weight today in the forex market. But more importantly, I'm going to show you how I have simplified it and optimized it for better performance, so stay tuned for that. Whether you're new to Hogaard's methods or you've tried this one yourself, this video will provide a different and fresh approach to this strategy, and we will look at some examples on the charts. Don't forget to subscribe and like, and please drop your thoughts in the comments. Let us know if you've traded this strategy before. So to start, let's take a look at the strategy to better understand it. Okay, so let's listen to Tom Hogaard explain his school run strategy in his own words. Okay, normal school run theory dictates that when we are trading the DAX index on a 15 minute chart, that 15 minute chart, this bar that you're seeing here, that's the first 15 minute bar in the DAX. And I developed the school run strategy around the idea that the market will come to work in the morning, and there will be people who need to get things done quickly. It could be they need to buy or they need to sell. So oftentimes, the first 30 minutes aren't indicative of the true trend of the day. And so I developed the strategy based on observation, purely observation going, I would like to be looking at the market after 30 minutes of trading. Specifically, I would like to be a buyer on a break of that second 15 minute candle. So I stuck to the second 15 minute candle as my tool, meaning that I want to be buying above and shorting below. Okay, so pretty self-explanatory, right? He's waiting for the markets to open at 8am, and then he waits for the first 15 minute candle, and then the second 15 minute candle. So basically, he's interested in trading after the first half hour of the open. He trades the DAX, we're actually going to use the pound US dollar. And it's as simple as this, he buys on the break of this candle, or he sells on the break of the low of this candle. All right, but let's carry on and listen to the rest of the video and shorting below. So the conventional school run theory says you want to be a buyer above that school run bar. And the school run bar is the second 15 minute candle. You buy above or you sell short below. A typical breakout strategy, nothing more to it than that. And for a long time, that was the only thing I did. And it worked extremely well. I made significant sums of money trading school run. However, whether it was a mean reversion taking place, or it was just my time to lose, but there became more and more frequently times when the market would go above the school run, the second 15 minute high, and it would trigger me long, and then they would reverse or vice versa, I would be triggered short, and then it would reverse back into the range and stop me out on the other side. And so I began as I think any trader who is worth their their pinch of salt, I began to do serious work and contemplation on, well, under what circumstances is it that my school run succeeds? And under what circumstances do they fail? I'm going to stop it there, guys, because he actually goes on to talk about the Asian range, and he only trades above the Asian range or below the Asian range. But without optimized strategy that I'm about to show you guys, we don't need to worry about that. And he also explains how we had some candles once he entered close back into the candle and eventually take him out. But again, we've optimized this strategy. So we don't need to worry about that. And we've actually simplified it guys. So let's get into it. Traders, before I show you our optimized version of this strategy, please don't forget to subscribe to the channel, smash the notification button and please smash the like button. Also, please don't forget to join our free, this called channel, you can join talk to like minded traders, share knowledge, trade ideas, please come join our community. Also, guys, if you want access to all of our premium trading education, including the course, the mentorship program, the VIP Academy and the price action indicator, then go check out our website, www.simply-4x.com. All the information are in the links below. Also, guys, please leave a comment if you enjoyed this strategy or you've traded it before, we would love to hear about it. Alright, guys, let's get into the strategy. So Thomas was using the DAX and he was using the 15 minute chart, we're actually going to use pound US dollar and the 30 minute chart. Thomas does actually explain how he uses that strategy with pound US dollar and euro US dollar and euro pound. But we found pound US dollar gave us the best results. Now, let's understand the criteria for the entry. Now, it's still looking at the London Open and taking advantage of that initial volume and that push we see in the market. But that's exactly what we need to see that push, right? If we don't see it, we don't trade. So let me explain the rules. Now, this is the 30 minute chart. So we need to find the 8am candle. And as you can see here, we're going to start on Friday and work our way back. So this is Friday and this is the 8am candle. And then the rules are as simple as this. We are looking for the next 30 minute candle, the body of the candle to close above the previous high of the previous candle, or the low of the previous candle. And then we can enter. It might happen on the next candle. It may be the following candle or the one after that. But it must happen before 10am. All right. So to understand these rules, let me just go for a few examples, right? So we've pinpointed our 8am candle. We just let that finish, right? We let it finish. And then we see what happens afterwards. Now, as you can see, literally the next candle, the body of the candle closes below the low of that candle. So that is our criteria met. And we can start selling this pair, right? We put our stop three pips above the high of this candle. Okay, so we start selling here on the close of the candle. Our stop loss is up here. And we're looking for one is to one, and then leave some profits to run. As you can see, a very nice trade, right? So we're just going to go along and look at a few examples of this. Right, let's find our next 8am candle. Here we are, this big red one right here. Okay, so this is a good example. So this is our 8am candle right here. And remember what we're looking for, we're looking for the break of the high or the low of that candle or the previous candle. Now, this candle, the body of the candle doesn't break below this low. Okay, it closes back in, so no trade. So we can look at the next candle and this candle only just, but the body of this candle breaks the low of this candle. So we can take the trade, then it doesn't have to be the first candle. It can be the next candle or the following candle. But remember, it must happen before 10am. So we can start on this red candle. The body of the candle has broken the low of that. We can start selling, stops three pips above the high of this candle, and we come lower. Okay, you can see it would have been a very nice trade. Let's find the next example. Okay, so let's zoom in. 8am, here we go. This is a really good example, guys, actually. Let's zoom in so you can see it. So this candle right here is the 8am candle. Make this green dojo right here. Now, as you can see, this candle doesn't break the low. Right, so we don't have a trade. This candle doesn't break the high or low of this candle. Right, so no trade. But this candle, the body of the candle breaks the high of the previous candle. Right, it breaks this high right here. Therefore, this is our entry candle. It meets the criteria. So we can start buying here. Right, stop loss, three pips below that low. And as you can see, nice trade again. Okay. And we're waiting for the break of that candle or the previous candle, because that suggests to us that there's enough momentum. Right, there's enough buyers or sellers to start pushing it. We don't want candles that are closing back into each other. Okay, and it doesn't matter how long after 8am that happens, as long as it happens before 10am. And you can see here with this candle right here, guys, that was 9.30. So that is okay. It happened before 10 o'clock. Right, just before when it finishes forming. But the 10am candle onwards, we cannot take. Okay. So let's carry along. Let's find the next 8am candle. Here we go. Right, this candle right here is the 8am candle. This candle doesn't close above the high or the low, as in the body of the candle, no trade. But the next candle does. You can see this candle. Right, the body of the candle breaks the high of the previous candle. We can start buying in here. Okay, stop loss, three pips below there. Okay, and we get our one is to one. All right, let's see if we, okay, let's have a look at this example now, guys. Right, so this is a losing trade. Right, and as with any strategy, we're going to have losing trade. So let's take a look at an example. So let's zoom in. Right, where's the 8am candle? There it is. Okay, so that candle right there is the 8am candle, this one here. And you can see the next candle, the body of the candle breaks the low of this candle. So we would start selling, put our stop three pips above here. Right, and eventually, maybe if this candle doesn't knock us out, we definitely get knocked out later. So a losing trade. Right, no problem, we will have losing trades as part of any strategy. But that is the first losing trade out of four trades. I mean, when was this? Yeah, this was Monday. Ever since Friday, Friday, Thursday, Wednesday, Tuesday, we have had winning trades, Monday wasn't. Let's have a look at one more example. Let's find the eight o'clock candle. Here we are. Right, that is the 8am candle right here. Remember, we're looking for the next 30 minute candle that breaks the previous high or low with its body. You can see the body of this candle breaks the low, we can start selling here, stop loss three pips above here. And again, we have a really nice trade. All right, guys, so you can see how we've taken a well established strategy that lots of traders have looked at and probably used. And we've simplified it and optimized it. And we've made it a forex strategy, right, because he was using it on the DAX. And it's super simple, right? So just to recap, guys, we are looking at the 8am candle to finish. We are then looking for the next 30 minute candle, the body of the candle to break the previous high or low of the previous candle. Okay, and it must happen before 10am's candle starts forming. All right, guys, and we take the trade. It's as simple as that. So guys, if you've enjoyed this video, please don't forget to subscribe to the channel, smash the notification button, and please smash that like button. And I will see you next time.

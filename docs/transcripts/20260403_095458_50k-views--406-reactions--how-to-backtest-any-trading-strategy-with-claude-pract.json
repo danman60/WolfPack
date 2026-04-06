@@ -1,0 +1,417 @@
+{
+  "title": "50K views \u00b7 406 reactions | How to backtest any trading strategy with Claude! Practically whatever you can imagine, Claude can build it in seconds! Comment the word \u201cAutomate\u201d\u2019and we\u2019ll send a step by step video showing you how to automate these trading strategies! Follow @thealphainsider to stay up to date on all things trading automating. #automatedtrading #claude #trading #trading #alphainsider | Alpha Insider",
+  "url": "https://www.facebook.com/share/v/1Fq7oMWg9T/",
+  "project": "WolfPack",
+  "model": "small",
+  "language": "en",
+  "language_probability": 1.0,
+  "duration_seconds": 164.5,
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 2.8,
+      "text": "This is how we're gonna use Claude to backtest"
+    },
+    {
+      "start": 2.8,
+      "end": 4.9,
+      "text": "any trading strategy on TradingView."
+    },
+    {
+      "start": 4.9,
+      "end": 7.8,
+      "text": "And no, we don't even need to have a paid plan of Claude."
+    },
+    {
+      "start": 7.8,
+      "end": 10.3,
+      "text": "So I'm prompting Claude to create a code in PineScript"
+    },
+    {
+      "start": 10.3,
+      "end": 11.2,
+      "text": "for TradingView."
+    },
+    {
+      "start": 11.2,
+      "end": 12.0,
+      "text": "All right, here we go."
+    },
+    {
+      "start": 12.0,
+      "end": 13.4,
+      "text": "We've got a description of the code."
+    },
+    {
+      "start": 13.4,
+      "end": 16.4,
+      "text": "Then I ask it to give me the code for me to copy over."
+    },
+    {
+      "start": 16.4,
+      "end": 18.0,
+      "text": "It writes it out in PineScript."
+    },
+    {
+      "start": 18.0,
+      "end": 21.3,
+      "text": "And all I'm gonna do now is grab this and copy it."
+    },
+    {
+      "start": 21.3,
+      "end": 22.7,
+      "text": "I now go to TradingView."
+    },
+    {
+      "start": 22.7,
+      "end": 24.0,
+      "text": "And on the right-hand side,"
+    },
+    {
+      "start": 24.0,
+      "end": 26.2,
+      "text": "there's a little PineTree icon that says Pine."
+    },
+    {
+      "start": 26.2,
+      "end": 27.0,
+      "text": "Click on that."
+    },
+    {
+      "start": 27.0,
+      "end": 27.9,
+      "text": "It's gonna open this window."
+    },
+    {
+      "start": 27.9,
+      "end": 29.1,
+      "text": "I've got some old stuff in there."
+    },
+    {
+      "start": 29.1,
+      "end": 30.8,
+      "text": "I'm gonna make a new strategy,"
+    },
+    {
+      "start": 30.8,
+      "end": 32.9,
+      "text": "then delete all that and paste over it"
+    },
+    {
+      "start": 32.9,
+      "end": 35.1,
+      "text": "with my new code that Claude just gave me."
+    },
+    {
+      "start": 35.1,
+      "end": 36.2,
+      "text": "Click on Add to Chart."
+    },
+    {
+      "start": 36.2,
+      "end": 37.8,
+      "text": "Now I'm gonna get rid of the coding window"
+    },
+    {
+      "start": 37.8,
+      "end": 39.9,
+      "text": "and I'm gonna open this up and we can see already,"
+    },
+    {
+      "start": 39.9,
+      "end": 43.3,
+      "text": "we have a profitable trading strategy based on the timeframe"
+    },
+    {
+      "start": 43.3,
+      "end": 45.2,
+      "text": "that I'm looking at on the backtest."
+    },
+    {
+      "start": 45.2,
+      "end": 48.6,
+      "text": "It's up 426% and I did not optimize it at all."
+    },
+    {
+      "start": 48.6,
+      "end": 51.3,
+      "text": "We can see all the trades being taken here on the chart."
+    },
+    {
+      "start": 51.3,
+      "end": 53.9,
+      "text": "It's got a max drawdown of 36.37."
+    },
+    {
+      "start": 53.9,
+      "end": 57.4,
+      "text": "It's got 176 trades, 52.84 profitable,"
+    },
+    {
+      "start": 57.4,
+      "end": 59.4,
+      "text": "and a 1.74 profit factor."
+    },
+    {
+      "start": 59.4,
+      "end": 60.4,
+      "text": "Now that sounds great,"
+    },
+    {
+      "start": 60.4,
+      "end": 62.1,
+      "text": "but if you scroll down on TradingView,"
+    },
+    {
+      "start": 62.1,
+      "end": 64.0,
+      "text": "what you'll see is that the strategy"
+    },
+    {
+      "start": 64.0,
+      "end": 66.9,
+      "text": "actually didn't outperform the buy and hold."
+    },
+    {
+      "start": 66.9,
+      "end": 69.7,
+      "text": "If you had bought and held during the timeframe on the chart,"
+    },
+    {
+      "start": 69.7,
+      "end": 72.7,
+      "text": "which I believe goes back to 1994,"
+    },
+    {
+      "start": 72.7,
+      "end": 75.8,
+      "text": "you actually would be up over 1300%"
+    },
+    {
+      "start": 75.8,
+      "end": 77.5,
+      "text": "just buying and holding spy."
+    },
+    {
+      "start": 77.5,
+      "end": 79.5,
+      "text": "It didn't take long to start testing other charts."
+    },
+    {
+      "start": 79.5,
+      "end": 81.5,
+      "text": "I now pulled up NVIDIA NVDA."
+    },
+    {
+      "start": 81.5,
+      "end": 83.8,
+      "text": "We can see that until as of late,"
+    },
+    {
+      "start": 83.8,
+      "end": 85.3,
+      "text": "it made some massive gains"
+    },
+    {
+      "start": 85.3,
+      "end": 88.7,
+      "text": "and it's had a recent major run over the past 10 years or so,"
+    },
+    {
+      "start": 88.7,
+      "end": 93.5,
+      "text": "but it's actually up 700,000% on 117 trades."
+    },
+    {
+      "start": 93.5,
+      "end": 96.4,
+      "text": "This one in this case actually does beat the buy and hold"
+    },
+    {
+      "start": 96.4,
+      "end": 99.2,
+      "text": "because the buy and hold return is up 300,000%"
+    },
+    {
+      "start": 99.2,
+      "end": 101.5,
+      "text": "and this strategy outperformed the buy and hold"
+    },
+    {
+      "start": 101.5,
+      "end": 102.4,
+      "text": "by a good margin."
+    },
+    {
+      "start": 102.4,
+      "end": 103.8,
+      "text": "Now these strategies are simple"
+    },
+    {
+      "start": 103.8,
+      "end": 106.2,
+      "text": "and I am looking at assets that have gone up over time."
+    },
+    {
+      "start": 106.2,
+      "end": 108.3,
+      "text": "So this is not going to be a guaranteed strategy"
+    },
+    {
+      "start": 108.3,
+      "end": 110.1,
+      "text": "that's going to automatically make you profitable"
+    },
+    {
+      "start": 110.1,
+      "end": 111.4,
+      "text": "and make you tons of money."
+    },
+    {
+      "start": 111.4,
+      "end": 112.9,
+      "text": "But what you can do inside of that"
+    },
+    {
+      "start": 112.9,
+      "end": 114.5,
+      "text": "is go under the strategy report,"
+    },
+    {
+      "start": 114.5,
+      "end": 115.4,
+      "text": "click on the little dropdown."
+    },
+    {
+      "start": 115.4,
+      "end": 117.0,
+      "text": "It then lets you go to the settings"
+    },
+    {
+      "start": 117.0,
+      "end": 119.5,
+      "text": "where you can customize the SMA, the RSI,"
+    },
+    {
+      "start": 119.5,
+      "end": 121.7,
+      "text": "over bought levels, over sold levels, properties,"
+    },
+    {
+      "start": 121.7,
+      "end": 124.4,
+      "text": "your order size, commissions, which it is accounting for."
+    },
+    {
+      "start": 124.4,
+      "end": 125.6,
+      "text": "You can even account for slippage"
+    },
+    {
+      "start": 125.6,
+      "end": 127.0,
+      "text": "and your starting account balance."
+    },
+    {
+      "start": 127.0,
+      "end": 128.1,
+      "text": "If you hit the strategy dropdown,"
+    },
+    {
+      "start": 128.1,
+      "end": 129.6,
+      "text": "you can even download an Excel file"
+    },
+    {
+      "start": 129.6,
+      "end": 131.2,
+      "text": "that you can go and use however you see fit."
+    },
+    {
+      "start": 131.2,
+      "end": 132.6,
+      "text": "When I go up to the top of my chart"
+    },
+    {
+      "start": 132.6,
+      "end": 133.7,
+      "text": "and I click on the strategy"
+    },
+    {
+      "start": 133.7,
+      "end": 135.4,
+      "text": "and I go over to these three dots,"
+    },
+    {
+      "start": 135.4,
+      "end": 136.5,
+      "text": "there's a couple of things we can do."
+    },
+    {
+      "start": 136.5,
+      "end": 138.1,
+      "text": "We can actually click on add alerts,"
+    },
+    {
+      "start": 138.1,
+      "end": 140.3,
+      "text": "which then allows us to set this alert"
+    },
+    {
+      "start": 140.3,
+      "end": 143.5,
+      "text": "so that every time this strategy were to fire or trigger,"
+    },
+    {
+      "start": 143.5,
+      "end": 145.4,
+      "text": "it's going to alert us on TradingView."
+    },
+    {
+      "start": 145.4,
+      "end": 148.2,
+      "text": "But an even cooler thing is that there's actually a way"
+    },
+    {
+      "start": 148.2,
+      "end": 150.6,
+      "text": "by setting up the web hook to send these trades"
+    },
+    {
+      "start": 150.6,
+      "end": 153.7,
+      "text": "to a place like this that can automate with your own broker."
+    },
+    {
+      "start": 153.7,
+      "end": 155.8,
+      "text": "Like in this case, these are actually live funds"
+    },
+    {
+      "start": 155.8,
+      "end": 156.6,
+      "text": "being traded."
+    },
+    {
+      "start": 156.6,
+      "end": 157.8,
+      "text": "If you wanna see how that works"
+    },
+    {
+      "start": 157.8,
+      "end": 159.8,
+      "text": "and how you can connect TradingView strategies"
+    },
+    {
+      "start": 159.8,
+      "end": 162.4,
+      "text": "that you build right here and automate them,"
+    },
+    {
+      "start": 162.4,
+      "end": 165.1,
+      "text": "comment the word automate and we'll send that video over."
+    }
+  ],
+  "full_text": "This is how we're gonna use Claude to backtest any trading strategy on TradingView. And no, we don't even need to have a paid plan of Claude. So I'm prompting Claude to create a code in PineScript for TradingView. All right, here we go. We've got a description of the code. Then I ask it to give me the code for me to copy over. It writes it out in PineScript. And all I'm gonna do now is grab this and copy it. I now go to TradingView. And on the right-hand side, there's a little PineTree icon that says Pine. Click on that. It's gonna open this window. I've got some old stuff in there. I'm gonna make a new strategy, then delete all that and paste over it with my new code that Claude just gave me. Click on Add to Chart. Now I'm gonna get rid of the coding window and I'm gonna open this up and we can see already, we have a profitable trading strategy based on the timeframe that I'm looking at on the backtest. It's up 426% and I did not optimize it at all. We can see all the trades being taken here on the chart. It's got a max drawdown of 36.37. It's got 176 trades, 52.84 profitable, and a 1.74 profit factor. Now that sounds great, but if you scroll down on TradingView, what you'll see is that the strategy actually didn't outperform the buy and hold. If you had bought and held during the timeframe on the chart, which I believe goes back to 1994, you actually would be up over 1300% just buying and holding spy. It didn't take long to start testing other charts. I now pulled up NVIDIA NVDA. We can see that until as of late, it made some massive gains and it's had a recent major run over the past 10 years or so, but it's actually up 700,000% on 117 trades. This one in this case actually does beat the buy and hold because the buy and hold return is up 300,000% and this strategy outperformed the buy and hold by a good margin. Now these strategies are simple and I am looking at assets that have gone up over time. So this is not going to be a guaranteed strategy that's going to automatically make you profitable and make you tons of money. But what you can do inside of that is go under the strategy report, click on the little dropdown. It then lets you go to the settings where you can customize the SMA, the RSI, over bought levels, over sold levels, properties, your order size, commissions, which it is accounting for. You can even account for slippage and your starting account balance. If you hit the strategy dropdown, you can even download an Excel file that you can go and use however you see fit. When I go up to the top of my chart and I click on the strategy and I go over to these three dots, there's a couple of things we can do. We can actually click on add alerts, which then allows us to set this alert so that every time this strategy were to fire or trigger, it's going to alert us on TradingView. But an even cooler thing is that there's actually a way by setting up the web hook to send these trades to a place like this that can automate with your own broker. Like in this case, these are actually live funds being traded. If you wanna see how that works and how you can connect TradingView strategies that you build right here and automate them, comment the word automate and we'll send that video over."
+}

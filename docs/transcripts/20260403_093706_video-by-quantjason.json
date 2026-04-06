@@ -1,0 +1,242 @@
+{
+  "title": "Video by quantjason",
+  "url": "https://www.instagram.com/reel/DVMukN2kWNk/",
+  "project": "WolfPack",
+  "model": "small",
+  "language": "en",
+  "language_probability": 1.0,
+  "duration_seconds": 89.6,
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 1.3,
+      "text": "We're starting to get into algorithmic trading"
+    },
+    {
+      "start": 1.3,
+      "end": 2.8,
+      "text": "from an elbow trading millionaire."
+    },
+    {
+      "start": 2.8,
+      "end": 5.8,
+      "text": "The single largest mistake I see"
+    },
+    {
+      "start": 5.8,
+      "end": 10.0,
+      "text": "and in theory it's me to no end is how people backtest."
+    },
+    {
+      "start": 10.0,
+      "end": 11.4,
+      "text": "Now, if you don't know what a backtest is,"
+    },
+    {
+      "start": 11.4,
+      "end": 12.5,
+      "text": "essentially you take the algorithm,"
+    },
+    {
+      "start": 12.5,
+      "end": 14.4,
+      "text": "you take its confluences and you run tests"
+    },
+    {
+      "start": 14.4,
+      "end": 16.7,
+      "text": "to see how the system would have performed"
+    },
+    {
+      "start": 16.7,
+      "end": 17.8,
+      "text": "in the given time period."
+    },
+    {
+      "start": 17.8,
+      "end": 19.2,
+      "text": "Usually it's 12 months."
+    },
+    {
+      "start": 19.2,
+      "end": 20.6,
+      "text": "Now, once you have the backtest,"
+    },
+    {
+      "start": 20.6,
+      "end": 22.2,
+      "text": "you just look at the KPIs to see"
+    },
+    {
+      "start": 22.2,
+      "end": 24.0,
+      "text": "how it would have performed in the last year."
+    },
+    {
+      "start": 24.0,
+      "end": 25.8,
+      "text": "On theory, that sounds great."
+    },
+    {
+      "start": 25.8,
+      "end": 27.8,
+      "text": "Why do you care what it did the year prior?"
+    },
+    {
+      "start": 27.8,
+      "end": 29.9,
+      "text": "That's not gonna tell you what's gonna do in the future."
+    },
+    {
+      "start": 29.9,
+      "end": 32.4,
+      "text": "Because of this, people constantly change their algorithm"
+    },
+    {
+      "start": 32.4,
+      "end": 35.5,
+      "text": "to try to see how good they can make their returns"
+    },
+    {
+      "start": 35.5,
+      "end": 37.2,
+      "text": "for what happened in the past."
+    },
+    {
+      "start": 37.2,
+      "end": 38.9,
+      "text": "This is called overfitting."
+    },
+    {
+      "start": 38.9,
+      "end": 41.2,
+      "text": "You will lose a lot of money doing this."
+    },
+    {
+      "start": 41.2,
+      "end": 42.5,
+      "text": "What's the right way to backtest?"
+    },
+    {
+      "start": 42.5,
+      "end": 44.6,
+      "text": "Well, you have to run what's called a stress test."
+    },
+    {
+      "start": 44.6,
+      "end": 46.0,
+      "text": "Usually it's a hidden Markov model"
+    },
+    {
+      "start": 46.0,
+      "end": 48.1,
+      "text": "of 10,000 Monte Carlo simulations."
+    },
+    {
+      "start": 48.1,
+      "end": 49.9,
+      "text": "You look at your drawdown analysis."
+    },
+    {
+      "start": 49.9,
+      "end": 51.1,
+      "text": "You do regime changes."
+    },
+    {
+      "start": 51.1,
+      "end": 53.1,
+      "text": "So basically you see how did it do"
+    },
+    {
+      "start": 53.1,
+      "end": 54.6,
+      "text": "in the past different markets."
+    },
+    {
+      "start": 54.6,
+      "end": 55.6,
+      "text": "Tons of other stress tests."
+    },
+    {
+      "start": 55.6,
+      "end": 57.5,
+      "text": "However, the most important one in my opinion"
+    },
+    {
+      "start": 57.5,
+      "end": 58.8,
+      "text": "would be the Monte Carlo simulation."
+    },
+    {
+      "start": 58.8,
+      "end": 60.8,
+      "text": "Not the standard simple rearrange"
+    },
+    {
+      "start": 60.8,
+      "end": 61.9,
+      "text": "and trade Monte Carlo simulation."
+    },
+    {
+      "start": 61.9,
+      "end": 62.7,
+      "text": "That's not gonna help you."
+    },
+    {
+      "start": 62.7,
+      "end": 64.0,
+      "text": "If you don't know what an HMM is,"
+    },
+    {
+      "start": 64.0,
+      "end": 65.6,
+      "text": "probabilistic model that tries to show"
+    },
+    {
+      "start": 65.6,
+      "end": 67.2,
+      "text": "sequences of unknown events."
+    },
+    {
+      "start": 67.2,
+      "end": 69.9,
+      "text": "And if you run 10,000, 100,000 simulations,"
+    },
+    {
+      "start": 69.9,
+      "end": 72.6,
+      "text": "that's a lot better than just one year of overfit data."
+    },
+    {
+      "start": 72.6,
+      "end": 76.3,
+      "text": "So do yourself a favor, never buy an algorithm"
+    },
+    {
+      "start": 76.3,
+      "end": 78.1,
+      "text": "based off of backtested data."
+    },
+    {
+      "start": 78.1,
+      "end": 79.7,
+      "text": "That is going to screw you over."
+    },
+    {
+      "start": 79.7,
+      "end": 83.4,
+      "text": "I lost over $300,000 in a single night doing that."
+    },
+    {
+      "start": 83.4,
+      "end": 86.0,
+      "text": "Always ask for live results first."
+    },
+    {
+      "start": 86.0,
+      "end": 87.6,
+      "text": "I hope this helps."
+    }
+  ],
+  "full_text": "We're starting to get into algorithmic trading from an elbow trading millionaire. The single largest mistake I see and in theory it's me to no end is how people backtest. Now, if you don't know what a backtest is, essentially you take the algorithm, you take its confluences and you run tests to see how the system would have performed in the given time period. Usually it's 12 months. Now, once you have the backtest, you just look at the KPIs to see how it would have performed in the last year. On theory, that sounds great. Why do you care what it did the year prior? That's not gonna tell you what's gonna do in the future. Because of this, people constantly change their algorithm to try to see how good they can make their returns for what happened in the past. This is called overfitting. You will lose a lot of money doing this. What's the right way to backtest? Well, you have to run what's called a stress test. Usually it's a hidden Markov model of 10,000 Monte Carlo simulations. You look at your drawdown analysis. You do regime changes. So basically you see how did it do in the past different markets. Tons of other stress tests. However, the most important one in my opinion would be the Monte Carlo simulation. Not the standard simple rearrange and trade Monte Carlo simulation. That's not gonna help you. If you don't know what an HMM is, probabilistic model that tries to show sequences of unknown events. And if you run 10,000, 100,000 simulations, that's a lot better than just one year of overfit data. So do yourself a favor, never buy an algorithm based off of backtested data. That is going to screw you over. I lost over $300,000 in a single night doing that. Always ask for live results first. I hope this helps."
+}

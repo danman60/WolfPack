@@ -1,0 +1,43 @@
+# Transcript: Video by chase.h.ai
+# Source: https://www.instagram.com/reel/DWC8bWVN5eA/
+# Project: WolfPack
+# Model: small | Language: en | Duration: 73.4s
+# Transcribed: 2026-04-03 09:48:39
+
+[0.0s - 6.3s] You can run cloud code 100% free, 100% private, and 100% local.
+[6.3s - 8.8s] And the best part is it's actually really easy to set up.
+[8.8s - 10.3s] And you can see it in action right here.
+[10.3s - 12.2s] Now, cloud code is just a harness.
+[12.2s - 14.9s] It sits on top of Opus or Sonic 4.6.
+[14.9s - 16.7s] But we can actually run it on our computer
+[16.7s - 19.1s] and just put that harness on top of a local model,
+[19.1s - 22.4s] like GLM 4.7 Flash or something like DeepSeq,
+[22.4s - 25.0s] which again, makes it 100% free,
+[25.0s - 26.4s] and your data doesn't go anywhere.
+[26.4s - 27.8s] Now, there's obvious trade-offs, right?
+[27.9s - 30.9s] Opus 4.6 and Sonic 4.6 are premier models for a reason.
+[30.9s - 32.5s] They are way more powerful.
+[32.5s - 34.6s] But if you're doing something that's relatively simple
+[34.6s - 37.0s] or cost is a factor, or you're dealing with data
+[37.0s - 38.6s] that can't just go out to the internet
+[38.6s - 40.2s] or to anthropic servers,
+[40.2s - 43.0s] these local models can be a huge value add.
+[43.0s - 45.7s] Now, to actually do this, you need to install Olama,
+[45.7s - 49.4s] and then you will download the local models from Olama itself.
+[49.4s - 51.4s] What model you should use depends on your computer,
+[51.4s - 52.6s] and the easiest way to figure that out
+[52.6s - 54.2s] is actually just to ask cloud code,
+[54.2s - 57.1s] because it can take a look at your hardware specifications.
+[57.1s - 59.5s] Now, to then run that local model inside of cloud code,
+[59.5s - 62.5s] you can just use these commands that come from Olama itself,
+[62.5s - 64.3s] or you can do something like Setup An alias.
+[64.3s - 65.8s] And once you do that, you're all set.
+[65.8s - 67.0s] It's really that simple.
+[67.0s - 69.3s] Now, don't expect it to knock your next coding project
+[69.3s - 70.1s] out of the park,
+[70.1s - 71.8s] but if you have something simple and straightforward,
+[71.8s - 73.2s] these local models can do well.
+
+---
+
+You can run cloud code 100% free, 100% private, and 100% local. And the best part is it's actually really easy to set up. And you can see it in action right here. Now, cloud code is just a harness. It sits on top of Opus or Sonic 4.6. But we can actually run it on our computer and just put that harness on top of a local model, like GLM 4.7 Flash or something like DeepSeq, which again, makes it 100% free, and your data doesn't go anywhere. Now, there's obvious trade-offs, right? Opus 4.6 and Sonic 4.6 are premier models for a reason. They are way more powerful. But if you're doing something that's relatively simple or cost is a factor, or you're dealing with data that can't just go out to the internet or to anthropic servers, these local models can be a huge value add. Now, to actually do this, you need to install Olama, and then you will download the local models from Olama itself. What model you should use depends on your computer, and the easiest way to figure that out is actually just to ask cloud code, because it can take a look at your hardware specifications. Now, to then run that local model inside of cloud code, you can just use these commands that come from Olama itself, or you can do something like Setup An alias. And once you do that, you're all set. It's really that simple. Now, don't expect it to knock your next coding project out of the park, but if you have something simple and straightforward, these local models can do well.

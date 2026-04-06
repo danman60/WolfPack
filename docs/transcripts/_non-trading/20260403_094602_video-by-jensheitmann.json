@@ -1,0 +1,152 @@
+{
+  "title": "Video by jens.heitmann",
+  "url": "https://www.instagram.com/reel/DV8rkpGEbBJ/",
+  "project": "WolfPack",
+  "model": "small",
+  "language": "en",
+  "language_probability": 1.0,
+  "duration_seconds": 71.0,
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 3.1,
+      "text": "If you're not leveraging hooks in Claude code,"
+    },
+    {
+      "start": 3.1,
+      "end": 6.0,
+      "text": "you are making your experience far harder"
+    },
+    {
+      "start": 6.0,
+      "end": 7.0,
+      "text": "than it has to be."
+    },
+    {
+      "start": 7.0,
+      "end": 9.1,
+      "text": "Hooks are essentially triggers that you put"
+    },
+    {
+      "start": 9.1,
+      "end": 11.8,
+      "text": "in your Claude code that will perform an action"
+    },
+    {
+      "start": 11.8,
+      "end": 12.9,
+      "text": "whenever they get flagged."
+    },
+    {
+      "start": 12.9,
+      "end": 15.6,
+      "text": "Here are three hooks that benefit me daily"
+    },
+    {
+      "start": 15.6,
+      "end": 17.0,
+      "text": "in my Claude code work."
+    },
+    {
+      "start": 17.0,
+      "end": 19.8,
+      "text": "My first hook is actually one that I built myself,"
+    },
+    {
+      "start": 19.8,
+      "end": 21.3,
+      "text": "which is my anti-deletion hook."
+    },
+    {
+      "start": 21.3,
+      "end": 23.0,
+      "text": "And what it does is in yellow mode,"
+    },
+    {
+      "start": 23.0,
+      "end": 25.5,
+      "text": "it prevents Claude code from deleting any files"
+    },
+    {
+      "start": 25.5,
+      "end": 27.9,
+      "text": "and instead moves it to a staging folder"
+    },
+    {
+      "start": 27.9,
+      "end": 31.0,
+      "text": "for me to review and delete later if I choose to do so."
+    },
+    {
+      "start": 31.0,
+      "end": 33.2,
+      "text": "Second is my notification hook,"
+    },
+    {
+      "start": 33.2,
+      "end": 36.2,
+      "text": "which basically whenever I start a Claude code session"
+    },
+    {
+      "start": 36.2,
+      "end": 39.4,
+      "text": "and alt tab in between and I'm not using yellow mode"
+    },
+    {
+      "start": 39.4,
+      "end": 41.8,
+      "text": "is that this will chime to get my attention"
+    },
+    {
+      "start": 41.8,
+      "end": 43.3,
+      "text": "to get back into Claude."
+    },
+    {
+      "start": 43.3,
+      "end": 45.3,
+      "text": "Lastly, this is one of my newer ones,"
+    },
+    {
+      "start": 45.3,
+      "end": 48.4,
+      "text": "but I've turned this auto research skill into a hook"
+    },
+    {
+      "start": 48.4,
+      "end": 51.4,
+      "text": "for whenever I work with anything in marketing"
+    },
+    {
+      "start": 51.4,
+      "end": 54.7,
+      "text": "that requires copy or visual designs,"
+    },
+    {
+      "start": 54.7,
+      "end": 57.9,
+      "text": "I have it auto research AB testing for refinement."
+    },
+    {
+      "start": 57.9,
+      "end": 60.9,
+      "text": "Now you should make hooks that are specific to you"
+    },
+    {
+      "start": 60.9,
+      "end": 63.6,
+      "text": "as these are very powerful personal systems,"
+    },
+    {
+      "start": 63.6,
+      "end": 66.6,
+      "text": "but if you wanna get started with my hooks that I have made,"
+    },
+    {
+      "start": 66.6,
+      "end": 70.8,
+      "text": "just comment hook and I'll DM you mine directly."
+    }
+  ],
+  "full_text": "If you're not leveraging hooks in Claude code, you are making your experience far harder than it has to be. Hooks are essentially triggers that you put in your Claude code that will perform an action whenever they get flagged. Here are three hooks that benefit me daily in my Claude code work. My first hook is actually one that I built myself, which is my anti-deletion hook. And what it does is in yellow mode, it prevents Claude code from deleting any files and instead moves it to a staging folder for me to review and delete later if I choose to do so. Second is my notification hook, which basically whenever I start a Claude code session and alt tab in between and I'm not using yellow mode is that this will chime to get my attention to get back into Claude. Lastly, this is one of my newer ones, but I've turned this auto research skill into a hook for whenever I work with anything in marketing that requires copy or visual designs, I have it auto research AB testing for refinement. Now you should make hooks that are specific to you as these are very powerful personal systems, but if you wanna get started with my hooks that I have made, just comment hook and I'll DM you mine directly."
+}

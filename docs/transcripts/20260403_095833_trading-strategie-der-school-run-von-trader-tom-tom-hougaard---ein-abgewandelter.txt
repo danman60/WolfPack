@@ -1,0 +1,169 @@
+# Transcript: Trading-Strategie: Der School Run von Trader Tom (Tom Hougaard) - Ein abgewandelter ORB
+# Source: https://www.youtube.com/watch?v=-1BJlsIyNwM
+# Project: WolfPack
+# Model: small | Language: de | Duration: 873.6s
+# Transcribed: 2026-04-03 09:58:40
+
+[0.0s - 3.8s] Hallo zusammen, wie versprochen, möchte ich euch in kleineren Videos jetzt die
+[3.8s - 7.3s] verschiedenen Strategien vorstellen, die ich aktuell Trader oder mir mal
+[7.3s - 12.0s] angeschaut habe und auch Backteste. In diesem ersten Fall möchte ich euch den
+[12.0s - 17.8s] Schoolrun von Trader Tom vorstellen. Die alleinigen Rechte liegen bei Tom
+[17.8s - 21.8s] Hougardt. Ich verteile oder ich verlinke euch seine entsprechenden Infos auch
+[21.8s - 27.1s] unten. Also er hat das Ding so benannt und traded danach und stellt das vor. Tom ist
+[27.1s - 32.3s] ein Day Trader, die mich aktiv folge, wo ich auch öfters Vormittags im Boys Chat
+[32.3s - 38.4s] drin bin, der auch einen reinen Price Chat hat, also ohne Indikatoren und sehr
+[38.4s - 41.5s] viel Erfahrung hat, profitabel ist, erfolgreich ist und der hat eben
+[41.5s - 46.5s] verschiedenste Strategien und den Schoolrun den finde ich einfach sehr
+[46.5s - 48.4s] charmant. Sehr passt momentan auch zu meinen
+[48.4s - 51.8s] Zeitebenen, wo ich träden kann überhaupt Vormittags werden, wenn ich es
+[51.8s - 57.4s] schaffe. Und genau, die möchte ich euch jetzt kurz vorstellen, vielleicht zu
+[57.4s - 62.8s] beginnen. Das Ganze ist ein abgewandelter Open Range Breakout. Das müsste man
+[62.8s - 68.9s] vielleicht wissen oder ich betitelte es zumindest so. Tom sagt dazu nichts und
+[68.9s - 71.9s] da möchte ich vielleicht kurz eine Einordnung geben. Open Range Breakouts oder
+[71.9s - 76.5s] Orbs findet ihr auf YouTube und sonst wo zuhauf. Es ist einfach, man definiert
+[76.5s - 80.1s] praktisch eine Zeitebene, wo man träden will oder wo man die Signale ansetzen
+[80.6s - 84.3s] will. Die meisten Orbs, die man so findet, sind auf 15 und 30 Minuten vom
+[84.3s - 89.8s] Opening ab und die Kerzen der entsprechenden Zeit-Einheit oder nach
+[89.8s - 93.2s] der entsprechenden Zeit-Einheit geben eben die Long und die Short Trigger und
+[93.2s - 98.5s] dann muss man je nach Riskerversion weitere Regeln dazu machen und je mehr
+[98.5s - 108.1s] oder je weniger Signale gibt es dann. Und was man da eben normalerweise macht, ist
+[108.1s - 112.4s] vom Opening das jeweiligen Indizis oder der Aktie oder das Kryptos wie auch immer
+[112.4s - 117.5s] und speziell bei CFD Futures gibt es ja quasi keinen Opening. Deswegen muss man
+[117.5s - 120.6s] für sich selbst durch Backtesting ausfinden, ob das zu den tatsächlichen
+[120.6s - 125.6s] Landes-Openings auch funktioniert. Bei mir passt es zu den DAX-Openings, obwohl ich
+[125.6s - 131.2s] hier jetzt CFD-Trade und auch wenn ich die Futures vom SPX-Trade passt, ist für
+[131.2s - 136.3s] mich ab 15.30. Das müsst ihr aber einfach für eure Assets selbst definieren. Man
+[136.4s - 139.6s] kann grundsätzlich mit den Orbs alles trading. Muss ihr eben rausfinden, wie es
+[139.6s - 146.0s] passt. Was jetzt Tom bei seinem School Run macht, er kombiniert im Prinzip die
+[146.0s - 151.3s] beiden traditionellsten Strategien, nämlich den 15.30 Minuten und er schaut
+[151.3s - 157.1s] nämlich auf die zweite Kerze auf der 15 Minuten eben. Also quasi hat er einen
+[157.1s - 164.0s] 30 Minuten Orb, aber nimmt eine kleinere Range, weil er eben die erste Range von
+[164.0s - 169.1s] der ersten 9 Uhr bis 9.15 Kerze ignoriert. Das gibt eine gewisse Sicherheit, um
+[169.1s - 173.6s] praktisch die Explosivität bei Marktöffnungen rauszunehmen. Gibt aber
+[173.6s - 178.6s] auf der anderen Seite genug Möglichkeiten einen Run mitzunehmen. School Run heißt
+[178.6s - 183.8s] es, deswegen hat er eben so benannt, weil in seiner Vorstellung alle europäischen
+[183.8s - 188.6s] Mammys und Puppys zu einer ähnlichen Zeit, früher war das wahrscheinlich so, ihre
+[188.6s - 193.4s] Kinder schön brav zur Schule fahren und praktisch dann rückzuse alle im
+[193.4s - 198.6s] Stau stehen. Und nach seiner Idee ist man eben mit so harten Regeln in der Lage,
+[198.6s - 203.0s] mal schnell über das Handy verschiedene Orders einzupacken und das Ganze dann
+[203.0s - 210.2s] möglichst stressfrei als normaler 9 to 5 Arbeiter oder Hausmama das ganze zu
+[210.2s - 214.4s] trading. Also daher kommt so grob ein bisschen die Beninnung. Ich habe euch jetzt
+[214.4s - 217.9s] hier mal das Beispiel von heute gemacht. Heute gab es eigentlich einen sehr schönen
+[217.9s - 226.9s] Trigger. Wir haben eben hier die erste 9 bis 9.15, also die erste Kerze auf der
+[226.9s - 231.2s] 15 Minuten Anzeige, die wird ignoriert. Die zweite wird interessiert. Sobald die
+[231.2s - 235.7s] fertig ist, haben wir unsere Trigger Points, eben einen School Run High und
+[235.7s - 241.6s] einen School Run Low. Und jetzt kommt es auf eure risk Aversion an. Tom, geht
+[241.6s - 247.5s] rein, sobald diese Kerze um einige Punkte über oder unterschritten ist. Das lässt
+[247.6s - 255.8s] ihn auch oft ausstoppen, aber er ist mental so gut bzw. auch so erfahren, dass er
+[255.8s - 259.6s] das praktisch in der Kalkulation mit drin hat und unterm Strich profitabel ist.
+[259.6s - 265.2s] Ich bin etwas riskaverser und ich warte normalerweise bis die erste 5 Minuten
+[265.2s - 268.9s] Kerze über oder unter dem jeweiligen Trigger abgeschlossen ist und dann
+[268.9s - 271.8s] schaue ich mir auch das Volumen oder weitere Indikatoren an. Aber das vielleicht
+[271.8s - 275.9s] kurz zur Einordnung. Ich wandle es dann auch schon wieder ab. Das müsst ihr eben
+[276.2s - 280.8s] herausfinden, wie das für euch ist. Aber wenn wir jetzt uns in Tom's Lage versetzen,
+[280.8s - 284.3s] heute war es auch so und er wurde auch heute einige Male ausgestoppt. Das heißt,
+[284.3s - 290.0s] er würde praktisch ungefähr heute bei 1582, 1583, glaube ich erst bei 79 ein
+[290.0s - 295.2s] bisschen proaktiv rein, weil er den Push gesehen hat, rein. Dann, je nachdem,
+[295.2s - 300.4s] wo euer Profitziel eben ist, Profit nehmen oder in diesem Fall heute auch ausgestoppt
+[300.4s - 306.6s] werden und dann wäre der nächste Trigger hier. Wir kommen quasi nie mehr mit einer
+[306.6s - 313.8s] Kerze viele Punkte unter den School Run Low. Das heißt, bis auf heute Nachmittag oder
+[313.8s - 319.8s] bis vorhin hätten wir keinen Short Trigger. Und in meinem Fall, ich gehe jetzt mal kurz
+[319.8s - 323.9s] auf die 5 Minuten Ebenen. Ich habe heute Morgen auch getradet und habe eben mein
+[323.9s - 329.2s] Wochenziel hier mit erreicht. Ich bin eben erst hier rein. Ich bin hier praktisch bei
+[329.2s - 335.2s] der ersten Kerze darüber rein. Hat nur ein paar Punkte mitgenommen, weil ich hier
+[335.2s - 339.6s] praktisch den großen Abverkauf gesehen habe und weil wir im 10 Uhr die GDP-Zahlen auch hatten.
+[339.6s - 345.4s] Und dann bin ich später noch mal rein, als wir praktisch wieder hochgepushed sind,
+[345.4s - 351.0s] als dann die EU-Zahlen auch gut waren. Als Vergleich, Tom wäre praktisch hier 3 mal
+[351.0s - 356.2s] rein, wenn die sonstigen Trigger gepasst hätten. Ich wäre eben erst hier und hier.
+[356.2s - 360.0s] Also teilweise fehlen mir dann einfach Signifikantpunkte, aber das ist eben eine
+[360.0s - 366.4s] Riskerversion. Da müsst ihr eben ein wenig drauf passen. Ich bin auch noch nicht zu erfahren
+[366.4s - 372.8s] oder noch nicht so abgebrüht, vielleicht mir so extrem hohe Price-Targets zu setzen wie Tom
+[372.8s - 377.3s] oder wie auch viele andere wahrscheinlich. Ich bin da mit einem guten Gewinn zufrieden.
+[377.3s - 384.3s] Auf der anderen Seite habe ich auch recht knappe Stop-Limits. Ich nehme sie normalerweise in der
+[384.3s - 390.2s] Hälfte der zweiten 15 Minuten Kerze, wenn überhaupt meistens sogar etwas kürzer. Bei Tom
+[390.2s - 395.0s] kann es gut sein, dass die praktisch am unteren Ende ist. Und je nachdem, wie groß die Range ist,
+[395.0s - 400.9s] können das halt schon mal ein heftigen Risk-Reward sein. Aber das ist nun mal so. Ihr könnt
+[400.9s - 409.5s] eben durch diese Strategie parallel euch Short- und Long-Trigger setzen und zumindest für den DAX
+[409.5s - 415.4s] gilt das. Man muss eben bei den anderen DCS schauen, wie gut es da funktioniert. Haben die beiden
+[415.4s - 420.9s] Grenzen, die beiden Trigger-Points auch noch für später eine Bewandtnis, weil eben in der ersten
+[420.9s - 428.1s] halben Stunde im DAX jetzt von 9 bis 39 massiv viel Volumen getradet wird und ein Volumenprofil seht
+[428.1s - 434.2s] ihr, dass wir praktisch hier unten beim Low und hier oben beim High durchaus Volumespikes haben.
+[434.2s - 439.4s] Das heißt, die Level sind auch für die spätere Price-Action durchaus noch interessant und relevant.
+[439.5s - 446.0s] Dann kann man auch das Opening mit dazunehmen und dann hat man eigentlich ganz gute Levels. Bis
+[446.0s - 452.9s] auf diesen Abverkauf vorhin war zum Beispiel das Value Area Low punktgenau auf dem School Run Low.
+[452.9s - 459.1s] Also so könnt ihr euch vielleicht ein bisschen da helfen. Ich finde es eine schöne, simple
+[459.1s - 463.5s] Möglichkeit, wenige Regeln und wenn es euch zu unsicher ist, könnt ihr weitere Regeln dazunehmen,
+[464.3s - 470.2s] das Ganze zu trading und euch da relativ blind einfach die Trigger zu setzen, ob ihr dann auf
+[470.2s - 475.3s] Trading View oder sonstigen Plattformen dementsprechend in Alarm setzt, damit ihr nicht immer vom
+[475.3s - 480.0s] Rechner hockt, ist ihr euch überlassen und mit einer gewissen Erfahrung könnt ihr dann auch
+[480.0s - 484.1s] einfach die Orders entsprechend eingeben mit dem definierten Stop Limit und dann läuft es eben
+[484.1s - 489.4s] oder läuft es nicht. Wenn ihr mit entsprechender Statistik profitabel seid, ist es dann no-brainer
+[489.4s - 496.9s] und passt. Genau, das vielleicht mal grundsätzlich ist relativ einfach, ist jetzt kein Hexenwerk,
+[496.9s - 506.8s] aber trotzdem finde ich sehr schön zusammengestellt. Ich kann keine Aussagen treffen, wie es momentan
+[506.8s - 512.2s] mit Aktien so funktioniert. Ich habe früher Optionen mit einer Obstrategie gehandelt, jetzt nicht
+[512.2s - 517.0s] mit dem School Run, das funktioniert eigentlich auch sehr gut. Wenn jemand von euch das Strat
+[517.0s - 525.6s] traded, da kann man ähnliche Kombinationsspielchen machen und sich so mehrere Bestätigungsereignisse
+[525.6s - 530.4s] oder Bereiche zusammenschrauben, um verschiedene Strategien zu verbinden, um das Ganze sicherer
+[530.4s - 540.2s] oder profitabler zu machen. Und ich weiß auch, dass praktisch viele, die Tomfollowen auch das
+[540.2s - 544.4s] auf andere Indizes übertragen, weiter bin ich einfach nicht gekommen. Das funktioniert sehr
+[544.4s - 550.8s] wahrscheinlich auch auf dem Nasdaq und auf dem FUTSC Trader, der ist auch. Aber ja, wenn ihr
+[550.8s - 554.5s] irgendetwas anderes handelt, kann ich dazu wenig sagen. Und eben, ihr müsst für euch gucken,
+[554.5s - 561.0s] ob ihr einfach morgens Zeit habt. Es gibt Leute, die das Ganze auch mit der Asia Range verbinden.
+[561.0s - 566.2s] Da müsst ihr einfach gucken, wie es euch passt. Ich wollte es einmal vorstellen. Und vielleicht
+[566.2s - 572.8s] noch so eine kleine Warnung zumindest für die aktuellen Wochen. Früher in Anfangszeichen,
+[572.8s - 578.9s] das ist ja schon so lange her, dass wir Herbst 2.22 hatten, ist der Schoolland tatsächlich in der
+[578.9s - 583.0s] ersten halben bis dreiviert Stunde ausgebrochen. Das heißt, so hat es den Level von der 2.15
+[583.0s - 587.9s] Minutenkerze. Und dann ist relativ schnell bis 10 Uhr, ist der Dachs dann nach oben oder nach
+[587.9s - 593.7s] unten ausgebrochen. Und erfahrungsgemäß, auch wenn es jetzt heute durch die News auch quasi
+[593.7s - 598.4s] gekommen ist, ihr seht hier schon, dass wir einen gewissen Rücksetzer hatten. Und das war früher
+[598.4s - 604.7s] seltenster Fall. Das sehe ich aber zumindest sehr viel häufiger. Deswegen meine persönliche
+[604.7s - 615.1s] Strategie gehe ich meist nicht voll in den ersten Run mit. Vor allem nicht mit voller Size, sondern
+[615.1s - 620.8s] ich erwarte zumindest aktuell im Januar eigentlich schon ein Reversal, ein Retracement. Und wir
+[620.8s - 627.1s] können das ja mal spielweise so machen. Wir nehmen hier Opening Low-Wick zu dem Temporären hoch,
+[627.2s - 635.6s] was eben gleichzeitig das Hoch der Initial Balance ist. Das wäre ein recht perfektes 05 Value
+[635.6s - 641.9s] Tracement. Wenn ihr dann erhandelt, wäre das noch ein sehr, sehr angenehmer Entry gewesen. Und dann
+[641.9s - 647.4s] hätten wir praktisch noch ein zusätzliches Layer von Bestätigung, dass das, wenn das schön
+[647.4s - 652.0s] gehalten wird und sehen wir hier Kaufpower, soweit ich weiß, war der POC zu der Zeit praktisch auch
+[652.0s - 656.2s] noch oben, dass wir dann verschiedenste Punkte, die man aufwadieren kann, um so einen besseren Entry
+[656.3s - 660.8s] zu kriegen, um nicht ausgestoppt zu werden, zudem auch. Und ihr seht ja, das Ganze hättet ihr
+[660.8s - 665.3s] schön nach oben pushen können. Und erst heute Nachmittag gab es dann einen starken Abverkauf,
+[665.3s - 671.2s] also genug Möglichkeiten, um einen sauberen Profit mitzunehmen. Und im ungekehrten Falle,
+[671.2s - 677.6s] der Tag bietet das eben, sehen wir hier auch jetzt die Möglichkeit, wie man auch ein paar Punkte mitnehmen
+[677.6s - 682.2s] könnt, wobei das mit dem 50er-Level nach meinem Verständnis jetzt wieder knapp geworden wäre,
+[682.2s - 688.3s] weil wir das 50er-Level letztlich halten und auch Value Area low. Aber rein von der puren
+[688.3s - 698.2s] Skuldron-Strategie wäre bei Tom hier der Entry gewesen und er hätte ganz guten Profit mitgenommen.
+[698.2s - 704.9s] Das sind knapp 25 Punkte. Ist dann die Frage, wann er ausgestoppt worden wäre oder ob es geschafft
+[704.9s - 710.6s] hätte, rauszugehen. Und dann gibt es eben den Retest und dann hätte man in der Range praktisch
+[710.6s - 714.9s] jetzt aktuell durchaus noch spielen können. Aber letztlich hätten wir dann mehrere Trigger
+[714.9s - 720.6s] des Skuldrons, die mit einem gewissen geringeren Profit-Ziel auch durchaus dabei gewesen wären.
+[720.6s - 727.2s] Und das ist auch was, was ich für mich feststelle. Tom hat da teilweise schon irgendwie so 30, 40,
+[727.2s - 731.0s] 50 Punkte, weil der Dachs momentan natürlich auch stark pusht oder sich zumindest stark bewegt.
+[731.0s - 736.6s] Ich bin meistens mit 10, 15 zufrieden, um mal zumindest einen ersten Profit zu nehmen. Und das
+[736.6s - 740.8s] funktioniert mit dieser Strategie eigentlich sehr gut. Wenn das lange Zeit profitabel ist,
+[740.8s - 748.2s] könnt ihr die Size erhöhen und so auch mehr Profit erwirtschaften. Das war es eigentlich dazu.
+[748.2s - 754.8s] Es ist nicht ultra kompliziert. Es ist sehr, sehr einfach, selbst das anzuwenden, backtestet es,
+[754.8s - 758.8s] probiert es, demotratet es eine Weile und dann guckt einfach, ob ihr damit klarkommt.
+[758.8s - 765.4s] Es sind, wie gesagt, zusätzliche Trigger könnt ihr euch immer noch dazu holen. Aber plain Skuldron
+[765.4s - 771.0s] ist wirklich, wartet die zweite 15 Minuten Kerze nach dem Aktien-Exchange-Opening ab,
+[771.0s - 776.5s] markiert das High und Low, legt euch das als Trigger und dann wartet, bis es so 2, 3,
+[776.5s - 782.8s] 4, 5 Punkte oben drüber ist und das Volumen dazu passt. Und das war es auch schon. Ich warte
+[782.8s - 788.4s] persönlich eben auf eine volle 5 Minuten Kerze über dem Level. Und zwar tatsächlich oben drüber,
+[788.4s - 797.3s] wie wir hier sehen. Also ich warte tatsächlich, bis die fertig ist. Ich warte nicht bis die
+[797.3s - 804.1s] zweite Kerze keinen Connection mit dem Trigger Level hat, weil das zumindest bei mir in der
+[804.1s - 808.7s] Vergangenheit auch oftmals sehr, sehr schnell reversed ist. Bietet natürlich die Gefahr,
+[808.7s - 814.2s] dass ich schneller ausgestoppt werden würde. Aber ich glaube, das waren eben, genau, da hatte ich
+[814.2s - 819.4s] meine 10 Punkte drin und das passt für mich. Es hat da zu den Zeitpunkten gepasst. Hier hatte ich
+[819.4s - 825.2s] noch ein paar mehr mitgenommen. Also ja, finde ich in Ordnung. Und ich nehme eben zusätzlich sogar
+[825.2s - 830.9s] noch das Volumenprofil als Trigger, was Tom nicht dabei hat. Das war es eigentlich auch schon
+[830.9s - 838.6s] simpel erklärt. Skuldron von Tom Hogarth. Ich verlinke alles von ihm bitte. Credits to him. Er ist da
+[838.6s - 844.9s] der alleinige Verursacher des Ganzen und ich folge da nur und wollte es euch vorstellen. Wer
+[844.9s - 850.4s] die wahrscheinlich auch schreiben, dass ob das in Ordnung ist. Und ja, erfolgreiches Traden heute.
+[850.4s - 855.3s] Wir haben heute Nachmittag noch einige Zahlen. Vor allem beginnen jetzt die Banken-Earnings,
+[855.3s - 861.6s] was teilweise hiermit eben verursacht oder was hier das hier verursacht hat. Passt auf. Letzter
+[861.6s - 866.8s] Tag der Woche nicht die wirtschafteten Profite wegschmeißen. Wir sehen uns ansonsten am
+[866.8s - 871.5s] Sonntag in der Kaffee-Runde. Und ansonsten wünsche ich euch ein schönes Wochenende,
+[871.5s - 873.3s] ruht euch aus und bis bald, tschau tschau.
+
+---
+
+Hallo zusammen, wie versprochen, möchte ich euch in kleineren Videos jetzt die verschiedenen Strategien vorstellen, die ich aktuell Trader oder mir mal angeschaut habe und auch Backteste. In diesem ersten Fall möchte ich euch den Schoolrun von Trader Tom vorstellen. Die alleinigen Rechte liegen bei Tom Hougardt. Ich verteile oder ich verlinke euch seine entsprechenden Infos auch unten. Also er hat das Ding so benannt und traded danach und stellt das vor. Tom ist ein Day Trader, die mich aktiv folge, wo ich auch öfters Vormittags im Boys Chat drin bin, der auch einen reinen Price Chat hat, also ohne Indikatoren und sehr viel Erfahrung hat, profitabel ist, erfolgreich ist und der hat eben verschiedenste Strategien und den Schoolrun den finde ich einfach sehr charmant. Sehr passt momentan auch zu meinen Zeitebenen, wo ich träden kann überhaupt Vormittags werden, wenn ich es schaffe. Und genau, die möchte ich euch jetzt kurz vorstellen, vielleicht zu beginnen. Das Ganze ist ein abgewandelter Open Range Breakout. Das müsste man vielleicht wissen oder ich betitelte es zumindest so. Tom sagt dazu nichts und da möchte ich vielleicht kurz eine Einordnung geben. Open Range Breakouts oder Orbs findet ihr auf YouTube und sonst wo zuhauf. Es ist einfach, man definiert praktisch eine Zeitebene, wo man träden will oder wo man die Signale ansetzen will. Die meisten Orbs, die man so findet, sind auf 15 und 30 Minuten vom Opening ab und die Kerzen der entsprechenden Zeit-Einheit oder nach der entsprechenden Zeit-Einheit geben eben die Long und die Short Trigger und dann muss man je nach Riskerversion weitere Regeln dazu machen und je mehr oder je weniger Signale gibt es dann. Und was man da eben normalerweise macht, ist vom Opening das jeweiligen Indizis oder der Aktie oder das Kryptos wie auch immer und speziell bei CFD Futures gibt es ja quasi keinen Opening. Deswegen muss man für sich selbst durch Backtesting ausfinden, ob das zu den tatsächlichen Landes-Openings auch funktioniert. Bei mir passt es zu den DAX-Openings, obwohl ich hier jetzt CFD-Trade und auch wenn ich die Futures vom SPX-Trade passt, ist für mich ab 15.30. Das müsst ihr aber einfach für eure Assets selbst definieren. Man kann grundsätzlich mit den Orbs alles trading. Muss ihr eben rausfinden, wie es passt. Was jetzt Tom bei seinem School Run macht, er kombiniert im Prinzip die beiden traditionellsten Strategien, nämlich den 15.30 Minuten und er schaut nämlich auf die zweite Kerze auf der 15 Minuten eben. Also quasi hat er einen 30 Minuten Orb, aber nimmt eine kleinere Range, weil er eben die erste Range von der ersten 9 Uhr bis 9.15 Kerze ignoriert. Das gibt eine gewisse Sicherheit, um praktisch die Explosivität bei Marktöffnungen rauszunehmen. Gibt aber auf der anderen Seite genug Möglichkeiten einen Run mitzunehmen. School Run heißt es, deswegen hat er eben so benannt, weil in seiner Vorstellung alle europäischen Mammys und Puppys zu einer ähnlichen Zeit, früher war das wahrscheinlich so, ihre Kinder schön brav zur Schule fahren und praktisch dann rückzuse alle im Stau stehen. Und nach seiner Idee ist man eben mit so harten Regeln in der Lage, mal schnell über das Handy verschiedene Orders einzupacken und das Ganze dann möglichst stressfrei als normaler 9 to 5 Arbeiter oder Hausmama das ganze zu trading. Also daher kommt so grob ein bisschen die Beninnung. Ich habe euch jetzt hier mal das Beispiel von heute gemacht. Heute gab es eigentlich einen sehr schönen Trigger. Wir haben eben hier die erste 9 bis 9.15, also die erste Kerze auf der 15 Minuten Anzeige, die wird ignoriert. Die zweite wird interessiert. Sobald die fertig ist, haben wir unsere Trigger Points, eben einen School Run High und einen School Run Low. Und jetzt kommt es auf eure risk Aversion an. Tom, geht rein, sobald diese Kerze um einige Punkte über oder unterschritten ist. Das lässt ihn auch oft ausstoppen, aber er ist mental so gut bzw. auch so erfahren, dass er das praktisch in der Kalkulation mit drin hat und unterm Strich profitabel ist. Ich bin etwas riskaverser und ich warte normalerweise bis die erste 5 Minuten Kerze über oder unter dem jeweiligen Trigger abgeschlossen ist und dann schaue ich mir auch das Volumen oder weitere Indikatoren an. Aber das vielleicht kurz zur Einordnung. Ich wandle es dann auch schon wieder ab. Das müsst ihr eben herausfinden, wie das für euch ist. Aber wenn wir jetzt uns in Tom's Lage versetzen, heute war es auch so und er wurde auch heute einige Male ausgestoppt. Das heißt, er würde praktisch ungefähr heute bei 1582, 1583, glaube ich erst bei 79 ein bisschen proaktiv rein, weil er den Push gesehen hat, rein. Dann, je nachdem, wo euer Profitziel eben ist, Profit nehmen oder in diesem Fall heute auch ausgestoppt werden und dann wäre der nächste Trigger hier. Wir kommen quasi nie mehr mit einer Kerze viele Punkte unter den School Run Low. Das heißt, bis auf heute Nachmittag oder bis vorhin hätten wir keinen Short Trigger. Und in meinem Fall, ich gehe jetzt mal kurz auf die 5 Minuten Ebenen. Ich habe heute Morgen auch getradet und habe eben mein Wochenziel hier mit erreicht. Ich bin eben erst hier rein. Ich bin hier praktisch bei der ersten Kerze darüber rein. Hat nur ein paar Punkte mitgenommen, weil ich hier praktisch den großen Abverkauf gesehen habe und weil wir im 10 Uhr die GDP-Zahlen auch hatten. Und dann bin ich später noch mal rein, als wir praktisch wieder hochgepushed sind, als dann die EU-Zahlen auch gut waren. Als Vergleich, Tom wäre praktisch hier 3 mal rein, wenn die sonstigen Trigger gepasst hätten. Ich wäre eben erst hier und hier. Also teilweise fehlen mir dann einfach Signifikantpunkte, aber das ist eben eine Riskerversion. Da müsst ihr eben ein wenig drauf passen. Ich bin auch noch nicht zu erfahren oder noch nicht so abgebrüht, vielleicht mir so extrem hohe Price-Targets zu setzen wie Tom oder wie auch viele andere wahrscheinlich. Ich bin da mit einem guten Gewinn zufrieden. Auf der anderen Seite habe ich auch recht knappe Stop-Limits. Ich nehme sie normalerweise in der Hälfte der zweiten 15 Minuten Kerze, wenn überhaupt meistens sogar etwas kürzer. Bei Tom kann es gut sein, dass die praktisch am unteren Ende ist. Und je nachdem, wie groß die Range ist, können das halt schon mal ein heftigen Risk-Reward sein. Aber das ist nun mal so. Ihr könnt eben durch diese Strategie parallel euch Short- und Long-Trigger setzen und zumindest für den DAX gilt das. Man muss eben bei den anderen DCS schauen, wie gut es da funktioniert. Haben die beiden Grenzen, die beiden Trigger-Points auch noch für später eine Bewandtnis, weil eben in der ersten halben Stunde im DAX jetzt von 9 bis 39 massiv viel Volumen getradet wird und ein Volumenprofil seht ihr, dass wir praktisch hier unten beim Low und hier oben beim High durchaus Volumespikes haben. Das heißt, die Level sind auch für die spätere Price-Action durchaus noch interessant und relevant. Dann kann man auch das Opening mit dazunehmen und dann hat man eigentlich ganz gute Levels. Bis auf diesen Abverkauf vorhin war zum Beispiel das Value Area Low punktgenau auf dem School Run Low. Also so könnt ihr euch vielleicht ein bisschen da helfen. Ich finde es eine schöne, simple Möglichkeit, wenige Regeln und wenn es euch zu unsicher ist, könnt ihr weitere Regeln dazunehmen, das Ganze zu trading und euch da relativ blind einfach die Trigger zu setzen, ob ihr dann auf Trading View oder sonstigen Plattformen dementsprechend in Alarm setzt, damit ihr nicht immer vom Rechner hockt, ist ihr euch überlassen und mit einer gewissen Erfahrung könnt ihr dann auch einfach die Orders entsprechend eingeben mit dem definierten Stop Limit und dann läuft es eben oder läuft es nicht. Wenn ihr mit entsprechender Statistik profitabel seid, ist es dann no-brainer und passt. Genau, das vielleicht mal grundsätzlich ist relativ einfach, ist jetzt kein Hexenwerk, aber trotzdem finde ich sehr schön zusammengestellt. Ich kann keine Aussagen treffen, wie es momentan mit Aktien so funktioniert. Ich habe früher Optionen mit einer Obstrategie gehandelt, jetzt nicht mit dem School Run, das funktioniert eigentlich auch sehr gut. Wenn jemand von euch das Strat traded, da kann man ähnliche Kombinationsspielchen machen und sich so mehrere Bestätigungsereignisse oder Bereiche zusammenschrauben, um verschiedene Strategien zu verbinden, um das Ganze sicherer oder profitabler zu machen. Und ich weiß auch, dass praktisch viele, die Tomfollowen auch das auf andere Indizes übertragen, weiter bin ich einfach nicht gekommen. Das funktioniert sehr wahrscheinlich auch auf dem Nasdaq und auf dem FUTSC Trader, der ist auch. Aber ja, wenn ihr irgendetwas anderes handelt, kann ich dazu wenig sagen. Und eben, ihr müsst für euch gucken, ob ihr einfach morgens Zeit habt. Es gibt Leute, die das Ganze auch mit der Asia Range verbinden. Da müsst ihr einfach gucken, wie es euch passt. Ich wollte es einmal vorstellen. Und vielleicht noch so eine kleine Warnung zumindest für die aktuellen Wochen. Früher in Anfangszeichen, das ist ja schon so lange her, dass wir Herbst 2.22 hatten, ist der Schoolland tatsächlich in der ersten halben bis dreiviert Stunde ausgebrochen. Das heißt, so hat es den Level von der 2.15 Minutenkerze. Und dann ist relativ schnell bis 10 Uhr, ist der Dachs dann nach oben oder nach unten ausgebrochen. Und erfahrungsgemäß, auch wenn es jetzt heute durch die News auch quasi gekommen ist, ihr seht hier schon, dass wir einen gewissen Rücksetzer hatten. Und das war früher seltenster Fall. Das sehe ich aber zumindest sehr viel häufiger. Deswegen meine persönliche Strategie gehe ich meist nicht voll in den ersten Run mit. Vor allem nicht mit voller Size, sondern ich erwarte zumindest aktuell im Januar eigentlich schon ein Reversal, ein Retracement. Und wir können das ja mal spielweise so machen. Wir nehmen hier Opening Low-Wick zu dem Temporären hoch, was eben gleichzeitig das Hoch der Initial Balance ist. Das wäre ein recht perfektes 05 Value Tracement. Wenn ihr dann erhandelt, wäre das noch ein sehr, sehr angenehmer Entry gewesen. Und dann hätten wir praktisch noch ein zusätzliches Layer von Bestätigung, dass das, wenn das schön gehalten wird und sehen wir hier Kaufpower, soweit ich weiß, war der POC zu der Zeit praktisch auch noch oben, dass wir dann verschiedenste Punkte, die man aufwadieren kann, um so einen besseren Entry zu kriegen, um nicht ausgestoppt zu werden, zudem auch. Und ihr seht ja, das Ganze hättet ihr schön nach oben pushen können. Und erst heute Nachmittag gab es dann einen starken Abverkauf, also genug Möglichkeiten, um einen sauberen Profit mitzunehmen. Und im ungekehrten Falle, der Tag bietet das eben, sehen wir hier auch jetzt die Möglichkeit, wie man auch ein paar Punkte mitnehmen könnt, wobei das mit dem 50er-Level nach meinem Verständnis jetzt wieder knapp geworden wäre, weil wir das 50er-Level letztlich halten und auch Value Area low. Aber rein von der puren Skuldron-Strategie wäre bei Tom hier der Entry gewesen und er hätte ganz guten Profit mitgenommen. Das sind knapp 25 Punkte. Ist dann die Frage, wann er ausgestoppt worden wäre oder ob es geschafft hätte, rauszugehen. Und dann gibt es eben den Retest und dann hätte man in der Range praktisch jetzt aktuell durchaus noch spielen können. Aber letztlich hätten wir dann mehrere Trigger des Skuldrons, die mit einem gewissen geringeren Profit-Ziel auch durchaus dabei gewesen wären. Und das ist auch was, was ich für mich feststelle. Tom hat da teilweise schon irgendwie so 30, 40, 50 Punkte, weil der Dachs momentan natürlich auch stark pusht oder sich zumindest stark bewegt. Ich bin meistens mit 10, 15 zufrieden, um mal zumindest einen ersten Profit zu nehmen. Und das funktioniert mit dieser Strategie eigentlich sehr gut. Wenn das lange Zeit profitabel ist, könnt ihr die Size erhöhen und so auch mehr Profit erwirtschaften. Das war es eigentlich dazu. Es ist nicht ultra kompliziert. Es ist sehr, sehr einfach, selbst das anzuwenden, backtestet es, probiert es, demotratet es eine Weile und dann guckt einfach, ob ihr damit klarkommt. Es sind, wie gesagt, zusätzliche Trigger könnt ihr euch immer noch dazu holen. Aber plain Skuldron ist wirklich, wartet die zweite 15 Minuten Kerze nach dem Aktien-Exchange-Opening ab, markiert das High und Low, legt euch das als Trigger und dann wartet, bis es so 2, 3, 4, 5 Punkte oben drüber ist und das Volumen dazu passt. Und das war es auch schon. Ich warte persönlich eben auf eine volle 5 Minuten Kerze über dem Level. Und zwar tatsächlich oben drüber, wie wir hier sehen. Also ich warte tatsächlich, bis die fertig ist. Ich warte nicht bis die zweite Kerze keinen Connection mit dem Trigger Level hat, weil das zumindest bei mir in der Vergangenheit auch oftmals sehr, sehr schnell reversed ist. Bietet natürlich die Gefahr, dass ich schneller ausgestoppt werden würde. Aber ich glaube, das waren eben, genau, da hatte ich meine 10 Punkte drin und das passt für mich. Es hat da zu den Zeitpunkten gepasst. Hier hatte ich noch ein paar mehr mitgenommen. Also ja, finde ich in Ordnung. Und ich nehme eben zusätzlich sogar noch das Volumenprofil als Trigger, was Tom nicht dabei hat. Das war es eigentlich auch schon simpel erklärt. Skuldron von Tom Hogarth. Ich verlinke alles von ihm bitte. Credits to him. Er ist da der alleinige Verursacher des Ganzen und ich folge da nur und wollte es euch vorstellen. Wer die wahrscheinlich auch schreiben, dass ob das in Ordnung ist. Und ja, erfolgreiches Traden heute. Wir haben heute Nachmittag noch einige Zahlen. Vor allem beginnen jetzt die Banken-Earnings, was teilweise hiermit eben verursacht oder was hier das hier verursacht hat. Passt auf. Letzter Tag der Woche nicht die wirtschafteten Profite wegschmeißen. Wir sehen uns ansonsten am Sonntag in der Kaffee-Runde. Und ansonsten wünsche ich euch ein schönes Wochenende, ruht euch aus und bis bald, tschau tschau.

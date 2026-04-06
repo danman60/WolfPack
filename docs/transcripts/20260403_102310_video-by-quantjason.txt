@@ -1,0 +1,42 @@
+# Transcript: Video by quantjason
+# Source: https://www.instagram.com/reel/DU9PpZukcNW/
+# Project: WolfPack
+# Model: small | Language: en | Duration: 56.4s
+# Transcribed: 2026-04-03 10:23:12
+
+[0.0s - 1.4s] Right again to algorithmic day trading.
+[1.4s - 3.1s] Today, we're going to talk about platforms.
+[3.1s - 4.8s] The two platforms you're going to possibly use
+[4.8s - 6.9s] is Ninja Trader and Metatrader 5.
+[6.9s - 8.2s] Here's the pros and cons of each.
+[8.2s - 9.7s] So let's talk Ninja Trader.
+[9.7s - 11.2s] It's much easier to use in the US.
+[11.2s - 13.5s] You can use prof firm accounts very easily
+[13.5s - 15.0s] and it's meant for futures trading.
+[15.0s - 17.4s] So if you want to build a futures based algorithm,
+[17.4s - 18.2s] go Ninja.
+[18.2s - 19.6s] Also, the native language is Python,
+[19.6s - 22.0s] so it's much easier to build algorithms in my opinion.
+[22.0s - 24.2s] Cons are it can be very buggy, high learning curve,
+[24.2s - 25.2s] and there's no market.
+[25.2s - 27.7s] Next, we're going to be talking about Metatrader 5.
+[27.7s - 29.4s] Metatrader is for the forex market.
+[29.4s - 32.1s] A much easier learning curve is great optimization features.
+[32.1s - 33.4s] Also have a market.
+[33.4s - 36.0s] Do the opportunity to test free algorithms.
+[36.0s - 37.8s] Here's a hint, they all suck.
+[37.8s - 39.1s] Begin at least learn from them.
+[39.1s - 41.3s] I'll also say I've found that execution speeds
+[41.3s - 43.8s] are much faster on Metatrader than Ninja.
+[43.8s - 45.6s] Now the cons are you have to use your native language
+[45.6s - 46.4s] to code the algorithms,
+[46.4s - 48.9s] which can be very hard for vibe coding.
+[48.9s - 51.4s] Also, it's not as readily available for US clients.
+[51.4s - 52.4s] They both have their pros and cons,
+[52.4s - 53.7s] but these are the top two platforms
+[53.7s - 54.8s] to host your algorithms on.
+[54.8s - 56.8s] Put in the comments what you guys want to learn.
+
+---
+
+Right again to algorithmic day trading. Today, we're going to talk about platforms. The two platforms you're going to possibly use is Ninja Trader and Metatrader 5. Here's the pros and cons of each. So let's talk Ninja Trader. It's much easier to use in the US. You can use prof firm accounts very easily and it's meant for futures trading. So if you want to build a futures based algorithm, go Ninja. Also, the native language is Python, so it's much easier to build algorithms in my opinion. Cons are it can be very buggy, high learning curve, and there's no market. Next, we're going to be talking about Metatrader 5. Metatrader is for the forex market. A much easier learning curve is great optimization features. Also have a market. Do the opportunity to test free algorithms. Here's a hint, they all suck. Begin at least learn from them. I'll also say I've found that execution speeds are much faster on Metatrader than Ninja. Now the cons are you have to use your native language to code the algorithms, which can be very hard for vibe coding. Also, it's not as readily available for US clients. They both have their pros and cons, but these are the top two platforms to host your algorithms on. Put in the comments what you guys want to learn.

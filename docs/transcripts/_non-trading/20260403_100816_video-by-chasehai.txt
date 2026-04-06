@@ -1,0 +1,38 @@
+# Transcript: Video by chase.h.ai
+# Source: https://www.instagram.com/reel/DVryCC1jfi1/
+# Project: WolfPack
+# Model: small | Language: en | Duration: 136.3s
+# Transcribed: 2026-04-03 10:08:19
+
+[0.0s - 5.4s] If you use cloud code, then here are 10 plugins that you need to try out the 10x your next project.
+[5.4s - 9.8s] Now, number one on the list is one of my favorites and is the SuperBase CLI tool.
+[9.8s - 13.4s] This is perfect any time you need to work with databases or authentication.
+[13.4s - 17.5s] Number two on the list is probably the most powerful of all 10, and that is the skill creator
+[17.5s - 24.0s] skill from Anthropic. It not only creates skills on its own, but you can test, benchmark and evaluate
+[24.0s - 28.6s] any skill you currently have. Now, number three is the one framework on this list, and that is GSD,
+[28.6s - 33.7s] the Get Shit Done framework, which is an orchestration layer that sits on top of cloud code. GSD
+[33.7s - 37.1s] is perfect if you're trying to create a new project from the ground up. It does an awesome
+[37.1s - 41.8s] job of taking your idea, breaking it down into phases and making sure we never deal with context
+[41.8s - 47.9s] rot. Now, number four is one of my favorites as of late in its notebook LM-pi. This is a CLI
+[47.9s - 52.6s] tool plus a skill that allows us to connect notebook LM to cloud code so we can do everything you
+[52.6s - 56.8s] can normally do in notebook LM, but from the terminal. Number five is Obsidian, and this is
+[56.8s - 61.5s] perfect to connect to cloud code. If you ever use cloud code as a personal assistant and you're
+[61.5s - 66.8s] dealing with tons of markdown files, just use cloud code inside of your Obsidian vault and it's
+[66.8s - 70.9s] all ready to go. Now, number six, you should already know about that's the Versal CLI tool,
+[70.9s - 76.0s] and this is all about making sure we can handle our deployments and our already deployed projects
+[76.0s - 80.0s] through the terminal. Number seven is the Playwright CLI tool. You're definitely noticing a
+[80.0s - 85.8s] theme with CLI tools. They're perfect for coding agents like cloud code, and Playwright is all
+[85.8s - 91.4s] about browser automation. So if you want cloud code to actually go out on the web and do things
+[91.4s - 96.8s] like fill out forms, buy things on Amazon for you, this is the tool you would use. Number eight,
+[96.8s - 101.1s] we all know and love it, but are you using the CLI tool for it inside of cloud code? It's the
+[101.1s - 106.5s] GitHub CLI. So between this and Versal, you should have no issues of taking your code,
+[106.5s - 112.2s] pushing it to repository, and then deploying it. And number nine is the Firecall CLI and skill.
+[112.2s - 117.1s] This is perfect for any sort of web scraping. So if you need to go grab data and bring it back
+[117.1s - 122.4s] in a form that is meant to be used by AI agents, this is for you. And last but not least is the
+[122.4s - 127.8s] Excalidraw diagram skill from Cole Medin. If you use Excalidraw at all or just need to have some
+[127.8s - 132.8s] sort of visual aids for presentations, well, use this with cloud code, point it at anything,
+[132.8s - 136.2s] and it will create these visuals based on that data.
+
+---
+
+If you use cloud code, then here are 10 plugins that you need to try out the 10x your next project. Now, number one on the list is one of my favorites and is the SuperBase CLI tool. This is perfect any time you need to work with databases or authentication. Number two on the list is probably the most powerful of all 10, and that is the skill creator skill from Anthropic. It not only creates skills on its own, but you can test, benchmark and evaluate any skill you currently have. Now, number three is the one framework on this list, and that is GSD, the Get Shit Done framework, which is an orchestration layer that sits on top of cloud code. GSD is perfect if you're trying to create a new project from the ground up. It does an awesome job of taking your idea, breaking it down into phases and making sure we never deal with context rot. Now, number four is one of my favorites as of late in its notebook LM-pi. This is a CLI tool plus a skill that allows us to connect notebook LM to cloud code so we can do everything you can normally do in notebook LM, but from the terminal. Number five is Obsidian, and this is perfect to connect to cloud code. If you ever use cloud code as a personal assistant and you're dealing with tons of markdown files, just use cloud code inside of your Obsidian vault and it's all ready to go. Now, number six, you should already know about that's the Versal CLI tool, and this is all about making sure we can handle our deployments and our already deployed projects through the terminal. Number seven is the Playwright CLI tool. You're definitely noticing a theme with CLI tools. They're perfect for coding agents like cloud code, and Playwright is all about browser automation. So if you want cloud code to actually go out on the web and do things like fill out forms, buy things on Amazon for you, this is the tool you would use. Number eight, we all know and love it, but are you using the CLI tool for it inside of cloud code? It's the GitHub CLI. So between this and Versal, you should have no issues of taking your code, pushing it to repository, and then deploying it. And number nine is the Firecall CLI and skill. This is perfect for any sort of web scraping. So if you need to go grab data and bring it back in a form that is meant to be used by AI agents, this is for you. And last but not least is the Excalidraw diagram skill from Cole Medin. If you use Excalidraw at all or just need to have some sort of visual aids for presentations, well, use this with cloud code, point it at anything, and it will create these visuals based on that data.

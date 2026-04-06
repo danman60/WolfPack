@@ -1,0 +1,48 @@
+# Transcript: 20K views · 196 reactions | Here is the truth about trading... it is supposed to be boring. #trading #daytrading #caspersmc #investing #trader | Coin Chain Profit
+# Source: https://www.facebook.com/share/v/1GcGHirqw7/
+# Project: WolfPack
+# Model: base | Language: en | Duration: 91.6s
+# Transcribed: 2026-04-04 19:24:01
+
+[0.0s - 2.1s] Here is the truth about trading.
+[2.1s - 4.1s] It is supposed to be boring.
+[4.1s - 8.7s] I only trade one candle every day at the same time.
+[8.7s - 11.6s] And this boring strategy makes me profits like this,
+[11.6s - 13.9s] this and this consistently.
+[13.9s - 15.9s] Now step number one is simple.
+[15.9s - 17.9s] You get everything that you need to trade
+[17.9s - 19.6s] in the first five minutes of the day.
+[19.6s - 22.4s] So you're gonna mark out the first five minute candle
+[22.4s - 24.4s] which is starting at 9.30 a.m.
+[24.4s - 26.2s] Take its high and it's low.
+[26.2s - 29.2s] And these are the levels that you'll use to trade.
+[29.2s - 31.6s] Step number two is you're going to wait for a break.
+[31.6s - 36.3s] Now we need a very specific behavior to confirm our break.
+[36.3s - 38.6s] And no, it's not a candle closure.
+[38.6s - 40.5s] And it's most certainly not just a wick.
+[40.5s - 42.4s] What we're looking for is displacement
+[42.4s - 44.7s] which shows us who is in control of the market,
+[44.7s - 46.8s] whether it's buyers or sellers.
+[46.8s - 49.6s] To confirm displacement we use a simple pattern
+[49.6s - 51.6s] called a fair value gap.
+[51.6s - 54.0s] This occurs when you have an expansive middle candle
+[54.0s - 57.4s] with gaps on the wick before it and the wick after it.
+[57.4s - 59.8s] And once this happens through the first five minute
+[59.8s - 61.5s] candles high or low,
+[61.5s - 64.6s] we then wait for a retest into the fair value gap.
+[64.6s - 66.2s] Once we get an engulfing candle
+[66.2s - 68.8s] that completely covers the retest candle,
+[68.8s - 71.0s] we have confirmed that this break is a good one
+[71.0s - 72.5s] and it's likely to continue.
+[72.5s - 75.2s] We can enter our trade, place our stops one tick
+[75.2s - 77.4s] beyond the retest candles low
+[77.4s - 80.8s] and target a fixed three to one risk to reward.
+[80.8s - 83.9s] Just like I told you, a stupid simple strategy.
+[83.9s - 85.1s] And I want you to go test this
+[85.1s - 87.6s] and see just how powerful it really is.
+[87.6s - 89.4s] Save this video for when you're testing it.
+[89.4s - 91.9s] That way you can make sure that you get it right.
+
+---
+
+Here is the truth about trading. It is supposed to be boring. I only trade one candle every day at the same time. And this boring strategy makes me profits like this, this and this consistently. Now step number one is simple. You get everything that you need to trade in the first five minutes of the day. So you're gonna mark out the first five minute candle which is starting at 9.30 a.m. Take its high and it's low. And these are the levels that you'll use to trade. Step number two is you're going to wait for a break. Now we need a very specific behavior to confirm our break. And no, it's not a candle closure. And it's most certainly not just a wick. What we're looking for is displacement which shows us who is in control of the market, whether it's buyers or sellers. To confirm displacement we use a simple pattern called a fair value gap. This occurs when you have an expansive middle candle with gaps on the wick before it and the wick after it. And once this happens through the first five minute candles high or low, we then wait for a retest into the fair value gap. Once we get an engulfing candle that completely covers the retest candle, we have confirmed that this break is a good one and it's likely to continue. We can enter our trade, place our stops one tick beyond the retest candles low and target a fixed three to one risk to reward. Just like I told you, a stupid simple strategy. And I want you to go test this and see just how powerful it really is. Save this video for when you're testing it. That way you can make sure that you get it right.

@@ -1,0 +1,53 @@
+# Transcript: School Run Trading Strategy Explained!
+# Source: https://www.youtube.com/watch?v=E8s_OJqYKs8
+# Project: WolfPack
+# Model: small | Language: en | Duration: 320.8s
+# Transcribed: 2026-04-03 09:20:09
+
+[0.0s - 12.7s] Okay, normal school run theory dictates that when we are trading the DAX index on a 15-minute chart,
+[12.7s - 19.8s] that 15-minute chart, this bar that you're seeing here, that's the first 15-minute bar in the DAX.
+[20.5s - 26.9s] And I developed the school run strategy around the idea that the market will come to work in the
+[26.9s - 33.0s] morning and there will be people who need to get things done quickly. It could be they need to buy
+[33.0s - 40.6s] or they need to sell. So often time, the first 30 minutes aren't indicative of the true trend
+[40.6s - 46.5s] of the day. And so I developed the strategy based on observation, purely observation going,
+[47.0s - 52.4s] I would like to be looking at the market after 30 minutes of trading. Specifically,
+[52.4s - 60.4s] I would like to be a buyer on a break of that second 15-minute candle. So I stuck to the second
+[60.4s - 68.6s] 15-minute candle as my tool, meaning that I want to be buying above and shorting below. So the
+[68.6s - 77.3s] conventional school run theory says, you want to be a buyer above that school run bar. And the
+[77.3s - 84.8s] school run bar is the second 15-minute candle. You buy above or you sell short below. A typical
+[84.8s - 91.4s] breakout strategy, nothing more to it than that. And for a long time, that was the only thing I
+[91.4s - 100.3s] did and it worked extremely well. I made significant sums of money trading school run. However,
+[100.3s - 109.0s] whether it was a mean reversion taking place or it was just my time to lose, but there became
+[109.0s - 117.0s] more and more frequently times when the market would go above the school run, the second 15-minute
+[117.0s - 122.9s] high and it would trigger me long and then it would reverse or vice versa. I would be triggered
+[122.9s - 128.0s] short and then it would reverse back into the range and stop me out on the other side. And so I
+[128.0s - 137.4s] began, as I think any trader who is worth their pins of sold, I began to do serious work and
+[137.4s - 145.5s] contemplation on, well, under what circumstances is it that my school run succeeds and under what
+[145.5s - 151.4s] circumstances do they fail? And I want to be very quick to point out here that you cannot
+[151.4s - 157.9s] reverse engineer your way out of losses. There will always be times when you do everything
+[157.9s - 165.0s] right and you end up losing. It is just inevitable. However, if I was able to detect
+[165.0s - 172.9s] certain circumstances being present on the price chart, that would be indicative of perhaps
+[172.9s - 179.7s] not following conventional school run theory. Well, then I wanted to uncover it and thus began
+[179.7s - 186.8s] the contemplation of the overnight range. The overnight range will be defined differently
+[186.8s - 194.2s] depending on the trader, but I think on a broad level, traders can roughly agree that the overnight
+[194.2s - 202.3s] range is from about midnight Europe or midnight UK to about six o'clock. Some people will include
+[202.3s - 209.1s] seven o'clock, but I don't think that we need to split hairs or divide ourselves into two different
+[209.1s - 216.2s] camps. I think that roughly we can agree that the overnight range is from around midnight till
+[216.2s - 224.2s] around six o'clock in the morning. So roughly a six hour window where the market is open for trading,
+[224.2s - 230.9s] but it's by and large driven by probably computer driven as most of it is anyway, but also sentiment
+[230.9s - 239.0s] in Asia, which is obviously trading whilst Europe and US is either asleep or late in the evening.
+[239.0s - 247.2s] And so the contemplation began to center around where does the school run bar, that second 15
+[247.2s - 252.8s] minute bar, where is it actually taking place? Is it taking place within the context of the
+[252.8s - 259.4s] overnight range? Or is it taking place outside the overnight range either above or below? Thus came
+[259.4s - 267.7s] to light a new theory. And that theory was that if the school run bar triggers a conventional
+[267.7s - 275.0s] long signal by going above the high, but that took place within the context of the overnight
+[275.0s - 280.7s] range. In other words, if the school run bar takes place within the overnight range, instead of buying
+[280.7s - 288.3s] above the high, you sell short. And instead of selling short below, if it's within the overnight
+[288.3s - 296.8s] range, don't sell short here by below. And then if the school run takes place above the overnight
+[296.8s - 305.4s] range, well, then you buy school run as normal, but instead of selling short, you will buy again.
+[305.4s - 312.2s] And vice versa. If the school run bar takes place below the overnight range, you sell short below,
+[312.2s - 320.0s] but you also sell short above. Okay, so what I would like to do now is I'd like to go through some example.
+
+---
+
+Okay, normal school run theory dictates that when we are trading the DAX index on a 15-minute chart, that 15-minute chart, this bar that you're seeing here, that's the first 15-minute bar in the DAX. And I developed the school run strategy around the idea that the market will come to work in the morning and there will be people who need to get things done quickly. It could be they need to buy or they need to sell. So often time, the first 30 minutes aren't indicative of the true trend of the day. And so I developed the strategy based on observation, purely observation going, I would like to be looking at the market after 30 minutes of trading. Specifically, I would like to be a buyer on a break of that second 15-minute candle. So I stuck to the second 15-minute candle as my tool, meaning that I want to be buying above and shorting below. So the conventional school run theory says, you want to be a buyer above that school run bar. And the school run bar is the second 15-minute candle. You buy above or you sell short below. A typical breakout strategy, nothing more to it than that. And for a long time, that was the only thing I did and it worked extremely well. I made significant sums of money trading school run. However, whether it was a mean reversion taking place or it was just my time to lose, but there became more and more frequently times when the market would go above the school run, the second 15-minute high and it would trigger me long and then it would reverse or vice versa. I would be triggered short and then it would reverse back into the range and stop me out on the other side. And so I began, as I think any trader who is worth their pins of sold, I began to do serious work and contemplation on, well, under what circumstances is it that my school run succeeds and under what circumstances do they fail? And I want to be very quick to point out here that you cannot reverse engineer your way out of losses. There will always be times when you do everything right and you end up losing. It is just inevitable. However, if I was able to detect certain circumstances being present on the price chart, that would be indicative of perhaps not following conventional school run theory. Well, then I wanted to uncover it and thus began the contemplation of the overnight range. The overnight range will be defined differently depending on the trader, but I think on a broad level, traders can roughly agree that the overnight range is from about midnight Europe or midnight UK to about six o'clock. Some people will include seven o'clock, but I don't think that we need to split hairs or divide ourselves into two different camps. I think that roughly we can agree that the overnight range is from around midnight till around six o'clock in the morning. So roughly a six hour window where the market is open for trading, but it's by and large driven by probably computer driven as most of it is anyway, but also sentiment in Asia, which is obviously trading whilst Europe and US is either asleep or late in the evening. And so the contemplation began to center around where does the school run bar, that second 15 minute bar, where is it actually taking place? Is it taking place within the context of the overnight range? Or is it taking place outside the overnight range either above or below? Thus came to light a new theory. And that theory was that if the school run bar triggers a conventional long signal by going above the high, but that took place within the context of the overnight range. In other words, if the school run bar takes place within the overnight range, instead of buying above the high, you sell short. And instead of selling short below, if it's within the overnight range, don't sell short here by below. And then if the school run takes place above the overnight range, well, then you buy school run as normal, but instead of selling short, you will buy again. And vice versa. If the school run bar takes place below the overnight range, you sell short below, but you also sell short above. Okay, so what I would like to do now is I'd like to go through some example.

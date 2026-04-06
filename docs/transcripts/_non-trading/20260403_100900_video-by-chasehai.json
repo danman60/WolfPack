@@ -1,0 +1,92 @@
+{
+  "title": "Video by chase.h.ai",
+  "url": "https://www.instagram.com/reel/DWA8qG8NeyJ/",
+  "project": "WolfPack",
+  "model": "small",
+  "language": "en",
+  "language_probability": 1.0,
+  "duration_seconds": 47.7,
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 4.1,
+      "text": "Here is my favorite free cloud code add-on that is super easy to integrate."
+    },
+    {
+      "start": 4.2,
+      "end": 5.3,
+      "text": "Well, it's not really an add-on."
+    },
+    {
+      "start": 5.3,
+      "end": 6.8,
+      "text": "It's really just Obsidian."
+    },
+    {
+      "start": 6.8,
+      "end": 11.0,
+      "text": "I love using Obsidian and cloud code these days, especially in my one"
+    },
+    {
+      "start": 11.0,
+      "end": 14.4,
+      "text": "directory that I use exclusively for personal assistant type tasks."
+    },
+    {
+      "start": 14.4,
+      "end": 17.8,
+      "text": "Things of things like research or just like general back and forth."
+    },
+    {
+      "start": 18.1,
+      "end": 23.1,
+      "text": "Obsidian makes it really easy for me to dump all of my stuff from cloud"
+    },
+    {
+      "start": 23.1,
+      "end": 26.7,
+      "text": "code into markdown files and have it organized in a way I can actually see them."
+    },
+    {
+      "start": 26.9,
+      "end": 29.4,
+      "text": "Plus, I'd like the cool vector diagrams you get with Obsidian."
+    },
+    {
+      "start": 29.4,
+      "end": 32.1,
+      "text": "But Obsidian and cloud code are such a nice tandem together"
+    },
+    {
+      "start": 32.1,
+      "end": 35.7,
+      "text": "because I would never set up a actual directory like this myself."
+    },
+    {
+      "start": 35.9,
+      "end": 38.4,
+      "text": "And I certainly wouldn't do all the backlinks either and cloud"
+    },
+    {
+      "start": 38.4,
+      "end": 39.9,
+      "text": "code handles all of it for me."
+    },
+    {
+      "start": 39.9,
+      "end": 41.7,
+      "text": "And again, the best part is it's free."
+    },
+    {
+      "start": 41.8,
+      "end": 44.8,
+      "text": "I wouldn't use it for actual like coding projects and coding"
+    },
+    {
+      "start": 44.8,
+      "end": 47.5,
+      "text": "directories, but for personal assistant type thing, it's perfect."
+    }
+  ],
+  "full_text": "Here is my favorite free cloud code add-on that is super easy to integrate. Well, it's not really an add-on. It's really just Obsidian. I love using Obsidian and cloud code these days, especially in my one directory that I use exclusively for personal assistant type tasks. Things of things like research or just like general back and forth. Obsidian makes it really easy for me to dump all of my stuff from cloud code into markdown files and have it organized in a way I can actually see them. Plus, I'd like the cool vector diagrams you get with Obsidian. But Obsidian and cloud code are such a nice tandem together because I would never set up a actual directory like this myself. And I certainly wouldn't do all the backlinks either and cloud code handles all of it for me. And again, the best part is it's free. I wouldn't use it for actual like coding projects and coding directories, but for personal assistant type thing, it's perfect."
+}

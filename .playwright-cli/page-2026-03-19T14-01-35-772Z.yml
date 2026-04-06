@@ -1,0 +1,90 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - link "WolfPack" [ref=e5] [cursor=pointer]:
+          - /url: /
+          - img [ref=e7]
+          - generic [ref=e11]: WolfPack
+        - generic [ref=e12]:
+          - link "Dashboard" [ref=e13] [cursor=pointer]:
+            - /url: /
+          - link "Intelligence" [ref=e14] [cursor=pointer]:
+            - /url: /intelligence
+          - link "Trading" [ref=e15] [cursor=pointer]:
+            - /url: /trading
+          - link "Portfolio" [ref=e16] [cursor=pointer]:
+            - /url: /portfolio
+          - link "Backtest" [ref=e17] [cursor=pointer]:
+            - /url: /backtest
+          - link "Auto-Bot" [ref=e18] [cursor=pointer]:
+            - /url: /auto-bot
+          - link "LP Pools" [ref=e19] [cursor=pointer]:
+            - /url: /pools
+          - link "Settings" [ref=e20] [cursor=pointer]:
+            - /url: /settings
+      - generic [ref=e23]:
+        - button "Hyperliquid" [ref=e24] [cursor=pointer]
+        - button "dYdX" [ref=e25] [cursor=pointer]
+        - button "Kraken" [ref=e26] [cursor=pointer]
+  - main [ref=e27]:
+    - generic [ref=e28]:
+      - generic [ref=e29]:
+        - generic [ref=e30]:
+          - paragraph [ref=e31]: Portfolio Value
+          - paragraph [ref=e32]: $10,015.04USD
+        - generic [ref=e33]:
+          - paragraph [ref=e34]: Unrealized P&L
+          - paragraph [ref=e35]: +$0.00
+        - generic [ref=e36]:
+          - paragraph [ref=e37]: Open Positions
+          - paragraph [ref=e38]: "0"
+        - generic [ref=e39]:
+          - paragraph [ref=e40]: Watchlist
+          - paragraph [ref=e41]: 0symbols
+      - generic [ref=e42]:
+        - generic [ref=e43]:
+          - generic [ref=e46]: "Active: Hyperliquid"
+          - generic [ref=e47]: Connected
+        - generic [ref=e49]: BTC-USD
+        - generic [ref=e52]: ETH-USD
+      - generic [ref=e54]:
+        - generic [ref=e55]:
+          - generic [ref=e56]:
+            - heading "Intelligence Brief" [level=2] [ref=e59]
+            - link "View all" [ref=e60] [cursor=pointer]:
+              - /url: /intelligence
+          - generic [ref=e61]:
+            - generic [ref=e62]:
+              - generic [ref=e63]:
+                - generic "The Quant" [ref=e64]:
+                  - img [ref=e66]
+                - generic [ref=e86]: The Quant
+              - generic [ref=e87]: "--"
+            - generic [ref=e88]:
+              - generic [ref=e89]:
+                - generic "The Snoop" [ref=e90]:
+                  - img [ref=e92]
+                - generic [ref=e116]: The Snoop
+              - generic [ref=e117]: "--"
+            - generic [ref=e118]:
+              - generic [ref=e119]:
+                - generic "The Sage" [ref=e120]:
+                  - img [ref=e122]
+                - generic [ref=e141]: The Sage
+              - generic [ref=e142]: "--"
+            - generic [ref=e143]:
+              - generic [ref=e144]:
+                - generic "The Brief" [ref=e145]:
+                  - img [ref=e147]
+                - generic [ref=e167]: The Brief
+              - generic [ref=e168]: "--"
+        - generic [ref=e169]:
+          - generic [ref=e170]:
+            - heading "Trade Recommendations" [level=2] [ref=e173]
+            - link "Trade" [ref=e174] [cursor=pointer]:
+              - /url: /trading
+          - generic [ref=e175]:
+            - paragraph [ref=e176]: No pending recommendations
+            - paragraph [ref=e177]: Run intelligence to generate trade signals
+  - alert [ref=e178]

@@ -1,0 +1,1496 @@
+- generic [ref=e2]:
+  - region
+  - generic [ref=e3]:
+    - link "Skip to content" [ref=e4] [cursor=pointer]:
+      - /url: "#start-of-content"
+    - banner [ref=e6]:
+      - heading "Navigation Menu" [level=2] [ref=e7]
+      - generic [ref=e8]:
+        - link "Homepage" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+        - generic [ref=e13]:
+          - navigation "Global" [ref=e16]:
+            - list [ref=e17]:
+              - listitem [ref=e18]:
+                - button "Platform" [ref=e20] [cursor=pointer]:
+                  - text: Platform
+                  - img [ref=e21]
+              - listitem [ref=e23]:
+                - button "Solutions" [ref=e25] [cursor=pointer]:
+                  - text: Solutions
+                  - img [ref=e26]
+              - listitem [ref=e28]:
+                - button "Resources" [ref=e30] [cursor=pointer]:
+                  - text: Resources
+                  - img [ref=e31]
+              - listitem [ref=e33]:
+                - button "Open Source" [ref=e35] [cursor=pointer]:
+                  - text: Open Source
+                  - img [ref=e36]
+              - listitem [ref=e38]:
+                - button "Enterprise" [ref=e40] [cursor=pointer]:
+                  - text: Enterprise
+                  - img [ref=e41]
+              - listitem [ref=e43]:
+                - link "Pricing" [ref=e44] [cursor=pointer]:
+                  - /url: https://github.com/pricing
+                  - generic [ref=e45]: Pricing
+          - generic [ref=e46]:
+            - button "Search or jump to…" [ref=e49] [cursor=pointer]:
+              - img [ref=e51]
+            - link "Sign in" [ref=e54] [cursor=pointer]:
+              - /url: /login?return_to=https%3A%2F%2Fgithub.com%2Fkrakenfx%2Fkraken-cli
+            - link "Sign up" [ref=e55] [cursor=pointer]:
+              - /url: /signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F%3Cuser-name%3E%2F%3Crepo-name%3E&source=header-repo&source_repo=krakenfx%2Fkraken-cli
+            - button "Appearance settings" [ref=e58] [cursor=pointer]:
+              - img
+  - main [ref=e62]:
+    - generic [ref=e63]:
+      - generic [ref=e64]:
+        - generic [ref=e66]:
+          - img [ref=e67]
+          - link "krakenfx" [ref=e70] [cursor=pointer]:
+            - /url: /krakenfx
+          - generic [ref=e71]: /
+          - strong [ref=e72]:
+            - link "kraken-cli" [ref=e73] [cursor=pointer]:
+              - /url: /krakenfx/kraken-cli
+          - generic [ref=e74]: Public
+        - generic [ref=e75]:
+          - list:
+            - listitem [ref=e76]:
+              - link "You must be signed in to change notification settings" [ref=e77] [cursor=pointer]:
+                - /url: /login?return_to=%2Fkrakenfx%2Fkraken-cli
+                - img [ref=e78]
+                - text: Notifications
+            - listitem [ref=e80]:
+              - link "Fork 10" [ref=e81] [cursor=pointer]:
+                - /url: /login?return_to=%2Fkrakenfx%2Fkraken-cli
+                - img [ref=e82]
+                - text: Fork
+                - generic "10" [ref=e84]
+            - listitem [ref=e85]:
+              - link "You must be signed in to star a repository" [ref=e87] [cursor=pointer]:
+                - /url: /login?return_to=%2Fkrakenfx%2Fkraken-cli
+                - img [ref=e88]
+                - text: Star
+                - generic "75 users starred this repository" [ref=e90]: "75"
+      - navigation "Repository" [ref=e91]:
+        - list [ref=e92]:
+          - listitem [ref=e93]:
+            - link "Code" [ref=e94] [cursor=pointer]:
+              - /url: /krakenfx/kraken-cli
+              - img [ref=e95]
+              - generic [ref=e97]: Code
+          - listitem [ref=e98]:
+            - link "Issues 5" [ref=e99] [cursor=pointer]:
+              - /url: /krakenfx/kraken-cli/issues
+              - img [ref=e100]
+              - generic [ref=e103]: Issues
+              - generic "5" [ref=e104]
+          - listitem [ref=e105]:
+            - link "Pull requests" [ref=e106] [cursor=pointer]:
+              - /url: /krakenfx/kraken-cli/pulls
+              - img [ref=e107]
+              - generic [ref=e109]: Pull requests
+          - listitem [ref=e110]:
+            - link "Actions" [ref=e111] [cursor=pointer]:
+              - /url: /krakenfx/kraken-cli/actions
+              - img [ref=e112]
+              - generic [ref=e114]: Actions
+          - listitem [ref=e115]:
+            - link "Security" [ref=e116] [cursor=pointer]:
+              - /url: /krakenfx/kraken-cli/security
+              - img [ref=e117]
+              - generic [ref=e119]: Security
+          - listitem [ref=e120]:
+            - link "Insights" [ref=e121] [cursor=pointer]:
+              - /url: /krakenfx/kraken-cli/pulse
+              - img [ref=e122]
+              - generic [ref=e124]: Insights
+    - generic [ref=e137]:
+      - heading "krakenfx/kraken-cli" [level=1] [ref=e139]
+      - generic [ref=e140]:
+        - generic [ref=e143]:
+          - generic [ref=e144]:
+            - generic [ref=e145]:
+              - button "main branch" [ref=e147] [cursor=pointer]:
+                - generic [ref=e148]:
+                  - generic [ref=e150]:
+                    - img [ref=e152]
+                    - generic [ref=e155]: main
+                  - generic:
+                    - img
+              - generic [ref=e156]:
+                - link "1 Branch" [ref=e157] [cursor=pointer]:
+                  - /url: /krakenfx/kraken-cli/branches
+                  - generic [ref=e158]:
+                    - generic:
+                      - img
+                    - generic [ref=e160]:
+                      - strong [ref=e161]: "1"
+                      - text: Branch
+                - link "3 Tags" [ref=e162] [cursor=pointer]:
+                  - /url: /krakenfx/kraken-cli/tags
+                  - generic [ref=e163]:
+                    - generic:
+                      - img
+                    - generic [ref=e165]:
+                      - strong [ref=e166]: "3"
+                      - text: Tags
+            - generic [ref=e167]:
+              - generic [ref=e171]:
+                - img [ref=e173]
+                - combobox "Go to file" [ref=e175]
+              - button "Code" [ref=e176] [cursor=pointer]:
+                - generic [ref=e177]:
+                  - generic:
+                    - img
+                  - generic [ref=e178]: Code
+                  - generic:
+                    - img
+          - generic [ref=e179]:
+            - generic [ref=e180]:
+              - heading "Folders and files" [level=2] [ref=e181]
+              - table "Folders and files" [ref=e182]:
+                - rowgroup:
+                  - row "Name Last commit message Last commit date":
+                    - columnheader "Name"
+                    - columnheader "Last commit message":
+                      - generic "Last commit message"
+                    - columnheader "Last commit date":
+                      - generic "Last commit date"
+                - rowgroup [ref=e183]:
+                  - 'row "Latest commit agent-smith-k commits by agent-smith-k chore: bump version to 0.2.1 (#17) success Commit a9712c4 · Mar 19, 20262 hours ago History 18 Commits" [ref=e184]':
+                    - 'cell "Latest commit agent-smith-k commits by agent-smith-k chore: bump version to 0.2.1 (#17) success Commit a9712c4 · Mar 19, 20262 hours ago History 18 Commits" [ref=e185]':
+                      - generic [ref=e186]:
+                        - heading "Latest commit" [level=2] [ref=e187]
+                        - generic [ref=e188]:
+                          - generic [ref=e190]:
+                            - link "agent-smith-k" [ref=e191] [cursor=pointer]:
+                              - /url: /agent-smith-k
+                              - img "agent-smith-k" [ref=e192]
+                            - link "commits by agent-smith-k" [ref=e193] [cursor=pointer]:
+                              - /url: /krakenfx/kraken-cli/commits?author=agent-smith-k
+                              - text: agent-smith-k
+                          - generic [ref=e194]:
+                            - generic [ref=e196]:
+                              - 'link "chore: bump version to 0.2.1 (" [ref=e197] [cursor=pointer]':
+                                - /url: /krakenfx/kraken-cli/commit/a9712c4786955297812328589ed6505e21b22102
+                              - link "#17" [ref=e198] [cursor=pointer]:
+                                - /url: https://github.com/krakenfx/kraken-cli/pull/17
+                              - link ")" [ref=e199] [cursor=pointer]:
+                                - /url: /krakenfx/kraken-cli/commit/a9712c4786955297812328589ed6505e21b22102
+                            - button "success" [ref=e200] [cursor=pointer]:
+                              - img [ref=e201]
+                        - generic [ref=e203]:
+                          - generic [ref=e205]:
+                            - link "Commit a9712c4" [ref=e206] [cursor=pointer]:
+                              - /url: /krakenfx/kraken-cli/commit/a9712c4786955297812328589ed6505e21b22102
+                              - text: a9712c4
+                            - text: ·
+                            - generic "Mar 19, 2026, 10:13 AM UTC" [ref=e207]: Mar 19, 20262 hours ago
+                          - generic [ref=e208]:
+                            - heading "History" [level=2] [ref=e209]
+                            - link "18 Commits" [ref=e210] [cursor=pointer]:
+                              - /url: /krakenfx/kraken-cli/commits/main/
+                              - generic [ref=e211]:
+                                - generic:
+                                  - img
+                                - generic [ref=e212]: 18 Commits
+                  - row ".github/workflows, (Directory) Add SecureSDLC workflow configuration Mar 7, 20262 weeks ago" [ref=e213]:
+                    - cell ".github/workflows, (Directory)" [ref=e214]:
+                      - generic [ref=e215]:
+                        - img [ref=e216]
+                        - link ".github/workflows, (Directory)" [ref=e221] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/tree/main/.github/workflows
+                          - text: .github/workflows
+                    - cell "Add SecureSDLC workflow configuration" [ref=e222]:
+                      - link "Add SecureSDLC workflow configuration" [ref=e225] [cursor=pointer]:
+                        - /url: /krakenfx/kraken-cli/commit/60458b7c0d87ee44a11313e624f04be97647103a
+                    - cell "Mar 7, 20262 weeks ago" [ref=e226]:
+                      - generic [ref=e227]: Mar 7, 20262 weeks ago
+                  - 'row "agents, (Directory) chore: sync upstream changes (#16) Mar 19, 20262 hours ago" [ref=e228]':
+                    - cell "agents, (Directory)" [ref=e229]:
+                      - generic [ref=e230]:
+                        - img [ref=e231]
+                        - link "agents, (Directory)" [ref=e236] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/tree/main/agents
+                          - text: agents
+                    - 'cell "chore: sync upstream changes (#16)" [ref=e237]':
+                      - generic [ref=e239]:
+                        - 'link "chore: sync upstream changes (" [ref=e240] [cursor=pointer]':
+                          - /url: /krakenfx/kraken-cli/commit/0970d3af9eec85a7e1789d439cf98d2036b9578a
+                        - link "#16" [ref=e241] [cursor=pointer]:
+                          - /url: https://github.com/krakenfx/kraken-cli/pull/16
+                        - link ")" [ref=e242] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/commit/0970d3af9eec85a7e1789d439cf98d2036b9578a
+                    - cell "Mar 19, 20262 hours ago" [ref=e243]:
+                      - generic [ref=e244]: Mar 19, 20262 hours ago
+                  - 'row "skills, (Directory) chore: sync upstream changes (#16) Mar 19, 20262 hours ago" [ref=e245]':
+                    - cell "skills, (Directory)" [ref=e246]:
+                      - generic [ref=e247]:
+                        - img [ref=e248]
+                        - link "skills, (Directory)" [ref=e253] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/tree/main/skills
+                          - text: skills
+                    - 'cell "chore: sync upstream changes (#16)" [ref=e254]':
+                      - generic [ref=e256]:
+                        - 'link "chore: sync upstream changes (" [ref=e257] [cursor=pointer]':
+                          - /url: /krakenfx/kraken-cli/commit/0970d3af9eec85a7e1789d439cf98d2036b9578a
+                        - link "#16" [ref=e258] [cursor=pointer]:
+                          - /url: https://github.com/krakenfx/kraken-cli/pull/16
+                        - link ")" [ref=e259] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/commit/0970d3af9eec85a7e1789d439cf98d2036b9578a
+                    - cell "Mar 19, 20262 hours ago" [ref=e260]:
+                      - generic [ref=e261]: Mar 19, 20262 hours ago
+                  - 'row "src, (Directory) chore: sync upstream changes (#16) Mar 19, 20262 hours ago" [ref=e262]':
+                    - cell "src, (Directory)" [ref=e263]:
+                      - generic [ref=e264]:
+                        - img [ref=e265]
+                        - link "src, (Directory)" [ref=e270] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/tree/main/src
+                          - text: src
+                    - 'cell "chore: sync upstream changes (#16)" [ref=e271]':
+                      - generic [ref=e273]:
+                        - 'link "chore: sync upstream changes (" [ref=e274] [cursor=pointer]':
+                          - /url: /krakenfx/kraken-cli/commit/0970d3af9eec85a7e1789d439cf98d2036b9578a
+                        - link "#16" [ref=e275] [cursor=pointer]:
+                          - /url: https://github.com/krakenfx/kraken-cli/pull/16
+                        - link ")" [ref=e276] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/commit/0970d3af9eec85a7e1789d439cf98d2036b9578a
+                    - cell "Mar 19, 20262 hours ago" [ref=e277]:
+                      - generic [ref=e278]: Mar 19, 20262 hours ago
+                  - 'row "tests, (Directory) chore: sync upstream changes (#16) Mar 19, 20262 hours ago" [ref=e279]':
+                    - cell "tests, (Directory)" [ref=e280]:
+                      - generic [ref=e281]:
+                        - img [ref=e282]
+                        - link "tests, (Directory)" [ref=e287] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/tree/main/tests
+                          - text: tests
+                    - 'cell "chore: sync upstream changes (#16)" [ref=e288]':
+                      - generic [ref=e290]:
+                        - 'link "chore: sync upstream changes (" [ref=e291] [cursor=pointer]':
+                          - /url: /krakenfx/kraken-cli/commit/0970d3af9eec85a7e1789d439cf98d2036b9578a
+                        - link "#16" [ref=e292] [cursor=pointer]:
+                          - /url: https://github.com/krakenfx/kraken-cli/pull/16
+                        - link ")" [ref=e293] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/commit/0970d3af9eec85a7e1789d439cf98d2036b9578a
+                    - cell "Mar 19, 20262 hours ago" [ref=e294]:
+                      - generic [ref=e295]: Mar 19, 20262 hours ago
+                  - row ".gitattributes, (File) Initial import of kraken-cli Mar 6, 20262 weeks ago" [ref=e296]:
+                    - cell ".gitattributes, (File)" [ref=e297]:
+                      - generic [ref=e298]:
+                        - img [ref=e299]
+                        - link ".gitattributes, (File)" [ref=e304] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/blob/main/.gitattributes
+                          - text: .gitattributes
+                    - cell "Initial import of kraken-cli" [ref=e305]:
+                      - link "Initial import of kraken-cli" [ref=e308] [cursor=pointer]:
+                        - /url: /krakenfx/kraken-cli/commit/8c76ccf99999ee8ca8d94e3a8032fc58fa9ebd9c
+                    - cell "Mar 6, 20262 weeks ago" [ref=e309]:
+                      - generic [ref=e310]: Mar 6, 20262 weeks ago
+                  - row ".gitignore, (File) Initial import of kraken-cli Mar 6, 20262 weeks ago" [ref=e311]:
+                    - cell ".gitignore, (File)" [ref=e312]:
+                      - generic [ref=e313]:
+                        - img [ref=e314]
+                        - link ".gitignore, (File)" [ref=e319] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/blob/main/.gitignore
+                          - text: .gitignore
+                    - cell "Initial import of kraken-cli" [ref=e320]:
+                      - link "Initial import of kraken-cli" [ref=e323] [cursor=pointer]:
+                        - /url: /krakenfx/kraken-cli/commit/8c76ccf99999ee8ca8d94e3a8032fc58fa9ebd9c
+                    - cell "Mar 6, 20262 weeks ago" [ref=e324]:
+                      - generic [ref=e325]: Mar 6, 20262 weeks ago
+                  - 'row "AGENTS.md, (File) feat: server-authoritative rate limiting with enriched errors (#9) Mar 10, 2026last week" [ref=e326]':
+                    - cell "AGENTS.md, (File)" [ref=e327]:
+                      - generic [ref=e328]:
+                        - img [ref=e329]
+                        - link "AGENTS.md, (File)" [ref=e334] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/blob/main/AGENTS.md
+                          - text: AGENTS.md
+                    - 'cell "feat: server-authoritative rate limiting with enriched errors (#9)" [ref=e335]':
+                      - generic [ref=e337]:
+                        - 'link "feat: server-authoritative rate limiting with enriched errors (" [ref=e338] [cursor=pointer]':
+                          - /url: /krakenfx/kraken-cli/commit/12b5317c073280e1170d73f2fa71c675156baabc
+                        - link "#9" [ref=e339] [cursor=pointer]:
+                          - /url: https://github.com/krakenfx/kraken-cli/pull/9
+                        - link ")" [ref=e340] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/commit/12b5317c073280e1170d73f2fa71c675156baabc
+                    - cell "Mar 10, 2026last week" [ref=e341]:
+                      - generic [ref=e342]: Mar 10, 2026last week
+                  - 'row "CLAUDE.md, (File) docs: surface full product scope across agent-facing docs (#8) Mar 8, 20262 weeks ago" [ref=e343]':
+                    - cell "CLAUDE.md, (File)" [ref=e344]:
+                      - generic [ref=e345]:
+                        - img [ref=e346]
+                        - link "CLAUDE.md, (File)" [ref=e351] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/blob/main/CLAUDE.md
+                          - text: CLAUDE.md
+                    - 'cell "docs: surface full product scope across agent-facing docs (#8)" [ref=e352]':
+                      - generic [ref=e354]:
+                        - 'link "docs: surface full product scope across agent-facing docs (" [ref=e355] [cursor=pointer]':
+                          - /url: /krakenfx/kraken-cli/commit/ec38fe3343be6e5a693bbd4a1a05d4dfc97d2c50
+                        - link "#8" [ref=e356] [cursor=pointer]:
+                          - /url: https://github.com/krakenfx/kraken-cli/pull/8
+                        - link ")" [ref=e357] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/commit/ec38fe3343be6e5a693bbd4a1a05d4dfc97d2c50
+                    - cell "Mar 8, 20262 weeks ago" [ref=e358]:
+                      - generic [ref=e359]: Mar 8, 20262 weeks ago
+                  - 'row "CONTEXT.md, (File) feat: server-authoritative rate limiting with enriched errors (#9) Mar 10, 2026last week" [ref=e360]':
+                    - cell "CONTEXT.md, (File)" [ref=e361]:
+                      - generic [ref=e362]:
+                        - img [ref=e363]
+                        - link "CONTEXT.md, (File)" [ref=e368] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/blob/main/CONTEXT.md
+                          - text: CONTEXT.md
+                    - 'cell "feat: server-authoritative rate limiting with enriched errors (#9)" [ref=e369]':
+                      - generic [ref=e371]:
+                        - 'link "feat: server-authoritative rate limiting with enriched errors (" [ref=e372] [cursor=pointer]':
+                          - /url: /krakenfx/kraken-cli/commit/12b5317c073280e1170d73f2fa71c675156baabc
+                        - link "#9" [ref=e373] [cursor=pointer]:
+                          - /url: https://github.com/krakenfx/kraken-cli/pull/9
+                        - link ")" [ref=e374] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/commit/12b5317c073280e1170d73f2fa71c675156baabc
+                    - cell "Mar 10, 2026last week" [ref=e375]:
+                      - generic [ref=e376]: Mar 10, 2026last week
+                  - 'row "Cargo.lock, (File) chore: bump version to 0.2.1 (#17) Mar 19, 20262 hours ago" [ref=e377]':
+                    - cell "Cargo.lock, (File)" [ref=e378]:
+                      - generic [ref=e379]:
+                        - img [ref=e380]
+                        - link "Cargo.lock, (File)" [ref=e385] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/blob/main/Cargo.lock
+                          - text: Cargo.lock
+                    - 'cell "chore: bump version to 0.2.1 (#17)" [ref=e386]':
+                      - generic [ref=e388]:
+                        - 'link "chore: bump version to 0.2.1 (" [ref=e389] [cursor=pointer]':
+                          - /url: /krakenfx/kraken-cli/commit/a9712c4786955297812328589ed6505e21b22102
+                        - link "#17" [ref=e390] [cursor=pointer]:
+                          - /url: https://github.com/krakenfx/kraken-cli/pull/17
+                        - link ")" [ref=e391] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/commit/a9712c4786955297812328589ed6505e21b22102
+                    - cell "Mar 19, 20262 hours ago" [ref=e392]:
+                      - generic [ref=e393]: Mar 19, 20262 hours ago
+                  - 'row "Cargo.toml, (File) chore: bump version to 0.2.1 (#17) Mar 19, 20262 hours ago" [ref=e394]':
+                    - cell "Cargo.toml, (File)" [ref=e395]:
+                      - generic [ref=e396]:
+                        - img [ref=e397]
+                        - link "Cargo.toml, (File)" [ref=e402] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/blob/main/Cargo.toml
+                          - text: Cargo.toml
+                    - 'cell "chore: bump version to 0.2.1 (#17)" [ref=e403]':
+                      - generic [ref=e405]:
+                        - 'link "chore: bump version to 0.2.1 (" [ref=e406] [cursor=pointer]':
+                          - /url: /krakenfx/kraken-cli/commit/a9712c4786955297812328589ed6505e21b22102
+                        - link "#17" [ref=e407] [cursor=pointer]:
+                          - /url: https://github.com/krakenfx/kraken-cli/pull/17
+                        - link ")" [ref=e408] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/commit/a9712c4786955297812328589ed6505e21b22102
+                    - cell "Mar 19, 20262 hours ago" [ref=e409]:
+                      - generic [ref=e410]: Mar 19, 20262 hours ago
+                  - row "DISCLAIMER.md, (File) Initial import of kraken-cli Mar 6, 20262 weeks ago" [ref=e411]:
+                    - cell "DISCLAIMER.md, (File)" [ref=e412]:
+                      - generic [ref=e413]:
+                        - img [ref=e414]
+                        - link "DISCLAIMER.md, (File)" [ref=e419] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/blob/main/DISCLAIMER.md
+                          - text: DISCLAIMER.md
+                    - cell "Initial import of kraken-cli" [ref=e420]:
+                      - link "Initial import of kraken-cli" [ref=e423] [cursor=pointer]:
+                        - /url: /krakenfx/kraken-cli/commit/8c76ccf99999ee8ca8d94e3a8032fc58fa9ebd9c
+                    - cell "Mar 6, 20262 weeks ago" [ref=e424]:
+                      - generic [ref=e425]: Mar 6, 20262 weeks ago
+                  - row "LICENSE, (File) Initial import of kraken-cli Mar 6, 20262 weeks ago" [ref=e426]:
+                    - cell "LICENSE, (File)" [ref=e427]:
+                      - generic [ref=e428]:
+                        - img [ref=e429]
+                        - link "LICENSE, (File)" [ref=e434] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/blob/main/LICENSE
+                          - text: LICENSE
+                    - cell "Initial import of kraken-cli" [ref=e435]:
+                      - link "Initial import of kraken-cli" [ref=e438] [cursor=pointer]:
+                        - /url: /krakenfx/kraken-cli/commit/8c76ccf99999ee8ca8d94e3a8032fc58fa9ebd9c
+                    - cell "Mar 6, 20262 weeks ago" [ref=e439]:
+                      - generic [ref=e440]: Mar 6, 20262 weeks ago
+                  - 'row "README.md, (File) chore: sync upstream changes (#16) Mar 19, 20262 hours ago" [ref=e441]':
+                    - cell "README.md, (File)" [ref=e442]:
+                      - generic [ref=e443]:
+                        - img [ref=e444]
+                        - link "README.md, (File)" [ref=e449] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/blob/main/README.md
+                          - text: README.md
+                    - 'cell "chore: sync upstream changes (#16)" [ref=e450]':
+                      - generic [ref=e452]:
+                        - 'link "chore: sync upstream changes (" [ref=e453] [cursor=pointer]':
+                          - /url: /krakenfx/kraken-cli/commit/0970d3af9eec85a7e1789d439cf98d2036b9578a
+                        - link "#16" [ref=e454] [cursor=pointer]:
+                          - /url: https://github.com/krakenfx/kraken-cli/pull/16
+                        - link ")" [ref=e455] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/commit/0970d3af9eec85a7e1789d439cf98d2036b9578a
+                    - cell "Mar 19, 20262 hours ago" [ref=e456]:
+                      - generic [ref=e457]: Mar 19, 20262 hours ago
+                  - 'row "dist-workspace.toml, (File) fix: allow-dirty ci for custom release workflow Mar 6, 20262 weeks ago" [ref=e458]':
+                    - cell "dist-workspace.toml, (File)" [ref=e459]:
+                      - generic [ref=e460]:
+                        - img [ref=e461]
+                        - link "dist-workspace.toml, (File)" [ref=e466] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/blob/main/dist-workspace.toml
+                          - text: dist-workspace.toml
+                    - 'cell "fix: allow-dirty ci for custom release workflow" [ref=e467]':
+                      - 'link "fix: allow-dirty ci for custom release workflow" [ref=e470] [cursor=pointer]':
+                        - /url: /krakenfx/kraken-cli/commit/ec32b0e3fc695941ffdefa1b290429e9a21c1e47
+                    - cell "Mar 6, 20262 weeks ago" [ref=e471]:
+                      - generic [ref=e472]: Mar 6, 20262 weeks ago
+                  - 'row "gemini-extension.json, (File) docs: surface full product scope across agent-facing docs (#8) Mar 8, 20262 weeks ago" [ref=e473]':
+                    - cell "gemini-extension.json, (File)" [ref=e474]:
+                      - generic [ref=e475]:
+                        - img [ref=e476]
+                        - link "gemini-extension.json, (File)" [ref=e481] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/blob/main/gemini-extension.json
+                          - text: gemini-extension.json
+                    - 'cell "docs: surface full product scope across agent-facing docs (#8)" [ref=e482]':
+                      - generic [ref=e484]:
+                        - 'link "docs: surface full product scope across agent-facing docs (" [ref=e485] [cursor=pointer]':
+                          - /url: /krakenfx/kraken-cli/commit/ec38fe3343be6e5a693bbd4a1a05d4dfc97d2c50
+                        - link "#8" [ref=e486] [cursor=pointer]:
+                          - /url: https://github.com/krakenfx/kraken-cli/pull/8
+                        - link ")" [ref=e487] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/commit/ec38fe3343be6e5a693bbd4a1a05d4dfc97d2c50
+                    - cell "Mar 8, 20262 weeks ago" [ref=e488]:
+                      - generic [ref=e489]: Mar 8, 20262 weeks ago
+                  - row "install.sh, (File) Initial import of kraken-cli Mar 6, 20262 weeks ago" [ref=e490]:
+                    - cell "install.sh, (File)" [ref=e491]:
+                      - generic [ref=e492]:
+                        - img [ref=e493]
+                        - link "install.sh, (File)" [ref=e498] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/blob/main/install.sh
+                          - text: install.sh
+                    - cell "Initial import of kraken-cli" [ref=e499]:
+                      - link "Initial import of kraken-cli" [ref=e502] [cursor=pointer]:
+                        - /url: /krakenfx/kraken-cli/commit/8c76ccf99999ee8ca8d94e3a8032fc58fa9ebd9c
+                    - cell "Mar 6, 20262 weeks ago" [ref=e503]:
+                      - generic [ref=e504]: Mar 6, 20262 weeks ago
+                  - 'row "llms.txt, (File) docs: surface full product scope across agent-facing docs (#8) Mar 8, 20262 weeks ago" [ref=e505]':
+                    - cell "llms.txt, (File)" [ref=e506]:
+                      - generic [ref=e507]:
+                        - img [ref=e508]
+                        - link "llms.txt, (File)" [ref=e513] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/blob/main/llms.txt
+                          - text: llms.txt
+                    - 'cell "docs: surface full product scope across agent-facing docs (#8)" [ref=e514]':
+                      - generic [ref=e516]:
+                        - 'link "docs: surface full product scope across agent-facing docs (" [ref=e517] [cursor=pointer]':
+                          - /url: /krakenfx/kraken-cli/commit/ec38fe3343be6e5a693bbd4a1a05d4dfc97d2c50
+                        - link "#8" [ref=e518] [cursor=pointer]:
+                          - /url: https://github.com/krakenfx/kraken-cli/pull/8
+                        - link ")" [ref=e519] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/commit/ec38fe3343be6e5a693bbd4a1a05d4dfc97d2c50
+                    - cell "Mar 8, 20262 weeks ago" [ref=e520]:
+                      - generic [ref=e521]: Mar 8, 20262 weeks ago
+            - generic [ref=e523]:
+              - generic [ref=e524]:
+                - heading "Repository files navigation" [level=2] [ref=e525]
+                - navigation "Repository files" [ref=e526]:
+                  - list [ref=e527]:
+                    - listitem [ref=e528]:
+                      - link "README" [ref=e529] [cursor=pointer]:
+                        - /url: "#"
+                        - img [ref=e531]
+                        - generic [ref=e533]: README
+                    - listitem [ref=e534]:
+                      - link "MIT license" [ref=e535] [cursor=pointer]:
+                        - /url: "#"
+                        - img [ref=e537]
+                        - generic [ref=e539]: MIT license
+                - button "Outline" [ref=e540] [cursor=pointer]:
+                  - img [ref=e541]
+              - article [ref=e544]:
+                - generic [ref=e545]:
+                  - heading "Kraken CLI" [level=1] [ref=e546]
+                  - 'link "Permalink: Kraken CLI" [ref=e547] [cursor=pointer]':
+                    - /url: "#kraken-cli"
+                    - img [ref=e548]
+                - paragraph [ref=e550]:
+                  - link "version" [ref=e551] [cursor=pointer]:
+                    - /url: https://camo.githubusercontent.com/8dd3c1a54523464e6549e5b137b9a4f60211648e6e360b370156dd703b40e2af/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f762f72656c656173652f6b72616b656e66782f6b72616b656e2d636c693f636f6c6f723d626c7565
+                    - img "version" [ref=e552]
+                  - link "license" [ref=e553] [cursor=pointer]:
+                    - /url: https://camo.githubusercontent.com/f8df3091bbe1149f398a5369b2c39e896766f9f6efba3477c63e9b4aa940ef14/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6c6963656e73652d4d49542d677265656e
+                    - img "license" [ref=e554]
+                  - link "platform" [ref=e555] [cursor=pointer]:
+                    - /url: https://camo.githubusercontent.com/6661496aefeba14e8601c2bc0d50f774373f510bda3f02b48ed96ff3b5ed41d0/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f706c6174666f726d2d6d61634f532532302537432532304c696e75782d6c6967687467726579
+                    - img "platform" [ref=e556]
+                - paragraph [ref=e557]: The first AI-native CLI for trading crypto, stocks, forex, and derivatives.
+                - paragraph [ref=e558]: Full Kraken API access. Built-in MCP server. Live and paper trading. Single binary.
+                - paragraph [ref=e559]: Works with Cursor, Claude, Codex, Copilot, Gemini, Goose, and OpenClaw.
+                - paragraph [ref=e560]: "Try these with your AI agent:"
+                - blockquote [ref=e561]:
+                  - paragraph [ref=e562]:
+                    - emphasis [ref=e563]:
+                      - text: "\"Install kraken-cli ("
+                      - link "https://github.com/krakenfx/kraken-cli" [ref=e564] [cursor=pointer]:
+                        - /url: https://github.com/krakenfx/kraken-cli
+                      - text: ) and build me a morning market brief."
+                - blockquote [ref=e565]:
+                  - paragraph [ref=e566]:
+                    - emphasis [ref=e567]: "\"Watch ETH, SOL, and BTC for 30 seconds. Tell me which one you'd buy and why.\""
+                - blockquote [ref=e568]:
+                  - paragraph [ref=e569]:
+                    - emphasis [ref=e570]: "\"Look up AAPLx, TSLAx, and SPYx on xStocks. Which one is the better value right now?\""
+                - blockquote [ref=e571]:
+                  - paragraph [ref=e572]:
+                    - emphasis [ref=e573]: "\"You are a Wall Street veteran with 20 years of experience. You have 1 minute. Paper trade BTC and show me your P&L.\""
+                - separator [ref=e574]
+                - generic [ref=e575]:
+                  - paragraph [ref=e576]:
+                    - img [ref=e577]
+                    - text: Caution
+                  - paragraph [ref=e579]:
+                    - text: Experimental software. Interacts with the live Kraken exchange and can execute real financial transactions. Read
+                    - link "DISCLAIMER.md" [ref=e580] [cursor=pointer]:
+                      - /url: /krakenfx/kraken-cli/blob/main/DISCLAIMER.md
+                    - text: before using with real funds or AI agents.
+                - generic [ref=e581]:
+                  - heading "Contents" [level=2] [ref=e582]
+                  - 'link "Permalink: Contents" [ref=e583] [cursor=pointer]':
+                    - /url: "#contents"
+                    - img [ref=e584]
+                - list [ref=e586]:
+                  - listitem [ref=e587]:
+                    - link "Installation" [ref=e588] [cursor=pointer]:
+                      - /url: "#installation"
+                  - listitem [ref=e589]:
+                    - link "What You Can Trade" [ref=e590] [cursor=pointer]:
+                      - /url: "#what-you-can-trade"
+                  - listitem [ref=e591]:
+                    - link "Quick Start" [ref=e592] [cursor=pointer]:
+                      - /url: "#quick-start"
+                  - listitem [ref=e593]:
+                    - link "MCP Server" [ref=e594] [cursor=pointer]:
+                      - /url: "#mcp-server"
+                  - listitem [ref=e595]:
+                    - link "Paper Trading" [ref=e596] [cursor=pointer]:
+                      - /url: "#paper-trading"
+                  - listitem [ref=e597]:
+                    - link "Commands" [ref=e598] [cursor=pointer]:
+                      - /url: "#commands"
+                  - listitem [ref=e599]:
+                    - link "API Keys & Configuration" [ref=e600] [cursor=pointer]:
+                      - /url: "#api-keys--configuration"
+                  - listitem [ref=e601]:
+                    - link "Verifying Binaries" [ref=e602] [cursor=pointer]:
+                      - /url: "#verifying-binaries"
+                  - listitem [ref=e603]:
+                    - link "License & Disclaimer" [ref=e604] [cursor=pointer]:
+                      - /url: "#license--disclaimer"
+                - generic [ref=e605]:
+                  - heading "Installation" [level=2] [ref=e606]
+                  - 'link "Permalink: Installation" [ref=e607] [cursor=pointer]':
+                    - /url: "#installation"
+                    - img [ref=e608]
+                - paragraph [ref=e610]: Single binary, no runtime dependencies.
+                - generic [ref=e611]:
+                  - heading "One-liner" [level=3] [ref=e612]
+                  - 'link "Permalink: One-liner" [ref=e613] [cursor=pointer]':
+                    - /url: "#one-liner"
+                    - img [ref=e614]
+                - generic [ref=e616]:
+                  - generic [ref=e617]:
+                    - text: curl --proto
+                    - generic [ref=e618]: "'=https'"
+                    - text: "--tlsv1.2 -LsSf https://github.com/krakenfx/kraken-cli/releases/latest/download/kraken-cli-installer.sh | sh"
+                  - button "Copy" [ref=e620] [cursor=pointer]:
+                    - img [ref=e621]
+                - paragraph [ref=e624]: "Detects your OS and architecture, downloads the right binary, and installs it. macOS (Apple Silicon and Intel) and Linux (x86_64 and ARM64) are supported. Windows: use WSL."
+                - paragraph [ref=e625]: "Verify it works:"
+                - generic [ref=e626]:
+                  - generic [ref=e627]: kraken status && kraken ticker BTCUSD
+                  - button "Copy" [ref=e629] [cursor=pointer]:
+                    - img [ref=e630]
+                - paragraph [ref=e633]:
+                  - text: Pre-built binaries are also available on the
+                  - link "GitHub Releases" [ref=e634] [cursor=pointer]:
+                    - /url: https://github.com/krakenfx/kraken-cli/releases
+                  - text: page.
+                - group [ref=e635]:
+                  - generic "Build from source" [ref=e636] [cursor=pointer]
+                - generic [ref=e637]:
+                  - heading "What You Can Trade" [level=2] [ref=e638]
+                  - 'link "Permalink: What You Can Trade" [ref=e639] [cursor=pointer]':
+                    - /url: "#what-you-can-trade"
+                    - img [ref=e640]
+                - paragraph [ref=e642]:
+                  - text: One binary covers six asset classes. All trading commands work across asset classes using the same interface; pass
+                  - code [ref=e643]: "--asset-class"
+                  - text: where needed.
+                - table [ref=e645]:
+                  - rowgroup [ref=e646]:
+                    - row "Asset class Instruments Margin Flag Example" [ref=e647]:
+                      - columnheader "Asset class" [ref=e648]
+                      - columnheader "Instruments" [ref=e649]
+                      - columnheader "Margin" [ref=e650]
+                      - columnheader "Flag" [ref=e651]
+                      - columnheader "Example" [ref=e652]
+                  - rowgroup [ref=e653]:
+                    - row "Crypto spot 1,400+ pairs (BTC, ETH, SOL, and hundreds more) Up to 10x on major pairs (default) kraken order buy BTCUSD 0.001 --type limit --price 50000" [ref=e654]:
+                      - cell "Crypto spot" [ref=e655]:
+                        - strong [ref=e656]: Crypto spot
+                      - cell "1,400+ pairs (BTC, ETH, SOL, and hundreds more)" [ref=e657]
+                      - cell "Up to 10x on major pairs" [ref=e658]
+                      - cell "(default)" [ref=e659]:
+                        - emphasis [ref=e660]: (default)
+                      - cell "kraken order buy BTCUSD 0.001 --type limit --price 50000" [ref=e661]:
+                        - code [ref=e662]: kraken order buy BTCUSD 0.001 --type limit --price 50000
+                    - 'row "Tokenized U.S. stocks & ETFs (xStocks) 79 assets: AAPL, NVDA, TSLA, GOOGL, AMZN, MSFT, SPY, QQQ, and more Up to 3x on top 10 --asset-class tokenized_asset kraken order buy AAPLx/USD 0.1 --type limit --price 200 --asset-class tokenized_asset" [ref=e663]':
+                      - cell "Tokenized U.S. stocks & ETFs (xStocks)" [ref=e664]:
+                        - strong [ref=e665]:
+                          - text: Tokenized U.S. stocks & ETFs (
+                          - link "xStocks" [ref=e666] [cursor=pointer]:
+                            - /url: https://www.kraken.com/xstocks
+                          - text: )
+                      - 'cell "79 assets: AAPL, NVDA, TSLA, GOOGL, AMZN, MSFT, SPY, QQQ, and more" [ref=e667]'
+                      - cell "Up to 3x on top 10" [ref=e668]
+                      - cell "--asset-class tokenized_asset" [ref=e669]:
+                        - code [ref=e670]: "--asset-class tokenized_asset"
+                      - cell "kraken order buy AAPLx/USD 0.1 --type limit --price 200 --asset-class tokenized_asset" [ref=e671]:
+                        - code [ref=e672]: kraken order buy AAPLx/USD 0.1 --type limit --price 200 --asset-class tokenized_asset
+                    - 'row "Forex 11 fiat pairs: EUR/USD, GBP/USD, USD/JPY, AUD/USD, and more — --asset-class forex kraken ticker EURUSD --asset-class forex" [ref=e673]':
+                      - cell "Forex" [ref=e674]:
+                        - strong [ref=e675]: Forex
+                      - 'cell "11 fiat pairs: EUR/USD, GBP/USD, USD/JPY, AUD/USD, and more" [ref=e676]'
+                      - cell "—" [ref=e677]
+                      - cell "--asset-class forex" [ref=e678]:
+                        - code [ref=e679]: "--asset-class forex"
+                      - cell "kraken ticker EURUSD --asset-class forex" [ref=e680]:
+                        - code [ref=e681]: kraken ticker EURUSD --asset-class forex
+                    - 'row "Perpetual futures 317 contracts: crypto, 5 forex perps, 11 equity/index perps (AAPL, NVDA, TSLA, SPY, QQQ, S&P 500) Up to 50x (futures engine) kraken futures order buy PF_XBTUSD 1 --type limit --price 50000" [ref=e682]':
+                      - cell "Perpetual futures" [ref=e683]:
+                        - strong [ref=e684]: Perpetual futures
+                      - 'cell "317 contracts: crypto, 5 forex perps, 11 equity/index perps (AAPL, NVDA, TSLA, SPY, QQQ, S&P 500)" [ref=e685]'
+                      - cell "Up to 50x" [ref=e686]
+                      - cell "(futures engine)" [ref=e687]:
+                        - emphasis [ref=e688]: (futures engine)
+                      - cell "kraken futures order buy PF_XBTUSD 1 --type limit --price 50000" [ref=e689]:
+                        - code [ref=e690]: kraken futures order buy PF_XBTUSD 1 --type limit --price 50000
+                    - 'row "Inverse & fixed-date futures 20 contracts: BTC, ETH, SOL, LTC, XRP, ADA, DOGE, LINK Varies (futures engine) kraken futures order buy FI_XBTUSD_260327 1 --type limit --price 50000" [ref=e691]':
+                      - cell "Inverse & fixed-date futures" [ref=e692]:
+                        - strong [ref=e693]: Inverse & fixed-date futures
+                      - 'cell "20 contracts: BTC, ETH, SOL, LTC, XRP, ADA, DOGE, LINK" [ref=e694]'
+                      - cell "Varies" [ref=e695]
+                      - cell "(futures engine)" [ref=e696]:
+                        - emphasis [ref=e697]: (futures engine)
+                      - cell "kraken futures order buy FI_XBTUSD_260327 1 --type limit --price 50000" [ref=e698]:
+                        - code [ref=e699]: kraken futures order buy FI_XBTUSD_260327 1 --type limit --price 50000
+                    - row "Earn / staking Flexible and bonded strategies across multiple assets — — kraken earn strategies --asset ETH" [ref=e700]:
+                      - cell "Earn / staking" [ref=e701]:
+                        - strong [ref=e702]: Earn / staking
+                      - cell "Flexible and bonded strategies across multiple assets" [ref=e703]
+                      - cell "—" [ref=e704]
+                      - cell "—" [ref=e705]
+                      - cell "kraken earn strategies --asset ETH" [ref=e706]:
+                        - code [ref=e707]: kraken earn strategies --asset ETH
+                - paragraph [ref=e708]:
+                  - emphasis [ref=e709]: xStocks are not available in the USA. Availability for all products varies by jurisdiction.
+                - generic [ref=e710]:
+                  - heading "For AI Agents" [level=2] [ref=e711]
+                  - 'link "Permalink: For AI Agents" [ref=e712] [cursor=pointer]':
+                    - /url: "#for-ai-agents"
+                    - img [ref=e713]
+                - paragraph [ref=e715]: "If you're an AI agent or building one, start here:"
+                - table [ref=e717]:
+                  - rowgroup [ref=e718]:
+                    - row "Resource Description" [ref=e719]:
+                      - columnheader "Resource" [ref=e720]
+                      - columnheader "Description" [ref=e721]
+                  - rowgroup [ref=e722]:
+                    - row "CONTEXT.md Runtime context for tool-using agents" [ref=e723]:
+                      - cell "CONTEXT.md" [ref=e724]:
+                        - link "CONTEXT.md" [ref=e725] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/blob/main/CONTEXT.md
+                      - cell "Runtime context for tool-using agents" [ref=e726]
+                    - 'row "AGENTS.md Full integration guide: auth, invocation, errors, rate limits" [ref=e727]':
+                      - cell "AGENTS.md" [ref=e728]:
+                        - link "AGENTS.md" [ref=e729] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/blob/main/AGENTS.md
+                      - 'cell "Full integration guide: auth, invocation, errors, rate limits" [ref=e730]'
+                    - row "agents/tool-catalog.json 134 commands with parameter schemas, types, and safety flags" [ref=e731]:
+                      - cell "agents/tool-catalog.json" [ref=e732]:
+                        - link "agents/tool-catalog.json" [ref=e733] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/blob/main/agents/tool-catalog.json
+                      - cell "134 commands with parameter schemas, types, and safety flags" [ref=e734]
+                    - row "agents/error-catalog.json 9 error categories with retry guidance" [ref=e735]:
+                      - cell "agents/error-catalog.json" [ref=e736]:
+                        - link "agents/error-catalog.json" [ref=e737] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/blob/main/agents/error-catalog.json
+                      - cell "9 error categories with retry guidance" [ref=e738]
+                    - row "skills/ 50 goal-oriented SKILL.md workflow packages" [ref=e739]:
+                      - cell "skills/" [ref=e740]:
+                        - link "skills/" [ref=e741] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/blob/main/skills
+                      - cell "50 goal-oriented SKILL.md workflow packages" [ref=e742]
+                    - row "CLAUDE.md Claude-specific integration guidance" [ref=e743]:
+                      - cell "CLAUDE.md" [ref=e744]:
+                        - link "CLAUDE.md" [ref=e745] [cursor=pointer]:
+                          - /url: /krakenfx/kraken-cli/blob/main/CLAUDE.md
+                      - cell "Claude-specific integration guidance" [ref=e746]
+                - paragraph [ref=e747]: "Core invocation pattern:"
+                - generic [ref=e748]:
+                  - generic [ref=e749]: kraken <command> [args...] -o json 2>/dev/null
+                  - button "Copy" [ref=e751] [cursor=pointer]:
+                    - img [ref=e752]
+                - list [ref=e755]:
+                  - listitem [ref=e756]: stdout is always valid JSON on success, or a JSON error envelope on failure.
+                  - listitem [ref=e757]: Exit code 0 means success. Non-zero means failure.
+                  - listitem [ref=e758]:
+                    - text: stderr carries diagnostics only (enabled with
+                    - code [ref=e759]: "-v"
+                    - text: ). Never parse stderr for data.
+                - group [ref=e760]:
+                  - generic "Why Agent-First?" [ref=e761] [cursor=pointer]
+                - generic [ref=e762]:
+                  - heading "Verifying Binaries" [level=2] [ref=e763]
+                  - 'link "Permalink: Verifying Binaries" [ref=e764] [cursor=pointer]':
+                    - /url: "#verifying-binaries"
+                    - img [ref=e765]
+                - paragraph [ref=e767]:
+                  - text: Release binaries are signed with
+                  - link "minisign" [ref=e768] [cursor=pointer]:
+                    - /url: https://jedisct1.github.io/minisign/
+                  - text: . Every artifact on the
+                  - link "Releases" [ref=e769] [cursor=pointer]:
+                    - /url: https://github.com/krakenfx/kraken-cli/releases
+                  - text: page has a corresponding
+                  - code [ref=e770]: .minisig
+                  - text: signature file.
+                - paragraph [ref=e771]:
+                  - strong [ref=e772]: "Public key:"
+                - generic [ref=e773]:
+                  - code [ref=e775]: RWQJue8SwPzZBZO8Up5ppAUqm0wM/gK5yjnam+Dbf7KbY0utkiO+7XCd
+                  - button "Copy" [ref=e777] [cursor=pointer]:
+                    - img [ref=e778]
+                - paragraph [ref=e781]:
+                  - strong [ref=e782]: "Verify a downloaded binary:"
+                - generic [ref=e783]:
+                  - generic [ref=e784]: minisign -Vm kraken-cli-aarch64-apple-darwin.tar.gz -P RWQJue8SwPzZBZO8Up5ppAUqm0wM/gK5yjnam+Dbf7KbY0utkiO+7XCd
+                  - button "Copy" [ref=e786] [cursor=pointer]:
+                    - img [ref=e787]
+                - paragraph [ref=e790]:
+                  - text: "Install minisign:"
+                  - code [ref=e791]: brew install minisign
+                  - text: (macOS) or
+                  - code [ref=e792]: apt install minisign
+                  - text: (Linux).
+                - generic [ref=e793]:
+                  - heading "Quick Start" [level=2] [ref=e794]
+                  - 'link "Permalink: Quick Start" [ref=e795] [cursor=pointer]':
+                    - /url: "#quick-start"
+                    - img [ref=e796]
+                - paragraph [ref=e798]: "Public market data requires no credentials:"
+                - generic [ref=e799]:
+                  - generic [ref=e800]: kraken ticker BTCUSD -o json kraken orderbook BTCUSD --count 10 -o json kraken trades BTCUSD --count 20 -o json kraken ohlc BTCUSD --interval 60 -o json
+                  - button "Copy" [ref=e802] [cursor=pointer]:
+                    - img [ref=e803]
+                - paragraph [ref=e806]: "With authentication:"
+                - generic [ref=e807]:
+                  - generic [ref=e808]:
+                    - text: export KRAKEN_API_KEY=
+                    - generic [ref=e809]: "\"your-key\""
+                    - text: export KRAKEN_API_SECRET=
+                    - generic [ref=e810]: "\"your-secret\""
+                    - text: kraken balance -o json kraken open-orders -o json kraken order buy BTCUSD 0.001 --type limit --price 50000 -o json
+                  - button "Copy" [ref=e812] [cursor=pointer]:
+                    - img [ref=e813]
+                - paragraph [ref=e816]: "For humans (table output, interactive setup):"
+                - generic [ref=e817]:
+                  - generic [ref=e818]: kraken setup kraken ticker BTCUSD kraken balance kraken shell
+                  - button "Copy" [ref=e820] [cursor=pointer]:
+                    - img [ref=e821]
+                - generic [ref=e824]:
+                  - heading "API Keys & Configuration" [level=2] [ref=e825]
+                  - 'link "Permalink: API Keys & Configuration" [ref=e826] [cursor=pointer]':
+                    - /url: "#api-keys--configuration"
+                    - img [ref=e827]
+                - paragraph [ref=e829]: Authenticated commands (trading, balances, order management) require a Kraken API key pair. Public market data and paper trading work without credentials.
+                - generic [ref=e830]:
+                  - heading "Getting API keys" [level=3] [ref=e831]
+                  - 'link "Permalink: Getting API keys" [ref=e832] [cursor=pointer]':
+                    - /url: "#getting-api-keys"
+                    - img [ref=e833]
+                - paragraph [ref=e835]:
+                  - strong [ref=e836]: Spot
+                  - text: "(covers trading, balances, funding, earn, subaccounts):"
+                  - link "Settings > API" [ref=e837] [cursor=pointer]:
+                    - /url: https://www.kraken.com
+                  - text: "on kraken.com. Full guide:"
+                  - link "How to create a spot API key" [ref=e838] [cursor=pointer]:
+                    - /url: https://support.kraken.com/articles/360000919966-how-to-create-an-api-key
+                  - text: .
+                - paragraph [ref=e839]:
+                  - strong [ref=e840]: Futures
+                  - text: (only for
+                  - code [ref=e841]: kraken futures
+                  - text: "commands):"
+                  - link "Settings > Create Key" [ref=e842] [cursor=pointer]:
+                    - /url: https://www.kraken.com/login-futures
+                  - text: "on the Futures interface. Full guide:"
+                  - link "How to create a Futures API key" [ref=e843] [cursor=pointer]:
+                    - /url: https://support.kraken.com/hc/en-us/articles/360022839451-How-to-create-an-API-key-for-Kraken-Futures
+                  - text: .
+                - paragraph [ref=e844]: Grant the minimum permissions your workflow needs. For read-only monitoring, "Query Funds" and "Query Open Orders & Trades" are sufficient.
+                - generic [ref=e845]:
+                  - heading "Environment variables (recommended for agents)" [level=3] [ref=e846]
+                  - 'link "Permalink: Environment variables (recommended for agents)" [ref=e847] [cursor=pointer]':
+                    - /url: "#environment-variables-recommended-for-agents"
+                    - img [ref=e848]
+                - generic [ref=e850]:
+                  - generic [ref=e851]:
+                    - text: export KRAKEN_API_KEY=
+                    - generic [ref=e852]: "\"your-key\""
+                    - text: export KRAKEN_API_SECRET=
+                    - generic [ref=e853]: "\"your-secret\""
+                    - text: export KRAKEN_FUTURES_API_KEY=
+                    - generic [ref=e854]: "\"your-futures-key\""
+                    - generic [ref=e855]: "# optional"
+                    - text: export KRAKEN_FUTURES_API_SECRET=
+                    - generic [ref=e856]: "\"your-futures-secret\""
+                    - generic [ref=e857]: "# optional"
+                  - button "Copy" [ref=e859] [cursor=pointer]:
+                    - img [ref=e860]
+                - generic [ref=e863]:
+                  - heading "Config file (for humans)" [level=3] [ref=e864]
+                  - 'link "Permalink: Config file (for humans)" [ref=e865] [cursor=pointer]':
+                    - /url: "#config-file-for-humans"
+                    - img [ref=e866]
+                - paragraph [ref=e868]:
+                  - text: Store credentials in
+                  - code [ref=e869]: ~/.config/kraken/config.toml
+                  - text: ":"
+                - generic [ref=e870]:
+                  - generic [ref=e871]:
+                    - text: "[auth] api_key ="
+                    - generic [ref=e872]: "\"your-api-key\""
+                    - text: api_secret =
+                    - generic [ref=e873]: "\"your-api-secret\""
+                    - text: "[settings] default_pair ="
+                    - generic [ref=e874]: "\"BTCUSD\""
+                    - text: output =
+                    - generic [ref=e875]: "\"table\""
+                  - button "Copy" [ref=e877] [cursor=pointer]:
+                    - img [ref=e878]
+                - paragraph [ref=e881]:
+                  - text: "Or use the interactive wizard:"
+                  - code [ref=e882]: kraken setup
+                  - text: .
+                - generic [ref=e883]:
+                  - heading "Credential resolution" [level=3] [ref=e884]
+                  - 'link "Permalink: Credential resolution" [ref=e885] [cursor=pointer]':
+                    - /url: "#credential-resolution"
+                    - img [ref=e886]
+                - paragraph [ref=e888]: "Highest precedence first:"
+                - list [ref=e889]:
+                  - listitem [ref=e890]:
+                    - text: Command-line flags (
+                    - code [ref=e891]: "--api-key"
+                    - text: ","
+                    - code [ref=e892]: "--api-secret"
+                    - text: )
+                  - listitem [ref=e893]:
+                    - text: Environment variables (
+                    - code [ref=e894]: KRAKEN_API_KEY
+                    - text: ","
+                    - code [ref=e895]: KRAKEN_API_SECRET
+                    - text: )
+                  - listitem [ref=e896]:
+                    - text: Config file (
+                    - code [ref=e897]: ~/.config/kraken/config.toml
+                    - text: )
+                - generic [ref=e898]:
+                  - heading "Security" [level=3] [ref=e899]
+                  - 'link "Permalink: Security" [ref=e900] [cursor=pointer]':
+                    - /url: "#security"
+                    - img [ref=e901]
+                - list [ref=e903]:
+                  - listitem [ref=e904]:
+                    - text: Config file is created with
+                    - code [ref=e905]: "0600"
+                    - text: permissions (owner read/write only)
+                  - listitem [ref=e906]: Secrets are never logged, printed, or included in error messages
+                  - listitem [ref=e907]:
+                    - text: Use
+                    - code [ref=e908]: "--api-secret-stdin"
+                    - text: or
+                    - code [ref=e909]: "--api-secret-file"
+                    - text: instead of
+                    - code [ref=e910]: "--api-secret"
+                    - text: to avoid secrets in process listings
+                  - listitem [ref=e911]: For automation, prefer environment variables over command-line flags
+                - group [ref=e912]:
+                  - 'generic "Advanced: API endpoint overrides" [ref=e913] [cursor=pointer]'
+                - generic [ref=e914]:
+                  - heading "MCP Server" [level=2] [ref=e915]
+                  - 'link "Permalink: MCP Server" [ref=e916] [cursor=pointer]':
+                    - /url: "#mcp-server"
+                    - img [ref=e917]
+                - paragraph [ref=e919]:
+                  - code [ref=e920]: kraken-cli
+                  - text: includes a built-in
+                  - link "Model Context Protocol" [ref=e921] [cursor=pointer]:
+                    - /url: https://modelcontextprotocol.io/
+                  - text: server over stdio. No subprocess wrappers needed.
+                - paragraph [ref=e922]: MCP tool calls run through the same command path as CLI commands and inherit the same error handling and rate-limit behavior.
+                - generic [ref=e923]:
+                  - paragraph [ref=e924]:
+                    - img [ref=e925]
+                    - text: Warning
+                  - paragraph [ref=e927]:
+                    - text: MCP is local-first and designed for your own machine. Any agent connected to this MCP server uses the same configured Kraken account and API key permissions. Do not expose, tunnel, or share this server outside systems you control. Always use
+                    - code [ref=e928]: https://
+                    - text: and
+                    - code [ref=e929]: wss://
+                    - text: endpoints. Treat this integration as alpha and use least-privilege API keys.
+                - generic [ref=e930]:
+                  - generic [ref=e931]:
+                    - text: kraken mcp
+                    - generic [ref=e932]: "# read-only (market, account, paper)"
+                    - text: kraken mcp -s all
+                    - generic [ref=e933]: "# all services, dangerous calls require acknowledged=true"
+                    - text: kraken mcp -s all --allow-dangerous
+                    - generic [ref=e934]: "# all services, no per-call confirmation"
+                    - text: kraken mcp -s market,trade,paper
+                    - generic [ref=e935]: "# specific services"
+                  - button "Copy" [ref=e937] [cursor=pointer]:
+                    - img [ref=e938]
+                - paragraph [ref=e941]: "Configure your MCP client (Claude Desktop, ChatGPT, Codex, Gemini CLI, Cursor, VS Code, Windsurf, etc.):"
+                - generic [ref=e942]:
+                  - generic [ref=e943]:
+                    - text: "{ \"mcpServers\": { \"kraken\": { \"command\":"
+                    - generic [ref=e944]: "\"kraken\""
+                    - text: ", \"args\": ["
+                    - generic [ref=e945]: "\"mcp\""
+                    - text: ","
+                    - generic [ref=e946]: "\"-s\""
+                    - text: ","
+                    - generic [ref=e947]: "\"all\""
+                    - text: "] } } }"
+                  - button "Copy" [ref=e949] [cursor=pointer]:
+                    - img [ref=e950]
+                - paragraph [ref=e953]:
+                  - text: "Gemini CLI users can install directly:"
+                  - code [ref=e954]: gemini extensions install https://github.com/krakenfx/kraken-cli
+                - generic [ref=e955]:
+                  - heading "Service groups" [level=3] [ref=e956]
+                  - 'link "Permalink: Service groups" [ref=e957] [cursor=pointer]':
+                    - /url: "#service-groups"
+                    - img [ref=e958]
+                - table [ref=e961]:
+                  - rowgroup [ref=e962]:
+                    - row "Service Auth Risk" [ref=e963]:
+                      - columnheader "Service" [ref=e964]
+                      - columnheader "Auth" [ref=e965]
+                      - columnheader "Risk" [ref=e966]
+                  - rowgroup [ref=e967]:
+                    - row "market No None" [ref=e968]:
+                      - cell "market" [ref=e969]
+                      - cell "No" [ref=e970]
+                      - cell "None" [ref=e971]
+                    - row "account Yes Read-only" [ref=e972]:
+                      - cell "account" [ref=e973]
+                      - cell "Yes" [ref=e974]
+                      - cell "Read-only" [ref=e975]
+                    - row "trade Yes Orders (dangerous)" [ref=e976]:
+                      - cell "trade" [ref=e977]
+                      - cell "Yes" [ref=e978]
+                      - cell "Orders (dangerous)" [ref=e979]
+                    - row "funding Yes Withdrawals (dangerous)" [ref=e980]:
+                      - cell "funding" [ref=e981]
+                      - cell "Yes" [ref=e982]
+                      - cell "Withdrawals (dangerous)" [ref=e983]
+                    - row "earn Yes Staking (dangerous)" [ref=e984]:
+                      - cell "earn" [ref=e985]
+                      - cell "Yes" [ref=e986]
+                      - cell "Staking (dangerous)" [ref=e987]
+                    - row "subaccount Yes Transfers (dangerous)" [ref=e988]:
+                      - cell "subaccount" [ref=e989]
+                      - cell "Yes" [ref=e990]
+                      - cell "Transfers (dangerous)" [ref=e991]
+                    - row "futures Mixed Orders (dangerous)" [ref=e992]:
+                      - cell "futures" [ref=e993]
+                      - cell "Mixed" [ref=e994]
+                      - cell "Orders (dangerous)" [ref=e995]
+                    - row "paper No None (simulation)" [ref=e996]:
+                      - cell "paper" [ref=e997]
+                      - cell "No" [ref=e998]
+                      - cell "None (simulation)" [ref=e999]
+                    - row "auth No Read-only" [ref=e1000]:
+                      - cell "auth" [ref=e1001]
+                      - cell "No" [ref=e1002]
+                      - cell "Read-only" [ref=e1003]
+                - paragraph [ref=e1004]:
+                  - text: "Default:"
+                  - code [ref=e1005]: market,account,paper
+                  - text: . Streaming groups (
+                  - code [ref=e1006]: websocket
+                  - text: ","
+                  - code [ref=e1007]: futures-ws
+                  - text: ) are excluded in MCP v1.
+                - paragraph [ref=e1008]:
+                  - text: Dangerous tools carry the
+                  - code [ref=e1009]: destructive_hint
+                  - text: annotation and include
+                  - code [ref=e1010]: "[DANGEROUS: requires human confirmation]"
+                  - text: in the description. In guarded mode (default), dangerous calls must include
+                  - code [ref=e1011]: acknowledged=true
+                  - text: . In autonomous mode (
+                  - code [ref=e1012]: "--allow-dangerous"
+                  - text: ), this requirement is disabled.
+                - group [ref=e1013]:
+                  - generic "Output & Errors" [ref=e1014] [cursor=pointer]
+                - generic [ref=e1015]:
+                  - heading "Commands" [level=2] [ref=e1016]
+                  - 'link "Permalink: Commands" [ref=e1017] [cursor=pointer]':
+                    - /url: "#commands"
+                    - img [ref=e1018]
+                - paragraph [ref=e1020]:
+                  - text: 134 commands across 12 groups. For machine-readable parameter schemas, load
+                  - link "agents/tool-catalog.json" [ref=e1021] [cursor=pointer]:
+                    - /url: /krakenfx/kraken-cli/blob/main/agents/tool-catalog.json
+                  - text: .
+                - table [ref=e1023]:
+                  - rowgroup [ref=e1024]:
+                    - row "Group Commands Auth Description" [ref=e1025]:
+                      - columnheader "Group" [ref=e1026]
+                      - columnheader "Commands" [ref=e1027]
+                      - columnheader "Auth" [ref=e1028]
+                      - columnheader "Description" [ref=e1029]
+                  - rowgroup [ref=e1030]:
+                    - row "market 10 No Ticker, orderbook, OHLC, trades, spreads, asset info" [ref=e1031]:
+                      - cell "market" [ref=e1032]
+                      - cell "10" [ref=e1033]
+                      - cell "No" [ref=e1034]
+                      - cell "Ticker, orderbook, OHLC, trades, spreads, asset info" [ref=e1035]
+                    - row "account 18 Yes Balances, orders, trades, ledgers, positions, exports" [ref=e1036]:
+                      - cell "account" [ref=e1037]
+                      - cell "18" [ref=e1038]
+                      - cell "Yes" [ref=e1039]
+                      - cell "Balances, orders, trades, ledgers, positions, exports" [ref=e1040]
+                    - row "trade 9 Yes Order placement, amendment, cancellation (spot, xStocks, forex)" [ref=e1041]:
+                      - cell "trade" [ref=e1042]
+                      - cell "9" [ref=e1043]
+                      - cell "Yes" [ref=e1044]
+                      - cell "Order placement, amendment, cancellation (spot, xStocks, forex)" [ref=e1045]
+                    - row "funding 10 Yes Deposits, withdrawals, wallet transfers" [ref=e1046]:
+                      - cell "funding" [ref=e1047]
+                      - cell "10" [ref=e1048]
+                      - cell "Yes" [ref=e1049]
+                      - cell "Deposits, withdrawals, wallet transfers" [ref=e1050]
+                    - row "earn 6 Yes Staking strategies and allocations" [ref=e1051]:
+                      - cell "earn" [ref=e1052]
+                      - cell "6" [ref=e1053]
+                      - cell "Yes" [ref=e1054]
+                      - cell "Staking strategies and allocations" [ref=e1055]
+                    - row "subaccount 2 Yes Create subaccounts, transfer between accounts" [ref=e1056]:
+                      - cell "subaccount" [ref=e1057]
+                      - cell "2" [ref=e1058]
+                      - cell "Yes" [ref=e1059]
+                      - cell "Create subaccounts, transfer between accounts" [ref=e1060]
+                    - row "futures 39 Mixed Futures market data and trading" [ref=e1061]:
+                      - cell "futures" [ref=e1062]
+                      - cell "39" [ref=e1063]
+                      - cell "Mixed" [ref=e1064]
+                      - cell "Futures market data and trading" [ref=e1065]
+                    - row "futures-ws 9 Mixed Futures WebSocket streaming" [ref=e1066]:
+                      - cell "futures-ws" [ref=e1067]
+                      - cell "9" [ref=e1068]
+                      - cell "Mixed" [ref=e1069]
+                      - cell "Futures WebSocket streaming" [ref=e1070]
+                    - row "websocket 15 Mixed Spot WebSocket v2 streaming and request/response" [ref=e1071]:
+                      - cell "websocket" [ref=e1072]
+                      - cell "15" [ref=e1073]
+                      - cell "Mixed" [ref=e1074]
+                      - cell "Spot WebSocket v2 streaming and request/response" [ref=e1075]
+                    - row "paper 10 No Paper trading simulation with live prices" [ref=e1076]:
+                      - cell "paper" [ref=e1077]
+                      - cell "10" [ref=e1078]
+                      - cell "No" [ref=e1079]
+                      - cell "Paper trading simulation with live prices" [ref=e1080]
+                    - row "auth 4 No Credential management" [ref=e1081]:
+                      - cell "auth" [ref=e1082]
+                      - cell "4" [ref=e1083]
+                      - cell "No" [ref=e1084]
+                      - cell "Credential management" [ref=e1085]
+                    - row "utility 2 No Interactive setup and REPL shell" [ref=e1086]:
+                      - cell "utility" [ref=e1087]
+                      - cell "2" [ref=e1088]
+                      - cell "No" [ref=e1089]
+                      - cell "Interactive setup and REPL shell" [ref=e1090]
+                - paragraph [ref=e1091]:
+                  - text: 32 commands are marked
+                  - code [ref=e1092]: dangerous
+                  - text: (orders, withdrawals, transfers, cancel-all, staking). The authoritative list is the
+                  - code [ref=e1093]: dangerous
+                  - text: field in
+                  - link "agents/tool-catalog.json" [ref=e1094] [cursor=pointer]:
+                    - /url: /krakenfx/kraken-cli/blob/main/agents/tool-catalog.json
+                  - text: .
+                - group [ref=e1095]:
+                  - generic "Full command reference" [ref=e1096] [cursor=pointer]
+                - generic [ref=e1097]:
+                  - heading "Paper Trading" [level=2] [ref=e1098]
+                  - 'link "Permalink: Paper Trading" [ref=e1099] [cursor=pointer]':
+                    - /url: "#paper-trading"
+                    - img [ref=e1100]
+                - paragraph [ref=e1102]:
+                  - text: Paper trading provides a safe sandbox for testing trading logic against live Kraken prices. No API keys, no account, no real money. The command interface mirrors live trading exactly; agents can switch between paper and live by changing the command prefix (
+                  - code [ref=e1103]: kraken paper buy
+                  - text: vs
+                  - code [ref=e1104]: kraken order buy
+                  - text: ).
+                - paragraph [ref=e1105]:
+                  - strong [ref=e1106]: "Agent pattern:"
+                - generic [ref=e1107]:
+                  - generic [ref=e1108]: kraken paper init --balance 10000 -o json kraken paper buy BTCUSD 0.01 -o json kraken paper sell BTCUSD 0.005 --type limit --price 70000 -o json kraken paper status -o json kraken paper reset -o json
+                  - button "Copy" [ref=e1110] [cursor=pointer]:
+                    - img [ref=e1111]
+                - paragraph [ref=e1114]:
+                  - strong [ref=e1115]: "Human pattern:"
+                - generic [ref=e1116]:
+                  - generic [ref=e1117]: kraken paper init --balance 5000 --currency EUR kraken paper buy BTCUSD 0.01 kraken paper balance kraken paper status kraken paper orders kraken paper history kraken paper reset
+                  - button "Copy" [ref=e1119] [cursor=pointer]:
+                    - img [ref=e1120]
+                - table [ref=e1124]:
+                  - rowgroup [ref=e1125]:
+                    - row "Command Description" [ref=e1126]:
+                      - columnheader "Command" [ref=e1127]
+                      - columnheader "Description" [ref=e1128]
+                  - rowgroup [ref=e1129]:
+                    - row "kraken paper init [--balance 10000] [--currency USD] Initialize paper account" [ref=e1130]:
+                      - cell "kraken paper init [--balance 10000] [--currency USD]" [ref=e1131]:
+                        - code [ref=e1132]: kraken paper init [--balance 10000] [--currency USD]
+                      - cell "Initialize paper account" [ref=e1133]
+                    - row "kraken paper reset Reconcile pending orders, then reset" [ref=e1134]:
+                      - cell "kraken paper reset" [ref=e1135]:
+                        - code [ref=e1136]: kraken paper reset
+                      - cell "Reconcile pending orders, then reset" [ref=e1137]
+                    - row "kraken paper balance All balances (total, reserved, available)" [ref=e1138]:
+                      - cell "kraken paper balance" [ref=e1139]:
+                        - code [ref=e1140]: kraken paper balance
+                      - cell "All balances (total, reserved, available)" [ref=e1141]
+                    - row "kraken paper buy <PAIR> <VOL> [--type limit --price P] Paper buy (market or limit)" [ref=e1142]:
+                      - cell "kraken paper buy <PAIR> <VOL> [--type limit --price P]" [ref=e1143]:
+                        - code [ref=e1144]: kraken paper buy <PAIR> <VOL> [--type limit --price P]
+                      - cell "Paper buy (market or limit)" [ref=e1145]
+                    - row "kraken paper sell <PAIR> <VOL> [--type limit --price P] Paper sell (market or limit)" [ref=e1146]:
+                      - cell "kraken paper sell <PAIR> <VOL> [--type limit --price P]" [ref=e1147]:
+                        - code [ref=e1148]: kraken paper sell <PAIR> <VOL> [--type limit --price P]
+                      - cell "Paper sell (market or limit)" [ref=e1149]
+                    - row "kraken paper orders Open limit orders" [ref=e1150]:
+                      - cell "kraken paper orders" [ref=e1151]:
+                        - code [ref=e1152]: kraken paper orders
+                      - cell "Open limit orders" [ref=e1153]
+                    - row "kraken paper cancel <ORDER_ID> Cancel a limit order" [ref=e1154]:
+                      - cell "kraken paper cancel <ORDER_ID>" [ref=e1155]:
+                        - code [ref=e1156]: kraken paper cancel <ORDER_ID>
+                      - cell "Cancel a limit order" [ref=e1157]
+                    - row "kraken paper cancel-all Cancel all limit orders" [ref=e1158]:
+                      - cell "kraken paper cancel-all" [ref=e1159]:
+                        - code [ref=e1160]: kraken paper cancel-all
+                      - cell "Cancel all limit orders" [ref=e1161]
+                    - row "kraken paper history Filled trade history" [ref=e1162]:
+                      - cell "kraken paper history" [ref=e1163]:
+                        - code [ref=e1164]: kraken paper history
+                      - cell "Filled trade history" [ref=e1165]
+                    - row "kraken paper status Portfolio value, unrealized P&L, trade count" [ref=e1166]:
+                      - cell "kraken paper status" [ref=e1167]:
+                        - code [ref=e1168]: kraken paper status
+                      - cell "Portfolio value, unrealized P&L, trade count" [ref=e1169]
+                - paragraph [ref=e1170]: Prices come from the public Kraken Ticker API (no auth needed). A 0.26% taker fee (Kraken Starter tier default) is applied to all fills. Limit orders fill at the limit price when the live market crosses the order price.
+                - paragraph [ref=e1171]:
+                  - text: All output is labeled
+                  - code [ref=e1172]: "[PAPER]"
+                  - text: in table mode and includes
+                  - code [ref=e1173]: "\"mode\": \"paper\""
+                  - text: in JSON mode.
+                - generic [ref=e1174]:
+                  - heading "Examples" [level=2] [ref=e1175]
+                  - 'link "Permalink: Examples" [ref=e1176] [cursor=pointer]':
+                    - /url: "#examples"
+                    - img [ref=e1177]
+                - generic [ref=e1179]:
+                  - heading "Conditional order based on live price" [level=3] [ref=e1180]
+                  - 'link "Permalink: Conditional order based on live price" [ref=e1181] [cursor=pointer]':
+                    - /url: "#conditional-order-based-on-live-price"
+                    - img [ref=e1182]
+                - generic [ref=e1184]:
+                  - generic [ref=e1185]:
+                    - text: PRICE=
+                    - generic [ref=e1186]:
+                      - text: $(kraken ticker BTCUSD -o json | jq -r
+                      - generic [ref=e1187]: "'.[].c[0]'"
+                      - text: )
+                    - text: kraken order buy BTCUSD 0.001 --type limit --price
+                    - generic [ref=e1188]: "\"$PRICE\""
+                    - text: "-o json"
+                  - button "Copy" [ref=e1190] [cursor=pointer]:
+                    - img [ref=e1191]
+                - generic [ref=e1194]:
+                  - heading "Portfolio rebalance check" [level=3] [ref=e1195]
+                  - 'link "Permalink: Portfolio rebalance check" [ref=e1196] [cursor=pointer]':
+                    - /url: "#portfolio-rebalance-check"
+                    - img [ref=e1197]
+                - generic [ref=e1199]:
+                  - generic [ref=e1200]:
+                    - text: BTC=
+                    - generic [ref=e1201]:
+                      - text: $(kraken balance -o json | jq -r
+                      - generic [ref=e1202]: "'.BTC // \"0\"'"
+                      - text: )
+                    - text: if [
+                    - generic [ref=e1203]:
+                      - text: "\""
+                      - generic [ref=e1204]:
+                        - text: $(echo
+                        - generic [ref=e1205]: "\"$BTC > 0.001\""
+                        - text: "| bc)"
+                      - text: "\""
+                    - text: "-eq 1 ]; then kraken order sell BTCUSD 0.001 --type market -o json fi"
+                  - button "Copy" [ref=e1207] [cursor=pointer]:
+                    - img [ref=e1208]
+                - generic [ref=e1211]:
+                  - heading "Real-time price stream" [level=3] [ref=e1212]
+                  - 'link "Permalink: Real-time price stream" [ref=e1213] [cursor=pointer]':
+                    - /url: "#real-time-price-stream"
+                    - img [ref=e1214]
+                - generic [ref=e1216]:
+                  - generic [ref=e1217]:
+                    - text: kraken ws ticker BTC/USD -o json | while read -r line; do LAST=
+                    - generic [ref=e1218]:
+                      - text: $(echo
+                      - generic [ref=e1219]: "\"$line\""
+                      - text: "| jq -r"
+                      - generic [ref=e1220]: "'.data[0].last // empty'"
+                      - text: )
+                    - text: "[ -n"
+                    - generic [ref=e1221]: "\"$LAST\""
+                    - text: "] && echo"
+                    - generic [ref=e1222]: "\"BTC: $LAST\""
+                    - text: done
+                  - button "Copy" [ref=e1224] [cursor=pointer]:
+                    - img [ref=e1225]
+                - generic [ref=e1228]:
+                  - heading "Stream multiple tickers" [level=3] [ref=e1229]
+                  - 'link "Permalink: Stream multiple tickers" [ref=e1230] [cursor=pointer]':
+                    - /url: "#stream-multiple-tickers"
+                    - img [ref=e1231]
+                - generic [ref=e1233]:
+                  - generic [ref=e1234]: kraken ws ticker BTC/USD ETH/USD SOL/USD -o json
+                  - button "Copy" [ref=e1236] [cursor=pointer]:
+                    - img [ref=e1237]
+                - generic [ref=e1240]:
+                  - heading "Dead man's switch" [level=3] [ref=e1241]
+                  - 'link "Permalink: Dead man''s switch" [ref=e1242] [cursor=pointer]':
+                    - /url: "#dead-mans-switch"
+                    - img [ref=e1243]
+                - generic [ref=e1245]:
+                  - generic [ref=e1246]: kraken order cancel-after 60
+                  - button "Copy" [ref=e1248] [cursor=pointer]:
+                    - img [ref=e1249]
+                - paragraph [ref=e1252]: Cancels all open orders if the CLI does not reset the timer within 60 seconds.
+                - generic [ref=e1253]:
+                  - heading "Agent Skills" [level=2] [ref=e1254]
+                  - 'link "Permalink: Agent Skills" [ref=e1255] [cursor=pointer]':
+                    - /url: "#agent-skills"
+                    - img [ref=e1256]
+                - paragraph [ref=e1258]:
+                  - text: Ships with 50 agent skills covering trading strategies, market analysis, and portfolio management. See the full
+                  - link "Skills Index" [ref=e1259] [cursor=pointer]:
+                    - /url: /krakenfx/kraken-cli/blob/main/skills/INDEX.md
+                  - text: .
+                - group [ref=e1260]:
+                  - generic "Troubleshooting" [ref=e1261] [cursor=pointer]
+                - group [ref=e1262]:
+                  - generic "Architecture" [ref=e1263] [cursor=pointer]
+                - generic [ref=e1264]:
+                  - heading "Development" [level=2] [ref=e1265]
+                  - 'link "Permalink: Development" [ref=e1266] [cursor=pointer]':
+                    - /url: "#development"
+                    - img [ref=e1267]
+                - generic [ref=e1269]:
+                  - generic [ref=e1270]:
+                    - text: cargo build
+                    - generic [ref=e1271]: "# dev build"
+                    - text: cargo test
+                    - generic [ref=e1272]: "# run tests"
+                    - text: cargo clippy -- -D warnings
+                    - generic [ref=e1273]: "# lint"
+                  - button "Copy" [ref=e1275] [cursor=pointer]:
+                    - img [ref=e1276]
+                - generic [ref=e1279]:
+                  - heading "License & Disclaimer" [level=2] [ref=e1280]
+                  - 'link "Permalink: License & Disclaimer" [ref=e1281] [cursor=pointer]':
+                    - /url: "#license--disclaimer"
+                    - img [ref=e1282]
+                - paragraph [ref=e1284]:
+                  - text: MIT. See
+                  - link "LICENSE" [ref=e1285] [cursor=pointer]:
+                    - /url: /krakenfx/kraken-cli/blob/main/LICENSE
+                  - text: .
+                - paragraph [ref=e1286]:
+                  - text: This is experimental software. Commands interact with the live Kraken exchange and can result in real financial transactions. Orders, withdrawals, and transfers are irreversible once processed. The authors accept no liability for financial losses. See
+                  - link "DISCLAIMER.md" [ref=e1287] [cursor=pointer]:
+                    - /url: /krakenfx/kraken-cli/blob/main/DISCLAIMER.md
+                  - text: for full terms.
+        - generic [ref=e1291]:
+          - generic [ref=e1294]:
+            - heading "About" [level=2] [ref=e1295]
+            - paragraph [ref=e1296]: The first AI-native CLI for trading crypto, stocks, forex, and derivatives.
+            - heading "Topics" [level=3] [ref=e1297]
+            - generic [ref=e1299]:
+              - link "cli" [ref=e1300] [cursor=pointer]:
+                - /url: /topics/cli
+              - link "crypto" [ref=e1301] [cursor=pointer]:
+                - /url: /topics/crypto
+              - link "trading" [ref=e1302] [cursor=pointer]:
+                - /url: /topics/trading
+              - link "mcp" [ref=e1303] [cursor=pointer]:
+                - /url: /topics/mcp
+              - link "kraken" [ref=e1304] [cursor=pointer]:
+                - /url: /topics/kraken
+            - heading "Resources" [level=3] [ref=e1305]
+            - link "Readme" [ref=e1307] [cursor=pointer]:
+              - /url: "#readme-ov-file"
+              - img [ref=e1308]
+              - text: Readme
+            - heading "License" [level=3] [ref=e1310]
+            - link "MIT license" [ref=e1312] [cursor=pointer]:
+              - /url: "#MIT-1-ov-file"
+              - img [ref=e1313]
+              - text: MIT license
+            - link "Activity" [ref=e1316] [cursor=pointer]:
+              - /url: /krakenfx/kraken-cli/activity
+              - img [ref=e1317]
+              - text: Activity
+            - link "Custom properties" [ref=e1320] [cursor=pointer]:
+              - /url: /krakenfx/kraken-cli/custom-properties
+              - img [ref=e1321]
+              - text: Custom properties
+            - heading "Stars" [level=3] [ref=e1323]
+            - link "75 stars" [ref=e1325] [cursor=pointer]:
+              - /url: /krakenfx/kraken-cli/stargazers
+              - img [ref=e1326]
+              - strong [ref=e1328]: "75"
+              - text: stars
+            - heading "Watchers" [level=3] [ref=e1329]
+            - link "1 watching" [ref=e1331] [cursor=pointer]:
+              - /url: /krakenfx/kraken-cli/watchers
+              - img [ref=e1332]
+              - strong [ref=e1334]: "1"
+              - text: watching
+            - heading "Forks" [level=3] [ref=e1335]
+            - link "10 forks" [ref=e1337] [cursor=pointer]:
+              - /url: /krakenfx/kraken-cli/forks
+              - img [ref=e1338]
+              - strong [ref=e1340]: "10"
+              - text: forks
+            - link "Report repository" [ref=e1342] [cursor=pointer]:
+              - /url: /contact/report-content?content_url=https%3A%2F%2Fgithub.com%2Fkrakenfx%2Fkraken-cli&report=krakenfx+%28user%29
+          - generic [ref=e1344]:
+            - heading "Releases 3" [level=2] [ref=e1345]:
+              - link "Releases 3" [ref=e1346] [cursor=pointer]:
+                - /url: /krakenfx/kraken-cli/releases
+                - text: Releases
+                - generic "3" [ref=e1347]
+            - link "v0.2.1 Latest Mar 19, 20262 hours ago" [ref=e1348] [cursor=pointer]:
+              - /url: /krakenfx/kraken-cli/releases/tag/v0.2.1
+              - img [ref=e1349]
+              - generic [ref=e1351]:
+                - generic [ref=e1352]:
+                  - generic [ref=e1353]: v0.2.1
+                  - 'generic "Label: Latest" [ref=e1354]': Latest
+                - generic [ref=e1355]: Mar 19, 20262 hours ago
+            - link "+ 2 releases" [ref=e1357] [cursor=pointer]:
+              - /url: /krakenfx/kraken-cli/releases
+          - generic [ref=e1359]:
+            - heading "Packages" [level=2] [ref=e1360]:
+              - link "Packages" [ref=e1361] [cursor=pointer]:
+                - /url: /orgs/krakenfx/packages?repo_name=kraken-cli
+            - generic [ref=e1362]: No packages published
+          - generic [ref=e1364]:
+            - heading "Contributors 3" [level=2] [ref=e1365]:
+              - link "Contributors 3" [ref=e1366] [cursor=pointer]:
+                - /url: /krakenfx/kraken-cli/graphs/contributors
+                - text: Contributors
+                - generic "3" [ref=e1367]
+            - list [ref=e1368]:
+              - listitem [ref=e1369]:
+                - link "@agent-smith-k" [ref=e1370] [cursor=pointer]:
+                  - /url: https://github.com/agent-smith-k
+                  - img "@agent-smith-k" [ref=e1371]
+                - link "agent-smith-k Agent Smith" [ref=e1373] [cursor=pointer]:
+                  - /url: https://github.com/agent-smith-k
+                  - strong [ref=e1374]: agent-smith-k
+                  - text: Agent Smith
+              - listitem [ref=e1375]:
+                - link "@jkosik-832gh8qwebc8" [ref=e1376] [cursor=pointer]:
+                  - /url: https://github.com/jkosik-832gh8qwebc8
+                  - img "@jkosik-832gh8qwebc8" [ref=e1377]
+                - link "jkosik-832gh8qwebc8" [ref=e1379] [cursor=pointer]:
+                  - /url: https://github.com/jkosik-832gh8qwebc8
+                  - strong [ref=e1380]: jkosik-832gh8qwebc8
+              - listitem [ref=e1381]:
+                - link "@secops-dso" [ref=e1382] [cursor=pointer]:
+                  - /url: https://github.com/secops-dso
+                  - img "@secops-dso" [ref=e1383]
+                - link "secops-dso" [ref=e1385] [cursor=pointer]:
+                  - /url: https://github.com/secops-dso
+                  - strong [ref=e1386]: secops-dso
+          - generic [ref=e1388]:
+            - heading "Languages" [level=2] [ref=e1389]
+            - list [ref=e1394]:
+              - listitem [ref=e1395]:
+                - link "Rust 98.5%" [ref=e1396] [cursor=pointer]:
+                  - /url: /krakenfx/kraken-cli/search?l=rust
+                  - img [ref=e1397]
+                  - generic [ref=e1399]: Rust
+                  - generic [ref=e1400]: 98.5%
+              - listitem [ref=e1401]:
+                - link "Shell 1.5%" [ref=e1402] [cursor=pointer]:
+                  - /url: /krakenfx/kraken-cli/search?l=shell
+                  - img [ref=e1403]
+                  - generic [ref=e1405]: Shell
+                  - generic [ref=e1406]: 1.5%
+  - contentinfo [ref=e1408]:
+    - heading "Footer" [level=2] [ref=e1409]
+    - generic [ref=e1410]:
+      - generic [ref=e1411]:
+        - link "GitHub Homepage" [ref=e1412] [cursor=pointer]:
+          - /url: https://github.com
+          - img [ref=e1413]
+        - generic [ref=e1415]: © 2026 GitHub, Inc.
+      - navigation "Footer" [ref=e1416]:
+        - heading "Footer navigation" [level=3] [ref=e1417]
+        - list "Footer navigation" [ref=e1418]:
+          - listitem [ref=e1419]:
+            - link "Terms" [ref=e1420] [cursor=pointer]:
+              - /url: https://docs.github.com/site-policy/github-terms/github-terms-of-service
+          - listitem [ref=e1421]:
+            - link "Privacy" [ref=e1422] [cursor=pointer]:
+              - /url: https://docs.github.com/site-policy/privacy-policies/github-privacy-statement
+          - listitem [ref=e1423]:
+            - link "Security" [ref=e1424] [cursor=pointer]:
+              - /url: https://github.com/security
+          - listitem [ref=e1425]:
+            - link "Status" [ref=e1426] [cursor=pointer]:
+              - /url: https://www.githubstatus.com/
+          - listitem [ref=e1427]:
+            - link "Community" [ref=e1428] [cursor=pointer]:
+              - /url: https://github.community/
+          - listitem [ref=e1429]:
+            - link "Docs" [ref=e1430] [cursor=pointer]:
+              - /url: https://docs.github.com/
+          - listitem [ref=e1431]:
+            - link "Contact" [ref=e1432] [cursor=pointer]:
+              - /url: https://support.github.com?tags=dotcom-footer
+          - listitem [ref=e1433]:
+            - button "Manage cookies" [ref=e1435] [cursor=pointer]
+          - listitem [ref=e1436]:
+            - button "Do not share my personal information" [ref=e1438] [cursor=pointer]

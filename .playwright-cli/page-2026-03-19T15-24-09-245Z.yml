@@ -1,0 +1,102 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - link "WolfPack" [ref=e5] [cursor=pointer]:
+          - /url: /
+          - img [ref=e7]
+          - generic [ref=e11]: WolfPack
+        - generic [ref=e12]:
+          - link "Dashboard" [active] [ref=e13] [cursor=pointer]:
+            - /url: /
+          - link "Intelligence" [ref=e14] [cursor=pointer]:
+            - /url: /intelligence
+          - link "Trading" [ref=e15] [cursor=pointer]:
+            - /url: /trading
+          - link "Portfolio" [ref=e16] [cursor=pointer]:
+            - /url: /portfolio
+          - link "Backtest" [ref=e17] [cursor=pointer]:
+            - /url: /backtest
+          - link "Auto-Bot" [ref=e18] [cursor=pointer]:
+            - /url: /auto-bot
+          - link "LP Pools" [ref=e19] [cursor=pointer]:
+            - /url: /pools
+          - link "Settings" [ref=e20] [cursor=pointer]:
+            - /url: /settings
+      - generic [ref=e23]:
+        - button "Hyperliquid" [ref=e24] [cursor=pointer]
+        - button "dYdX" [ref=e25] [cursor=pointer]
+        - button "Kraken" [ref=e26] [cursor=pointer]
+  - main [ref=e27]:
+    - generic [ref=e704]:
+      - generic [ref=e705]:
+        - generic [ref=e706]:
+          - paragraph [ref=e707]: Portfolio Value
+          - paragraph [ref=e708]: $10,015USD
+        - generic [ref=e709]:
+          - paragraph [ref=e710]: Unrealized P&L
+          - paragraph [ref=e711]: +$0.00
+        - generic [ref=e712]:
+          - paragraph [ref=e713]: Open Positions
+          - paragraph [ref=e714]: "0"
+        - generic [ref=e715]:
+          - paragraph [ref=e716]: Watchlist
+          - paragraph [ref=e717]: 1symbols
+      - generic [ref=e718]:
+        - generic [ref=e719]:
+          - generic [ref=e722]: "Active: Hyperliquid"
+          - generic [ref=e723]: Connected
+        - generic [ref=e724]:
+          - generic [ref=e725]: BTC-USD
+          - generic [ref=e726]:
+            - generic [ref=e727]: $69,298
+            - generic [ref=e728]: "-3.00%"
+        - generic [ref=e729]:
+          - generic [ref=e730]: ETH-USD
+          - generic [ref=e731]:
+            - generic [ref=e732]: $2,115
+            - generic [ref=e733]: "-3.28%"
+      - generic [ref=e734]:
+        - generic [ref=e735]:
+          - generic [ref=e736]:
+            - heading "Intelligence Brief" [level=2] [ref=e739]
+            - link "View all" [ref=e740] [cursor=pointer]:
+              - /url: /intelligence
+          - generic [ref=e741]:
+            - generic [ref=e742]:
+              - generic [ref=e743]:
+                - generic "The Quant" [ref=e744]:
+                  - img [ref=e746]
+                - generic [ref=e766]: The Quant
+              - generic [ref=e767]: 6:55:16 PM
+            - generic [ref=e768]:
+              - generic [ref=e769]:
+                - generic "The Snoop" [ref=e770]:
+                  - img [ref=e772]
+                - generic [ref=e796]: The Snoop
+              - generic [ref=e797]: 6:54:09 PM
+            - generic [ref=e798]:
+              - generic [ref=e799]:
+                - generic "The Sage" [ref=e800]:
+                  - img [ref=e802]
+                - generic [ref=e821]: The Sage
+              - generic [ref=e822]: 6:54:19 PM
+            - generic [ref=e823]:
+              - generic [ref=e824]:
+                - generic "The Brief" [ref=e825]:
+                  - img [ref=e827]
+                - generic [ref=e847]: The Brief
+              - generic [ref=e848]: 6:55:33 PM
+          - generic [ref=e849]:
+            - paragraph [ref=e850]: The Brief
+            - paragraph [ref=e851]: No trade — conviction below 60. Quant and Sage bearish, Snoop contrarian but unconfirmed. Wait for break below 70,730 or panic exhaustion bounce before considering entry.
+        - generic [ref=e852]:
+          - generic [ref=e853]:
+            - heading "Trade Recommendations" [level=2] [ref=e856]
+            - link "Trade" [ref=e857] [cursor=pointer]:
+              - /url: /trading
+          - generic [ref=e858]:
+            - paragraph [ref=e859]: No pending recommendations
+            - paragraph [ref=e860]: Run intelligence to generate trade signals
+  - alert [ref=e103]
+  - generic [ref=e506]: $10,000

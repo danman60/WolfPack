@@ -1,0 +1,612 @@
+{
+  "title": "\ud83d\udca5Reacting to Tom Hougaard\u2019s School Run Strategy \u2013 Genius or Gamble?",
+  "url": "https://www.youtube.com/watch?v=Si7J5VG3lYQ",
+  "project": "WolfPack",
+  "model": "small",
+  "language": "en",
+  "language_probability": 1.0,
+  "duration_seconds": 840.1,
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 7.0,
+      "text": "In this video, I break down Tom Hogaard's famous school run strategy, a trading approach"
+    },
+    {
+      "start": 7.0,
+      "end": 13.4,
+      "text": "designed around the early morning volatility, often near the London Open. I'll explain"
+    },
+    {
+      "start": 13.4,
+      "end": 20.2,
+      "text": "how it works, the rules behind it, and test it out on real charts to see if it still holds"
+    },
+    {
+      "start": 20.2,
+      "end": 26.6,
+      "text": "weight today in the forex market. But more importantly, I'm going to show you how I have"
+    },
+    {
+      "start": 26.6,
+      "end": 33.1,
+      "text": "simplified it and optimized it for better performance, so stay tuned for that. Whether"
+    },
+    {
+      "start": 33.1,
+      "end": 38.7,
+      "text": "you're new to Hogaard's methods or you've tried this one yourself, this video will provide a"
+    },
+    {
+      "start": 38.7,
+      "end": 45.7,
+      "text": "different and fresh approach to this strategy, and we will look at some examples on the charts."
+    },
+    {
+      "start": 45.7,
+      "end": 51.1,
+      "text": "Don't forget to subscribe and like, and please drop your thoughts in the comments. Let us know"
+    },
+    {
+      "start": 51.1,
+      "end": 56.9,
+      "text": "if you've traded this strategy before. So to start, let's take a look at the strategy to"
+    },
+    {
+      "start": 56.9,
+      "end": 63.7,
+      "text": "better understand it. Okay, so let's listen to Tom Hogaard explain his school run strategy"
+    },
+    {
+      "start": 63.7,
+      "end": 75.0,
+      "text": "in his own words. Okay, normal school run theory dictates that when we are trading the DAX index"
+    },
+    {
+      "start": 75.5,
+      "end": 82.7,
+      "text": "on a 15 minute chart, that 15 minute chart, this bar that you're seeing here, that's the first"
+    },
+    {
+      "start": 82.7,
+      "end": 90.2,
+      "text": "15 minute bar in the DAX. And I developed the school run strategy around the idea that the market"
+    },
+    {
+      "start": 90.2,
+      "end": 96.2,
+      "text": "will come to work in the morning, and there will be people who need to get things done quickly."
+    },
+    {
+      "start": 96.2,
+      "end": 103.0,
+      "text": "It could be they need to buy or they need to sell. So oftentimes, the first 30 minutes aren't"
+    },
+    {
+      "start": 103.0,
+      "end": 110.0,
+      "text": "indicative of the true trend of the day. And so I developed the strategy based on observation,"
+    },
+    {
+      "start": 110.0,
+      "end": 116.4,
+      "text": "purely observation going, I would like to be looking at the market after 30 minutes of trading."
+    },
+    {
+      "start": 116.4,
+      "end": 124.6,
+      "text": "Specifically, I would like to be a buyer on a break of that second 15 minute candle. So I stuck to"
+    },
+    {
+      "start": 124.6,
+      "end": 132.1,
+      "text": "the second 15 minute candle as my tool, meaning that I want to be buying above and shorting below."
+    },
+    {
+      "start": 132.6,
+      "end": 138.3,
+      "text": "Okay, so pretty self-explanatory, right? He's waiting for the markets to open at 8am,"
+    },
+    {
+      "start": 138.3,
+      "end": 144.6,
+      "text": "and then he waits for the first 15 minute candle, and then the second 15 minute candle."
+    },
+    {
+      "start": 144.6,
+      "end": 151.4,
+      "text": "So basically, he's interested in trading after the first half hour of the open. He trades the DAX,"
+    },
+    {
+      "start": 151.4,
+      "end": 157.4,
+      "text": "we're actually going to use the pound US dollar. And it's as simple as this, he buys on the break"
+    },
+    {
+      "start": 157.4,
+      "end": 165.0,
+      "text": "of this candle, or he sells on the break of the low of this candle. All right, but let's carry on"
+    },
+    {
+      "start": 165.0,
+      "end": 174.6,
+      "text": "and listen to the rest of the video and shorting below. So the conventional school run theory says"
+    },
+    {
+      "start": 174.6,
+      "end": 182.6,
+      "text": "you want to be a buyer above that school run bar. And the school run bar is the second 15 minute"
+    },
+    {
+      "start": 182.6,
+      "end": 190.2,
+      "text": "candle. You buy above or you sell short below. A typical breakout strategy, nothing more to it"
+    },
+    {
+      "start": 190.2,
+      "end": 198.2,
+      "text": "than that. And for a long time, that was the only thing I did. And it worked extremely well. I made"
+    },
+    {
+      "start": 198.2,
+      "end": 206.2,
+      "text": "significant sums of money trading school run. However, whether it was a mean reversion taking"
+    },
+    {
+      "start": 206.2,
+      "end": 214.8,
+      "text": "place, or it was just my time to lose, but there became more and more frequently times when the"
+    },
+    {
+      "start": 214.8,
+      "end": 222.0,
+      "text": "market would go above the school run, the second 15 minute high, and it would trigger me long,"
+    },
+    {
+      "start": 222.0,
+      "end": 226.7,
+      "text": "and then they would reverse or vice versa, I would be triggered short, and then it would"
+    },
+    {
+      "start": 226.7,
+      "end": 233.8,
+      "text": "reverse back into the range and stop me out on the other side. And so I began as I think any trader"
+    },
+    {
+      "start": 233.8,
+      "end": 241.6,
+      "text": "who is worth their their pinch of salt, I began to do serious work and contemplation on, well,"
+    },
+    {
+      "start": 241.6,
+      "end": 249.5,
+      "text": "under what circumstances is it that my school run succeeds? And under what circumstances do they fail?"
+    },
+    {
+      "start": 250.9,
+      "end": 256.0,
+      "text": "I'm going to stop it there, guys, because he actually goes on to talk about the Asian range,"
+    },
+    {
+      "start": 256.0,
+      "end": 262.6,
+      "text": "and he only trades above the Asian range or below the Asian range. But without optimized"
+    },
+    {
+      "start": 262.6,
+      "end": 268.5,
+      "text": "strategy that I'm about to show you guys, we don't need to worry about that. And he also explains"
+    },
+    {
+      "start": 268.5,
+      "end": 275.0,
+      "text": "how we had some candles once he entered close back into the candle and eventually take him out."
+    },
+    {
+      "start": 275.0,
+      "end": 280.1,
+      "text": "But again, we've optimized this strategy. So we don't need to worry about that. And we've"
+    },
+    {
+      "start": 280.1,
+      "end": 285.4,
+      "text": "actually simplified it guys. So let's get into it. Traders, before I show you our optimized"
+    },
+    {
+      "start": 285.4,
+      "end": 290.5,
+      "text": "version of this strategy, please don't forget to subscribe to the channel, smash the notification"
+    },
+    {
+      "start": 290.5,
+      "end": 296.1,
+      "text": "button and please smash the like button. Also, please don't forget to join our free,"
+    },
+    {
+      "start": 296.1,
+      "end": 302.2,
+      "text": "this called channel, you can join talk to like minded traders, share knowledge, trade ideas,"
+    },
+    {
+      "start": 302.2,
+      "end": 307.3,
+      "text": "please come join our community. Also, guys, if you want access to all of our premium trading"
+    },
+    {
+      "start": 307.3,
+      "end": 313.8,
+      "text": "education, including the course, the mentorship program, the VIP Academy and the price action"
+    },
+    {
+      "start": 313.8,
+      "end": 322.5,
+      "text": "indicator, then go check out our website, www.simply-4x.com. All the information are in the"
+    },
+    {
+      "start": 322.5,
+      "end": 328.1,
+      "text": "links below. Also, guys, please leave a comment if you enjoyed this strategy or you've traded it"
+    },
+    {
+      "start": 328.1,
+      "end": 334.1,
+      "text": "before, we would love to hear about it. Alright, guys, let's get into the strategy. So Thomas was"
+    },
+    {
+      "start": 334.1,
+      "end": 340.3,
+      "text": "using the DAX and he was using the 15 minute chart, we're actually going to use pound US dollar and"
+    },
+    {
+      "start": 340.4,
+      "end": 346.9,
+      "text": "the 30 minute chart. Thomas does actually explain how he uses that strategy with pound US dollar"
+    },
+    {
+      "start": 346.9,
+      "end": 353.8,
+      "text": "and euro US dollar and euro pound. But we found pound US dollar gave us the best results. Now,"
+    },
+    {
+      "start": 353.8,
+      "end": 360.8,
+      "text": "let's understand the criteria for the entry. Now, it's still looking at the London Open and"
+    },
+    {
+      "start": 360.8,
+      "end": 367.9,
+      "text": "taking advantage of that initial volume and that push we see in the market. But that's exactly what"
+    },
+    {
+      "start": 367.9,
+      "end": 374.6,
+      "text": "we need to see that push, right? If we don't see it, we don't trade. So let me explain the rules."
+    },
+    {
+      "start": 375.4,
+      "end": 381.1,
+      "text": "Now, this is the 30 minute chart. So we need to find the 8am candle. And as you can see here,"
+    },
+    {
+      "start": 381.1,
+      "end": 388.6,
+      "text": "we're going to start on Friday and work our way back. So this is Friday and this is the 8am candle."
+    },
+    {
+      "start": 390.0,
+      "end": 397.5,
+      "text": "And then the rules are as simple as this. We are looking for the next 30 minute candle,"
+    },
+    {
+      "start": 397.5,
+      "end": 405.8,
+      "text": "the body of the candle to close above the previous high of the previous candle,"
+    },
+    {
+      "start": 405.8,
+      "end": 413.0,
+      "text": "or the low of the previous candle. And then we can enter. It might happen on the next candle."
+    },
+    {
+      "start": 413.0,
+      "end": 419.7,
+      "text": "It may be the following candle or the one after that. But it must happen before 10am."
+    },
+    {
+      "start": 420.2,
+      "end": 425.7,
+      "text": "All right. So to understand these rules, let me just go for a few examples, right?"
+    },
+    {
+      "start": 425.7,
+      "end": 432.7,
+      "text": "So we've pinpointed our 8am candle. We just let that finish, right? We let it finish."
+    },
+    {
+      "start": 432.7,
+      "end": 438.6,
+      "text": "And then we see what happens afterwards. Now, as you can see, literally the next candle,"
+    },
+    {
+      "start": 439.5,
+      "end": 448.9,
+      "text": "the body of the candle closes below the low of that candle. So that is our criteria met."
+    },
+    {
+      "start": 448.9,
+      "end": 456.2,
+      "text": "And we can start selling this pair, right? We put our stop three pips above the high of this"
+    },
+    {
+      "start": 456.2,
+      "end": 462.6,
+      "text": "candle. Okay, so we start selling here on the close of the candle. Our stop loss is up here."
+    },
+    {
+      "start": 462.6,
+      "end": 468.3,
+      "text": "And we're looking for one is to one, and then leave some profits to run. As you can see,"
+    },
+    {
+      "start": 468.3,
+      "end": 473.9,
+      "text": "a very nice trade, right? So we're just going to go along and look at a few examples of this."
+    },
+    {
+      "start": 474.7,
+      "end": 480.5,
+      "text": "Right, let's find our next 8am candle. Here we are, this big red one right here."
+    },
+    {
+      "start": 481.8,
+      "end": 488.2,
+      "text": "Okay, so this is a good example. So this is our 8am candle right here."
+    },
+    {
+      "start": 489.2,
+      "end": 492.3,
+      "text": "And remember what we're looking for, we're looking for the break"
+    },
+    {
+      "start": 493.3,
+      "end": 499.1,
+      "text": "of the high or the low of that candle or the previous candle. Now, this candle,"
+    },
+    {
+      "start": 499.7,
+      "end": 506.6,
+      "text": "the body of the candle doesn't break below this low. Okay, it closes back in, so no trade."
+    },
+    {
+      "start": 507.3,
+      "end": 514.2,
+      "text": "So we can look at the next candle and this candle only just, but the body of this candle"
+    },
+    {
+      "start": 514.2,
+      "end": 520.9,
+      "text": "breaks the low of this candle. So we can take the trade, then it doesn't have to be the first"
+    },
+    {
+      "start": 520.9,
+      "end": 527.4,
+      "text": "candle. It can be the next candle or the following candle. But remember, it must happen before 10am."
+    },
+    {
+      "start": 528.3,
+      "end": 535.3,
+      "text": "So we can start on this red candle. The body of the candle has broken the low of that. We can"
+    },
+    {
+      "start": 535.3,
+      "end": 542.7,
+      "text": "start selling, stops three pips above the high of this candle, and we come lower. Okay, you can"
+    },
+    {
+      "start": 542.7,
+      "end": 549.6,
+      "text": "see it would have been a very nice trade. Let's find the next example. Okay, so let's zoom in."
+    },
+    {
+      "start": 550.6,
+      "end": 556.2,
+      "text": "8am, here we go. This is a really good example, guys, actually. Let's zoom in so you can see it."
+    },
+    {
+      "start": 557.2,
+      "end": 567.7,
+      "text": "So this candle right here is the 8am candle. Make this green dojo right here. Now, as you can see,"
+    },
+    {
+      "start": 568.4,
+      "end": 576.8,
+      "text": "this candle doesn't break the low. Right, so we don't have a trade. This candle doesn't break the"
+    },
+    {
+      "start": 576.8,
+      "end": 585.6,
+      "text": "high or low of this candle. Right, so no trade. But this candle, the body of the candle breaks the"
+    },
+    {
+      "start": 585.6,
+      "end": 594.4,
+      "text": "high of the previous candle. Right, it breaks this high right here. Therefore, this is our"
+    },
+    {
+      "start": 594.4,
+      "end": 603.8,
+      "text": "entry candle. It meets the criteria. So we can start buying here. Right, stop loss, three pips"
+    },
+    {
+      "start": 603.8,
+      "end": 613.7,
+      "text": "below that low. And as you can see, nice trade again. Okay. And we're waiting for the break of"
+    },
+    {
+      "start": 613.7,
+      "end": 621.5,
+      "text": "that candle or the previous candle, because that suggests to us that there's enough momentum. Right,"
+    },
+    {
+      "start": 621.5,
+      "end": 627.0,
+      "text": "there's enough buyers or sellers to start pushing it. We don't want candles that are closing back"
+    },
+    {
+      "start": 627.0,
+      "end": 635.0,
+      "text": "into each other. Okay, and it doesn't matter how long after 8am that happens, as long as it happens"
+    },
+    {
+      "start": 635.0,
+      "end": 642.7,
+      "text": "before 10am. And you can see here with this candle right here, guys, that was 9.30. So that is okay."
+    },
+    {
+      "start": 642.8,
+      "end": 649.5,
+      "text": "It happened before 10 o'clock. Right, just before when it finishes forming. But the 10am candle"
+    },
+    {
+      "start": 649.5,
+      "end": 659.5,
+      "text": "onwards, we cannot take. Okay. So let's carry along. Let's find the next 8am candle. Here we go."
+    },
+    {
+      "start": 659.5,
+      "end": 669.3,
+      "text": "Right, this candle right here is the 8am candle. This candle doesn't close above the high or the"
+    },
+    {
+      "start": 669.3,
+      "end": 676.2,
+      "text": "low, as in the body of the candle, no trade. But the next candle does. You can see this candle."
+    },
+    {
+      "start": 676.2,
+      "end": 682.8,
+      "text": "Right, the body of the candle breaks the high of the previous candle. We can start buying in here."
+    },
+    {
+      "start": 683.4,
+      "end": 689.4,
+      "text": "Okay, stop loss, three pips below there. Okay, and we get our one is to one."
+    },
+    {
+      "start": 691.4,
+      "end": 696.7,
+      "text": "All right, let's see if we, okay, let's have a look at this example now, guys. Right, so"
+    },
+    {
+      "start": 697.4,
+      "end": 702.2,
+      "text": "this is a losing trade. Right, and as with any strategy, we're going to have losing trade. So"
+    },
+    {
+      "start": 702.2,
+      "end": 708.8,
+      "text": "let's take a look at an example. So let's zoom in. Right, where's the 8am candle? There it is."
+    },
+    {
+      "start": 709.4,
+      "end": 717.3,
+      "text": "Okay, so that candle right there is the 8am candle, this one here. And you can see the next candle,"
+    },
+    {
+      "start": 717.3,
+      "end": 723.8,
+      "text": "the body of the candle breaks the low of this candle. So we would start selling, put our stop"
+    },
+    {
+      "start": 723.8,
+      "end": 730.6,
+      "text": "three pips above here. Right, and eventually, maybe if this candle doesn't knock us out,"
+    },
+    {
+      "start": 730.6,
+      "end": 736.3,
+      "text": "we definitely get knocked out later. So a losing trade. Right, no problem, we will have losing"
+    },
+    {
+      "start": 736.3,
+      "end": 743.0,
+      "text": "trades as part of any strategy. But that is the first losing trade out of four trades. I mean,"
+    },
+    {
+      "start": 743.0,
+      "end": 748.8,
+      "text": "when was this? Yeah, this was Monday. Ever since Friday, Friday, Thursday, Wednesday, Tuesday,"
+    },
+    {
+      "start": 748.8,
+      "end": 754.5,
+      "text": "we have had winning trades, Monday wasn't. Let's have a look at one more example."
+    },
+    {
+      "start": 755.2,
+      "end": 762.5,
+      "text": "Let's find the eight o'clock candle. Here we are. Right, that is the 8am candle right here."
+    },
+    {
+      "start": 763.1,
+      "end": 769.8,
+      "text": "Remember, we're looking for the next 30 minute candle that breaks the previous high or low"
+    },
+    {
+      "start": 769.8,
+      "end": 776.2,
+      "text": "with its body. You can see the body of this candle breaks the low, we can start selling here,"
+    },
+    {
+      "start": 776.8,
+      "end": 782.4,
+      "text": "stop loss three pips above here. And again, we have a really nice trade."
+    },
+    {
+      "start": 783.4,
+      "end": 789.8,
+      "text": "All right, guys, so you can see how we've taken a well established strategy that lots of traders"
+    },
+    {
+      "start": 789.8,
+      "end": 795.8,
+      "text": "have looked at and probably used. And we've simplified it and optimized it. And we've made"
+    },
+    {
+      "start": 795.8,
+      "end": 803.3,
+      "text": "it a forex strategy, right, because he was using it on the DAX. And it's super simple, right? So"
+    },
+    {
+      "start": 804.2,
+      "end": 810.2,
+      "text": "just to recap, guys, we are looking at the 8am candle to finish. We are then looking for the"
+    },
+    {
+      "start": 810.2,
+      "end": 818.2,
+      "text": "next 30 minute candle, the body of the candle to break the previous high or low of the previous"
+    },
+    {
+      "start": 818.2,
+      "end": 826.3,
+      "text": "candle. Okay, and it must happen before 10am's candle starts forming. All right, guys, and we"
+    },
+    {
+      "start": 826.3,
+      "end": 832.3,
+      "text": "take the trade. It's as simple as that. So guys, if you've enjoyed this video, please don't forget"
+    },
+    {
+      "start": 832.6,
+      "end": 837.8,
+      "text": "to subscribe to the channel, smash the notification button, and please smash that like button."
+    },
+    {
+      "start": 837.8,
+      "end": 840.1,
+      "text": "And I will see you next time."
+    }
+  ],
+  "full_text": "In this video, I break down Tom Hogaard's famous school run strategy, a trading approach designed around the early morning volatility, often near the London Open. I'll explain how it works, the rules behind it, and test it out on real charts to see if it still holds weight today in the forex market. But more importantly, I'm going to show you how I have simplified it and optimized it for better performance, so stay tuned for that. Whether you're new to Hogaard's methods or you've tried this one yourself, this video will provide a different and fresh approach to this strategy, and we will look at some examples on the charts. Don't forget to subscribe and like, and please drop your thoughts in the comments. Let us know if you've traded this strategy before. So to start, let's take a look at the strategy to better understand it. Okay, so let's listen to Tom Hogaard explain his school run strategy in his own words. Okay, normal school run theory dictates that when we are trading the DAX index on a 15 minute chart, that 15 minute chart, this bar that you're seeing here, that's the first 15 minute bar in the DAX. And I developed the school run strategy around the idea that the market will come to work in the morning, and there will be people who need to get things done quickly. It could be they need to buy or they need to sell. So oftentimes, the first 30 minutes aren't indicative of the true trend of the day. And so I developed the strategy based on observation, purely observation going, I would like to be looking at the market after 30 minutes of trading. Specifically, I would like to be a buyer on a break of that second 15 minute candle. So I stuck to the second 15 minute candle as my tool, meaning that I want to be buying above and shorting below. Okay, so pretty self-explanatory, right? He's waiting for the markets to open at 8am, and then he waits for the first 15 minute candle, and then the second 15 minute candle. So basically, he's interested in trading after the first half hour of the open. He trades the DAX, we're actually going to use the pound US dollar. And it's as simple as this, he buys on the break of this candle, or he sells on the break of the low of this candle. All right, but let's carry on and listen to the rest of the video and shorting below. So the conventional school run theory says you want to be a buyer above that school run bar. And the school run bar is the second 15 minute candle. You buy above or you sell short below. A typical breakout strategy, nothing more to it than that. And for a long time, that was the only thing I did. And it worked extremely well. I made significant sums of money trading school run. However, whether it was a mean reversion taking place, or it was just my time to lose, but there became more and more frequently times when the market would go above the school run, the second 15 minute high, and it would trigger me long, and then they would reverse or vice versa, I would be triggered short, and then it would reverse back into the range and stop me out on the other side. And so I began as I think any trader who is worth their their pinch of salt, I began to do serious work and contemplation on, well, under what circumstances is it that my school run succeeds? And under what circumstances do they fail? I'm going to stop it there, guys, because he actually goes on to talk about the Asian range, and he only trades above the Asian range or below the Asian range. But without optimized strategy that I'm about to show you guys, we don't need to worry about that. And he also explains how we had some candles once he entered close back into the candle and eventually take him out. But again, we've optimized this strategy. So we don't need to worry about that. And we've actually simplified it guys. So let's get into it. Traders, before I show you our optimized version of this strategy, please don't forget to subscribe to the channel, smash the notification button and please smash the like button. Also, please don't forget to join our free, this called channel, you can join talk to like minded traders, share knowledge, trade ideas, please come join our community. Also, guys, if you want access to all of our premium trading education, including the course, the mentorship program, the VIP Academy and the price action indicator, then go check out our website, www.simply-4x.com. All the information are in the links below. Also, guys, please leave a comment if you enjoyed this strategy or you've traded it before, we would love to hear about it. Alright, guys, let's get into the strategy. So Thomas was using the DAX and he was using the 15 minute chart, we're actually going to use pound US dollar and the 30 minute chart. Thomas does actually explain how he uses that strategy with pound US dollar and euro US dollar and euro pound. But we found pound US dollar gave us the best results. Now, let's understand the criteria for the entry. Now, it's still looking at the London Open and taking advantage of that initial volume and that push we see in the market. But that's exactly what we need to see that push, right? If we don't see it, we don't trade. So let me explain the rules. Now, this is the 30 minute chart. So we need to find the 8am candle. And as you can see here, we're going to start on Friday and work our way back. So this is Friday and this is the 8am candle. And then the rules are as simple as this. We are looking for the next 30 minute candle, the body of the candle to close above the previous high of the previous candle, or the low of the previous candle. And then we can enter. It might happen on the next candle. It may be the following candle or the one after that. But it must happen before 10am. All right. So to understand these rules, let me just go for a few examples, right? So we've pinpointed our 8am candle. We just let that finish, right? We let it finish. And then we see what happens afterwards. Now, as you can see, literally the next candle, the body of the candle closes below the low of that candle. So that is our criteria met. And we can start selling this pair, right? We put our stop three pips above the high of this candle. Okay, so we start selling here on the close of the candle. Our stop loss is up here. And we're looking for one is to one, and then leave some profits to run. As you can see, a very nice trade, right? So we're just going to go along and look at a few examples of this. Right, let's find our next 8am candle. Here we are, this big red one right here. Okay, so this is a good example. So this is our 8am candle right here. And remember what we're looking for, we're looking for the break of the high or the low of that candle or the previous candle. Now, this candle, the body of the candle doesn't break below this low. Okay, it closes back in, so no trade. So we can look at the next candle and this candle only just, but the body of this candle breaks the low of this candle. So we can take the trade, then it doesn't have to be the first candle. It can be the next candle or the following candle. But remember, it must happen before 10am. So we can start on this red candle. The body of the candle has broken the low of that. We can start selling, stops three pips above the high of this candle, and we come lower. Okay, you can see it would have been a very nice trade. Let's find the next example. Okay, so let's zoom in. 8am, here we go. This is a really good example, guys, actually. Let's zoom in so you can see it. So this candle right here is the 8am candle. Make this green dojo right here. Now, as you can see, this candle doesn't break the low. Right, so we don't have a trade. This candle doesn't break the high or low of this candle. Right, so no trade. But this candle, the body of the candle breaks the high of the previous candle. Right, it breaks this high right here. Therefore, this is our entry candle. It meets the criteria. So we can start buying here. Right, stop loss, three pips below that low. And as you can see, nice trade again. Okay. And we're waiting for the break of that candle or the previous candle, because that suggests to us that there's enough momentum. Right, there's enough buyers or sellers to start pushing it. We don't want candles that are closing back into each other. Okay, and it doesn't matter how long after 8am that happens, as long as it happens before 10am. And you can see here with this candle right here, guys, that was 9.30. So that is okay. It happened before 10 o'clock. Right, just before when it finishes forming. But the 10am candle onwards, we cannot take. Okay. So let's carry along. Let's find the next 8am candle. Here we go. Right, this candle right here is the 8am candle. This candle doesn't close above the high or the low, as in the body of the candle, no trade. But the next candle does. You can see this candle. Right, the body of the candle breaks the high of the previous candle. We can start buying in here. Okay, stop loss, three pips below there. Okay, and we get our one is to one. All right, let's see if we, okay, let's have a look at this example now, guys. Right, so this is a losing trade. Right, and as with any strategy, we're going to have losing trade. So let's take a look at an example. So let's zoom in. Right, where's the 8am candle? There it is. Okay, so that candle right there is the 8am candle, this one here. And you can see the next candle, the body of the candle breaks the low of this candle. So we would start selling, put our stop three pips above here. Right, and eventually, maybe if this candle doesn't knock us out, we definitely get knocked out later. So a losing trade. Right, no problem, we will have losing trades as part of any strategy. But that is the first losing trade out of four trades. I mean, when was this? Yeah, this was Monday. Ever since Friday, Friday, Thursday, Wednesday, Tuesday, we have had winning trades, Monday wasn't. Let's have a look at one more example. Let's find the eight o'clock candle. Here we are. Right, that is the 8am candle right here. Remember, we're looking for the next 30 minute candle that breaks the previous high or low with its body. You can see the body of this candle breaks the low, we can start selling here, stop loss three pips above here. And again, we have a really nice trade. All right, guys, so you can see how we've taken a well established strategy that lots of traders have looked at and probably used. And we've simplified it and optimized it. And we've made it a forex strategy, right, because he was using it on the DAX. And it's super simple, right? So just to recap, guys, we are looking at the 8am candle to finish. We are then looking for the next 30 minute candle, the body of the candle to break the previous high or low of the previous candle. Okay, and it must happen before 10am's candle starts forming. All right, guys, and we take the trade. It's as simple as that. So guys, if you've enjoyed this video, please don't forget to subscribe to the channel, smash the notification button, and please smash that like button. And I will see you next time."
+}

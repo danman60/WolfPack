@@ -1,0 +1,92 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - link "WolfPack" [ref=e5] [cursor=pointer]:
+          - /url: /
+          - img [ref=e7]
+          - generic [ref=e11]: WolfPack
+        - generic [ref=e12]:
+          - link "Dashboard" [ref=e13] [cursor=pointer]:
+            - /url: /
+          - link "Intelligence" [ref=e14] [cursor=pointer]:
+            - /url: /intelligence
+          - link "Trading" [ref=e15] [cursor=pointer]:
+            - /url: /trading
+          - link "Portfolio" [ref=e16] [cursor=pointer]:
+            - /url: /portfolio
+          - link "Backtest" [ref=e17] [cursor=pointer]:
+            - /url: /backtest
+          - link "Auto-Bot" [ref=e18] [cursor=pointer]:
+            - /url: /auto-bot
+          - link "LP Pools" [ref=e19] [cursor=pointer]:
+            - /url: /pools
+          - link "Settings" [ref=e20] [cursor=pointer]:
+            - /url: /settings
+      - generic [ref=e23]:
+        - button "Hyperliquid" [ref=e24] [cursor=pointer]
+        - button "dYdX" [ref=e25] [cursor=pointer]
+  - main [ref=e26]:
+    - generic [ref=e27]:
+      - generic [ref=e28]:
+        - heading "Portfolio" [level=1] [ref=e29]
+        - paragraph [ref=e30]: Paper trading performance on Hyperliquid
+      - generic [ref=e31]:
+        - generic [ref=e32]:
+          - paragraph [ref=e33]: Equity
+          - paragraph [ref=e34]: $10,015.3
+        - generic [ref=e35]:
+          - paragraph [ref=e36]: Unrealized P&L
+          - paragraph [ref=e37]: +$0.00
+        - generic [ref=e38]:
+          - paragraph [ref=e39]: Realized P&L
+          - paragraph [ref=e40]: +$15.28
+        - generic [ref=e41]:
+          - paragraph [ref=e42]: Win Rate
+          - paragraph [ref=e43]: "--"
+        - generic [ref=e44]:
+          - paragraph [ref=e45]: Return
+          - paragraph [ref=e46]: +0.15%
+      - generic [ref=e47]:
+        - heading "Equity Curve" [level=2] [ref=e50]
+        - application [ref=e64]:
+          - generic [ref=e73]:
+            - generic [ref=e74]:
+              - generic [ref=e76]: 08:54 PM
+              - generic [ref=e78]: 08:55 PM
+              - generic [ref=e80]: 04:04 AM
+              - generic [ref=e82]: 04:04 AM
+              - generic [ref=e84]: 06:53 PM
+              - generic [ref=e86]: 06:54 PM
+            - generic [ref=e87]:
+              - generic [ref=e89]: $10,000
+              - generic [ref=e91]: $10,004
+              - generic [ref=e93]: $10,008
+              - generic [ref=e95]: $10,012
+              - generic [ref=e97]: $10,016
+      - generic [ref=e52]:
+        - heading "Open Positions (0)" [level=2] [ref=e53]
+        - generic [ref=e54]: No open positions. Approve a recommendation to start paper trading.
+      - generic [ref=e55]:
+        - generic [ref=e56]:
+          - heading "Trade History" [level=2] [ref=e58]
+          - generic [ref=e59]: 1 closed trades
+        - generic [ref=e98]:
+          - generic [ref=e99]:
+            - generic [ref=e100]: long
+            - generic [ref=e101]:
+              - text: ETH
+              - paragraph [ref=e102]: $2,098.7 → $2,097.7
+          - generic [ref=e103]:
+            - generic [ref=e104]:
+              - generic [ref=e105]: Size
+              - generic [ref=e106]: $500
+            - generic [ref=e107]:
+              - generic [ref=e108]: P&L
+              - generic [ref=e109]: $-0.24
+            - generic [ref=e110]:
+              - generic [ref=e111]: Closed
+              - generic [ref=e112]: 3/13/2026
+            - generic [ref=e113]: manual
+  - alert [ref=e61]
+  - generic [ref=e114]: $10,000

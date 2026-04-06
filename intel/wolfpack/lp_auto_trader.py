@@ -37,6 +37,8 @@ class LPAutoTrader:
         self.rebalance_engine = LPRebalanceEngine()
         self.pool_scanner = LPPoolScanner()
         self._restored = False
+        # IL hedge tracking: {lp_position_id: {"hedge_size": float, "hedge_entry": float, "last_adjusted": datetime}}
+        self._il_hedges: dict[str, dict] = {}
         # Load watched pools from config as seeds (scanner adds dynamically)
         self._config_pools: list[str] = [
             p.strip() for p in (settings.lp_watched_pools or "").split(",") if p.strip()
@@ -120,6 +122,10 @@ class LPAutoTrader:
             should_exit, reason = self._should_exit_pool(pos)
             if should_exit:
                 net_pnl = self.engine.close_position(pos.pool_address)
+                # Close any IL hedge tied to this position
+                if pos.position_id in self._il_hedges:
+                    hedge = self._il_hedges.pop(pos.position_id)
+                    logger.info(f"[lp-hedge] Closed IL hedge on rotation: ${hedge['hedge_size']:.2f}")
                 logger.info(f"[lp-auto] ROTATED OUT: {pos.token0_symbol}/{pos.token1_symbol} — {reason} (net PnL: ${net_pnl:.2f})")
                 self._store_rotation_event(pos, reason, net_pnl)
                 alerts.append({
@@ -247,6 +253,10 @@ class LPAutoTrader:
         ]
         alerts.extend(self.monitor.check_alerts(active_positions))
 
+        # IL hedging — open/adjust/close perp hedges for positions with IL > 3%
+        hedge_alerts = self._check_il_hedges(active_positions)
+        alerts.extend(hedge_alerts)
+
         # Fee harvesting — evaluate and auto-harvest for active positions
         for pos in self.engine.portfolio.positions:
             if pos.status == "active":
@@ -275,6 +285,75 @@ class LPAutoTrader:
             "equity": round(self.engine.portfolio.equity, 2),
             "scanner_candidates": len(self.pool_scanner.get_candidates()),
         }
+
+    def _check_il_hedges(self, active_positions: list) -> list[dict]:
+        """Check IL on active LP positions and manage perp hedges (paper mode).
+
+        - Opens a short hedge when IL exceeds 3% of position value
+        - Adjusts hedge size if IL changed by more than 20% since last adjustment
+        - Closes hedge when the LP position is no longer active
+        """
+        alerts: list[dict] = []
+        IL_THRESHOLD_PCT = 3.0
+        REBALANCE_THRESHOLD = 0.20  # Adjust hedge if IL changed by >20%
+
+        active_ids = {p.position_id for p in active_positions}
+
+        # Close hedges for positions that are no longer active
+        closed_ids = [pid for pid in self._il_hedges if pid not in active_ids]
+        for pid in closed_ids:
+            hedge = self._il_hedges.pop(pid)
+            logger.info(f"[lp-hedge] Closed IL hedge for {pid}: size=${hedge['hedge_size']:.2f}")
+            alerts.append({
+                "type": "il_hedge",
+                "message": f"IL hedge CLOSED (position exited): hedge was ${hedge['hedge_size']:.2f}",
+            })
+
+        for pos in active_positions:
+            il_pct = abs(getattr(pos, "il_pct", 0.0))
+            il_usd = abs(getattr(pos, "il_usd", 0.0))
+            pair = f"{pos.token0_symbol}/{pos.token1_symbol}"
+
+            if il_pct < IL_THRESHOLD_PCT:
+                # If IL dropped below threshold and we have a hedge, close it
+                if pos.position_id in self._il_hedges:
+                    hedge = self._il_hedges.pop(pos.position_id)
+                    logger.info(f"[lp-hedge] Closed IL hedge for {pair}: IL dropped to {il_pct:.1f}%")
+                    alerts.append({
+                        "type": "il_hedge",
+                        "message": f"IL hedge CLOSED for {pair}: IL recovered to {il_pct:.1f}%",
+                    })
+                continue
+
+            # IL exceeds threshold — open or adjust hedge
+            existing_hedge = self._il_hedges.get(pos.position_id)
+
+            if existing_hedge is None:
+                # Open new hedge — size equals the IL in USD
+                self._il_hedges[pos.position_id] = {
+                    "hedge_size": il_usd,
+                    "hedge_entry": getattr(pos, "current_price_ratio", 0.0),
+                    "last_adjusted": datetime.now(timezone.utc),
+                    "pair": pair,
+                }
+                logger.info(f"[lp-hedge] Opened IL hedge for {pair}: ${il_usd:.2f} short (IL={il_pct:.1f}%)")
+                alerts.append({
+                    "type": "il_hedge",
+                    "message": f"IL hedge OPENED for {pair}: ${il_usd:.2f} short to offset {il_pct:.1f}% IL",
+                })
+            else:
+                # Check if hedge needs rebalancing
+                old_size = existing_hedge["hedge_size"]
+                if old_size > 0 and abs(il_usd - old_size) / old_size > REBALANCE_THRESHOLD:
+                    existing_hedge["hedge_size"] = il_usd
+                    existing_hedge["last_adjusted"] = datetime.now(timezone.utc)
+                    logger.info(f"[lp-hedge] Adjusted IL hedge for {pair}: ${old_size:.2f} -> ${il_usd:.2f}")
+                    alerts.append({
+                        "type": "il_hedge",
+                        "message": f"IL hedge ADJUSTED for {pair}: ${old_size:.2f} -> ${il_usd:.2f} (IL={il_pct:.1f}%)",
+                    })
+
+        return alerts
 
     def _update_watch_list(self, candidates) -> None:
         """Update watched pools based on scanner results."""
@@ -383,6 +462,8 @@ class LPAutoTrader:
             "total_il": round(self.engine.portfolio.total_il, 2),
             "realized_pnl": round(self.engine.portfolio.realized_pnl, 2),
             "watched_pools": len(self._watched_pools),
+            "active_il_hedges": len(self._il_hedges),
+            "total_hedge_usd": round(sum(h["hedge_size"] for h in self._il_hedges.values()), 2),
             "scanner_candidates": len(candidates),
             "top_pools": [
                 {"name": c.name, "apr": c.fee_apr, "score": c.score}

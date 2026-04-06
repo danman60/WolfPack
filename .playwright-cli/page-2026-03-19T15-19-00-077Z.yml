@@ -1,0 +1,139 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - link "WolfPack" [ref=e5] [cursor=pointer]:
+          - /url: /
+          - img [ref=e7]
+          - generic [ref=e11]: WolfPack
+        - generic [ref=e12]:
+          - link "Dashboard" [ref=e13] [cursor=pointer]:
+            - /url: /
+          - link "Intelligence" [ref=e14] [cursor=pointer]:
+            - /url: /intelligence
+          - link "Trading" [ref=e15] [cursor=pointer]:
+            - /url: /trading
+          - link "Portfolio" [ref=e16] [cursor=pointer]:
+            - /url: /portfolio
+          - link "Backtest" [ref=e17] [cursor=pointer]:
+            - /url: /backtest
+          - link "Auto-Bot" [ref=e18] [cursor=pointer]:
+            - /url: /auto-bot
+          - link "LP Pools" [ref=e19] [cursor=pointer]:
+            - /url: /pools
+          - link "Settings" [ref=e20] [cursor=pointer]:
+            - /url: /settings
+      - generic [ref=e23]:
+        - button "Hyperliquid" [ref=e24] [cursor=pointer]
+        - button "dYdX" [ref=e25] [cursor=pointer]
+        - button "Kraken" [ref=e26] [cursor=pointer]
+  - main [ref=e27]:
+    - generic [ref=e507]:
+      - generic [ref=e510]:
+        - heading "Backtest" [level=1] [ref=e511]
+        - paragraph [ref=e512]: Strategy simulation engine — Hyperliquid
+      - generic [ref=e513]:
+        - generic [ref=e514]:
+          - generic [ref=e515]:
+            - heading "Market" [level=2] [ref=e518]
+            - generic [ref=e519]:
+              - text: Asset
+              - generic [ref=e520]:
+                - button "BTC" [ref=e521] [cursor=pointer]
+                - button "ETH" [ref=e522] [cursor=pointer]
+                - button "SOL" [ref=e523] [cursor=pointer]
+                - button "DOGE" [ref=e524] [cursor=pointer]
+                - button "ARB" [ref=e525] [cursor=pointer]
+                - button "OP" [ref=e526] [cursor=pointer]
+            - generic [ref=e527]:
+              - text: Interval
+              - generic [ref=e528]:
+                - button "1m" [ref=e529] [cursor=pointer]
+                - button "5m" [ref=e530] [cursor=pointer]
+                - button "15m" [ref=e531] [cursor=pointer]
+                - button "1h" [ref=e532] [cursor=pointer]
+                - button "4h" [ref=e533] [cursor=pointer]
+                - button "1d" [ref=e534] [cursor=pointer]
+            - generic [ref=e535]:
+              - text: Lookback
+              - generic [ref=e536]:
+                - button "7d" [ref=e537] [cursor=pointer]
+                - button "14d" [ref=e538] [cursor=pointer]
+                - button "30d" [ref=e539] [cursor=pointer]
+                - button "60d" [ref=e540] [cursor=pointer]
+                - button "90d" [ref=e541] [cursor=pointer]
+                - button "180d" [ref=e542] [cursor=pointer]
+          - generic [ref=e543]:
+            - heading "Strategy" [level=2] [ref=e546]
+            - generic [ref=e547]:
+              - button "regime momentum Trades in the direction of the detected market regime using EMA/ADX/ATR signals" [ref=e548] [cursor=pointer]:
+                - generic [ref=e551]: regime momentum
+                - paragraph [ref=e552]: Trades in the direction of the detected market regime using EMA/ADX/ATR signals
+              - button "ema crossover Trades EMA crossovers — long when fast > slow, short when fast < slow" [ref=e553] [cursor=pointer]:
+                - generic [ref=e556]: ema crossover
+                - paragraph [ref=e557]: Trades EMA crossovers — long when fast > slow, short when fast < slow
+              - button "vol breakout Trades volatility regime transitions — enters on breakout, exits when vol subsides" [ref=e558] [cursor=pointer]:
+                - generic [ref=e561]: vol breakout
+                - paragraph [ref=e562]: Trades volatility regime transitions — enters on breakout, exits when vol subsides
+              - generic [ref=e563]:
+                - generic [ref=e564]:
+                  - generic [ref=e565]:
+                    - generic [ref=e566]: confidence threshold
+                    - generic [ref=e567]: "0.4"
+                  - slider [ref=e568]: "0.4"
+                  - paragraph [ref=e569]: Minimum regime confidence to enter a trade
+                - generic [ref=e570]:
+                  - generic [ref=e571]:
+                    - generic [ref=e572]: size pct
+                    - generic [ref=e573]: "15"
+                  - slider [ref=e574]: "15"
+                  - paragraph [ref=e575]: Position size as % of equity
+          - generic [ref=e576]:
+            - heading "Execution" [level=2] [ref=e579]
+            - generic [ref=e580]:
+              - generic [ref=e581]:
+                - text: Starting equity
+                - generic [ref=e582]:
+                  - generic [ref=e583]: $
+                  - spinbutton [ref=e584]: "10000"
+              - generic [ref=e585]:
+                - generic [ref=e586]:
+                  - text: Fees (bps)
+                  - spinbutton [ref=e587]: "5"
+                - generic [ref=e588]:
+                  - text: Slippage (bps)
+                  - spinbutton [ref=e589]: "5"
+              - generic [ref=e590]:
+                - generic [ref=e591]:
+                  - text: Stop Loss %
+                  - spinbutton [ref=e592]
+                - generic [ref=e593]:
+                  - text: Take Profit %
+                  - spinbutton [ref=e594]
+          - button "Run Backtest" [ref=e640] [cursor=pointer]:
+            - generic [ref=e596]:
+              - img [ref=e641]
+              - text: Run Backtest
+        - generic [ref=e643]:
+          - img [ref=e645]
+          - paragraph [ref=e647]: No results yet
+          - paragraph [ref=e648]: Configure your strategy parameters and run a backtest to see equity curves, drawdowns, and trade-level analysis.
+      - generic [ref=e606]:
+        - generic [ref=e607]:
+          - heading "Run History" [level=2] [ref=e610]
+          - generic [ref=e611]: 2 runs
+        - generic [ref=e612]:
+          - generic [ref=e628] [cursor=pointer]:
+            - generic [ref=e631]:
+              - generic [ref=e632]: BTC / regime momentum / 1h
+              - paragraph [ref=e633]: Mar 19, 03:17 PM · 0 trades
+            - button "Delete run" [active] [ref=e636]:
+              - img [ref=e637]
+          - generic [ref=e613] [cursor=pointer]:
+            - generic [ref=e616]:
+              - generic [ref=e617]: BTC / regime momentum / 1h
+              - paragraph [ref=e618]: Mar 13, 06:54 PM · 0 trades
+            - button "Delete run" [ref=e620]:
+              - img [ref=e621]
+  - alert [ref=e103]
+  - generic [ref=e506]: $10,000

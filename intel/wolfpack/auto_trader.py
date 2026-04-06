@@ -14,6 +14,7 @@ from wolfpack.risk_controls import RISK_PRESETS, YOLO_LEVEL_MAP, get_preset
 
 logger = logging.getLogger(__name__)
 
+# Static defaults — used as fallback when < 30 total strategy trades
 STRATEGY_ALLOCATIONS = {
     # Trending strategies
     "ema_crossover": 0.15,
@@ -25,6 +26,51 @@ STRATEGY_ALLOCATIONS = {
     "measured_move": 0.10,
     # Brief-driven: remaining ~25%
 }
+
+# Dynamic allocation cache (module-level, shared across AutoTrader instances)
+_dynamic_allocations: dict[str, float] | None = None
+_dynamic_alloc_time: datetime | None = None
+_DYNAMIC_ALLOC_TTL_SECONDS = 3600  # recompute hourly
+
+
+def _get_dynamic_allocations(perf_tracker) -> dict[str, float]:
+    """Get dynamic strategy allocations, cached for 1 hour.
+
+    Falls back to static STRATEGY_ALLOCATIONS if < 30 total trades.
+    Logs allocation shifts > 5%.
+    """
+    global _dynamic_allocations, _dynamic_alloc_time
+
+    now = datetime.now(timezone.utc)
+    if (
+        _dynamic_allocations is not None
+        and _dynamic_alloc_time is not None
+        and (now - _dynamic_alloc_time).total_seconds() < _DYNAMIC_ALLOC_TTL_SECONDS
+    ):
+        return _dynamic_allocations
+
+    new_alloc = perf_tracker.get_strategy_allocations(
+        default_allocations=STRATEGY_ALLOCATIONS,
+        min_total_trades=30,
+        min_strategy_trades=10,
+    )
+
+    # Log shifts > 5%
+    old = _dynamic_allocations or STRATEGY_ALLOCATIONS
+    for strat in set(list(old.keys()) + list(new_alloc.keys())):
+        old_val = old.get(strat, 0)
+        new_val = new_alloc.get(strat, 0)
+        if abs(new_val - old_val) > 0.05:
+            logger.info(
+                f"[auto-trader] Allocation shift: {strat} "
+                f"{old_val:.1%} -> {new_val:.1%} "
+                f"(delta {new_val - old_val:+.1%})"
+            )
+
+    _dynamic_allocations = new_alloc
+    _dynamic_alloc_time = now
+    return _dynamic_allocations
+
 
 # Which candle timeframe each strategy expects
 STRATEGY_TIMEFRAMES = {
@@ -278,24 +324,15 @@ class AutoTrader:
                     from wolfpack.notification_digest import get_digest
                     digest = get_digest()
                     arrow = "\u2b06\ufe0f" if direction == "long" else "\u2b07\ufe0f"
-                    if digest.mode == "individual":
-                        from wolfpack.notifications import send_telegram
-                        await send_telegram(
-                            f"<b>{arrow} Auto-Bot {direction.upper()} {symbol}</b>\n"
-                            f"Entry: <code>${entry_price:,.2f}</code>\n"
-                            f"Size: <code>${pos.size_usd:,.0f}</code>\n"
-                            f"Conviction: {veto_result.final_conviction}%"
-                        )
-                    else:
-                        digest.add({
-                            "type": "trade_open",
-                            "symbol": symbol,
-                            "direction": direction,
-                            "size": pos.size_usd,
-                            "entry_price": entry_price,
-                            "conviction": veto_result.final_conviction,
-                            "details": f"{arrow} {direction.upper()} {symbol} @ ${entry_price:,.2f} (${pos.size_usd:,.0f})",
-                        })
+                    digest.add({
+                        "type": "trade_open",
+                        "symbol": symbol,
+                        "direction": direction,
+                        "size": pos.size_usd,
+                        "entry_price": entry_price,
+                        "conviction": veto_result.final_conviction,
+                        "details": f"{arrow} {direction.upper()} {symbol} @ ${entry_price:,.2f} (${pos.size_usd:,.0f})",
+                    })
                 except Exception:
                     pass
 
@@ -350,21 +387,13 @@ class AutoTrader:
                     from wolfpack.notification_digest import get_digest
                     digest = get_digest()
                     pnl_str = f"+${pnl:,.2f}" if pnl >= 0 else f"-${abs(pnl):,.2f}"
-                    if digest.mode == "individual":
-                        from wolfpack.notifications import send_telegram
-                        await send_telegram(
-                            f"<b>\U0001f916 Auto-bot CLOSED {pos.direction.upper()} {pa_symbol}</b>\n"
-                            f"P&L: <code>{pnl_str}</code>\n"
-                            f"Reason: {pa.get('reason', 'Brief recommended close')}"
-                        )
-                    else:
-                        digest.add({
-                            "type": "trade_close",
-                            "symbol": pa_symbol,
-                            "direction": pos.direction,
-                            "pnl": pnl,
-                            "details": f"CLOSED {pos.direction.upper()} {pa_symbol}: {pnl_str}",
-                        })
+                    digest.add({
+                        "type": "trade_close",
+                        "symbol": pa_symbol,
+                        "direction": pos.direction,
+                        "pnl": pnl,
+                        "details": f"CLOSED {pos.direction.upper()} {pa_symbol}: {pnl_str}",
+                    })
                 except Exception:
                     pass
 
@@ -377,19 +406,11 @@ class AutoTrader:
                     try:
                         from wolfpack.notification_digest import get_digest
                         digest = get_digest()
-                        if digest.mode == "individual":
-                            from wolfpack.notifications import send_telegram
-                            await send_telegram(
-                                f"<b>\U0001f916 Auto-bot adjusted stop for {pa_symbol}</b>\n"
-                                f"New stop: <code>${new_stop:,.2f}</code>\n"
-                                f"Reason: {pa.get('reason', 'Brief recommended adjustment')}"
-                            )
-                        else:
-                            digest.add({
-                                "type": "stop_adjusted",
-                                "symbol": pa_symbol,
-                                "details": f"Stop adjusted to ${new_stop:,.2f} — {pa.get('reason', 'Brief recommended adjustment')}",
-                            })
+                        digest.add({
+                            "type": "stop_adjusted",
+                            "symbol": pa_symbol,
+                            "details": f"Stop adjusted to ${new_stop:,.2f} — {pa.get('reason', 'Brief recommended adjustment')}",
+                        })
                     except Exception:
                         pass
 
@@ -402,19 +423,11 @@ class AutoTrader:
                     try:
                         from wolfpack.notification_digest import get_digest
                         digest = get_digest()
-                        if digest.mode == "individual":
-                            from wolfpack.notifications import send_telegram
-                            await send_telegram(
-                                f"<b>\U0001f916 Auto-bot adjusted TP for {pa_symbol}</b>\n"
-                                f"New TP: <code>${new_tp:,.2f}</code>\n"
-                                f"Reason: {pa.get('reason', 'Brief recommended adjustment')}"
-                            )
-                        else:
-                            digest.add({
-                                "type": "stop_adjusted",
-                                "symbol": pa_symbol,
-                                "details": f"TP adjusted to ${new_tp:,.2f} — {pa.get('reason', 'Brief recommended adjustment')}",
-                            })
+                        digest.add({
+                            "type": "stop_adjusted",
+                            "symbol": pa_symbol,
+                            "details": f"TP adjusted to ${new_tp:,.2f} — {pa.get('reason', 'Brief recommended adjustment')}",
+                        })
                     except Exception:
                         pass
 
@@ -512,8 +525,11 @@ class AutoTrader:
         current_idx = len(candles) - 1
         timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M")
 
+        # Use dynamic allocations (falls back to static if insufficient data)
+        active_allocations = _get_dynamic_allocations(self._perf_tracker)
+
         for strategy_name, strategy_cls in STRATEGIES.items():
-            allocation = STRATEGY_ALLOCATIONS.get(strategy_name)
+            allocation = active_allocations.get(strategy_name)
             if allocation is None:
                 continue
 

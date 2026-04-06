@@ -1,0 +1,56 @@
+# Transcript: Video by quantjason
+# Source: https://www.instagram.com/reel/DVMukN2kWNk/
+# Project: WolfPack
+# Model: small | Language: en | Duration: 89.6s
+# Transcribed: 2026-04-03 09:37:09
+
+[0.0s - 1.3s] We're starting to get into algorithmic trading
+[1.3s - 2.8s] from an elbow trading millionaire.
+[2.8s - 5.8s] The single largest mistake I see
+[5.8s - 10.0s] and in theory it's me to no end is how people backtest.
+[10.0s - 11.4s] Now, if you don't know what a backtest is,
+[11.4s - 12.5s] essentially you take the algorithm,
+[12.5s - 14.4s] you take its confluences and you run tests
+[14.4s - 16.7s] to see how the system would have performed
+[16.7s - 17.8s] in the given time period.
+[17.8s - 19.2s] Usually it's 12 months.
+[19.2s - 20.6s] Now, once you have the backtest,
+[20.6s - 22.2s] you just look at the KPIs to see
+[22.2s - 24.0s] how it would have performed in the last year.
+[24.0s - 25.8s] On theory, that sounds great.
+[25.8s - 27.8s] Why do you care what it did the year prior?
+[27.8s - 29.9s] That's not gonna tell you what's gonna do in the future.
+[29.9s - 32.4s] Because of this, people constantly change their algorithm
+[32.4s - 35.5s] to try to see how good they can make their returns
+[35.5s - 37.2s] for what happened in the past.
+[37.2s - 38.9s] This is called overfitting.
+[38.9s - 41.2s] You will lose a lot of money doing this.
+[41.2s - 42.5s] What's the right way to backtest?
+[42.5s - 44.6s] Well, you have to run what's called a stress test.
+[44.6s - 46.0s] Usually it's a hidden Markov model
+[46.0s - 48.1s] of 10,000 Monte Carlo simulations.
+[48.1s - 49.9s] You look at your drawdown analysis.
+[49.9s - 51.1s] You do regime changes.
+[51.1s - 53.1s] So basically you see how did it do
+[53.1s - 54.6s] in the past different markets.
+[54.6s - 55.6s] Tons of other stress tests.
+[55.6s - 57.5s] However, the most important one in my opinion
+[57.5s - 58.8s] would be the Monte Carlo simulation.
+[58.8s - 60.8s] Not the standard simple rearrange
+[60.8s - 61.9s] and trade Monte Carlo simulation.
+[61.9s - 62.7s] That's not gonna help you.
+[62.7s - 64.0s] If you don't know what an HMM is,
+[64.0s - 65.6s] probabilistic model that tries to show
+[65.6s - 67.2s] sequences of unknown events.
+[67.2s - 69.9s] And if you run 10,000, 100,000 simulations,
+[69.9s - 72.6s] that's a lot better than just one year of overfit data.
+[72.6s - 76.3s] So do yourself a favor, never buy an algorithm
+[76.3s - 78.1s] based off of backtested data.
+[78.1s - 79.7s] That is going to screw you over.
+[79.7s - 83.4s] I lost over $300,000 in a single night doing that.
+[83.4s - 86.0s] Always ask for live results first.
+[86.0s - 87.6s] I hope this helps.
+
+---
+
+We're starting to get into algorithmic trading from an elbow trading millionaire. The single largest mistake I see and in theory it's me to no end is how people backtest. Now, if you don't know what a backtest is, essentially you take the algorithm, you take its confluences and you run tests to see how the system would have performed in the given time period. Usually it's 12 months. Now, once you have the backtest, you just look at the KPIs to see how it would have performed in the last year. On theory, that sounds great. Why do you care what it did the year prior? That's not gonna tell you what's gonna do in the future. Because of this, people constantly change their algorithm to try to see how good they can make their returns for what happened in the past. This is called overfitting. You will lose a lot of money doing this. What's the right way to backtest? Well, you have to run what's called a stress test. Usually it's a hidden Markov model of 10,000 Monte Carlo simulations. You look at your drawdown analysis. You do regime changes. So basically you see how did it do in the past different markets. Tons of other stress tests. However, the most important one in my opinion would be the Monte Carlo simulation. Not the standard simple rearrange and trade Monte Carlo simulation. That's not gonna help you. If you don't know what an HMM is, probabilistic model that tries to show sequences of unknown events. And if you run 10,000, 100,000 simulations, that's a lot better than just one year of overfit data. So do yourself a favor, never buy an algorithm based off of backtested data. That is going to screw you over. I lost over $300,000 in a single night doing that. Always ask for live results first. I hope this helps.

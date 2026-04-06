@@ -1,0 +1,50 @@
+# Transcript: Video by quantjason
+# Source: https://www.instagram.com/reel/DVZbjQDkcLy/
+# Project: WolfPack
+# Model: small | Language: en | Duration: 73.4s
+# Transcribed: 2026-04-03 10:24:23
+
+[0.0s - 1.6s] How to get into algorithmic day trading.
+[1.6s - 3.4s] You can have numbers that look like this.
+[3.4s - 4.6s] Go over the number one equation
+[4.6s - 6.1s] when it comes to algorithmic day trading.
+[6.1s - 7.2s] The most important metric for me
+[7.2s - 8.8s] and don't worry, this equation's easy.
+[8.8s - 10.6s] It's called the calmer ratio.
+[10.6s - 11.4s] And it's so simple.
+[11.4s - 13.3s] All you do is take your annualized return
+[13.3s - 14.8s] over your maximum drawdown.
+[14.8s - 16.5s] It shows the performance of your investment
+[16.5s - 18.0s] relative to your risk.
+[18.0s - 20.5s] For calmer ratio of two, that's okay.
+[20.5s - 22.2s] Calmer ratio of three is decent
+[22.2s - 24.5s] and anything over five is fantastic.
+[24.5s - 26.8s] Like you can make generational wealth abuse that edge.
+[26.8s - 27.6s] Fantastic.
+[27.6s - 30.0s] So many traders focus on the annualized return.
+[30.0s - 31.2s] So like for example,
+[31.2s - 34.3s] I need to have an algorithm make 100% a year.
+[34.3s - 37.1s] In theory, you're going to incur a pretty large risk,
+[37.1s - 40.6s] a 30% plus risk in order to achieve those gains.
+[40.6s - 42.8s] However, if you have a solid calmer ratio,
+[42.8s - 44.8s] you can leverage the absolute crap out of that.
+[44.8s - 46.8s] For example, high calmer ratio algorithms
+[46.8s - 47.9s] are great for proverbs
+[47.9s - 50.0s] and they're even better for 10x accounts.
+[50.0s - 51.1s] The algorithmic trading fund,
+[51.1s - 52.4s] we don't do anything unless it has
+[52.4s - 54.0s] at least a calmer ratio of three.
+[54.0s - 55.9s] Even if the system makes 15% a year
+[55.9s - 57.3s] where it's maxed drawdown is five,
+[57.3s - 59.8s] as long as you do not exceed a 10% drawdown
+[59.8s - 61.2s] from a starting balance,
+[61.2s - 64.7s] you can raise a lot of capital very quickly.
+[64.7s - 66.1s] Easy ways to increase calmer
+[66.1s - 68.2s] would be to add a fast trailing stop system
+[68.2s - 70.7s] and to add a regime classification tool.
+[70.7s - 72.1s] So when the regime changes,
+[72.1s - 73.7s] your system doesn't go haywire.
+
+---
+
+How to get into algorithmic day trading. You can have numbers that look like this. Go over the number one equation when it comes to algorithmic day trading. The most important metric for me and don't worry, this equation's easy. It's called the calmer ratio. And it's so simple. All you do is take your annualized return over your maximum drawdown. It shows the performance of your investment relative to your risk. For calmer ratio of two, that's okay. Calmer ratio of three is decent and anything over five is fantastic. Like you can make generational wealth abuse that edge. Fantastic. So many traders focus on the annualized return. So like for example, I need to have an algorithm make 100% a year. In theory, you're going to incur a pretty large risk, a 30% plus risk in order to achieve those gains. However, if you have a solid calmer ratio, you can leverage the absolute crap out of that. For example, high calmer ratio algorithms are great for proverbs and they're even better for 10x accounts. The algorithmic trading fund, we don't do anything unless it has at least a calmer ratio of three. Even if the system makes 15% a year where it's maxed drawdown is five, as long as you do not exceed a 10% drawdown from a starting balance, you can raise a lot of capital very quickly. Easy ways to increase calmer would be to add a fast trailing stop system and to add a regime classification tool. So when the regime changes, your system doesn't go haywire.

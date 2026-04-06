@@ -1,0 +1,24 @@
+# Transcript: Video by quantjason
+# Source: https://www.instagram.com/reel/DU3VNzQkSUn/
+# Project: WolfPack
+# Model: small | Language: en | Duration: 37.3s
+# Transcribed: 2026-04-03 09:35:22
+
+[0.0s - 2.4s] All right, here's how you guys get into algorithmic day trading.
+[2.4s - 5.0s] I'm going to teach you guys from a day one beginner to a complete pro.
+[5.2s - 7.6s] And wow, are they printing right now?
+[7.6s - 11.2s] First thing you need to purchase is a VPS, a virtual private server.
+[11.2s - 13.2s] But my algorithms are running on right now.
+[13.3s - 15.4s] You are going to design futures based algorithms.
+[15.4s - 19.2s] You need to use quantum VPS, direct connection to CME exchange.
+[19.3s - 23.0s] If you're going to use Forex algorithms, you need to be using Forex VPS.
+[23.1s - 26.5s] You'd be shocked at how much latency truly does matter with these things.
+[26.5s - 28.8s] So make sure you use the right VPS accordingly.
+[29.0s - 31.2s] If you're just getting started, a cloud server is fine.
+[31.2s - 33.8s] If you have the money, I would definitely spring for a DDS.
+[33.9s - 36.3s] Yo, the algo is printed.
+[36.4s - 37.2s] Follow up with part two.
+
+---
+
+All right, here's how you guys get into algorithmic day trading. I'm going to teach you guys from a day one beginner to a complete pro. And wow, are they printing right now? First thing you need to purchase is a VPS, a virtual private server. But my algorithms are running on right now. You are going to design futures based algorithms. You need to use quantum VPS, direct connection to CME exchange. If you're going to use Forex algorithms, you need to be using Forex VPS. You'd be shocked at how much latency truly does matter with these things. So make sure you use the right VPS accordingly. If you're just getting started, a cloud server is fine. If you have the money, I would definitely spring for a DDS. Yo, the algo is printed. Follow up with part two.

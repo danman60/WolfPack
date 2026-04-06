@@ -191,6 +191,15 @@ class PaperTradingEngine:
         try:
             from wolfpack.db import get_db
             db = get_db()
+            # Extract strategy name from recommendation_id (pattern: strat-{name}-{symbol}-{ts})
+            strategy = None
+            rec_id = pos.recommendation_id
+            if rec_id and rec_id.startswith("strat-"):
+                import re
+                m = re.match(r"strat-(.+)-[A-Z]+-\d+$", rec_id)
+                if m:
+                    strategy = m.group(1)
+
             db.table("wp_trade_history").upsert({
                 "symbol": pos.symbol,
                 "direction": pos.direction,
@@ -201,6 +210,7 @@ class PaperTradingEngine:
                 "recommendation_id": pos.recommendation_id,
                 "source": "manual",
                 "opened_at": pos.opened_at.isoformat(),
+                "strategy": strategy,
             }, on_conflict="recommendation_id").execute()
         except Exception as e:
             logger.warning(f"Failed to store closed trade: {e}")

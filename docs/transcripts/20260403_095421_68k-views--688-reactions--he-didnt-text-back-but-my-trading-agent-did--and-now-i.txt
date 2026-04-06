@@ -1,0 +1,23 @@
+# Transcript: 68K views · 688 reactions | he didn’t text back but my trading agent did 💚🫶 and now I can get signal on my desktop and phone for when I should buy and sell the current stocks in my portfolio! Literally took me like 20 minutes to build it out with @repl.it all I did was insert my API keys #stockmarket #replitagent4 #replit #tradingsingals | Mariana Antaya AI/ML, Cars & Investing
+# Source: https://www.facebook.com/share/r/18DLh6oRbW/
+# Project: WolfPack
+# Model: small | Language: en | Duration: 63.0s
+# Transcribed: 2026-04-03 09:54:26
+
+[0.5s - 5.5s] Let's build a stock trading bot that's going to send me alerts so that I know when to buy and sell
+[5.5s - 9.9s] the stocks in my portfolio. I found that this is probably one of the easiest ways to automate
+[9.9s - 13.9s] an agent to actually do something for you, so let's get into it. I'm going to be pulling my
+[13.9s - 19.4s] real-time data from the Alpaca Markets API, but really feel free to customize this to whatever
+[19.4s - 24.6s] data source you prefer. This is the very first prompt that I used in order to build out my agent,
+[24.6s - 29.5s] but now with Agent 4, it's actually the very first coding agent that helps you
+[29.5s - 34.3s] plan, design, and build at the same time. In parallel, I'm actually going to spin up another
+[34.3s - 40.6s] agent that way I can work even faster and I can even add animations, so that's super cool. And
+[40.6s - 45.6s] obviously, I'm going to want to take this on the go so I can even convert it into a mobile app
+[45.6s - 51.1s] super quickly. And just like that, I created my own web app and mobile app to get trading signals
+[51.1s - 55.5s] on the stocks in my portfolio. It's really awesome because Replet enables you to focus
+[55.5s - 60.2s] more on the vision instead of the execution of your actual app, so if you're interested in
+[60.2s - 62.9s] building your first agent, go check them out.
+
+---
+
+Let's build a stock trading bot that's going to send me alerts so that I know when to buy and sell the stocks in my portfolio. I found that this is probably one of the easiest ways to automate an agent to actually do something for you, so let's get into it. I'm going to be pulling my real-time data from the Alpaca Markets API, but really feel free to customize this to whatever data source you prefer. This is the very first prompt that I used in order to build out my agent, but now with Agent 4, it's actually the very first coding agent that helps you plan, design, and build at the same time. In parallel, I'm actually going to spin up another agent that way I can work even faster and I can even add animations, so that's super cool. And obviously, I'm going to want to take this on the go so I can even convert it into a mobile app super quickly. And just like that, I created my own web app and mobile app to get trading signals on the stocks in my portfolio. It's really awesome because Replet enables you to focus more on the vision instead of the execution of your actual app, so if you're interested in building your first agent, go check them out.

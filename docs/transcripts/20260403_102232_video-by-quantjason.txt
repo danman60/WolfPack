@@ -1,0 +1,34 @@
+# Transcript: Video by quantjason
+# Source: https://www.instagram.com/reel/DU6X33KkS0q/
+# Project: WolfPack
+# Model: small | Language: en | Duration: 113.9s
+# Transcribed: 2026-04-03 10:22:35
+
+[0.0s - 4.3s] you get into algorithmic day trading. Today I'm going to go over the most common algorithmic
+[4.3s - 8.0s] trading styles and I'm going to share with you the pros, the cons, and the ones that I personally
+[8.0s - 12.2s] use. Number one, trend following or momentum. In order for a trend following system to really
+[12.2s - 17.3s] work, you need some sort of survivorship bias. So it's common with gold and the S&P 500.
+[17.3s - 20.3s] Particularly the asset you're trading is like this, you're constantly trading the way up to
+[20.3s - 25.6s] juice the returns. However, the second the market does this, there goes any cash flow you
+[25.6s - 30.5s] may hope to have had. Next is mean reversion, the most common. These systems can be either
+[30.5s - 34.6s] extremely profitable or extremely dangerous. You are trying to trade against the trend.
+[34.6s - 38.7s] Mean reversion states that there has to be a norm of which the market usually trades in. If the
+[38.7s - 43.8s] market goes outside of that, you're trying to trade for it to go back to the mean version.
+[43.8s - 47.8s] Number three, high-frequency trading. Unfortunately, I believe high-frequency
+[47.8s - 51.8s] trading is going to be a thing of the past. I personally know people who managed billions of
+[51.8s - 56.9s] dollars using high-frequency trading and no longer are in business. It is too competitive,
+[56.9s - 61.8s] is too expensive, and the edge just isn't there for most people. Last one I'm going to be going
+[61.8s - 65.8s] over is statistical arbitrage. And this is a really good one. You're trying to find two assets
+[65.8s - 71.8s] that should correlate in value. And if one of the values increases exponentially or one decreases,
+[71.8s - 78.0s] you're trying to trade for them to go back to a mean. Essentially, Coke and Pepsi, if Pepsi drops
+[78.0s - 83.1s] significantly due to earnings and Coke remains the same, you're probably going to go along Pepsi
+[83.1s - 88.6s] in theory. Now, for me, mean reversion is my home. I personally love mean reversion based systems.
+[88.6s - 94.5s] It produces the best cash flow models you can possibly imagine. They do carry a form of risk.
+[94.5s - 100.1s] So what is in your best interest is to have most of your assets probably trading a trend following
+[100.1s - 105.8s] system with survivorship bias with 20 to 40 percent of your income trading a mean revert system
+[105.8s - 111.0s] that's constantly being updated with a regime classification tool to make sure that you do
+[111.0s - 121.8s] not blow any of your accounts. Hopefully this helped.
+
+---
+
+you get into algorithmic day trading. Today I'm going to go over the most common algorithmic trading styles and I'm going to share with you the pros, the cons, and the ones that I personally use. Number one, trend following or momentum. In order for a trend following system to really work, you need some sort of survivorship bias. So it's common with gold and the S&P 500. Particularly the asset you're trading is like this, you're constantly trading the way up to juice the returns. However, the second the market does this, there goes any cash flow you may hope to have had. Next is mean reversion, the most common. These systems can be either extremely profitable or extremely dangerous. You are trying to trade against the trend. Mean reversion states that there has to be a norm of which the market usually trades in. If the market goes outside of that, you're trying to trade for it to go back to the mean version. Number three, high-frequency trading. Unfortunately, I believe high-frequency trading is going to be a thing of the past. I personally know people who managed billions of dollars using high-frequency trading and no longer are in business. It is too competitive, is too expensive, and the edge just isn't there for most people. Last one I'm going to be going over is statistical arbitrage. And this is a really good one. You're trying to find two assets that should correlate in value. And if one of the values increases exponentially or one decreases, you're trying to trade for them to go back to a mean. Essentially, Coke and Pepsi, if Pepsi drops significantly due to earnings and Coke remains the same, you're probably going to go along Pepsi in theory. Now, for me, mean reversion is my home. I personally love mean reversion based systems. It produces the best cash flow models you can possibly imagine. They do carry a form of risk. So what is in your best interest is to have most of your assets probably trading a trend following system with survivorship bias with 20 to 40 percent of your income trading a mean revert system that's constantly being updated with a regime classification tool to make sure that you do not blow any of your accounts. Hopefully this helped.

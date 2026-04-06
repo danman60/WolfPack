@@ -1,0 +1,19 @@
+# Transcript: Video by nick_saraev
+# Source: https://www.instagram.com/reels/DWMM-TxD6Vr/
+# Project: WolfPack
+# Model: small | Language: en | Duration: 40.1s
+# Transcribed: 2026-04-03 09:45:10
+
+[0.0s - 5.0s] You don't need to pay for Veo3, or Kling, or Sora, or any video model anymore. Just use this
+[5.0s - 10.1s] open-source AI model that lets you generate 4K cinematic videos directly on your computer,
+[10.1s - 15.6s] completely free. It's called LTX 2.3, and it turns your text and images into stunning 4K
+[15.6s - 21.4s] videos with full audio, sound effects, and music all perfectly synced. Plus, they also launched
+[21.4s - 26.1s] LTX Desktop. It's a free video editor that lets you download the models, then generate videos,
+[26.1s - 30.4s] and edit everything locally all in one app. You can add videos to your project, cut it,
+[30.4s - 35.0s] and replace scenes, add in text and music, and more, completely free and offline,
+[35.0s - 38.9s] depending on your hardware. So, want to try it for yourself? Just comment video down below,
+[38.9s - 39.9s] and I'll send you all the links.
+
+---
+
+You don't need to pay for Veo3, or Kling, or Sora, or any video model anymore. Just use this open-source AI model that lets you generate 4K cinematic videos directly on your computer, completely free. It's called LTX 2.3, and it turns your text and images into stunning 4K videos with full audio, sound effects, and music all perfectly synced. Plus, they also launched LTX Desktop. It's a free video editor that lets you download the models, then generate videos, and edit everything locally all in one app. You can add videos to your project, cut it, and replace scenes, add in text and music, and more, completely free and offline, depending on your hardware. So, want to try it for yourself? Just comment video down below, and I'll send you all the links.

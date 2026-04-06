@@ -1,0 +1,169 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - link "WolfPack" [ref=e5] [cursor=pointer]:
+          - /url: /
+          - img [ref=e7]
+          - generic [ref=e11]: WolfPack
+        - generic [ref=e12]:
+          - link "Dashboard" [ref=e13] [cursor=pointer]:
+            - /url: /
+          - link "Intelligence" [ref=e14] [cursor=pointer]:
+            - /url: /intelligence
+          - link "Trading" [ref=e15] [cursor=pointer]:
+            - /url: /trading
+          - link "Portfolio" [ref=e16] [cursor=pointer]:
+            - /url: /portfolio
+          - link "Backtest" [ref=e17] [cursor=pointer]:
+            - /url: /backtest
+          - link "Auto-Bot" [ref=e18] [cursor=pointer]:
+            - /url: /auto-bot
+          - link "LP Pools" [ref=e19] [cursor=pointer]:
+            - /url: /pools
+          - link "Settings" [ref=e20] [cursor=pointer]:
+            - /url: /settings
+      - generic [ref=e23]:
+        - button "Hyperliquid" [ref=e24] [cursor=pointer]
+        - button "dYdX" [ref=e25] [cursor=pointer]
+  - main [ref=e26]:
+    - generic [ref=e27]:
+      - generic [ref=e28]:
+        - generic [ref=e29]:
+          - heading "Intelligence Brief" [level=1] [ref=e30]
+          - paragraph [ref=e31]: Multi-agent AI analysis for Hyperliquid
+        - button "Run Intelligence" [ref=e32] [cursor=pointer]
+      - generic [ref=e33]:
+        - generic [ref=e34]:
+          - generic [ref=e35]:
+            - generic [ref=e36]:
+              - generic "The Quant" [ref=e37]:
+                - img [ref=e39]
+              - generic [ref=e59]:
+                - heading "The Quant" [level=3] [ref=e60]
+                - paragraph [ref=e61]: Technical Analysis
+            - generic [ref=e62]: completed
+          - generic [ref=e208]:
+            - paragraph [ref=e209]: BTC in a panic-driven, high-volatility environment with weak bearish bias. Key support at SMA_50 (70,730); break below could trigger further declines. Adopt reduced exposure and await stabilization.
+            - generic [ref=e210]: "Confidence: 41%"
+            - generic [ref=e211]: 3/13/2026, 6:55:16 PM
+        - generic [ref=e64]:
+          - generic [ref=e65]:
+            - generic [ref=e66]:
+              - generic "The Snoop" [ref=e67]:
+                - img [ref=e69]
+              - generic [ref=e93]:
+                - heading "The Snoop" [level=3] [ref=e94]
+                - paragraph [ref=e95]: Social Intelligence
+            - generic [ref=e96]: completed
+          - generic [ref=e212]:
+            - paragraph [ref=e213]: Extreme fear and panic regime suggest oversold conditions with contrarian potential, but neutral whale activity and balanced funding limit conviction. High social attention adds noise, requiring caution for reversal signals.
+            - generic [ref=e214]: "Confidence: 55%"
+            - generic [ref=e215]: 3/13/2026, 6:54:09 PM
+        - generic [ref=e98]:
+          - generic [ref=e99]:
+            - generic [ref=e100]:
+              - generic "The Sage" [ref=e101]:
+                - img [ref=e103]
+              - generic [ref=e122]:
+                - heading "The Sage" [level=3] [ref=e123]
+                - paragraph [ref=e124]: Forecasting
+            - generic [ref=e125]: completed
+          - generic [ref=e216]:
+            - paragraph [ref=e217]: "Multiple bearish signals align: panic regime, extreme fear sentiment, high correlation approaching crisis lock, and OI stagnation. Primary scenario is breakdown to 65k (45% probability). Extreme fear provides contrarian bounce potential but requires catalyst."
+            - generic [ref=e218]: "Confidence: 65%"
+            - generic [ref=e219]: 3/13/2026, 6:54:19 PM
+        - generic [ref=e127]:
+          - generic [ref=e128]:
+            - generic [ref=e129]:
+              - generic "The Brief" [ref=e130]:
+                - img [ref=e132]
+              - generic [ref=e152]:
+                - heading "The Brief" [level=3] [ref=e153]
+                - paragraph [ref=e154]: Decision Synthesis
+            - generic [ref=e155]: completed
+          - generic [ref=e220]:
+            - paragraph [ref=e221]: No trade — conviction below 60. Quant and Sage bearish, Snoop contrarian but unconfirmed. Wait for break below 70,730 or panic exhaustion bounce before considering entry.
+            - generic [ref=e222]: "Confidence: 45%"
+            - generic [ref=e223]: 3/13/2026, 6:55:33 PM
+      - generic [ref=e157]:
+        - heading "Quantitative Modules" [level=2] [ref=e160]
+        - generic [ref=e161]:
+          - generic [ref=e162]:
+            - generic [ref=e163]: 📊
+            - generic [ref=e164]: Regime Detection
+            - generic [ref=e165]: 6:53:52 PM
+          - generic [ref=e166]:
+            - generic [ref=e167]: 💧
+            - generic [ref=e168]: Liquidity Intel
+            - generic [ref=e169]: 6:53:52 PM
+          - generic [ref=e170]:
+            - generic [ref=e171]: 💰
+            - generic [ref=e172]: Funding & Carry
+            - generic [ref=e173]: 6:53:52 PM
+          - generic [ref=e174]:
+            - generic [ref=e175]: 🔗
+            - generic [ref=e176]: Correlation
+            - generic [ref=e177]: 6:53:53 PM
+          - generic [ref=e178]:
+            - generic [ref=e179]: 📈
+            - generic [ref=e180]: Volatility
+            - generic [ref=e181]: 6:53:52 PM
+          - generic [ref=e182]:
+            - generic [ref=e183]: 🛡
+            - generic [ref=e184]: Circuit Breakers
+            - generic [ref=e185]: 6:53:53 PM
+          - generic [ref=e186]:
+            - generic [ref=e187]: ⏱
+            - generic [ref=e188]: Execution Timing
+            - generic [ref=e189]: 6:53:53 PM
+          - generic [ref=e190]:
+            - generic [ref=e191]: 📢
+            - generic [ref=e192]: Social Sentiment
+            - generic [ref=e193]: 6:53:53 PM
+          - generic [ref=e194]:
+            - generic [ref=e195]: 🐋
+            - generic [ref=e196]: Whale Tracker
+            - generic [ref=e197]: 6:53:53 PM
+          - generic [ref=e198]:
+            - generic [ref=e199]: 🔬
+            - generic [ref=e200]: Backtest
+            - generic [ref=e201]: No data
+      - generic [ref=e202]:
+        - heading "Latest Analysis" [level=2] [ref=e205]
+        - generic [ref=e206]:
+          - generic [ref=e224]:
+            - heading "The Quant" [level=3] [ref=e225]
+            - paragraph [ref=e226]: BTC in a panic-driven, high-volatility environment with weak bearish bias. Key support at SMA_50 (70,730); break below could trigger further declines. Adopt reduced exposure and await stabilization.
+            - generic [ref=e227]:
+              - generic [ref=e228]: "Confidence:"
+              - generic [ref=e231]: 41%
+            - generic [ref=e232]:
+              - generic [ref=e233]: "SMA_20: 71720.60"
+              - generic [ref=e234]: "SMA_50: 70729.96"
+              - generic [ref=e235]: "price_change_pct: -0.02"
+              - generic [ref=e236]: "RSI_14: 46.48"
+              - generic [ref=e237]: "latest_close: 70988.00"
+              - generic [ref=e238]: bearish (15)
+          - generic [ref=e239]:
+            - heading "The Snoop" [level=3] [ref=e240]
+            - paragraph [ref=e241]: Extreme fear and panic regime suggest oversold conditions with contrarian potential, but neutral whale activity and balanced funding limit conviction. High social attention adds noise, requiring caution for reversal signals.
+            - generic [ref=e242]:
+              - generic [ref=e243]: "Confidence:"
+              - generic [ref=e246]: 55%
+            - generic [ref=e248]: "Sentiment: -65"
+          - generic [ref=e249]:
+            - heading "The Sage" [level=3] [ref=e250]
+            - paragraph [ref=e251]: "Multiple bearish signals align: panic regime, extreme fear sentiment, high correlation approaching crisis lock, and OI stagnation. Primary scenario is breakdown to 65k (45% probability). Extreme fear provides contrarian bounce potential but requires catalyst."
+            - generic [ref=e252]:
+              - generic [ref=e253]: "Confidence:"
+              - generic [ref=e256]: 65%
+            - generic [ref=e258]: "Outlook: bearish"
+          - generic [ref=e259]:
+            - heading "The Brief" [level=3] [ref=e260]
+            - paragraph [ref=e261]: No trade — conviction below 60. Quant and Sage bearish, Snoop contrarian but unconfirmed. Wait for break below 70,730 or panic exhaustion bounce before considering entry.
+            - generic [ref=e262]:
+              - generic [ref=e263]: "Confidence:"
+              - generic [ref=e266]: 45%
+            - generic [ref=e268]: wait BTC (45%)
+  - alert [ref=e207]

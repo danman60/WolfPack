@@ -1,0 +1,77 @@
+{
+  "title": "68K views \u00b7 688 reactions | he didn\u2019t text back but my trading agent did \ud83d\udc9a\ud83e\udef6 and now I can get signal on my desktop and phone for when I should buy and sell the current stocks in my portfolio! Literally took me like 20 minutes to build it out with @repl.it all I did was insert my API keys #stockmarket #replitagent4 #replit #tradingsingals | Mariana Antaya AI/ML, Cars & Investing",
+  "url": "https://www.facebook.com/share/r/18DLh6oRbW/",
+  "project": "WolfPack",
+  "model": "small",
+  "language": "en",
+  "language_probability": 1.0,
+  "duration_seconds": 63.0,
+  "segments": [
+    {
+      "start": 0.5,
+      "end": 5.5,
+      "text": "Let's build a stock trading bot that's going to send me alerts so that I know when to buy and sell"
+    },
+    {
+      "start": 5.5,
+      "end": 9.9,
+      "text": "the stocks in my portfolio. I found that this is probably one of the easiest ways to automate"
+    },
+    {
+      "start": 9.9,
+      "end": 13.9,
+      "text": "an agent to actually do something for you, so let's get into it. I'm going to be pulling my"
+    },
+    {
+      "start": 13.9,
+      "end": 19.4,
+      "text": "real-time data from the Alpaca Markets API, but really feel free to customize this to whatever"
+    },
+    {
+      "start": 19.4,
+      "end": 24.6,
+      "text": "data source you prefer. This is the very first prompt that I used in order to build out my agent,"
+    },
+    {
+      "start": 24.6,
+      "end": 29.5,
+      "text": "but now with Agent 4, it's actually the very first coding agent that helps you"
+    },
+    {
+      "start": 29.5,
+      "end": 34.3,
+      "text": "plan, design, and build at the same time. In parallel, I'm actually going to spin up another"
+    },
+    {
+      "start": 34.3,
+      "end": 40.6,
+      "text": "agent that way I can work even faster and I can even add animations, so that's super cool. And"
+    },
+    {
+      "start": 40.6,
+      "end": 45.6,
+      "text": "obviously, I'm going to want to take this on the go so I can even convert it into a mobile app"
+    },
+    {
+      "start": 45.6,
+      "end": 51.1,
+      "text": "super quickly. And just like that, I created my own web app and mobile app to get trading signals"
+    },
+    {
+      "start": 51.1,
+      "end": 55.5,
+      "text": "on the stocks in my portfolio. It's really awesome because Replet enables you to focus"
+    },
+    {
+      "start": 55.5,
+      "end": 60.2,
+      "text": "more on the vision instead of the execution of your actual app, so if you're interested in"
+    },
+    {
+      "start": 60.2,
+      "end": 62.9,
+      "text": "building your first agent, go check them out."
+    }
+  ],
+  "full_text": "Let's build a stock trading bot that's going to send me alerts so that I know when to buy and sell the stocks in my portfolio. I found that this is probably one of the easiest ways to automate an agent to actually do something for you, so let's get into it. I'm going to be pulling my real-time data from the Alpaca Markets API, but really feel free to customize this to whatever data source you prefer. This is the very first prompt that I used in order to build out my agent, but now with Agent 4, it's actually the very first coding agent that helps you plan, design, and build at the same time. In parallel, I'm actually going to spin up another agent that way I can work even faster and I can even add animations, so that's super cool. And obviously, I'm going to want to take this on the go so I can even convert it into a mobile app super quickly. And just like that, I created my own web app and mobile app to get trading signals on the stocks in my portfolio. It's really awesome because Replet enables you to focus more on the vision instead of the execution of your actual app, so if you're interested in building your first agent, go check them out."
+}

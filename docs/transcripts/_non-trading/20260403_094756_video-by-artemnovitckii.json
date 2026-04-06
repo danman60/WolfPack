@@ -1,0 +1,77 @@
+{
+  "title": "Video by artem.novitckii",
+  "url": "https://www.instagram.com/reel/DWBaRqwDFWy/",
+  "project": "WolfPack",
+  "model": "small",
+  "language": "en",
+  "language_probability": 1.0,
+  "duration_seconds": 57.0,
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 4.8,
+      "text": "Here's what almost everyone missed in Claude's latest update, and why I'll never use Canva again."
+    },
+    {
+      "start": 4.8,
+      "end": 10.2,
+      "text": "A few days ago, Claude released an update that lets you build interactive visuals directly inside your chat."
+    },
+    {
+      "start": 10.2,
+      "end": 14.8,
+      "text": "Most of the people thought it was just for basic diagrams or flowcharts, but I found a cheat code."
+    },
+    {
+      "start": 14.8,
+      "end": 21.7,
+      "text": "If you use the right prompt, Claude will actually design a completely highly aesthetic on-brand Instagram carousels right inside the chat."
+    },
+    {
+      "start": 21.7,
+      "end": 24.9,
+      "text": "And honestly, they look better than anything I've ever designed in Canva."
+    },
+    {
+      "start": 24.9,
+      "end": 26.1,
+      "text": "And here's how it works."
+    },
+    {
+      "start": 26.1,
+      "end": 29.5,
+      "text": "Inside my project, I asked Claude to generate an Instagram carousel."
+    },
+    {
+      "start": 29.5,
+      "end": 36.1,
+      "text": "He created seven slides with all the images, text, and best practices like progress bar, arrows, and visual hierarchy."
+    },
+    {
+      "start": 36.1,
+      "end": 43.8,
+      "text": "And the best part is, if you don't like something, just tell Claude to fix it, and that way you literally never have to touch a design tool again."
+    },
+    {
+      "start": 43.8,
+      "end": 45.8,
+      "text": "All I do is save them and pause on Instagram."
+    },
+    {
+      "start": 45.8,
+      "end": 49.9,
+      "text": "The whole process took me less than a minute, setting me hours of drag and drop on Canva."
+    },
+    {
+      "start": 49.9,
+      "end": 55.0,
+      "text": "And if you want the exact custom instructions for the Claude project to do the same with your branding,"
+    },
+    {
+      "start": 55.0,
+      "end": 57.0,
+      "text": "comment the word Claude and I'll DM it to you."
+    }
+  ],
+  "full_text": "Here's what almost everyone missed in Claude's latest update, and why I'll never use Canva again. A few days ago, Claude released an update that lets you build interactive visuals directly inside your chat. Most of the people thought it was just for basic diagrams or flowcharts, but I found a cheat code. If you use the right prompt, Claude will actually design a completely highly aesthetic on-brand Instagram carousels right inside the chat. And honestly, they look better than anything I've ever designed in Canva. And here's how it works. Inside my project, I asked Claude to generate an Instagram carousel. He created seven slides with all the images, text, and best practices like progress bar, arrows, and visual hierarchy. And the best part is, if you don't like something, just tell Claude to fix it, and that way you literally never have to touch a design tool again. All I do is save them and pause on Instagram. The whole process took me less than a minute, setting me hours of drag and drop on Canva. And if you want the exact custom instructions for the Claude project to do the same with your branding, comment the word Claude and I'll DM it to you."
+}

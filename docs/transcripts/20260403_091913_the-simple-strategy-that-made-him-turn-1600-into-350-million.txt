@@ -1,0 +1,326 @@
+# Transcript: The SIMPLE Strategy That Made Him Turn $1,600 Into $350 MILLION
+# Source: https://www.youtube.com/watch?v=2ElrQnn2cZE
+# Project: WolfPack
+# Model: small | Language: en | Duration: 687.6s
+# Transcribed: 2026-04-03 09:19:20
+
+[0.0s - 1.8s] This is Richard Dennis.
+[1.8s - 3.8s] He is one of the most famous traders
+[3.8s - 6.5s] who made millions of dollars in the 70s and 80s.
+[6.5s - 8.8s] To be specific, at the age of 22,
+[8.8s - 12.8s] he borrowed $1,600 that he would turn into $350 million.
+[14.1s - 15.0s] Are you serious right now?
+[15.0s - 17.9s] Yes, you heard me right, $350 million.
+[17.9s - 19.1s] And what's even crazier?
+[19.1s - 21.9s] He did all of this in the span of nine years.
+[21.9s - 23.2s] That's insane.
+[23.2s - 25.9s] He applied a simple and unorthodox strategy
+[25.9s - 28.8s] that so many other traders criticized Dennis for.
+[28.8s - 30.4s] Moreover, William Eckhart,
+[30.4s - 32.6s] another great successful trader of that era,
+[32.6s - 34.6s] claimed that trading cannot be taught.
+[34.6s - 36.0s] It's only an innate talent.
+[36.0s - 38.4s] Dennis believed that anyone could learn to trade
+[38.4s - 39.5s] if adequately trained.
+[39.5s - 41.9s] To prove his thesis, he launched an experiment
+[41.9s - 44.3s] that would become legendary in trading history.
+[44.3s - 47.4s] He recruited and trained 21 men and two women.
+[47.4s - 49.7s] They came from completely different backgrounds,
+[49.7s - 51.8s] clerks, musicians, chess players,
+[51.8s - 54.3s] ordinary people with no trading experience.
+[54.3s - 56.7s] This group became known as the Turtle Traders.
+[56.7s - 58.8s] When the experiment ended five years later,
+[58.8s - 63.8s] his Turtles had generated a total profit of $175 million.
+[63.8s - 66.5s] Dennis's students achieved incredible results,
+[66.5s - 69.2s] proving that discipline beats talent every time.
+[69.2s - 72.4s] In fact, Dennis expected to lose on most of his trades,
+[72.4s - 73.7s] but when trades went right,
+[73.7s - 75.9s] they would run for weeks or even months,
+[75.9s - 78.6s] and that's what made the strategy wildly profitable.
+[78.6s - 81.4s] Today, several of these former Turtle Traders
+[81.4s - 84.7s] have become successful hedge fund managers like Jerry Parker,
+[84.7s - 87.4s] and many had already reached millionaire status.
+[87.4s - 89.2s] Now, if you're like me, you're thinking,
+[89.2s - 90.1s] how did he do it?
+[90.1s - 91.9s] Well, I decided to look for the answer
+[91.9s - 93.3s] to that specific question,
+[93.3s - 95.2s] scavenging the internet and books
+[95.2s - 98.3s] for the strategy he used to get those massive gains,
+[98.3s - 101.4s] and oh, did I find something really interesting,
+[101.4s - 104.6s] and I gotta say, Richard is an absolute genius.
+[104.6s - 105.9s] I'm gonna share it with you guys,
+[105.9s - 107.7s] so leave me a thank you in the comments.
+[107.7s - 108.7s] Let's get straight to it.
+[108.7s - 111.5s] Before jumping directly into Richard Dennis's strategies,
+[111.5s - 113.5s] we need to discuss the core principles
+[113.6s - 114.8s] he used in the trading world.
+[114.8s - 117.0s] Risk a fixed percentage per trade.
+[117.0s - 118.2s] Cut your losses quickly.
+[118.2s - 119.5s] Let your profits run.
+[119.5s - 121.6s] Trade trends, not predictions.
+[121.6s - 123.2s] Richard always told his students
+[123.2s - 125.9s] they should risk no more than 2% of their account
+[125.9s - 126.8s] on each trade.
+[126.8s - 129.2s] This type of percentage has always been variable
+[129.2s - 131.0s] over the years, since it depends heavily
+[131.0s - 134.6s] on the strategy, timeframe, asset, and many other variables.
+[134.6s - 136.7s] But Dennis used this type of risk management
+[136.7s - 137.8s] as his foundation.
+[137.8s - 139.0s] The main part of his theories
+[139.0s - 140.9s] was based on one crucial concept.
+[140.9s - 142.9s] Cut losses as quickly as possible
+[142.9s - 144.2s] and let profits run.
+[144.2s - 146.2s] This is what separates the professionals
+[146.2s - 147.2s] from everyone else.
+[147.2s - 149.5s] Let me show you exactly how this works on a chart.
+[149.5s - 152.0s] Here we can detect a major resistance zone
+[152.0s - 154.4s] where price has touched multiple times
+[154.4s - 156.2s] and projected the asset downward
+[156.2s - 157.7s] each time it reached that zone.
+[157.7s - 160.4s] It fell every single time until obviously,
+[160.4s - 162.2s] there comes a moment where the market manages
+[162.2s - 163.2s] to break this structure.
+[163.2s - 164.1s] What happens then?
+[164.1s - 165.9s] The trend explodes upward.
+[165.9s - 167.9s] This is something Dennis wanted his students
+[167.9s - 169.5s] to understand crystal clear,
+[169.5s - 172.0s] that concept that wherever you enter the market,
+[172.0s - 174.0s] you can make money as long as you have
+[174.0s - 175.3s] proper risk management.
+[175.3s - 177.8s] Or as he said, risk management based more
+[177.8s - 179.3s] on numbers and mathematics
+[179.3s - 180.9s] than on other trader psychology.
+[180.9s - 182.7s] Let me give you a very simple example
+[182.7s - 184.1s] using this same structure.
+[184.1s - 185.7s] Imagine a beginner trader.
+[185.7s - 188.0s] Instead of placing this major resistance zone
+[188.0s - 190.3s] at this order block, this liquidity zone,
+[190.3s - 191.3s] whatever you wanna call it,
+[191.3s - 193.5s] sees two highs and decides to place
+[193.5s - 194.8s] that resistance line here.
+[194.8s - 196.8s] Let's put it in red so everything matches better.
+[196.8s - 199.0s] He waits for it to break, for example here,
+[199.0s - 200.3s] to enter one of his trades.
+[200.3s - 202.4s] Of course, he'd lose this one here,
+[202.4s - 204.6s] lose the next one again, and so on
+[204.6s - 207.0s] until there comes a moment right at this candle
+[207.0s - 209.4s] where this breakout candle marks the beginning
+[209.4s - 210.6s] of a major uptrend.
+[210.6s - 212.9s] If we go back to the basic concepts from Dennis
+[212.9s - 214.4s] that we discussed a moment ago,
+[214.4s - 217.3s] if we really focus on having good risk management
+[217.3s - 218.8s] and cutting our losses early,
+[218.8s - 221.4s] but letting our profits run throughout the entire trend,
+[221.4s - 224.1s] here we could have lost, for example, this amount,
+[224.1s - 227.1s] then another amount, those are our total losses.
+[227.1s - 229.3s] But here, if you notice the proportion,
+[229.3s - 231.6s] we would have gained this significant amount.
+[231.6s - 232.5s] What's the net result?
+[232.5s - 235.8s] Total gains minus total losses equals this profit.
+[235.8s - 237.5s] This is a very simple example
+[237.5s - 239.5s] so you understand the philosophy Dennis had.
+[239.5s - 242.0s] Obviously, he didn't enter randomly all the time.
+[242.0s - 243.9s] He followed specific strategies
+[243.9s - 246.5s] and considered certain variables that we'll see next.
+[246.5s - 248.3s] But clearly, the most important thing
+[248.3s - 250.3s] about his trading style and philosophy
+[250.3s - 252.8s] is that we can lose small amounts many times
+[252.8s - 255.4s] and compensate by winning big amounts few times.
+[255.4s - 256.7s] This is one of those things
+[256.7s - 258.6s] that if you're starting in the trading world,
+[258.6s - 260.1s] might shock you quite a bit.
+[260.1s - 262.6s] You don't need a positive win rate to be profitable.
+[262.6s - 266.6s] You can lose, for example, nine trades with a 1% stop loss
+[266.6s - 269.1s] and then on that one remaining trade out of 10,
+[269.1s - 271.8s] make 25% and you'll have made a lot of money.
+[271.8s - 274.9s] Now, imagine performing this style of trading consistently,
+[274.9s - 277.3s] not just having a track record of 10 trades,
+[277.3s - 280.9s] but having one of 1,000, 10,000 or a million trades.
+[280.9s - 282.1s] If you look at any chart,
+[282.1s - 284.1s] the market will always move the same way.
+[284.1s - 286.9s] Trend, consolidation zone or range as we call it,
+[287.0s - 289.5s] reversal or in this case, trend continuation,
+[289.5s - 291.5s] then another consolidation zone,
+[291.5s - 293.6s] another breakout and so on repeatedly.
+[293.6s - 296.8s] So it's very logical to think that if we have risk management
+[296.8s - 299.7s] that involves cutting those losses as quickly as possible,
+[299.7s - 302.5s] when we catch a complete trend in just one of these trades,
+[302.5s - 305.3s] we'll make much more money than we lost in all the others.
+[305.3s - 307.1s] But what's the problem with all this?
+[307.1s - 310.3s] Normally traders or directly people, human beings,
+[310.3s - 312.7s] have pretty poor psychological capacity
+[312.7s - 314.3s] to face this type of situation.
+[314.3s - 317.1s] Any person who doesn't have discipline, practice
+[317.1s - 319.4s] and knowledge of the subject will get nervous
+[319.4s - 321.4s] or suffer tremendously each time
+[321.4s - 322.6s] they have one of these losses.
+[322.6s - 325.0s] Even if you tell them they're controlled losses
+[325.0s - 326.9s] and that they'll recover and make more money
+[326.9s - 328.4s] when they catch the entire trend.
+[328.4s - 329.7s] Dennis commented on something
+[329.7s - 332.5s] that many other billionaire traders today have also said,
+[332.5s - 334.7s] that psychological part of human beings
+[334.7s - 337.4s] is what normally makes new traders lose the most money.
+[337.4s - 339.3s] Even having professionals helping them,
+[339.3s - 341.0s] telling them to follow those methods,
+[341.0s - 343.7s] if they don't spend a lot of time gaining experience,
+[343.7s - 345.5s] they'll end up losing money for this reason.
+[345.5s - 347.0s] Now let's see step by step
+[347.0s - 349.8s] how Richard Dennis specifically used price action
+[349.8s - 353.5s] to go from $1,600 to $350 million.
+[353.5s - 355.7s] As I mentioned before in the structure example,
+[355.7s - 358.2s] Dennis, by basing himself on price action
+[358.2s - 359.6s] or direct market movements,
+[359.6s - 362.5s] had to pay close attention to previous structural highs
+[362.5s - 364.7s] and lows zones to make all his entries.
+[364.7s - 366.6s] So we go to the indicators section
+[366.6s - 368.9s] and look for highest high, lowest low.
+[368.9s - 371.0s] That is the highest high and lowest low
+[371.0s - 372.6s] that represent with this indicator,
+[372.6s - 374.7s] those structural high and low zones
+[374.7s - 376.7s] that we must consider to form our strategy.
+[376.7s - 379.1s] First of all, we go to the configuration section
+[379.1s - 380.5s] and set everything to 20,
+[380.5s - 382.5s] which is one of the things Dennis always did.
+[382.5s - 383.9s] He studied periods in 20.
+[383.9s - 385.0s] In the style section,
+[385.0s - 388.0s] we'll remove the moving average, click okay, and that's it,
+[388.0s - 390.2s] since we're only going to need those high and low zones.
+[390.2s - 392.9s] This indicator is very simple to see and use.
+[392.9s - 396.0s] Basically, it continuously shows us those highs and lows,
+[396.0s - 398.4s] the structures that form within those price movements.
+[398.4s - 401.1s] For example, here we see how we have these highs.
+[401.1s - 403.8s] We see this interaction of the candles with this upper zone.
+[403.8s - 405.3s] We're in a one hour timeframe,
+[405.3s - 408.4s] so quite a bit of time passes here with price in this range.
+[408.4s - 409.6s] Then it falls to this zone
+[409.6s - 411.3s] where we see that new low is marked.
+[411.3s - 412.1s] What happens here?
+[412.1s - 415.4s] That low breaks and another low forms in this structure,
+[415.4s - 416.2s] until when?
+[416.2s - 419.3s] Until it breaks again down here and so on, successively.
+[419.3s - 421.2s] Well, Dennis also used what's called
+[421.2s - 423.5s] the average true range or ATR,
+[423.5s - 425.7s] a very simple and well-known indicator.
+[425.7s - 428.1s] We search for ATR and it appears here,
+[428.1s - 429.8s] even the one that comes with TradingView.
+[429.8s - 432.0s] We click and something like this will appear.
+[432.0s - 433.7s] We go to the configuration section
+[433.7s - 436.4s] and change the length from 14 to 20 as well.
+[436.4s - 439.4s] In smoothing, we'll place SMA, click OK,
+[439.4s - 441.9s] and we'll add something else within this same indicator.
+[441.9s - 444.1s] If we go to the three dots of the ATR,
+[444.1s - 446.6s] this option to add another indicator or strategy
+[446.6s - 448.4s] to the ATR itself will appear.
+[448.4s - 450.7s] We click and the indicator's window comes up again.
+[450.7s - 452.2s] Several will appear down here.
+[452.2s - 454.3s] For example, the exponential and such,
+[454.3s - 455.7s] but we'll use this simple one.
+[455.7s - 457.4s] We'll click it and as you can see,
+[457.4s - 460.3s] it adds an average that will be controlling the ATR data.
+[460.3s - 462.7s] We also set it to 20 and here in source,
+[462.7s - 466.3s] we leave it on ATR so it's giving us the data from that ATR.
+[466.3s - 467.5s] In the style section,
+[467.5s - 469.3s] you can change the colors to your liking.
+[469.3s - 470.9s] I'm going to leave it like this in white
+[470.9s - 472.4s] and I place 20 here as well.
+[472.4s - 475.5s] So this would be the ATR and here the moving average.
+[475.5s - 476.8s] There it is, 2020.
+[476.8s - 479.5s] Dennis's basic strategy was based on this.
+[479.5s - 482.9s] We detect these previous highs and having this indicator,
+[482.9s - 485.9s] we only need to place another simple moving average,
+[485.9s - 487.4s] but in this case for the upper part,
+[487.4s - 489.8s] we edit it and place the length at 200.
+[489.8s - 492.3s] In this case, I'll put it in yellow, a bit thicker.
+[492.3s - 493.8s] I'll remove this from here
+[493.8s - 496.1s] and now we have our 200 period average
+[496.1s - 498.1s] that will indicate with a broader perspective
+[498.1s - 499.4s] what trend we should follow.
+[499.4s - 502.4s] In this case, of course, price is above that average.
+[502.4s - 505.0s] So we should look for bullish breakouts to enter
+[505.0s - 506.6s] and have price continue upward
+[506.6s - 507.9s] while we take those profits.
+[507.9s - 510.3s] What Dennis said is that we should first detect
+[510.3s - 512.9s] a structural breakout following the current trend,
+[512.9s - 513.9s] that is uptrend.
+[513.9s - 515.7s] So we have this previous high zone.
+[515.7s - 517.3s] This candle that breaks it upward.
+[517.3s - 518.8s] And then when this candle closes
+[518.8s - 521.2s] from exactly that closing point of that candle,
+[521.2s - 523.1s] we would have to place the stop loss.
+[523.1s - 526.3s] We visualize how many points the ATR average would mark us
+[526.3s - 528.1s] here on the right, multiply it by two.
+[528.1s - 530.8s] In this case, this value times two would be this value.
+[530.8s - 532.3s] And from the close of that candle
+[532.3s - 533.8s] that broke the previous highs,
+[533.8s - 536.9s] which would be this value, we would subtract those values.
+[536.9s - 539.1s] That's where we should place our stop loss.
+[539.1s - 542.2s] Clearly in this case, the stop loss was hit by price,
+[542.2s - 543.1s] losing the trade.
+[543.1s - 545.3s] But that's the basis of Dennis's strategy.
+[545.3s - 547.5s] As I explained before, a bit further ahead,
+[547.5s - 549.2s] we see again this candle here
+[549.2s - 551.6s] that breaks those previous highs again, uptrend.
+[551.6s - 554.7s] We check the ATR, which is more or less around these points.
+[554.7s - 556.4s] Times two would be this value.
+[556.4s - 558.2s] At the candle close, it's around this.
+[558.2s - 561.0s] So again, our stop loss would be around this value.
+[561.0s - 562.3s] Again, we fail the trade.
+[562.3s - 565.2s] Right here, this candle breaks these previous highs again.
+[565.2s - 567.4s] In this case, the ATR is around this,
+[567.4s - 569.3s] which would be about these points.
+[569.3s - 571.7s] This candle, for example, is around this value.
+[571.7s - 574.0s] So again, it would be here, the stop loss,
+[574.0s - 575.1s] more or less around here.
+[575.1s - 576.7s] In this case, what happens?
+[576.7s - 579.5s] As you can see, price doesn't close our stop loss,
+[579.5s - 582.2s] because in this case, this breakout has been legitimate.
+[582.2s - 585.3s] And now we only have to see where we have to take profits.
+[585.3s - 587.5s] Dennis tells us we should let our trade run
+[587.5s - 589.6s] until exactly this happens here.
+[589.6s - 592.7s] These lows right at the low of this candle have been broken.
+[592.7s - 594.0s] The next candle breaks it.
+[594.0s - 596.9s] So at that exact point, we would have taken profits.
+[596.9s - 599.1s] What's the conclusion of having traded this way?
+[599.1s - 601.9s] Simply looking at price action in this automatic way
+[601.9s - 603.5s] without considering any other data.
+[603.5s - 606.2s] We lost here this percent, here another time,
+[606.2s - 608.0s] which in total would make this percent,
+[608.0s - 609.8s] while here we gained this percent.
+[609.8s - 612.3s] We gained a total of this percent profit
+[612.3s - 614.5s] following this unorthodox strategy
+[614.5s - 617.1s] that so many other traders criticized Dennis for,
+[617.1s - 620.6s] but with which both he and his students became millionaires.
+[620.6s - 623.2s] As I was saying, he based himself completely
+[623.2s - 625.0s] on that vision of price action
+[625.0s - 627.8s] and believing that you can make money in financial markets,
+[627.8s - 630.2s] not by having the maximum possible knowledge,
+[630.2s - 632.7s] but by making better risk management prevail.
+[632.8s - 635.1s] Even if your knowledge and strategies were simpler,
+[635.1s - 637.8s] Dennis also commented that this type of strategy
+[637.8s - 640.7s] with all the averages and all the data practically at 20,
+[640.7s - 642.7s] he used more short and medium term,
+[642.7s - 645.8s] which for him were, for example, one hour timeframes.
+[645.8s - 647.4s] But then for larger timeframes,
+[647.4s - 649.7s] like daily or even weekly timeframes,
+[649.7s - 652.3s] he placed in the upper band, not the lower one,
+[652.3s - 654.4s] only the upper one, 55,
+[654.4s - 656.4s] so that breakouts would make more sense
+[656.4s - 659.9s] in broader structures, that is structures in higher timeframes.
+[659.9s - 661.2s] If we go back to one hour,
+[661.2s - 663.5s] you can see how that upper zone changes,
+[663.5s - 665.0s] those upper structural highs.
+[665.0s - 667.5s] If we change from those 20 to 55,
+[667.5s - 670.0s] here you can see how these highs wouldn't be considered,
+[670.0s - 672.7s] but we'd go directly to having to break these ones here,
+[672.7s - 674.2s] which would give a safer entry
+[674.2s - 675.9s] and larger timeframes without a doubt.
+[675.9s - 678.4s] Richard Dennis has been one of the trading geniuses
+[678.4s - 680.9s] who has extracted the most profit from the market
+[680.9s - 682.2s] in the last 100 years.
+[682.2s - 683.6s] Thank you all for your support
+[683.6s - 685.2s] and see you guys next time.
+
+---
+
+This is Richard Dennis. He is one of the most famous traders who made millions of dollars in the 70s and 80s. To be specific, at the age of 22, he borrowed $1,600 that he would turn into $350 million. Are you serious right now? Yes, you heard me right, $350 million. And what's even crazier? He did all of this in the span of nine years. That's insane. He applied a simple and unorthodox strategy that so many other traders criticized Dennis for. Moreover, William Eckhart, another great successful trader of that era, claimed that trading cannot be taught. It's only an innate talent. Dennis believed that anyone could learn to trade if adequately trained. To prove his thesis, he launched an experiment that would become legendary in trading history. He recruited and trained 21 men and two women. They came from completely different backgrounds, clerks, musicians, chess players, ordinary people with no trading experience. This group became known as the Turtle Traders. When the experiment ended five years later, his Turtles had generated a total profit of $175 million. Dennis's students achieved incredible results, proving that discipline beats talent every time. In fact, Dennis expected to lose on most of his trades, but when trades went right, they would run for weeks or even months, and that's what made the strategy wildly profitable. Today, several of these former Turtle Traders have become successful hedge fund managers like Jerry Parker, and many had already reached millionaire status. Now, if you're like me, you're thinking, how did he do it? Well, I decided to look for the answer to that specific question, scavenging the internet and books for the strategy he used to get those massive gains, and oh, did I find something really interesting, and I gotta say, Richard is an absolute genius. I'm gonna share it with you guys, so leave me a thank you in the comments. Let's get straight to it. Before jumping directly into Richard Dennis's strategies, we need to discuss the core principles he used in the trading world. Risk a fixed percentage per trade. Cut your losses quickly. Let your profits run. Trade trends, not predictions. Richard always told his students they should risk no more than 2% of their account on each trade. This type of percentage has always been variable over the years, since it depends heavily on the strategy, timeframe, asset, and many other variables. But Dennis used this type of risk management as his foundation. The main part of his theories was based on one crucial concept. Cut losses as quickly as possible and let profits run. This is what separates the professionals from everyone else. Let me show you exactly how this works on a chart. Here we can detect a major resistance zone where price has touched multiple times and projected the asset downward each time it reached that zone. It fell every single time until obviously, there comes a moment where the market manages to break this structure. What happens then? The trend explodes upward. This is something Dennis wanted his students to understand crystal clear, that concept that wherever you enter the market, you can make money as long as you have proper risk management. Or as he said, risk management based more on numbers and mathematics than on other trader psychology. Let me give you a very simple example using this same structure. Imagine a beginner trader. Instead of placing this major resistance zone at this order block, this liquidity zone, whatever you wanna call it, sees two highs and decides to place that resistance line here. Let's put it in red so everything matches better. He waits for it to break, for example here, to enter one of his trades. Of course, he'd lose this one here, lose the next one again, and so on until there comes a moment right at this candle where this breakout candle marks the beginning of a major uptrend. If we go back to the basic concepts from Dennis that we discussed a moment ago, if we really focus on having good risk management and cutting our losses early, but letting our profits run throughout the entire trend, here we could have lost, for example, this amount, then another amount, those are our total losses. But here, if you notice the proportion, we would have gained this significant amount. What's the net result? Total gains minus total losses equals this profit. This is a very simple example so you understand the philosophy Dennis had. Obviously, he didn't enter randomly all the time. He followed specific strategies and considered certain variables that we'll see next. But clearly, the most important thing about his trading style and philosophy is that we can lose small amounts many times and compensate by winning big amounts few times. This is one of those things that if you're starting in the trading world, might shock you quite a bit. You don't need a positive win rate to be profitable. You can lose, for example, nine trades with a 1% stop loss and then on that one remaining trade out of 10, make 25% and you'll have made a lot of money. Now, imagine performing this style of trading consistently, not just having a track record of 10 trades, but having one of 1,000, 10,000 or a million trades. If you look at any chart, the market will always move the same way. Trend, consolidation zone or range as we call it, reversal or in this case, trend continuation, then another consolidation zone, another breakout and so on repeatedly. So it's very logical to think that if we have risk management that involves cutting those losses as quickly as possible, when we catch a complete trend in just one of these trades, we'll make much more money than we lost in all the others. But what's the problem with all this? Normally traders or directly people, human beings, have pretty poor psychological capacity to face this type of situation. Any person who doesn't have discipline, practice and knowledge of the subject will get nervous or suffer tremendously each time they have one of these losses. Even if you tell them they're controlled losses and that they'll recover and make more money when they catch the entire trend. Dennis commented on something that many other billionaire traders today have also said, that psychological part of human beings is what normally makes new traders lose the most money. Even having professionals helping them, telling them to follow those methods, if they don't spend a lot of time gaining experience, they'll end up losing money for this reason. Now let's see step by step how Richard Dennis specifically used price action to go from $1,600 to $350 million. As I mentioned before in the structure example, Dennis, by basing himself on price action or direct market movements, had to pay close attention to previous structural highs and lows zones to make all his entries. So we go to the indicators section and look for highest high, lowest low. That is the highest high and lowest low that represent with this indicator, those structural high and low zones that we must consider to form our strategy. First of all, we go to the configuration section and set everything to 20, which is one of the things Dennis always did. He studied periods in 20. In the style section, we'll remove the moving average, click okay, and that's it, since we're only going to need those high and low zones. This indicator is very simple to see and use. Basically, it continuously shows us those highs and lows, the structures that form within those price movements. For example, here we see how we have these highs. We see this interaction of the candles with this upper zone. We're in a one hour timeframe, so quite a bit of time passes here with price in this range. Then it falls to this zone where we see that new low is marked. What happens here? That low breaks and another low forms in this structure, until when? Until it breaks again down here and so on, successively. Well, Dennis also used what's called the average true range or ATR, a very simple and well-known indicator. We search for ATR and it appears here, even the one that comes with TradingView. We click and something like this will appear. We go to the configuration section and change the length from 14 to 20 as well. In smoothing, we'll place SMA, click OK, and we'll add something else within this same indicator. If we go to the three dots of the ATR, this option to add another indicator or strategy to the ATR itself will appear. We click and the indicator's window comes up again. Several will appear down here. For example, the exponential and such, but we'll use this simple one. We'll click it and as you can see, it adds an average that will be controlling the ATR data. We also set it to 20 and here in source, we leave it on ATR so it's giving us the data from that ATR. In the style section, you can change the colors to your liking. I'm going to leave it like this in white and I place 20 here as well. So this would be the ATR and here the moving average. There it is, 2020. Dennis's basic strategy was based on this. We detect these previous highs and having this indicator, we only need to place another simple moving average, but in this case for the upper part, we edit it and place the length at 200. In this case, I'll put it in yellow, a bit thicker. I'll remove this from here and now we have our 200 period average that will indicate with a broader perspective what trend we should follow. In this case, of course, price is above that average. So we should look for bullish breakouts to enter and have price continue upward while we take those profits. What Dennis said is that we should first detect a structural breakout following the current trend, that is uptrend. So we have this previous high zone. This candle that breaks it upward. And then when this candle closes from exactly that closing point of that candle, we would have to place the stop loss. We visualize how many points the ATR average would mark us here on the right, multiply it by two. In this case, this value times two would be this value. And from the close of that candle that broke the previous highs, which would be this value, we would subtract those values. That's where we should place our stop loss. Clearly in this case, the stop loss was hit by price, losing the trade. But that's the basis of Dennis's strategy. As I explained before, a bit further ahead, we see again this candle here that breaks those previous highs again, uptrend. We check the ATR, which is more or less around these points. Times two would be this value. At the candle close, it's around this. So again, our stop loss would be around this value. Again, we fail the trade. Right here, this candle breaks these previous highs again. In this case, the ATR is around this, which would be about these points. This candle, for example, is around this value. So again, it would be here, the stop loss, more or less around here. In this case, what happens? As you can see, price doesn't close our stop loss, because in this case, this breakout has been legitimate. And now we only have to see where we have to take profits. Dennis tells us we should let our trade run until exactly this happens here. These lows right at the low of this candle have been broken. The next candle breaks it. So at that exact point, we would have taken profits. What's the conclusion of having traded this way? Simply looking at price action in this automatic way without considering any other data. We lost here this percent, here another time, which in total would make this percent, while here we gained this percent. We gained a total of this percent profit following this unorthodox strategy that so many other traders criticized Dennis for, but with which both he and his students became millionaires. As I was saying, he based himself completely on that vision of price action and believing that you can make money in financial markets, not by having the maximum possible knowledge, but by making better risk management prevail. Even if your knowledge and strategies were simpler, Dennis also commented that this type of strategy with all the averages and all the data practically at 20, he used more short and medium term, which for him were, for example, one hour timeframes. But then for larger timeframes, like daily or even weekly timeframes, he placed in the upper band, not the lower one, only the upper one, 55, so that breakouts would make more sense in broader structures, that is structures in higher timeframes. If we go back to one hour, you can see how that upper zone changes, those upper structural highs. If we change from those 20 to 55, here you can see how these highs wouldn't be considered, but we'd go directly to having to break these ones here, which would give a safer entry and larger timeframes without a doubt. Richard Dennis has been one of the trading geniuses who has extracted the most profit from the market in the last 100 years. Thank you all for your support and see you guys next time.

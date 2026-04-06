@@ -1,0 +1,200 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - link "WolfPack" [ref=e5] [cursor=pointer]:
+          - /url: /
+          - img [ref=e7]
+          - generic [ref=e11]: WolfPack
+        - generic [ref=e12]:
+          - link "Dashboard" [ref=e13] [cursor=pointer]:
+            - /url: /
+          - link "Intelligence" [active] [ref=e14] [cursor=pointer]:
+            - /url: /intelligence
+          - link "Trading" [ref=e15] [cursor=pointer]:
+            - /url: /trading
+          - link "Portfolio" [ref=e16] [cursor=pointer]:
+            - /url: /portfolio
+          - link "Backtest" [ref=e17] [cursor=pointer]:
+            - /url: /backtest
+          - link "Auto-Bot" [ref=e18] [cursor=pointer]:
+            - /url: /auto-bot
+          - link "LP Pools" [ref=e19] [cursor=pointer]:
+            - /url: /pools
+          - link "Settings" [ref=e20] [cursor=pointer]:
+            - /url: /settings
+      - generic [ref=e23]:
+        - button "Hyperliquid" [ref=e24] [cursor=pointer]
+        - button "dYdX" [ref=e25] [cursor=pointer]
+        - button "Kraken" [ref=e26] [cursor=pointer]
+  - main [ref=e27]:
+    - generic [ref=e190]:
+      - generic [ref=e191]:
+        - generic [ref=e192]:
+          - heading "Intelligence Brief" [level=1] [ref=e193]
+          - paragraph [ref=e194]: Multi-agent AI analysis for Hyperliquid
+        - button "Run Intelligence" [ref=e195] [cursor=pointer]
+      - generic [ref=e196]:
+        - heading "Market Intelligence" [level=2] [ref=e199]
+        - generic [ref=e200]:
+          - generic [ref=e201]:
+            - img [ref=e202]:
+              - generic [ref=e208]: SELL
+              - generic [ref=e209]: BUY
+            - generic [ref=e210]:
+              - generic [ref=e211]: Neutral
+              - generic [ref=e212]: "Brief Conviction: 0"
+          - generic [ref=e213]:
+            - generic [ref=e214]:
+              - application [ref=e217]
+              - generic [ref=e221]: 0%
+            - generic [ref=e222]:
+              - generic [ref=e223]: 7-Day Accuracy
+              - generic [ref=e224]:
+                - generic [ref=e225]: 0 correct
+                - generic [ref=e226]: 0 wrong
+                - generic [ref=e227]: 0 total
+      - generic [ref=e228]:
+        - generic [ref=e229]:
+          - generic [ref=e230]:
+            - generic [ref=e231]:
+              - generic "The Quant" [ref=e232]:
+                - img [ref=e234]
+              - generic [ref=e254]:
+                - heading "The Quant" [level=3] [ref=e255]
+                - paragraph [ref=e256]: Technical Analysis
+            - generic [ref=e257]: completed
+          - generic [ref=e258]:
+            - paragraph [ref=e259]: "{ \"regime_assessment\": \"Choppy market with weak trend signals: AD"
+            - generic [ref=e260]: "Confidence: 30%"
+            - generic [ref=e261]: 3/19/2026, 9:29:05 PM
+        - generic [ref=e262]:
+          - generic [ref=e263]:
+            - generic [ref=e264]:
+              - generic "The Snoop" [ref=e265]:
+                - img [ref=e267]
+              - generic [ref=e291]:
+                - heading "The Snoop" [level=3] [ref=e292]
+                - paragraph [ref=e293]: Social Intelligence
+            - generic [ref=e294]: completed
+          - generic [ref=e295]:
+            - paragraph [ref=e296]: Contrarian signal active due to Extreme Fear with balanced positioning and neutral funding, but low whale activity and choppy regime limit conviction. Social attention is high, suggesting potential volatility.
+            - generic [ref=e297]: "Confidence: 55%"
+            - generic [ref=e298]: 3/19/2026, 9:28:16 PM
+        - generic [ref=e299]:
+          - generic [ref=e300]:
+            - generic [ref=e301]:
+              - generic "The Sage" [ref=e302]:
+                - img [ref=e304]
+              - generic [ref=e323]:
+                - heading "The Sage" [level=3] [ref=e324]
+                - paragraph [ref=e325]: Forecasting
+            - generic [ref=e326]: completed
+          - generic [ref=e327]:
+            - paragraph [ref=e328]: Neutral outlook dominated by choppy regime with extreme fear sentiment providing contrarian support. Primary scenario is mean reversion bounce (45% probability) given extreme fear reading, but choppy continuation (40%) equally likely given weak trend indicators. Watch for correlation spikes above 0.95 as regime transition signal.
+            - generic [ref=e329]: "Confidence: 48%"
+            - generic [ref=e330]: 3/19/2026, 9:28:26 PM
+        - generic [ref=e331]:
+          - generic [ref=e332]:
+            - generic [ref=e333]:
+              - generic "The Brief" [ref=e334]:
+                - img [ref=e336]
+              - generic [ref=e356]:
+                - heading "The Brief" [level=3] [ref=e357]
+                - paragraph [ref=e358]: Decision Synthesis
+            - generic [ref=e359]: completed
+          - generic [ref=e360]:
+            - paragraph [ref=e361]: "No trade — wait for higher conviction. Agents conflicted: Quant bearish, Snoop contrarian bullish, Sage neutral. Choppy regime and weak trends suggest caution; monitor for clearer signals."
+            - generic [ref=e362]: "Confidence: 45%"
+            - generic [ref=e363]: 3/19/2026, 9:29:17 PM
+      - generic [ref=e364]: No prediction data yet. Run intelligence cycles to generate predictions.
+      - generic [ref=e365]:
+        - heading "Snoop Signal Feed" [level=2] [ref=e368]
+        - generic [ref=e370]:
+          - generic [ref=e371]:
+            - generic [ref=e372]:
+              - generic [ref=e373]: Snoop
+              - generic [ref=e374]: 09:28 PM
+            - paragraph [ref=e375]: "Bearish sentiment signal (score: -45)"
+          - generic [ref=e376]: Bearish
+      - generic [ref=e377]:
+        - heading "Quantitative Modules" [level=2] [ref=e380]
+        - generic [ref=e381]:
+          - generic [ref=e382]:
+            - generic [ref=e383]: 📊
+            - generic [ref=e384]: Regime Detection
+            - generic [ref=e385]: 9:28:04 PM
+          - generic [ref=e386]:
+            - generic [ref=e387]: 💧
+            - generic [ref=e388]: Liquidity Intel
+            - generic [ref=e389]: 9:28:04 PM
+          - generic [ref=e390]:
+            - generic [ref=e391]: 💰
+            - generic [ref=e392]: Funding & Carry
+            - generic [ref=e393]: 9:28:04 PM
+          - generic [ref=e394]:
+            - generic [ref=e395]: 🔗
+            - generic [ref=e396]: Correlation
+            - generic [ref=e397]: 9:28:04 PM
+          - generic [ref=e398]:
+            - generic [ref=e399]: 📈
+            - generic [ref=e400]: Volatility
+            - generic [ref=e401]: 9:28:04 PM
+          - generic [ref=e402]:
+            - generic [ref=e403]: 🛡
+            - generic [ref=e404]: Circuit Breakers
+            - generic [ref=e405]: 9:28:05 PM
+          - generic [ref=e406]:
+            - generic [ref=e407]: ⏱
+            - generic [ref=e408]: Execution Timing
+            - generic [ref=e409]: 9:28:04 PM
+          - generic [ref=e410]:
+            - generic [ref=e411]: 📢
+            - generic [ref=e412]: Social Sentiment
+            - generic [ref=e413]: 9:28:05 PM
+          - generic [ref=e414]:
+            - generic [ref=e415]: 🐋
+            - generic [ref=e416]: Whale Tracker
+            - generic [ref=e417]: 9:28:05 PM
+          - generic [ref=e418]:
+            - generic [ref=e419]: 🔬
+            - generic [ref=e420]: Backtest
+            - generic [ref=e421]: No data
+      - generic [ref=e422]:
+        - heading "Latest Analysis" [level=2] [ref=e425]
+        - generic [ref=e426]:
+          - generic [ref=e427]:
+            - heading "The Quant" [level=3] [ref=e428]
+            - paragraph [ref=e429]: "{ \"regime_assessment\": \"Choppy market with weak trend signals: AD"
+            - generic [ref=e430]:
+              - generic [ref=e431]: "Confidence:"
+              - generic [ref=e434]: 30%
+            - generic [ref=e435]:
+              - generic [ref=e436]: "SMA_20: 70156.90"
+              - generic [ref=e437]: "SMA_50: 71730.78"
+              - generic [ref=e438]: "EMA_9: 70107.73"
+              - generic [ref=e439]: "EMA_9_dist_pct: 0.65"
+              - generic [ref=e440]: "VWAP: 70762.49"
+              - generic [ref=e441]: "VWAP_dist_pct: -0.28"
+          - generic [ref=e442]:
+            - heading "The Snoop" [level=3] [ref=e443]
+            - paragraph [ref=e444]: Contrarian signal active due to Extreme Fear with balanced positioning and neutral funding, but low whale activity and choppy regime limit conviction. Social attention is high, suggesting potential volatility.
+            - generic [ref=e445]:
+              - generic [ref=e446]: "Confidence:"
+              - generic [ref=e449]: 55%
+            - generic [ref=e451]: "Sentiment: -45"
+          - generic [ref=e452]:
+            - heading "The Sage" [level=3] [ref=e453]
+            - paragraph [ref=e454]: Neutral outlook dominated by choppy regime with extreme fear sentiment providing contrarian support. Primary scenario is mean reversion bounce (45% probability) given extreme fear reading, but choppy continuation (40%) equally likely given weak trend indicators. Watch for correlation spikes above 0.95 as regime transition signal.
+            - generic [ref=e455]:
+              - generic [ref=e456]: "Confidence:"
+              - generic [ref=e459]: 48%
+            - generic [ref=e461]: "Outlook: neutral"
+          - generic [ref=e462]:
+            - heading "The Brief" [level=3] [ref=e463]
+            - paragraph [ref=e464]: "No trade — wait for higher conviction. Agents conflicted: Quant bearish, Snoop contrarian bullish, Sage neutral. Choppy regime and weak trends suggest caution; monitor for clearer signals."
+            - generic [ref=e465]:
+              - generic [ref=e466]: "Confidence:"
+              - generic [ref=e469]: 45%
+            - generic [ref=e471]: wait BTC (45%)
+  - alert [ref=e181]

@@ -40,3 +40,5 @@ supabase/.temp/
 *.log
 coverage/
 app/.env.production
+.vercel
+.gitnexus

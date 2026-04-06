@@ -1,0 +1,152 @@
+{
+  "title": "Video by chase.h.ai",
+  "url": "https://www.instagram.com/reel/DVryCC1jfi1/",
+  "project": "WolfPack",
+  "model": "small",
+  "language": "en",
+  "language_probability": 1.0,
+  "duration_seconds": 136.3,
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 5.4,
+      "text": "If you use cloud code, then here are 10 plugins that you need to try out the 10x your next project."
+    },
+    {
+      "start": 5.4,
+      "end": 9.8,
+      "text": "Now, number one on the list is one of my favorites and is the SuperBase CLI tool."
+    },
+    {
+      "start": 9.8,
+      "end": 13.4,
+      "text": "This is perfect any time you need to work with databases or authentication."
+    },
+    {
+      "start": 13.4,
+      "end": 17.5,
+      "text": "Number two on the list is probably the most powerful of all 10, and that is the skill creator"
+    },
+    {
+      "start": 17.5,
+      "end": 24.0,
+      "text": "skill from Anthropic. It not only creates skills on its own, but you can test, benchmark and evaluate"
+    },
+    {
+      "start": 24.0,
+      "end": 28.6,
+      "text": "any skill you currently have. Now, number three is the one framework on this list, and that is GSD,"
+    },
+    {
+      "start": 28.6,
+      "end": 33.7,
+      "text": "the Get Shit Done framework, which is an orchestration layer that sits on top of cloud code. GSD"
+    },
+    {
+      "start": 33.7,
+      "end": 37.1,
+      "text": "is perfect if you're trying to create a new project from the ground up. It does an awesome"
+    },
+    {
+      "start": 37.1,
+      "end": 41.8,
+      "text": "job of taking your idea, breaking it down into phases and making sure we never deal with context"
+    },
+    {
+      "start": 41.8,
+      "end": 47.9,
+      "text": "rot. Now, number four is one of my favorites as of late in its notebook LM-pi. This is a CLI"
+    },
+    {
+      "start": 47.9,
+      "end": 52.6,
+      "text": "tool plus a skill that allows us to connect notebook LM to cloud code so we can do everything you"
+    },
+    {
+      "start": 52.6,
+      "end": 56.8,
+      "text": "can normally do in notebook LM, but from the terminal. Number five is Obsidian, and this is"
+    },
+    {
+      "start": 56.8,
+      "end": 61.5,
+      "text": "perfect to connect to cloud code. If you ever use cloud code as a personal assistant and you're"
+    },
+    {
+      "start": 61.5,
+      "end": 66.8,
+      "text": "dealing with tons of markdown files, just use cloud code inside of your Obsidian vault and it's"
+    },
+    {
+      "start": 66.8,
+      "end": 70.9,
+      "text": "all ready to go. Now, number six, you should already know about that's the Versal CLI tool,"
+    },
+    {
+      "start": 70.9,
+      "end": 76.0,
+      "text": "and this is all about making sure we can handle our deployments and our already deployed projects"
+    },
+    {
+      "start": 76.0,
+      "end": 80.0,
+      "text": "through the terminal. Number seven is the Playwright CLI tool. You're definitely noticing a"
+    },
+    {
+      "start": 80.0,
+      "end": 85.8,
+      "text": "theme with CLI tools. They're perfect for coding agents like cloud code, and Playwright is all"
+    },
+    {
+      "start": 85.8,
+      "end": 91.4,
+      "text": "about browser automation. So if you want cloud code to actually go out on the web and do things"
+    },
+    {
+      "start": 91.4,
+      "end": 96.8,
+      "text": "like fill out forms, buy things on Amazon for you, this is the tool you would use. Number eight,"
+    },
+    {
+      "start": 96.8,
+      "end": 101.1,
+      "text": "we all know and love it, but are you using the CLI tool for it inside of cloud code? It's the"
+    },
+    {
+      "start": 101.1,
+      "end": 106.5,
+      "text": "GitHub CLI. So between this and Versal, you should have no issues of taking your code,"
+    },
+    {
+      "start": 106.5,
+      "end": 112.2,
+      "text": "pushing it to repository, and then deploying it. And number nine is the Firecall CLI and skill."
+    },
+    {
+      "start": 112.2,
+      "end": 117.1,
+      "text": "This is perfect for any sort of web scraping. So if you need to go grab data and bring it back"
+    },
+    {
+      "start": 117.1,
+      "end": 122.4,
+      "text": "in a form that is meant to be used by AI agents, this is for you. And last but not least is the"
+    },
+    {
+      "start": 122.4,
+      "end": 127.8,
+      "text": "Excalidraw diagram skill from Cole Medin. If you use Excalidraw at all or just need to have some"
+    },
+    {
+      "start": 127.8,
+      "end": 132.8,
+      "text": "sort of visual aids for presentations, well, use this with cloud code, point it at anything,"
+    },
+    {
+      "start": 132.8,
+      "end": 136.2,
+      "text": "and it will create these visuals based on that data."
+    }
+  ],
+  "full_text": "If you use cloud code, then here are 10 plugins that you need to try out the 10x your next project. Now, number one on the list is one of my favorites and is the SuperBase CLI tool. This is perfect any time you need to work with databases or authentication. Number two on the list is probably the most powerful of all 10, and that is the skill creator skill from Anthropic. It not only creates skills on its own, but you can test, benchmark and evaluate any skill you currently have. Now, number three is the one framework on this list, and that is GSD, the Get Shit Done framework, which is an orchestration layer that sits on top of cloud code. GSD is perfect if you're trying to create a new project from the ground up. It does an awesome job of taking your idea, breaking it down into phases and making sure we never deal with context rot. Now, number four is one of my favorites as of late in its notebook LM-pi. This is a CLI tool plus a skill that allows us to connect notebook LM to cloud code so we can do everything you can normally do in notebook LM, but from the terminal. Number five is Obsidian, and this is perfect to connect to cloud code. If you ever use cloud code as a personal assistant and you're dealing with tons of markdown files, just use cloud code inside of your Obsidian vault and it's all ready to go. Now, number six, you should already know about that's the Versal CLI tool, and this is all about making sure we can handle our deployments and our already deployed projects through the terminal. Number seven is the Playwright CLI tool. You're definitely noticing a theme with CLI tools. They're perfect for coding agents like cloud code, and Playwright is all about browser automation. So if you want cloud code to actually go out on the web and do things like fill out forms, buy things on Amazon for you, this is the tool you would use. Number eight, we all know and love it, but are you using the CLI tool for it inside of cloud code? It's the GitHub CLI. So between this and Versal, you should have no issues of taking your code, pushing it to repository, and then deploying it. And number nine is the Firecall CLI and skill. This is perfect for any sort of web scraping. So if you need to go grab data and bring it back in a form that is meant to be used by AI agents, this is for you. And last but not least is the Excalidraw diagram skill from Cole Medin. If you use Excalidraw at all or just need to have some sort of visual aids for presentations, well, use this with cloud code, point it at anything, and it will create these visuals based on that data."
+}

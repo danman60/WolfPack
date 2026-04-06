@@ -1,0 +1,143 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - link "WolfPack" [ref=e5] [cursor=pointer]:
+          - /url: /
+          - img [ref=e7]
+          - generic [ref=e11]: WolfPack
+        - generic [ref=e12]:
+          - link "Dashboard" [ref=e13] [cursor=pointer]:
+            - /url: /
+          - link "Intelligence" [ref=e14] [cursor=pointer]:
+            - /url: /intelligence
+          - link "Trading" [active] [ref=e15] [cursor=pointer]:
+            - /url: /trading
+          - link "Portfolio" [ref=e16] [cursor=pointer]:
+            - /url: /portfolio
+          - link "Backtest" [ref=e17] [cursor=pointer]:
+            - /url: /backtest
+          - link "Auto-Bot" [ref=e18] [cursor=pointer]:
+            - /url: /auto-bot
+          - link "LP Pools" [ref=e19] [cursor=pointer]:
+            - /url: /pools
+          - link "Settings" [ref=e20] [cursor=pointer]:
+            - /url: /settings
+      - generic [ref=e23]:
+        - button "Hyperliquid" [ref=e24] [cursor=pointer]
+        - button "dYdX" [ref=e25] [cursor=pointer]
+        - button "Kraken" [ref=e26] [cursor=pointer]
+  - main [ref=e27]:
+    - generic [ref=e472]:
+      - generic [ref=e473]:
+        - heading "Trading" [level=1] [ref=e474]
+        - paragraph [ref=e475]: Manual & AI-assisted trading on Hyperliquid
+      - generic [ref=e476]:
+        - generic [ref=e477]:
+          - heading "Place Order" [level=2] [ref=e478]
+          - generic [ref=e479]:
+            - generic [ref=e480]:
+              - text: Asset
+              - combobox [ref=e481]:
+                - option "BTC-USD" [selected]
+                - option "ETH-USD"
+                - option "SOL-USD"
+                - option "LINK-USD"
+                - option "DOGE-USD"
+                - option "ARB-USD"
+                - option "ATOM-USD"
+                - option "MATIC-USD"
+                - option "DYDX-USD"
+                - option "AVAX-USD"
+                - option "BNB-USD"
+                - option "APE-USD"
+                - option "OP-USD"
+                - option "LTC-USD"
+                - option "INJ-USD"
+                - option "SUI-USD"
+                - option "kPEPE-USD"
+                - option "CRV-USD"
+                - option "LDO-USD"
+                - option "STX-USD"
+            - generic [ref=e482]:
+              - generic [ref=e483]: Live Price
+              - generic [ref=e484]:
+                - generic [ref=e485]: $69,839
+                - generic [ref=e486]: "-1.83%"
+            - generic [ref=e487]:
+              - button "Long" [ref=e488] [cursor=pointer]
+              - button "Short" [ref=e489] [cursor=pointer]
+            - generic [ref=e490]:
+              - text: Size (USD)
+              - spinbutton [ref=e491]
+            - generic [ref=e492]:
+              - generic [ref=e493]:
+                - generic [ref=e494]: Leverage
+                - generic [ref=e495]: 5x
+              - slider [ref=e496]: "5"
+              - generic [ref=e497]:
+                - generic [ref=e498]: 1x
+                - generic [ref=e499]: 50x
+            - generic [ref=e500]:
+              - generic [ref=e501]:
+                - text: Stop Loss
+                - spinbutton [ref=e502]
+              - generic [ref=e503]:
+                - text: Take Profit
+                - spinbutton [ref=e504]
+            - button "Long BTC" [disabled] [ref=e505]
+        - generic [ref=e506]:
+          - generic [ref=e507]:
+            - generic [ref=e508]:
+              - heading "BTC-USD" [level=2] [ref=e509]
+              - generic [ref=e510]:
+                - button "1M" [ref=e511] [cursor=pointer]
+                - button "5M" [ref=e512] [cursor=pointer]
+                - button "15M" [ref=e513] [cursor=pointer]
+                - button "1H" [ref=e514] [cursor=pointer]
+                - button "4H" [ref=e515] [cursor=pointer]
+                - button "1D" [ref=e516] [cursor=pointer]
+            - generic [ref=e517]:
+              - button "Price" [ref=e518] [cursor=pointer]
+              - button "Volume" [ref=e519] [cursor=pointer]
+              - button "RSI / MACD" [ref=e520] [cursor=pointer]
+              - generic [ref=e521]:
+                - generic [ref=e522]: SMA20
+                - generic [ref=e523]: SMA50
+                - generic [ref=e524]: EMA12
+                - generic [ref=e525]: BB(20,2)
+            - table [ref=e528]:
+              - row [ref=e529]:
+                - cell
+                - cell [ref=e530]:
+                  - link "Charting by TradingView" [ref=e534] [cursor=pointer]:
+                    - /url: https://www.tradingview.com/?utm_medium=lwc-link&utm_campaign=lwc-chart&utm_source=wolf-pack-eight.vercel.app/trading
+                    - img [ref=e535]
+                - cell [ref=e539]
+              - row [ref=e543]:
+                - cell
+                - cell [ref=e544]
+                - cell [ref=e548]
+          - generic [ref=e552]:
+            - generic [ref=e555]:
+              - text: "Paper Portfolio:"
+              - generic [ref=e556]: $10,015.3
+            - generic [ref=e557]:
+              - generic [ref=e558]: "Unrealized: +$0.00"
+              - generic [ref=e559]: "Realized: +$15.28"
+              - generic [ref=e560]: 0 positions
+      - generic [ref=e561]:
+        - generic [ref=e562]:
+          - generic [ref=e563]:
+            - heading "Watchlist" [level=2] [ref=e565]
+            - generic [ref=e566]: 1 symbols
+          - generic [ref=e567]:
+            - button "Run All Intel" [ref=e568] [cursor=pointer]
+            - button "+ Add" [ref=e569] [cursor=pointer]
+        - generic [ref=e571]:
+          - button "SOL" [ref=e572] [cursor=pointer]
+          - button "x" [ref=e573] [cursor=pointer]
+      - generic [ref=e574]:
+        - heading "AI Recommendations" [level=2] [ref=e577]
+        - generic [ref=e578]: No pending recommendations. Run intelligence to generate trade signals.
+  - alert [ref=e178]

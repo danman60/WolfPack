@@ -1,0 +1,177 @@
+{
+  "title": "Video by chase.h.ai",
+  "url": "https://www.instagram.com/reel/DWC8bWVN5eA/",
+  "project": "WolfPack",
+  "model": "small",
+  "language": "en",
+  "language_probability": 1.0,
+  "duration_seconds": 73.4,
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 6.3,
+      "text": "You can run cloud code 100% free, 100% private, and 100% local."
+    },
+    {
+      "start": 6.3,
+      "end": 8.8,
+      "text": "And the best part is it's actually really easy to set up."
+    },
+    {
+      "start": 8.8,
+      "end": 10.3,
+      "text": "And you can see it in action right here."
+    },
+    {
+      "start": 10.3,
+      "end": 12.2,
+      "text": "Now, cloud code is just a harness."
+    },
+    {
+      "start": 12.2,
+      "end": 14.9,
+      "text": "It sits on top of Opus or Sonic 4.6."
+    },
+    {
+      "start": 14.9,
+      "end": 16.7,
+      "text": "But we can actually run it on our computer"
+    },
+    {
+      "start": 16.7,
+      "end": 19.1,
+      "text": "and just put that harness on top of a local model,"
+    },
+    {
+      "start": 19.1,
+      "end": 22.4,
+      "text": "like GLM 4.7 Flash or something like DeepSeq,"
+    },
+    {
+      "start": 22.4,
+      "end": 25.0,
+      "text": "which again, makes it 100% free,"
+    },
+    {
+      "start": 25.0,
+      "end": 26.4,
+      "text": "and your data doesn't go anywhere."
+    },
+    {
+      "start": 26.4,
+      "end": 27.8,
+      "text": "Now, there's obvious trade-offs, right?"
+    },
+    {
+      "start": 27.9,
+      "end": 30.9,
+      "text": "Opus 4.6 and Sonic 4.6 are premier models for a reason."
+    },
+    {
+      "start": 30.9,
+      "end": 32.5,
+      "text": "They are way more powerful."
+    },
+    {
+      "start": 32.5,
+      "end": 34.6,
+      "text": "But if you're doing something that's relatively simple"
+    },
+    {
+      "start": 34.6,
+      "end": 37.0,
+      "text": "or cost is a factor, or you're dealing with data"
+    },
+    {
+      "start": 37.0,
+      "end": 38.6,
+      "text": "that can't just go out to the internet"
+    },
+    {
+      "start": 38.6,
+      "end": 40.2,
+      "text": "or to anthropic servers,"
+    },
+    {
+      "start": 40.2,
+      "end": 43.0,
+      "text": "these local models can be a huge value add."
+    },
+    {
+      "start": 43.0,
+      "end": 45.7,
+      "text": "Now, to actually do this, you need to install Olama,"
+    },
+    {
+      "start": 45.7,
+      "end": 49.4,
+      "text": "and then you will download the local models from Olama itself."
+    },
+    {
+      "start": 49.4,
+      "end": 51.4,
+      "text": "What model you should use depends on your computer,"
+    },
+    {
+      "start": 51.4,
+      "end": 52.6,
+      "text": "and the easiest way to figure that out"
+    },
+    {
+      "start": 52.6,
+      "end": 54.2,
+      "text": "is actually just to ask cloud code,"
+    },
+    {
+      "start": 54.2,
+      "end": 57.1,
+      "text": "because it can take a look at your hardware specifications."
+    },
+    {
+      "start": 57.1,
+      "end": 59.5,
+      "text": "Now, to then run that local model inside of cloud code,"
+    },
+    {
+      "start": 59.5,
+      "end": 62.5,
+      "text": "you can just use these commands that come from Olama itself,"
+    },
+    {
+      "start": 62.5,
+      "end": 64.3,
+      "text": "or you can do something like Setup An alias."
+    },
+    {
+      "start": 64.3,
+      "end": 65.8,
+      "text": "And once you do that, you're all set."
+    },
+    {
+      "start": 65.8,
+      "end": 67.0,
+      "text": "It's really that simple."
+    },
+    {
+      "start": 67.0,
+      "end": 69.3,
+      "text": "Now, don't expect it to knock your next coding project"
+    },
+    {
+      "start": 69.3,
+      "end": 70.1,
+      "text": "out of the park,"
+    },
+    {
+      "start": 70.1,
+      "end": 71.8,
+      "text": "but if you have something simple and straightforward,"
+    },
+    {
+      "start": 71.8,
+      "end": 73.2,
+      "text": "these local models can do well."
+    }
+  ],
+  "full_text": "You can run cloud code 100% free, 100% private, and 100% local. And the best part is it's actually really easy to set up. And you can see it in action right here. Now, cloud code is just a harness. It sits on top of Opus or Sonic 4.6. But we can actually run it on our computer and just put that harness on top of a local model, like GLM 4.7 Flash or something like DeepSeq, which again, makes it 100% free, and your data doesn't go anywhere. Now, there's obvious trade-offs, right? Opus 4.6 and Sonic 4.6 are premier models for a reason. They are way more powerful. But if you're doing something that's relatively simple or cost is a factor, or you're dealing with data that can't just go out to the internet or to anthropic servers, these local models can be a huge value add. Now, to actually do this, you need to install Olama, and then you will download the local models from Olama itself. What model you should use depends on your computer, and the easiest way to figure that out is actually just to ask cloud code, because it can take a look at your hardware specifications. Now, to then run that local model inside of cloud code, you can just use these commands that come from Olama itself, or you can do something like Setup An alias. And once you do that, you're all set. It's really that simple. Now, don't expect it to knock your next coding project out of the park, but if you have something simple and straightforward, these local models can do well."
+}

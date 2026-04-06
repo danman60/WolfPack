@@ -1,0 +1,38 @@
+# Transcript: 73K views · 532 reactions | Part 2 is coming up and I’m so excited to share the tutorial too for it 🥰🤩🤩 #quantfinance #financialengineering | Mariana Antaya AI/ML, Cars & Investing
+# Source: https://www.facebook.com/reel/954291633844593
+# Project: WolfPack
+# Model: small | Language: en | Duration: 61.9s
+# Transcribed: 2026-04-03 09:57:57
+
+[0.0s - 2.8s] These are the Quant Finance infrastructure tools
+[2.8s - 4.0s] that you didn't know about
+[4.0s - 5.8s] and they're all open sourced on GitHub
+[5.8s - 7.8s] that I learned about at GTC.
+[7.8s - 10.7s] Number one is the Quant Portfolio Optimization Blueprint
+[10.7s - 12.2s] directly from NVIDIA.
+[12.2s - 13.4s] One is a full pipeline
+[13.4s - 16.2s] that actually takes in market data, returns scenarios,
+[16.2s - 19.8s] and then solves portfolio optimization all in one workflow.
+[19.8s - 21.6s] But this is an accelerated pipeline,
+[21.6s - 24.3s] so that means the risk modeling that is occurring
+[24.3s - 26.7s] that used to take overnight actually runs in seconds
+[26.7s - 28.0s] and keep going long in part two
+[28.0s - 29.4s] because I got a full demo
+[29.4s - 31.9s] just to show you how easy it is to run.
+[31.9s - 33.4s] And number two is the model pipeline
+[33.4s - 35.8s] that KX is actually open sourcing.
+[35.8s - 38.2s] You don't know KX, they're actually a pretty big deal
+[38.2s - 39.4s] because they're the company
+[39.4s - 41.1s] behind the time series database
+[41.1s - 43.2s] that the top trading firms and hedge funds
+[43.2s - 45.2s] have actually been leveraging for years.
+[45.2s - 47.2s] What they've done is they've taken a really large
+[47.2s - 51.3s] expensive LLM and used it to label specifically news data
+[51.3s - 54.2s] and then enriched it with real time market context.
+[54.2s - 56.3s] Then they used all of that to actually train
+[56.3s - 58.4s] a super small and cost efficient model
+[58.4s - 61.5s] that will get smarter and cheaper over time.
+
+---
+
+These are the Quant Finance infrastructure tools that you didn't know about and they're all open sourced on GitHub that I learned about at GTC. Number one is the Quant Portfolio Optimization Blueprint directly from NVIDIA. One is a full pipeline that actually takes in market data, returns scenarios, and then solves portfolio optimization all in one workflow. But this is an accelerated pipeline, so that means the risk modeling that is occurring that used to take overnight actually runs in seconds and keep going long in part two because I got a full demo just to show you how easy it is to run. And number two is the model pipeline that KX is actually open sourcing. You don't know KX, they're actually a pretty big deal because they're the company behind the time series database that the top trading firms and hedge funds have actually been leveraging for years. What they've done is they've taken a really large expensive LLM and used it to label specifically news data and then enriched it with real time market context. Then they used all of that to actually train a super small and cost efficient model that will get smarter and cheaper over time.

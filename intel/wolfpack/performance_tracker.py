@@ -1,14 +1,27 @@
-"""Performance tracker -- rolling scorecard per symbol+direction.
+"""Performance tracker -- rolling scorecard per symbol+direction and per strategy.
 
 Reads wp_trade_history, computes rolling stats, provides dynamic
-conviction thresholds and sizing multipliers based on recent performance.
+conviction thresholds, sizing multipliers, and strategy allocations
+based on recent performance.
 """
 
 import logging
+import math
 from dataclasses import dataclass
 from datetime import datetime, timezone
 
 logger = logging.getLogger(__name__)
+
+
+@dataclass
+class StrategyScore:
+    strategy: str
+    trades: int
+    wins: int
+    win_rate: float
+    net_pnl: float
+    edge: float  # expectancy: (WR * avg_win) - ((1-WR) * abs(avg_loss))
+    sharpe: float | None  # rolling Sharpe ratio (None if < 10 trades)
 
 
 @dataclass
@@ -34,6 +47,9 @@ class PerformanceTracker:
         self._scorecard: dict[str, SymbolScore] = {}
         self._last_refresh: datetime | None = None
         self._refresh_interval_seconds = 300  # refresh every 5 min max
+        self._strategy_cache: dict[str, StrategyScore] = {}
+        self._strategy_cache_time: datetime | None = None
+        self._strategy_cache_ttl = 300  # 5 min
 
     def refresh(self) -> dict[str, SymbolScore]:
         """Refresh scorecard from DB. Rate-limited to avoid excessive queries."""
@@ -165,3 +181,182 @@ class PerformanceTracker:
                 f"R:R {score.rr_ratio:.1f}:1"
             )
         return "\n".join(lines)
+
+    # ── Strategy-level performance ──────────────────────────────────
+
+    def _refresh_strategy_scores(self) -> dict[str, StrategyScore]:
+        """Refresh per-strategy performance from DB. Rate-limited."""
+        now = datetime.now(timezone.utc)
+        if (
+            self._strategy_cache_time
+            and (now - self._strategy_cache_time).total_seconds() < self._strategy_cache_ttl
+            and self._strategy_cache
+        ):
+            return self._strategy_cache
+
+        try:
+            from wolfpack.db import get_db
+            db = get_db()
+
+            result = db.table("wp_trade_history").select(
+                "strategy, pnl_usd"
+            ).not_.is_("strategy", "null").order(
+                "closed_at", desc=True
+            ).limit(self.rolling_window * 20).execute()
+
+            if not result.data:
+                return self._strategy_cache
+
+            # Group by strategy
+            groups: dict[str, list[float]] = {}
+            for row in result.data:
+                strat = row["strategy"]
+                if strat not in groups:
+                    groups[strat] = []
+                if len(groups[strat]) < self.rolling_window:
+                    groups[strat].append(float(row["pnl_usd"]))
+
+            self._strategy_cache = {}
+            for strat, pnls in groups.items():
+                wins = [p for p in pnls if p > 0]
+                losses = [p for p in pnls if p < 0]
+                trades = len(pnls)
+                win_count = len(wins)
+                wr = win_count / trades if trades > 0 else 0
+                avg_win = sum(wins) / len(wins) if wins else 0
+                avg_loss = sum(losses) / len(losses) if losses else 0
+                net = sum(pnls)
+                edge = (wr * avg_win) - ((1 - wr) * abs(avg_loss))
+
+                # Sharpe ratio (annualized, assuming ~6 trades/day)
+                sharpe = None
+                if trades >= 10:
+                    mean_pnl = net / trades
+                    variance = sum((p - mean_pnl) ** 2 for p in pnls) / trades
+                    std = math.sqrt(variance) if variance > 0 else 0
+                    if std > 0:
+                        sharpe = round((mean_pnl / std) * math.sqrt(252 * 6), 2)
+
+                self._strategy_cache[strat] = StrategyScore(
+                    strategy=strat,
+                    trades=trades,
+                    wins=win_count,
+                    win_rate=wr,
+                    net_pnl=net,
+                    edge=edge,
+                    sharpe=sharpe,
+                )
+
+            self._strategy_cache_time = now
+            logger.info(f"[perf-tracker] Refreshed strategy scores: {list(self._strategy_cache.keys())}")
+
+        except Exception as e:
+            logger.warning(f"[perf-tracker] Failed to refresh strategy scores: {e}")
+
+        return self._strategy_cache
+
+    def get_strategy_performance(self, strategy_name: str) -> dict:
+        """Return performance dict for a single strategy.
+
+        Returns: {trades, win_rate, net_pnl, edge, sharpe}
+        """
+        scores = self._refresh_strategy_scores()
+        score = scores.get(strategy_name)
+        if score is None:
+            return {"trades": 0, "win_rate": 0.0, "net_pnl": 0.0, "edge": 0.0, "sharpe": None}
+        return {
+            "trades": score.trades,
+            "win_rate": score.win_rate,
+            "net_pnl": score.net_pnl,
+            "edge": score.edge,
+            "sharpe": score.sharpe,
+        }
+
+    def get_strategy_allocations(
+        self,
+        default_allocations: dict[str, float] | None = None,
+        min_total_trades: int = 30,
+        min_strategy_trades: int = 10,
+        min_alloc: float = 0.02,
+        max_alloc: float = 0.35,
+        strategy_budget: float = 0.75,
+    ) -> dict[str, float]:
+        """Compute dynamic allocation weights based on strategy edge strength.
+
+        Args:
+            default_allocations: Static fallback allocations.
+            min_total_trades: Minimum total trades across all strategies before
+                              dynamic allocation kicks in.
+            min_strategy_trades: Minimum trades per strategy to influence allocation.
+            min_alloc: Floor per strategy (default 2%).
+            max_alloc: Ceiling per strategy (default 35%).
+            strategy_budget: Total budget for strategies (remainder is Brief-driven).
+
+        Returns:
+            Dict mapping strategy_name -> allocation weight (sums to ~strategy_budget).
+        """
+        if default_allocations is None:
+            default_allocations = {}
+
+        scores = self._refresh_strategy_scores()
+
+        # Check if we have enough total trades
+        total_trades = sum(s.trades for s in scores.values())
+        if total_trades < min_total_trades:
+            logger.info(
+                f"[perf-tracker] Only {total_trades} total strategy trades "
+                f"(need {min_total_trades}), using static allocations"
+            )
+            return dict(default_allocations)
+
+        # Separate strategies with enough data vs those that fall back to defaults
+        eligible: dict[str, float] = {}  # strategy -> raw edge weight
+        fallback_strategies: dict[str, float] = {}  # strategy -> static alloc
+
+        for strat_name in default_allocations:
+            score = scores.get(strat_name)
+            if score is None or score.trades < min_strategy_trades:
+                fallback_strategies[strat_name] = default_allocations[strat_name]
+            else:
+                eligible[strat_name] = score.edge
+
+        # If ALL eligible strategies have negative edge, use equal allocation
+        # to avoid zeroing everything out
+        if eligible and all(e <= 0 for e in eligible.values()):
+            logger.info("[perf-tracker] All strategies underperforming, using equal allocation")
+            equal_alloc = strategy_budget / len(default_allocations) if default_allocations else 0
+            return {s: equal_alloc for s in default_allocations}
+
+        # Budget available for dynamically allocated strategies
+        fallback_budget = sum(fallback_strategies.values())
+        dynamic_budget = strategy_budget - fallback_budget
+
+        if not eligible or dynamic_budget <= 0:
+            return dict(default_allocations)
+
+        # Shift edges so the minimum is at least 0.01 (avoid negatives dominating)
+        min_edge = min(eligible.values())
+        shifted = {}
+        for s, e in eligible.items():
+            shifted[s] = max(e - min_edge + 0.01, 0.01)
+
+        # Normalize to dynamic_budget
+        total_weight = sum(shifted.values())
+        allocations: dict[str, float] = {}
+
+        for s, w in shifted.items():
+            raw = (w / total_weight) * dynamic_budget
+            allocations[s] = round(max(min_alloc, min(max_alloc, raw)), 4)
+
+        # Re-normalize after clamping to hit dynamic_budget
+        clamped_sum = sum(allocations.values())
+        if clamped_sum > 0 and abs(clamped_sum - dynamic_budget) > 0.001:
+            scale = dynamic_budget / clamped_sum
+            allocations = {
+                s: round(max(min_alloc, min(max_alloc, v * scale)), 4)
+                for s, v in allocations.items()
+            }
+
+        # Merge with fallback strategies
+        result = {**fallback_strategies, **allocations}
+        return result

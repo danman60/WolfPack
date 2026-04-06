@@ -1,0 +1,807 @@
+{
+  "title": "Trading-Strategie: Der School Run von Trader Tom (Tom Hougaard) - Ein abgewandelter ORB",
+  "url": "https://www.youtube.com/watch?v=-1BJlsIyNwM",
+  "project": "WolfPack",
+  "model": "small",
+  "language": "de",
+  "language_probability": 0.99,
+  "duration_seconds": 873.6,
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 3.8,
+      "text": "Hallo zusammen, wie versprochen, m\u00f6chte ich euch in kleineren Videos jetzt die"
+    },
+    {
+      "start": 3.8,
+      "end": 7.3,
+      "text": "verschiedenen Strategien vorstellen, die ich aktuell Trader oder mir mal"
+    },
+    {
+      "start": 7.3,
+      "end": 12.0,
+      "text": "angeschaut habe und auch Backteste. In diesem ersten Fall m\u00f6chte ich euch den"
+    },
+    {
+      "start": 12.0,
+      "end": 17.8,
+      "text": "Schoolrun von Trader Tom vorstellen. Die alleinigen Rechte liegen bei Tom"
+    },
+    {
+      "start": 17.8,
+      "end": 21.8,
+      "text": "Hougardt. Ich verteile oder ich verlinke euch seine entsprechenden Infos auch"
+    },
+    {
+      "start": 21.8,
+      "end": 27.1,
+      "text": "unten. Also er hat das Ding so benannt und traded danach und stellt das vor. Tom ist"
+    },
+    {
+      "start": 27.1,
+      "end": 32.3,
+      "text": "ein Day Trader, die mich aktiv folge, wo ich auch \u00f6fters Vormittags im Boys Chat"
+    },
+    {
+      "start": 32.3,
+      "end": 38.4,
+      "text": "drin bin, der auch einen reinen Price Chat hat, also ohne Indikatoren und sehr"
+    },
+    {
+      "start": 38.4,
+      "end": 41.5,
+      "text": "viel Erfahrung hat, profitabel ist, erfolgreich ist und der hat eben"
+    },
+    {
+      "start": 41.5,
+      "end": 46.5,
+      "text": "verschiedenste Strategien und den Schoolrun den finde ich einfach sehr"
+    },
+    {
+      "start": 46.5,
+      "end": 48.4,
+      "text": "charmant. Sehr passt momentan auch zu meinen"
+    },
+    {
+      "start": 48.4,
+      "end": 51.8,
+      "text": "Zeitebenen, wo ich tr\u00e4den kann \u00fcberhaupt Vormittags werden, wenn ich es"
+    },
+    {
+      "start": 51.8,
+      "end": 57.4,
+      "text": "schaffe. Und genau, die m\u00f6chte ich euch jetzt kurz vorstellen, vielleicht zu"
+    },
+    {
+      "start": 57.4,
+      "end": 62.8,
+      "text": "beginnen. Das Ganze ist ein abgewandelter Open Range Breakout. Das m\u00fcsste man"
+    },
+    {
+      "start": 62.8,
+      "end": 68.9,
+      "text": "vielleicht wissen oder ich betitelte es zumindest so. Tom sagt dazu nichts und"
+    },
+    {
+      "start": 68.9,
+      "end": 71.9,
+      "text": "da m\u00f6chte ich vielleicht kurz eine Einordnung geben. Open Range Breakouts oder"
+    },
+    {
+      "start": 71.9,
+      "end": 76.5,
+      "text": "Orbs findet ihr auf YouTube und sonst wo zuhauf. Es ist einfach, man definiert"
+    },
+    {
+      "start": 76.5,
+      "end": 80.1,
+      "text": "praktisch eine Zeitebene, wo man tr\u00e4den will oder wo man die Signale ansetzen"
+    },
+    {
+      "start": 80.6,
+      "end": 84.3,
+      "text": "will. Die meisten Orbs, die man so findet, sind auf 15 und 30 Minuten vom"
+    },
+    {
+      "start": 84.3,
+      "end": 89.8,
+      "text": "Opening ab und die Kerzen der entsprechenden Zeit-Einheit oder nach"
+    },
+    {
+      "start": 89.8,
+      "end": 93.2,
+      "text": "der entsprechenden Zeit-Einheit geben eben die Long und die Short Trigger und"
+    },
+    {
+      "start": 93.2,
+      "end": 98.5,
+      "text": "dann muss man je nach Riskerversion weitere Regeln dazu machen und je mehr"
+    },
+    {
+      "start": 98.5,
+      "end": 108.1,
+      "text": "oder je weniger Signale gibt es dann. Und was man da eben normalerweise macht, ist"
+    },
+    {
+      "start": 108.1,
+      "end": 112.4,
+      "text": "vom Opening das jeweiligen Indizis oder der Aktie oder das Kryptos wie auch immer"
+    },
+    {
+      "start": 112.4,
+      "end": 117.5,
+      "text": "und speziell bei CFD Futures gibt es ja quasi keinen Opening. Deswegen muss man"
+    },
+    {
+      "start": 117.5,
+      "end": 120.6,
+      "text": "f\u00fcr sich selbst durch Backtesting ausfinden, ob das zu den tats\u00e4chlichen"
+    },
+    {
+      "start": 120.6,
+      "end": 125.6,
+      "text": "Landes-Openings auch funktioniert. Bei mir passt es zu den DAX-Openings, obwohl ich"
+    },
+    {
+      "start": 125.6,
+      "end": 131.2,
+      "text": "hier jetzt CFD-Trade und auch wenn ich die Futures vom SPX-Trade passt, ist f\u00fcr"
+    },
+    {
+      "start": 131.2,
+      "end": 136.3,
+      "text": "mich ab 15.30. Das m\u00fcsst ihr aber einfach f\u00fcr eure Assets selbst definieren. Man"
+    },
+    {
+      "start": 136.4,
+      "end": 139.6,
+      "text": "kann grunds\u00e4tzlich mit den Orbs alles trading. Muss ihr eben rausfinden, wie es"
+    },
+    {
+      "start": 139.6,
+      "end": 146.0,
+      "text": "passt. Was jetzt Tom bei seinem School Run macht, er kombiniert im Prinzip die"
+    },
+    {
+      "start": 146.0,
+      "end": 151.3,
+      "text": "beiden traditionellsten Strategien, n\u00e4mlich den 15.30 Minuten und er schaut"
+    },
+    {
+      "start": 151.3,
+      "end": 157.1,
+      "text": "n\u00e4mlich auf die zweite Kerze auf der 15 Minuten eben. Also quasi hat er einen"
+    },
+    {
+      "start": 157.1,
+      "end": 164.0,
+      "text": "30 Minuten Orb, aber nimmt eine kleinere Range, weil er eben die erste Range von"
+    },
+    {
+      "start": 164.0,
+      "end": 169.1,
+      "text": "der ersten 9 Uhr bis 9.15 Kerze ignoriert. Das gibt eine gewisse Sicherheit, um"
+    },
+    {
+      "start": 169.1,
+      "end": 173.6,
+      "text": "praktisch die Explosivit\u00e4t bei Markt\u00f6ffnungen rauszunehmen. Gibt aber"
+    },
+    {
+      "start": 173.6,
+      "end": 178.6,
+      "text": "auf der anderen Seite genug M\u00f6glichkeiten einen Run mitzunehmen. School Run hei\u00dft"
+    },
+    {
+      "start": 178.6,
+      "end": 183.8,
+      "text": "es, deswegen hat er eben so benannt, weil in seiner Vorstellung alle europ\u00e4ischen"
+    },
+    {
+      "start": 183.8,
+      "end": 188.6,
+      "text": "Mammys und Puppys zu einer \u00e4hnlichen Zeit, fr\u00fcher war das wahrscheinlich so, ihre"
+    },
+    {
+      "start": 188.6,
+      "end": 193.4,
+      "text": "Kinder sch\u00f6n brav zur Schule fahren und praktisch dann r\u00fcckzuse alle im"
+    },
+    {
+      "start": 193.4,
+      "end": 198.6,
+      "text": "Stau stehen. Und nach seiner Idee ist man eben mit so harten Regeln in der Lage,"
+    },
+    {
+      "start": 198.6,
+      "end": 203.0,
+      "text": "mal schnell \u00fcber das Handy verschiedene Orders einzupacken und das Ganze dann"
+    },
+    {
+      "start": 203.0,
+      "end": 210.2,
+      "text": "m\u00f6glichst stressfrei als normaler 9 to 5 Arbeiter oder Hausmama das ganze zu"
+    },
+    {
+      "start": 210.2,
+      "end": 214.4,
+      "text": "trading. Also daher kommt so grob ein bisschen die Beninnung. Ich habe euch jetzt"
+    },
+    {
+      "start": 214.4,
+      "end": 217.9,
+      "text": "hier mal das Beispiel von heute gemacht. Heute gab es eigentlich einen sehr sch\u00f6nen"
+    },
+    {
+      "start": 217.9,
+      "end": 226.9,
+      "text": "Trigger. Wir haben eben hier die erste 9 bis 9.15, also die erste Kerze auf der"
+    },
+    {
+      "start": 226.9,
+      "end": 231.2,
+      "text": "15 Minuten Anzeige, die wird ignoriert. Die zweite wird interessiert. Sobald die"
+    },
+    {
+      "start": 231.2,
+      "end": 235.7,
+      "text": "fertig ist, haben wir unsere Trigger Points, eben einen School Run High und"
+    },
+    {
+      "start": 235.7,
+      "end": 241.6,
+      "text": "einen School Run Low. Und jetzt kommt es auf eure risk Aversion an. Tom, geht"
+    },
+    {
+      "start": 241.6,
+      "end": 247.5,
+      "text": "rein, sobald diese Kerze um einige Punkte \u00fcber oder unterschritten ist. Das l\u00e4sst"
+    },
+    {
+      "start": 247.6,
+      "end": 255.8,
+      "text": "ihn auch oft ausstoppen, aber er ist mental so gut bzw. auch so erfahren, dass er"
+    },
+    {
+      "start": 255.8,
+      "end": 259.6,
+      "text": "das praktisch in der Kalkulation mit drin hat und unterm Strich profitabel ist."
+    },
+    {
+      "start": 259.6,
+      "end": 265.2,
+      "text": "Ich bin etwas riskaverser und ich warte normalerweise bis die erste 5 Minuten"
+    },
+    {
+      "start": 265.2,
+      "end": 268.9,
+      "text": "Kerze \u00fcber oder unter dem jeweiligen Trigger abgeschlossen ist und dann"
+    },
+    {
+      "start": 268.9,
+      "end": 271.8,
+      "text": "schaue ich mir auch das Volumen oder weitere Indikatoren an. Aber das vielleicht"
+    },
+    {
+      "start": 271.8,
+      "end": 275.9,
+      "text": "kurz zur Einordnung. Ich wandle es dann auch schon wieder ab. Das m\u00fcsst ihr eben"
+    },
+    {
+      "start": 276.2,
+      "end": 280.8,
+      "text": "herausfinden, wie das f\u00fcr euch ist. Aber wenn wir jetzt uns in Tom's Lage versetzen,"
+    },
+    {
+      "start": 280.8,
+      "end": 284.3,
+      "text": "heute war es auch so und er wurde auch heute einige Male ausgestoppt. Das hei\u00dft,"
+    },
+    {
+      "start": 284.3,
+      "end": 290.0,
+      "text": "er w\u00fcrde praktisch ungef\u00e4hr heute bei 1582, 1583, glaube ich erst bei 79 ein"
+    },
+    {
+      "start": 290.0,
+      "end": 295.2,
+      "text": "bisschen proaktiv rein, weil er den Push gesehen hat, rein. Dann, je nachdem,"
+    },
+    {
+      "start": 295.2,
+      "end": 300.4,
+      "text": "wo euer Profitziel eben ist, Profit nehmen oder in diesem Fall heute auch ausgestoppt"
+    },
+    {
+      "start": 300.4,
+      "end": 306.6,
+      "text": "werden und dann w\u00e4re der n\u00e4chste Trigger hier. Wir kommen quasi nie mehr mit einer"
+    },
+    {
+      "start": 306.6,
+      "end": 313.8,
+      "text": "Kerze viele Punkte unter den School Run Low. Das hei\u00dft, bis auf heute Nachmittag oder"
+    },
+    {
+      "start": 313.8,
+      "end": 319.8,
+      "text": "bis vorhin h\u00e4tten wir keinen Short Trigger. Und in meinem Fall, ich gehe jetzt mal kurz"
+    },
+    {
+      "start": 319.8,
+      "end": 323.9,
+      "text": "auf die 5 Minuten Ebenen. Ich habe heute Morgen auch getradet und habe eben mein"
+    },
+    {
+      "start": 323.9,
+      "end": 329.2,
+      "text": "Wochenziel hier mit erreicht. Ich bin eben erst hier rein. Ich bin hier praktisch bei"
+    },
+    {
+      "start": 329.2,
+      "end": 335.2,
+      "text": "der ersten Kerze dar\u00fcber rein. Hat nur ein paar Punkte mitgenommen, weil ich hier"
+    },
+    {
+      "start": 335.2,
+      "end": 339.6,
+      "text": "praktisch den gro\u00dfen Abverkauf gesehen habe und weil wir im 10 Uhr die GDP-Zahlen auch hatten."
+    },
+    {
+      "start": 339.6,
+      "end": 345.4,
+      "text": "Und dann bin ich sp\u00e4ter noch mal rein, als wir praktisch wieder hochgepushed sind,"
+    },
+    {
+      "start": 345.4,
+      "end": 351.0,
+      "text": "als dann die EU-Zahlen auch gut waren. Als Vergleich, Tom w\u00e4re praktisch hier 3 mal"
+    },
+    {
+      "start": 351.0,
+      "end": 356.2,
+      "text": "rein, wenn die sonstigen Trigger gepasst h\u00e4tten. Ich w\u00e4re eben erst hier und hier."
+    },
+    {
+      "start": 356.2,
+      "end": 360.0,
+      "text": "Also teilweise fehlen mir dann einfach Signifikantpunkte, aber das ist eben eine"
+    },
+    {
+      "start": 360.0,
+      "end": 366.4,
+      "text": "Riskerversion. Da m\u00fcsst ihr eben ein wenig drauf passen. Ich bin auch noch nicht zu erfahren"
+    },
+    {
+      "start": 366.4,
+      "end": 372.8,
+      "text": "oder noch nicht so abgebr\u00fcht, vielleicht mir so extrem hohe Price-Targets zu setzen wie Tom"
+    },
+    {
+      "start": 372.8,
+      "end": 377.3,
+      "text": "oder wie auch viele andere wahrscheinlich. Ich bin da mit einem guten Gewinn zufrieden."
+    },
+    {
+      "start": 377.3,
+      "end": 384.3,
+      "text": "Auf der anderen Seite habe ich auch recht knappe Stop-Limits. Ich nehme sie normalerweise in der"
+    },
+    {
+      "start": 384.3,
+      "end": 390.2,
+      "text": "H\u00e4lfte der zweiten 15 Minuten Kerze, wenn \u00fcberhaupt meistens sogar etwas k\u00fcrzer. Bei Tom"
+    },
+    {
+      "start": 390.2,
+      "end": 395.0,
+      "text": "kann es gut sein, dass die praktisch am unteren Ende ist. Und je nachdem, wie gro\u00df die Range ist,"
+    },
+    {
+      "start": 395.0,
+      "end": 400.9,
+      "text": "k\u00f6nnen das halt schon mal ein heftigen Risk-Reward sein. Aber das ist nun mal so. Ihr k\u00f6nnt"
+    },
+    {
+      "start": 400.9,
+      "end": 409.5,
+      "text": "eben durch diese Strategie parallel euch Short- und Long-Trigger setzen und zumindest f\u00fcr den DAX"
+    },
+    {
+      "start": 409.5,
+      "end": 415.4,
+      "text": "gilt das. Man muss eben bei den anderen DCS schauen, wie gut es da funktioniert. Haben die beiden"
+    },
+    {
+      "start": 415.4,
+      "end": 420.9,
+      "text": "Grenzen, die beiden Trigger-Points auch noch f\u00fcr sp\u00e4ter eine Bewandtnis, weil eben in der ersten"
+    },
+    {
+      "start": 420.9,
+      "end": 428.1,
+      "text": "halben Stunde im DAX jetzt von 9 bis 39 massiv viel Volumen getradet wird und ein Volumenprofil seht"
+    },
+    {
+      "start": 428.1,
+      "end": 434.2,
+      "text": "ihr, dass wir praktisch hier unten beim Low und hier oben beim High durchaus Volumespikes haben."
+    },
+    {
+      "start": 434.2,
+      "end": 439.4,
+      "text": "Das hei\u00dft, die Level sind auch f\u00fcr die sp\u00e4tere Price-Action durchaus noch interessant und relevant."
+    },
+    {
+      "start": 439.5,
+      "end": 446.0,
+      "text": "Dann kann man auch das Opening mit dazunehmen und dann hat man eigentlich ganz gute Levels. Bis"
+    },
+    {
+      "start": 446.0,
+      "end": 452.9,
+      "text": "auf diesen Abverkauf vorhin war zum Beispiel das Value Area Low punktgenau auf dem School Run Low."
+    },
+    {
+      "start": 452.9,
+      "end": 459.1,
+      "text": "Also so k\u00f6nnt ihr euch vielleicht ein bisschen da helfen. Ich finde es eine sch\u00f6ne, simple"
+    },
+    {
+      "start": 459.1,
+      "end": 463.5,
+      "text": "M\u00f6glichkeit, wenige Regeln und wenn es euch zu unsicher ist, k\u00f6nnt ihr weitere Regeln dazunehmen,"
+    },
+    {
+      "start": 464.3,
+      "end": 470.2,
+      "text": "das Ganze zu trading und euch da relativ blind einfach die Trigger zu setzen, ob ihr dann auf"
+    },
+    {
+      "start": 470.2,
+      "end": 475.3,
+      "text": "Trading View oder sonstigen Plattformen dementsprechend in Alarm setzt, damit ihr nicht immer vom"
+    },
+    {
+      "start": 475.3,
+      "end": 480.0,
+      "text": "Rechner hockt, ist ihr euch \u00fcberlassen und mit einer gewissen Erfahrung k\u00f6nnt ihr dann auch"
+    },
+    {
+      "start": 480.0,
+      "end": 484.1,
+      "text": "einfach die Orders entsprechend eingeben mit dem definierten Stop Limit und dann l\u00e4uft es eben"
+    },
+    {
+      "start": 484.1,
+      "end": 489.4,
+      "text": "oder l\u00e4uft es nicht. Wenn ihr mit entsprechender Statistik profitabel seid, ist es dann no-brainer"
+    },
+    {
+      "start": 489.4,
+      "end": 496.9,
+      "text": "und passt. Genau, das vielleicht mal grunds\u00e4tzlich ist relativ einfach, ist jetzt kein Hexenwerk,"
+    },
+    {
+      "start": 496.9,
+      "end": 506.8,
+      "text": "aber trotzdem finde ich sehr sch\u00f6n zusammengestellt. Ich kann keine Aussagen treffen, wie es momentan"
+    },
+    {
+      "start": 506.8,
+      "end": 512.2,
+      "text": "mit Aktien so funktioniert. Ich habe fr\u00fcher Optionen mit einer Obstrategie gehandelt, jetzt nicht"
+    },
+    {
+      "start": 512.2,
+      "end": 517.0,
+      "text": "mit dem School Run, das funktioniert eigentlich auch sehr gut. Wenn jemand von euch das Strat"
+    },
+    {
+      "start": 517.0,
+      "end": 525.6,
+      "text": "traded, da kann man \u00e4hnliche Kombinationsspielchen machen und sich so mehrere Best\u00e4tigungsereignisse"
+    },
+    {
+      "start": 525.6,
+      "end": 530.4,
+      "text": "oder Bereiche zusammenschrauben, um verschiedene Strategien zu verbinden, um das Ganze sicherer"
+    },
+    {
+      "start": 530.4,
+      "end": 540.2,
+      "text": "oder profitabler zu machen. Und ich wei\u00df auch, dass praktisch viele, die Tomfollowen auch das"
+    },
+    {
+      "start": 540.2,
+      "end": 544.4,
+      "text": "auf andere Indizes \u00fcbertragen, weiter bin ich einfach nicht gekommen. Das funktioniert sehr"
+    },
+    {
+      "start": 544.4,
+      "end": 550.8,
+      "text": "wahrscheinlich auch auf dem Nasdaq und auf dem FUTSC Trader, der ist auch. Aber ja, wenn ihr"
+    },
+    {
+      "start": 550.8,
+      "end": 554.5,
+      "text": "irgendetwas anderes handelt, kann ich dazu wenig sagen. Und eben, ihr m\u00fcsst f\u00fcr euch gucken,"
+    },
+    {
+      "start": 554.5,
+      "end": 561.0,
+      "text": "ob ihr einfach morgens Zeit habt. Es gibt Leute, die das Ganze auch mit der Asia Range verbinden."
+    },
+    {
+      "start": 561.0,
+      "end": 566.2,
+      "text": "Da m\u00fcsst ihr einfach gucken, wie es euch passt. Ich wollte es einmal vorstellen. Und vielleicht"
+    },
+    {
+      "start": 566.2,
+      "end": 572.8,
+      "text": "noch so eine kleine Warnung zumindest f\u00fcr die aktuellen Wochen. Fr\u00fcher in Anfangszeichen,"
+    },
+    {
+      "start": 572.8,
+      "end": 578.9,
+      "text": "das ist ja schon so lange her, dass wir Herbst 2.22 hatten, ist der Schoolland tats\u00e4chlich in der"
+    },
+    {
+      "start": 578.9,
+      "end": 583.0,
+      "text": "ersten halben bis dreiviert Stunde ausgebrochen. Das hei\u00dft, so hat es den Level von der 2.15"
+    },
+    {
+      "start": 583.0,
+      "end": 587.9,
+      "text": "Minutenkerze. Und dann ist relativ schnell bis 10 Uhr, ist der Dachs dann nach oben oder nach"
+    },
+    {
+      "start": 587.9,
+      "end": 593.7,
+      "text": "unten ausgebrochen. Und erfahrungsgem\u00e4\u00df, auch wenn es jetzt heute durch die News auch quasi"
+    },
+    {
+      "start": 593.7,
+      "end": 598.4,
+      "text": "gekommen ist, ihr seht hier schon, dass wir einen gewissen R\u00fccksetzer hatten. Und das war fr\u00fcher"
+    },
+    {
+      "start": 598.4,
+      "end": 604.7,
+      "text": "seltenster Fall. Das sehe ich aber zumindest sehr viel h\u00e4ufiger. Deswegen meine pers\u00f6nliche"
+    },
+    {
+      "start": 604.7,
+      "end": 615.1,
+      "text": "Strategie gehe ich meist nicht voll in den ersten Run mit. Vor allem nicht mit voller Size, sondern"
+    },
+    {
+      "start": 615.1,
+      "end": 620.8,
+      "text": "ich erwarte zumindest aktuell im Januar eigentlich schon ein Reversal, ein Retracement. Und wir"
+    },
+    {
+      "start": 620.8,
+      "end": 627.1,
+      "text": "k\u00f6nnen das ja mal spielweise so machen. Wir nehmen hier Opening Low-Wick zu dem Tempor\u00e4ren hoch,"
+    },
+    {
+      "start": 627.2,
+      "end": 635.6,
+      "text": "was eben gleichzeitig das Hoch der Initial Balance ist. Das w\u00e4re ein recht perfektes 05 Value"
+    },
+    {
+      "start": 635.6,
+      "end": 641.9,
+      "text": "Tracement. Wenn ihr dann erhandelt, w\u00e4re das noch ein sehr, sehr angenehmer Entry gewesen. Und dann"
+    },
+    {
+      "start": 641.9,
+      "end": 647.4,
+      "text": "h\u00e4tten wir praktisch noch ein zus\u00e4tzliches Layer von Best\u00e4tigung, dass das, wenn das sch\u00f6n"
+    },
+    {
+      "start": 647.4,
+      "end": 652.0,
+      "text": "gehalten wird und sehen wir hier Kaufpower, soweit ich wei\u00df, war der POC zu der Zeit praktisch auch"
+    },
+    {
+      "start": 652.0,
+      "end": 656.2,
+      "text": "noch oben, dass wir dann verschiedenste Punkte, die man aufwadieren kann, um so einen besseren Entry"
+    },
+    {
+      "start": 656.3,
+      "end": 660.8,
+      "text": "zu kriegen, um nicht ausgestoppt zu werden, zudem auch. Und ihr seht ja, das Ganze h\u00e4ttet ihr"
+    },
+    {
+      "start": 660.8,
+      "end": 665.3,
+      "text": "sch\u00f6n nach oben pushen k\u00f6nnen. Und erst heute Nachmittag gab es dann einen starken Abverkauf,"
+    },
+    {
+      "start": 665.3,
+      "end": 671.2,
+      "text": "also genug M\u00f6glichkeiten, um einen sauberen Profit mitzunehmen. Und im ungekehrten Falle,"
+    },
+    {
+      "start": 671.2,
+      "end": 677.6,
+      "text": "der Tag bietet das eben, sehen wir hier auch jetzt die M\u00f6glichkeit, wie man auch ein paar Punkte mitnehmen"
+    },
+    {
+      "start": 677.6,
+      "end": 682.2,
+      "text": "k\u00f6nnt, wobei das mit dem 50er-Level nach meinem Verst\u00e4ndnis jetzt wieder knapp geworden w\u00e4re,"
+    },
+    {
+      "start": 682.2,
+      "end": 688.3,
+      "text": "weil wir das 50er-Level letztlich halten und auch Value Area low. Aber rein von der puren"
+    },
+    {
+      "start": 688.3,
+      "end": 698.2,
+      "text": "Skuldron-Strategie w\u00e4re bei Tom hier der Entry gewesen und er h\u00e4tte ganz guten Profit mitgenommen."
+    },
+    {
+      "start": 698.2,
+      "end": 704.9,
+      "text": "Das sind knapp 25 Punkte. Ist dann die Frage, wann er ausgestoppt worden w\u00e4re oder ob es geschafft"
+    },
+    {
+      "start": 704.9,
+      "end": 710.6,
+      "text": "h\u00e4tte, rauszugehen. Und dann gibt es eben den Retest und dann h\u00e4tte man in der Range praktisch"
+    },
+    {
+      "start": 710.6,
+      "end": 714.9,
+      "text": "jetzt aktuell durchaus noch spielen k\u00f6nnen. Aber letztlich h\u00e4tten wir dann mehrere Trigger"
+    },
+    {
+      "start": 714.9,
+      "end": 720.6,
+      "text": "des Skuldrons, die mit einem gewissen geringeren Profit-Ziel auch durchaus dabei gewesen w\u00e4ren."
+    },
+    {
+      "start": 720.6,
+      "end": 727.2,
+      "text": "Und das ist auch was, was ich f\u00fcr mich feststelle. Tom hat da teilweise schon irgendwie so 30, 40,"
+    },
+    {
+      "start": 727.2,
+      "end": 731.0,
+      "text": "50 Punkte, weil der Dachs momentan nat\u00fcrlich auch stark pusht oder sich zumindest stark bewegt."
+    },
+    {
+      "start": 731.0,
+      "end": 736.6,
+      "text": "Ich bin meistens mit 10, 15 zufrieden, um mal zumindest einen ersten Profit zu nehmen. Und das"
+    },
+    {
+      "start": 736.6,
+      "end": 740.8,
+      "text": "funktioniert mit dieser Strategie eigentlich sehr gut. Wenn das lange Zeit profitabel ist,"
+    },
+    {
+      "start": 740.8,
+      "end": 748.2,
+      "text": "k\u00f6nnt ihr die Size erh\u00f6hen und so auch mehr Profit erwirtschaften. Das war es eigentlich dazu."
+    },
+    {
+      "start": 748.2,
+      "end": 754.8,
+      "text": "Es ist nicht ultra kompliziert. Es ist sehr, sehr einfach, selbst das anzuwenden, backtestet es,"
+    },
+    {
+      "start": 754.8,
+      "end": 758.8,
+      "text": "probiert es, demotratet es eine Weile und dann guckt einfach, ob ihr damit klarkommt."
+    },
+    {
+      "start": 758.8,
+      "end": 765.4,
+      "text": "Es sind, wie gesagt, zus\u00e4tzliche Trigger k\u00f6nnt ihr euch immer noch dazu holen. Aber plain Skuldron"
+    },
+    {
+      "start": 765.4,
+      "end": 771.0,
+      "text": "ist wirklich, wartet die zweite 15 Minuten Kerze nach dem Aktien-Exchange-Opening ab,"
+    },
+    {
+      "start": 771.0,
+      "end": 776.5,
+      "text": "markiert das High und Low, legt euch das als Trigger und dann wartet, bis es so 2, 3,"
+    },
+    {
+      "start": 776.5,
+      "end": 782.8,
+      "text": "4, 5 Punkte oben dr\u00fcber ist und das Volumen dazu passt. Und das war es auch schon. Ich warte"
+    },
+    {
+      "start": 782.8,
+      "end": 788.4,
+      "text": "pers\u00f6nlich eben auf eine volle 5 Minuten Kerze \u00fcber dem Level. Und zwar tats\u00e4chlich oben dr\u00fcber,"
+    },
+    {
+      "start": 788.4,
+      "end": 797.3,
+      "text": "wie wir hier sehen. Also ich warte tats\u00e4chlich, bis die fertig ist. Ich warte nicht bis die"
+    },
+    {
+      "start": 797.3,
+      "end": 804.1,
+      "text": "zweite Kerze keinen Connection mit dem Trigger Level hat, weil das zumindest bei mir in der"
+    },
+    {
+      "start": 804.1,
+      "end": 808.7,
+      "text": "Vergangenheit auch oftmals sehr, sehr schnell reversed ist. Bietet nat\u00fcrlich die Gefahr,"
+    },
+    {
+      "start": 808.7,
+      "end": 814.2,
+      "text": "dass ich schneller ausgestoppt werden w\u00fcrde. Aber ich glaube, das waren eben, genau, da hatte ich"
+    },
+    {
+      "start": 814.2,
+      "end": 819.4,
+      "text": "meine 10 Punkte drin und das passt f\u00fcr mich. Es hat da zu den Zeitpunkten gepasst. Hier hatte ich"
+    },
+    {
+      "start": 819.4,
+      "end": 825.2,
+      "text": "noch ein paar mehr mitgenommen. Also ja, finde ich in Ordnung. Und ich nehme eben zus\u00e4tzlich sogar"
+    },
+    {
+      "start": 825.2,
+      "end": 830.9,
+      "text": "noch das Volumenprofil als Trigger, was Tom nicht dabei hat. Das war es eigentlich auch schon"
+    },
+    {
+      "start": 830.9,
+      "end": 838.6,
+      "text": "simpel erkl\u00e4rt. Skuldron von Tom Hogarth. Ich verlinke alles von ihm bitte. Credits to him. Er ist da"
+    },
+    {
+      "start": 838.6,
+      "end": 844.9,
+      "text": "der alleinige Verursacher des Ganzen und ich folge da nur und wollte es euch vorstellen. Wer"
+    },
+    {
+      "start": 844.9,
+      "end": 850.4,
+      "text": "die wahrscheinlich auch schreiben, dass ob das in Ordnung ist. Und ja, erfolgreiches Traden heute."
+    },
+    {
+      "start": 850.4,
+      "end": 855.3,
+      "text": "Wir haben heute Nachmittag noch einige Zahlen. Vor allem beginnen jetzt die Banken-Earnings,"
+    },
+    {
+      "start": 855.3,
+      "end": 861.6,
+      "text": "was teilweise hiermit eben verursacht oder was hier das hier verursacht hat. Passt auf. Letzter"
+    },
+    {
+      "start": 861.6,
+      "end": 866.8,
+      "text": "Tag der Woche nicht die wirtschafteten Profite wegschmei\u00dfen. Wir sehen uns ansonsten am"
+    },
+    {
+      "start": 866.8,
+      "end": 871.5,
+      "text": "Sonntag in der Kaffee-Runde. Und ansonsten w\u00fcnsche ich euch ein sch\u00f6nes Wochenende,"
+    },
+    {
+      "start": 871.5,
+      "end": 873.3,
+      "text": "ruht euch aus und bis bald, tschau tschau."
+    }
+  ],
+  "full_text": "Hallo zusammen, wie versprochen, m\u00f6chte ich euch in kleineren Videos jetzt die verschiedenen Strategien vorstellen, die ich aktuell Trader oder mir mal angeschaut habe und auch Backteste. In diesem ersten Fall m\u00f6chte ich euch den Schoolrun von Trader Tom vorstellen. Die alleinigen Rechte liegen bei Tom Hougardt. Ich verteile oder ich verlinke euch seine entsprechenden Infos auch unten. Also er hat das Ding so benannt und traded danach und stellt das vor. Tom ist ein Day Trader, die mich aktiv folge, wo ich auch \u00f6fters Vormittags im Boys Chat drin bin, der auch einen reinen Price Chat hat, also ohne Indikatoren und sehr viel Erfahrung hat, profitabel ist, erfolgreich ist und der hat eben verschiedenste Strategien und den Schoolrun den finde ich einfach sehr charmant. Sehr passt momentan auch zu meinen Zeitebenen, wo ich tr\u00e4den kann \u00fcberhaupt Vormittags werden, wenn ich es schaffe. Und genau, die m\u00f6chte ich euch jetzt kurz vorstellen, vielleicht zu beginnen. Das Ganze ist ein abgewandelter Open Range Breakout. Das m\u00fcsste man vielleicht wissen oder ich betitelte es zumindest so. Tom sagt dazu nichts und da m\u00f6chte ich vielleicht kurz eine Einordnung geben. Open Range Breakouts oder Orbs findet ihr auf YouTube und sonst wo zuhauf. Es ist einfach, man definiert praktisch eine Zeitebene, wo man tr\u00e4den will oder wo man die Signale ansetzen will. Die meisten Orbs, die man so findet, sind auf 15 und 30 Minuten vom Opening ab und die Kerzen der entsprechenden Zeit-Einheit oder nach der entsprechenden Zeit-Einheit geben eben die Long und die Short Trigger und dann muss man je nach Riskerversion weitere Regeln dazu machen und je mehr oder je weniger Signale gibt es dann. Und was man da eben normalerweise macht, ist vom Opening das jeweiligen Indizis oder der Aktie oder das Kryptos wie auch immer und speziell bei CFD Futures gibt es ja quasi keinen Opening. Deswegen muss man f\u00fcr sich selbst durch Backtesting ausfinden, ob das zu den tats\u00e4chlichen Landes-Openings auch funktioniert. Bei mir passt es zu den DAX-Openings, obwohl ich hier jetzt CFD-Trade und auch wenn ich die Futures vom SPX-Trade passt, ist f\u00fcr mich ab 15.30. Das m\u00fcsst ihr aber einfach f\u00fcr eure Assets selbst definieren. Man kann grunds\u00e4tzlich mit den Orbs alles trading. Muss ihr eben rausfinden, wie es passt. Was jetzt Tom bei seinem School Run macht, er kombiniert im Prinzip die beiden traditionellsten Strategien, n\u00e4mlich den 15.30 Minuten und er schaut n\u00e4mlich auf die zweite Kerze auf der 15 Minuten eben. Also quasi hat er einen 30 Minuten Orb, aber nimmt eine kleinere Range, weil er eben die erste Range von der ersten 9 Uhr bis 9.15 Kerze ignoriert. Das gibt eine gewisse Sicherheit, um praktisch die Explosivit\u00e4t bei Markt\u00f6ffnungen rauszunehmen. Gibt aber auf der anderen Seite genug M\u00f6glichkeiten einen Run mitzunehmen. School Run hei\u00dft es, deswegen hat er eben so benannt, weil in seiner Vorstellung alle europ\u00e4ischen Mammys und Puppys zu einer \u00e4hnlichen Zeit, fr\u00fcher war das wahrscheinlich so, ihre Kinder sch\u00f6n brav zur Schule fahren und praktisch dann r\u00fcckzuse alle im Stau stehen. Und nach seiner Idee ist man eben mit so harten Regeln in der Lage, mal schnell \u00fcber das Handy verschiedene Orders einzupacken und das Ganze dann m\u00f6glichst stressfrei als normaler 9 to 5 Arbeiter oder Hausmama das ganze zu trading. Also daher kommt so grob ein bisschen die Beninnung. Ich habe euch jetzt hier mal das Beispiel von heute gemacht. Heute gab es eigentlich einen sehr sch\u00f6nen Trigger. Wir haben eben hier die erste 9 bis 9.15, also die erste Kerze auf der 15 Minuten Anzeige, die wird ignoriert. Die zweite wird interessiert. Sobald die fertig ist, haben wir unsere Trigger Points, eben einen School Run High und einen School Run Low. Und jetzt kommt es auf eure risk Aversion an. Tom, geht rein, sobald diese Kerze um einige Punkte \u00fcber oder unterschritten ist. Das l\u00e4sst ihn auch oft ausstoppen, aber er ist mental so gut bzw. auch so erfahren, dass er das praktisch in der Kalkulation mit drin hat und unterm Strich profitabel ist. Ich bin etwas riskaverser und ich warte normalerweise bis die erste 5 Minuten Kerze \u00fcber oder unter dem jeweiligen Trigger abgeschlossen ist und dann schaue ich mir auch das Volumen oder weitere Indikatoren an. Aber das vielleicht kurz zur Einordnung. Ich wandle es dann auch schon wieder ab. Das m\u00fcsst ihr eben herausfinden, wie das f\u00fcr euch ist. Aber wenn wir jetzt uns in Tom's Lage versetzen, heute war es auch so und er wurde auch heute einige Male ausgestoppt. Das hei\u00dft, er w\u00fcrde praktisch ungef\u00e4hr heute bei 1582, 1583, glaube ich erst bei 79 ein bisschen proaktiv rein, weil er den Push gesehen hat, rein. Dann, je nachdem, wo euer Profitziel eben ist, Profit nehmen oder in diesem Fall heute auch ausgestoppt werden und dann w\u00e4re der n\u00e4chste Trigger hier. Wir kommen quasi nie mehr mit einer Kerze viele Punkte unter den School Run Low. Das hei\u00dft, bis auf heute Nachmittag oder bis vorhin h\u00e4tten wir keinen Short Trigger. Und in meinem Fall, ich gehe jetzt mal kurz auf die 5 Minuten Ebenen. Ich habe heute Morgen auch getradet und habe eben mein Wochenziel hier mit erreicht. Ich bin eben erst hier rein. Ich bin hier praktisch bei der ersten Kerze dar\u00fcber rein. Hat nur ein paar Punkte mitgenommen, weil ich hier praktisch den gro\u00dfen Abverkauf gesehen habe und weil wir im 10 Uhr die GDP-Zahlen auch hatten. Und dann bin ich sp\u00e4ter noch mal rein, als wir praktisch wieder hochgepushed sind, als dann die EU-Zahlen auch gut waren. Als Vergleich, Tom w\u00e4re praktisch hier 3 mal rein, wenn die sonstigen Trigger gepasst h\u00e4tten. Ich w\u00e4re eben erst hier und hier. Also teilweise fehlen mir dann einfach Signifikantpunkte, aber das ist eben eine Riskerversion. Da m\u00fcsst ihr eben ein wenig drauf passen. Ich bin auch noch nicht zu erfahren oder noch nicht so abgebr\u00fcht, vielleicht mir so extrem hohe Price-Targets zu setzen wie Tom oder wie auch viele andere wahrscheinlich. Ich bin da mit einem guten Gewinn zufrieden. Auf der anderen Seite habe ich auch recht knappe Stop-Limits. Ich nehme sie normalerweise in der H\u00e4lfte der zweiten 15 Minuten Kerze, wenn \u00fcberhaupt meistens sogar etwas k\u00fcrzer. Bei Tom kann es gut sein, dass die praktisch am unteren Ende ist. Und je nachdem, wie gro\u00df die Range ist, k\u00f6nnen das halt schon mal ein heftigen Risk-Reward sein. Aber das ist nun mal so. Ihr k\u00f6nnt eben durch diese Strategie parallel euch Short- und Long-Trigger setzen und zumindest f\u00fcr den DAX gilt das. Man muss eben bei den anderen DCS schauen, wie gut es da funktioniert. Haben die beiden Grenzen, die beiden Trigger-Points auch noch f\u00fcr sp\u00e4ter eine Bewandtnis, weil eben in der ersten halben Stunde im DAX jetzt von 9 bis 39 massiv viel Volumen getradet wird und ein Volumenprofil seht ihr, dass wir praktisch hier unten beim Low und hier oben beim High durchaus Volumespikes haben. Das hei\u00dft, die Level sind auch f\u00fcr die sp\u00e4tere Price-Action durchaus noch interessant und relevant. Dann kann man auch das Opening mit dazunehmen und dann hat man eigentlich ganz gute Levels. Bis auf diesen Abverkauf vorhin war zum Beispiel das Value Area Low punktgenau auf dem School Run Low. Also so k\u00f6nnt ihr euch vielleicht ein bisschen da helfen. Ich finde es eine sch\u00f6ne, simple M\u00f6glichkeit, wenige Regeln und wenn es euch zu unsicher ist, k\u00f6nnt ihr weitere Regeln dazunehmen, das Ganze zu trading und euch da relativ blind einfach die Trigger zu setzen, ob ihr dann auf Trading View oder sonstigen Plattformen dementsprechend in Alarm setzt, damit ihr nicht immer vom Rechner hockt, ist ihr euch \u00fcberlassen und mit einer gewissen Erfahrung k\u00f6nnt ihr dann auch einfach die Orders entsprechend eingeben mit dem definierten Stop Limit und dann l\u00e4uft es eben oder l\u00e4uft es nicht. Wenn ihr mit entsprechender Statistik profitabel seid, ist es dann no-brainer und passt. Genau, das vielleicht mal grunds\u00e4tzlich ist relativ einfach, ist jetzt kein Hexenwerk, aber trotzdem finde ich sehr sch\u00f6n zusammengestellt. Ich kann keine Aussagen treffen, wie es momentan mit Aktien so funktioniert. Ich habe fr\u00fcher Optionen mit einer Obstrategie gehandelt, jetzt nicht mit dem School Run, das funktioniert eigentlich auch sehr gut. Wenn jemand von euch das Strat traded, da kann man \u00e4hnliche Kombinationsspielchen machen und sich so mehrere Best\u00e4tigungsereignisse oder Bereiche zusammenschrauben, um verschiedene Strategien zu verbinden, um das Ganze sicherer oder profitabler zu machen. Und ich wei\u00df auch, dass praktisch viele, die Tomfollowen auch das auf andere Indizes \u00fcbertragen, weiter bin ich einfach nicht gekommen. Das funktioniert sehr wahrscheinlich auch auf dem Nasdaq und auf dem FUTSC Trader, der ist auch. Aber ja, wenn ihr irgendetwas anderes handelt, kann ich dazu wenig sagen. Und eben, ihr m\u00fcsst f\u00fcr euch gucken, ob ihr einfach morgens Zeit habt. Es gibt Leute, die das Ganze auch mit der Asia Range verbinden. Da m\u00fcsst ihr einfach gucken, wie es euch passt. Ich wollte es einmal vorstellen. Und vielleicht noch so eine kleine Warnung zumindest f\u00fcr die aktuellen Wochen. Fr\u00fcher in Anfangszeichen, das ist ja schon so lange her, dass wir Herbst 2.22 hatten, ist der Schoolland tats\u00e4chlich in der ersten halben bis dreiviert Stunde ausgebrochen. Das hei\u00dft, so hat es den Level von der 2.15 Minutenkerze. Und dann ist relativ schnell bis 10 Uhr, ist der Dachs dann nach oben oder nach unten ausgebrochen. Und erfahrungsgem\u00e4\u00df, auch wenn es jetzt heute durch die News auch quasi gekommen ist, ihr seht hier schon, dass wir einen gewissen R\u00fccksetzer hatten. Und das war fr\u00fcher seltenster Fall. Das sehe ich aber zumindest sehr viel h\u00e4ufiger. Deswegen meine pers\u00f6nliche Strategie gehe ich meist nicht voll in den ersten Run mit. Vor allem nicht mit voller Size, sondern ich erwarte zumindest aktuell im Januar eigentlich schon ein Reversal, ein Retracement. Und wir k\u00f6nnen das ja mal spielweise so machen. Wir nehmen hier Opening Low-Wick zu dem Tempor\u00e4ren hoch, was eben gleichzeitig das Hoch der Initial Balance ist. Das w\u00e4re ein recht perfektes 05 Value Tracement. Wenn ihr dann erhandelt, w\u00e4re das noch ein sehr, sehr angenehmer Entry gewesen. Und dann h\u00e4tten wir praktisch noch ein zus\u00e4tzliches Layer von Best\u00e4tigung, dass das, wenn das sch\u00f6n gehalten wird und sehen wir hier Kaufpower, soweit ich wei\u00df, war der POC zu der Zeit praktisch auch noch oben, dass wir dann verschiedenste Punkte, die man aufwadieren kann, um so einen besseren Entry zu kriegen, um nicht ausgestoppt zu werden, zudem auch. Und ihr seht ja, das Ganze h\u00e4ttet ihr sch\u00f6n nach oben pushen k\u00f6nnen. Und erst heute Nachmittag gab es dann einen starken Abverkauf, also genug M\u00f6glichkeiten, um einen sauberen Profit mitzunehmen. Und im ungekehrten Falle, der Tag bietet das eben, sehen wir hier auch jetzt die M\u00f6glichkeit, wie man auch ein paar Punkte mitnehmen k\u00f6nnt, wobei das mit dem 50er-Level nach meinem Verst\u00e4ndnis jetzt wieder knapp geworden w\u00e4re, weil wir das 50er-Level letztlich halten und auch Value Area low. Aber rein von der puren Skuldron-Strategie w\u00e4re bei Tom hier der Entry gewesen und er h\u00e4tte ganz guten Profit mitgenommen. Das sind knapp 25 Punkte. Ist dann die Frage, wann er ausgestoppt worden w\u00e4re oder ob es geschafft h\u00e4tte, rauszugehen. Und dann gibt es eben den Retest und dann h\u00e4tte man in der Range praktisch jetzt aktuell durchaus noch spielen k\u00f6nnen. Aber letztlich h\u00e4tten wir dann mehrere Trigger des Skuldrons, die mit einem gewissen geringeren Profit-Ziel auch durchaus dabei gewesen w\u00e4ren. Und das ist auch was, was ich f\u00fcr mich feststelle. Tom hat da teilweise schon irgendwie so 30, 40, 50 Punkte, weil der Dachs momentan nat\u00fcrlich auch stark pusht oder sich zumindest stark bewegt. Ich bin meistens mit 10, 15 zufrieden, um mal zumindest einen ersten Profit zu nehmen. Und das funktioniert mit dieser Strategie eigentlich sehr gut. Wenn das lange Zeit profitabel ist, k\u00f6nnt ihr die Size erh\u00f6hen und so auch mehr Profit erwirtschaften. Das war es eigentlich dazu. Es ist nicht ultra kompliziert. Es ist sehr, sehr einfach, selbst das anzuwenden, backtestet es, probiert es, demotratet es eine Weile und dann guckt einfach, ob ihr damit klarkommt. Es sind, wie gesagt, zus\u00e4tzliche Trigger k\u00f6nnt ihr euch immer noch dazu holen. Aber plain Skuldron ist wirklich, wartet die zweite 15 Minuten Kerze nach dem Aktien-Exchange-Opening ab, markiert das High und Low, legt euch das als Trigger und dann wartet, bis es so 2, 3, 4, 5 Punkte oben dr\u00fcber ist und das Volumen dazu passt. Und das war es auch schon. Ich warte pers\u00f6nlich eben auf eine volle 5 Minuten Kerze \u00fcber dem Level. Und zwar tats\u00e4chlich oben dr\u00fcber, wie wir hier sehen. Also ich warte tats\u00e4chlich, bis die fertig ist. Ich warte nicht bis die zweite Kerze keinen Connection mit dem Trigger Level hat, weil das zumindest bei mir in der Vergangenheit auch oftmals sehr, sehr schnell reversed ist. Bietet nat\u00fcrlich die Gefahr, dass ich schneller ausgestoppt werden w\u00fcrde. Aber ich glaube, das waren eben, genau, da hatte ich meine 10 Punkte drin und das passt f\u00fcr mich. Es hat da zu den Zeitpunkten gepasst. Hier hatte ich noch ein paar mehr mitgenommen. Also ja, finde ich in Ordnung. Und ich nehme eben zus\u00e4tzlich sogar noch das Volumenprofil als Trigger, was Tom nicht dabei hat. Das war es eigentlich auch schon simpel erkl\u00e4rt. Skuldron von Tom Hogarth. Ich verlinke alles von ihm bitte. Credits to him. Er ist da der alleinige Verursacher des Ganzen und ich folge da nur und wollte es euch vorstellen. Wer die wahrscheinlich auch schreiben, dass ob das in Ordnung ist. Und ja, erfolgreiches Traden heute. Wir haben heute Nachmittag noch einige Zahlen. Vor allem beginnen jetzt die Banken-Earnings, was teilweise hiermit eben verursacht oder was hier das hier verursacht hat. Passt auf. Letzter Tag der Woche nicht die wirtschafteten Profite wegschmei\u00dfen. Wir sehen uns ansonsten am Sonntag in der Kaffee-Runde. Und ansonsten w\u00fcnsche ich euch ein sch\u00f6nes Wochenende, ruht euch aus und bis bald, tschau tschau."
+}
