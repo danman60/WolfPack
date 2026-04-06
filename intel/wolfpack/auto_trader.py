@@ -17,13 +17,23 @@ logger = logging.getLogger(__name__)
 STRATEGY_ALLOCATIONS = {
     # Trending strategies
     "ema_crossover": 0.15,
-    "turtle_donchian": 0.15,
+    "turtle_donchian": 0.10,
     "orb_session": 0.10,
-    "regime_momentum": 0.10,
+    "regime_momentum": 0.05,
     # Ranging strategies
-    "mean_reversion": 0.15,
+    "mean_reversion": 0.25,
     "measured_move": 0.10,
     # Brief-driven: remaining ~25%
+}
+
+# Which candle timeframe each strategy expects
+STRATEGY_TIMEFRAMES = {
+    "ema_crossover": "1h",
+    "turtle_donchian": "1h",
+    "regime_momentum": "1h",
+    "mean_reversion": "1h",
+    "orb_session": "5m",
+    "measured_move": "5m",
 }
 
 # conviction_threshold is NOT part of risk_controls (it's auto_trader-specific)
@@ -463,6 +473,7 @@ class AutoTrader:
         symbol: str,
         regime_output=None,
         vol_output=None,
+        timeframe: str = "1h",
     ) -> list[dict]:
         """Run mechanical strategies and open/close positions from their signals.
 
@@ -508,6 +519,11 @@ class AutoTrader:
 
             # Regime-based strategy filter
             if allowed is not None and strategy_name not in allowed:
+                continue
+
+            # Check timeframe compatibility
+            expected_tf = STRATEGY_TIMEFRAMES.get(strategy_name, "1h")
+            if expected_tf != timeframe:
                 continue
 
             try:

@@ -1,7 +1,7 @@
 """Turtle/Donchian Breakout Strategy -- classic channel breakout with SMA trend filter.
 
-Goes long on 20-period highest-high breakout above SMA(200), short on lowest-low
-breakout below SMA(200). Uses ATR-based stops and structural exits (opposite channel break).
+Goes long on 20-period highest-high breakout above SMA(55), short on lowest-low
+breakout below SMA(55). Uses ATR-based stops and structural exits (opposite channel break).
 Pure numpy implementation.
 """
 
@@ -13,7 +13,7 @@ from wolfpack.strategies.base import Strategy
 
 class TurtleDonchianStrategy(Strategy):
     name = "turtle_donchian"
-    description = "Donchian channel breakout with SMA(200) trend filter and ATR stops"
+    description = "Donchian channel breakout with SMA(55) trend filter and ATR stops"
     parameters = {
         "breakout_period": {
             "type": "int",
@@ -38,8 +38,8 @@ class TurtleDonchianStrategy(Strategy):
         },
         "sma_trend_period": {
             "type": "int",
-            "default": 200,
-            "min": 100,
+            "default": 55,
+            "min": 20,
             "max": 300,
             "desc": "SMA period for trend filter",
         },
@@ -54,7 +54,7 @@ class TurtleDonchianStrategy(Strategy):
 
     @property
     def warmup_bars(self) -> int:
-        return 201  # needs SMA(200)
+        return 56  # needs SMA(55)
 
     def evaluate(
         self, candles: list[Candle], current_idx: int, **params

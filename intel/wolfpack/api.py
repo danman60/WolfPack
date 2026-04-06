@@ -1958,6 +1958,7 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                     strat_executed = auto_trader.process_strategy_signals(
                         candles_1h, symbol,
                         regime_output=regime_output, vol_output=vol_output,
+                        timeframe="1h",
                     )
                     if strat_executed:
                         logger.info(f"[cycle] Strategy signals executed {len(strat_executed)} trades")
@@ -1969,6 +1970,7 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                             strat_5m = auto_trader.process_strategy_signals(
                                 candles_5m, symbol,
                                 regime_output=regime_output, vol_output=vol_output,
+                                timeframe="5m",
                             )
                             if strat_5m:
                                 logger.info(f"[cycle] 5m strategy signals executed {len(strat_5m)} trades")
