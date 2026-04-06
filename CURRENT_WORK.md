@@ -1,49 +1,46 @@
 # Current Work - WolfPack
 
-## Last Session Summary
-Massive session: researched NoFx trading platform for architectural patterns, implemented 7 new safety/resilience modules, built full LP Autobot (5 phases), fixed multiple bugs (Telegram spam, DeepSeek 400s, backtest data contamination, lookahead bug), added ORB FVG filter, and analyzed strategy performance.
+## Last Session Summary (2026-04-06)
+Massive session: unified hourly digest, dynamic strategy allocation, LP persistence, background tick loop, mobile profit report, LP Autobot dashboard, full mobile polish, and complete live money cutover infrastructure.
 
-## What Changed (15 commits this session)
-- `516ade5` fix: strategy allocations + timeframe routing — mean_rev 25%, ORB/measured_move get 5m candles
-- `d1c4913` fix: prevent same-cycle TP/SL triggers (lookahead bug)
-- `ac03183` feat: LP pool rotation engine — autonomous yield hunting + capital rotation
-- `667021a` fix: replace dead subgraph with RPC + GeckoTerminal hybrid
-- `882513e` fix: persist LP watched pools via config env var
-- `66ca971` feat: LP rebalance engine — debounced OOR + IL triggers with cooldown
-- `455dd4d` feat: LP fee manager — auto-harvest with compound/sweep decisions
-- `b47f5cf` feat: LP range calculator + auto-open paper positions
-- `d95590c` feat: LP AutoTrader orchestrator + API endpoints
-- `181e55b` feat: ORB strategy — FVG displacement filter + retest engulfing confirmation
-- `bc2d116` feat: LP Autobot Phase 1 - Paper Engine + Monitor + Migration
-- `cb25376` feat: regime debounce — require 3 consecutive ticks before macro shift
-- `dad18a3` fix: backtest trades polluting live trade history + dedup bot profit tool
-- `7ea4cc4` feat: add get_profit tool to Telegram bot
-- `92982a0` feat: NoFx pattern integration — 7 modules for safety, resilience, observability
+## What Changed (8 commits this session)
+- `6a580c9` feat: LP live engine on Arbitrum + live mode UI banner
+- `f3e95b7` feat: live perp execution bridge — paper→live toggle for real money
+- `990b0c1` fix: LP equity inflation on snapshot restore
+- `8c0995d` fix: profit report buttons no longer snap/reload page
+- `0eeeac6` feat: mobile profit report + LP dashboard + mobile polish
+- `cfaccc6` fix: production-readiness — LP persistence, background tick loop, startup restore
+- `c0ee82f` feat: include LP portfolio data in profit reports
+- `c389931` feat: unified hourly digest + dynamic strategy allocation + IL hedging
 
 ## Build Status
-DEPLOYED — intel service running on droplet (159.89.115.95)
+DEPLOYED — intel service running on droplet (159.89.115.95), frontend on Vercel
 
-## Perp Autobot Performance
-- Clean 24h: +$1,033 (after lookahead fix)
-- Mean reversion dominant: $1,220 total, 62.5% WR, 5.6:1 R:R
-- Strategy allocations updated: mean_rev 25%, regime_momentum 5%
-- ORB/turtle/measured_move now receive correct candle timeframes
+## Live Cutover Infrastructure (COMPLETE)
+- LiveTradingEngine: wraps HyperliquidTrader with PaperTradingEngine interface
+- LiveLPEngine: wraps web3.py Uniswap V3 calls on Arbitrum
+- Emergency kill switch: POST /emergency-kill
+- Safety: $100 equity floor, 5-min trade spacing, mode enforcement
+- UI: Live trading banner, mode indicator in status
 
-## LP Autobot (NEW)
-- $15K paper equity, 6 positions, 10 scanner candidates
-- Fees: $10.90, IL: $1.03, net: +$9.87
-- RPC + GeckoTerminal hybrid (free, no API keys)
-- Pool rotation engine scans top pools every 3h
+## Cutover Checklist (When Ready ~2026-04-13)
+1. Set HYPERLIQUID_PRIVATE_KEY in droplet .env
+2. pip install web3>=7.0.0 on droplet
+3. Set LP_WALLET_PRIVATE_KEY in droplet .env
+4. Fund Hyperliquid account (~$500 for perps)
+5. Fund Arbitrum wallet (~$500 for LP + gas)
+6. POST /strategy/mode?mode=live
+7. Set LP_PAPER_MODE=false in .env
+8. Monitor first few trades closely
 
 ## Known Issues
-- Telegram notifications still too frequent — need to check what's bypassing digest
-- `[training] Failed to append training data: name 'os' is not defined`
-- `wp_position_actions` duplicate key errors on auto-executed actions
-- Pipeline tmux launch failures (zombie windows) — sent to sysadmin INBOX
+- Profit report contaminated by crypto price appreciation vs actual trading alpha
+- web3 not yet installed on droplet (only needed for live LP)
+- Pool scanner may need tuning for Arbitrum pool discovery
 
 ## Next Steps (Priority Order)
-1. Fix remaining Telegram notification spam
-2. Strategy-level auto-allocation (shift allocation toward winners)
-3. Monitor newly-enabled strategies (ORB, turtle, measured_move)
-4. Add more trading symbols (SOL, AVAX, DOGE, ARB)
-5. LP Phase 5: IL hedging via perp autobot
+1. Fix profit reporting — separate trading alpha from market beta
+2. Monitor paper trading performance for 1 week
+3. Test live cutover with small amount before full commitment
+4. Install web3 on droplet when LP cutover is near
+5. Tune Arbitrum pool scanner parameters

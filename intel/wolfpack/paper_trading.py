@@ -12,6 +12,28 @@ from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 
+# ---------------------------------------------------------------------------
+# Market friction constants (easy to tune)
+# ---------------------------------------------------------------------------
+
+# Entry/exit slippage in basis points per asset class
+# BTC/ETH: 2-5 bps (deep books), altcoins: 5-15 bps (thinner books)
+SLIPPAGE_BPS: dict[str, int] = {
+    "BTC": 3, "ETH": 4,
+    "SOL": 8, "AVAX": 10, "DOGE": 10, "ARB": 12, "LINK": 8,
+}
+DEFAULT_SLIPPAGE_BPS: int = 10
+
+# Extra adverse slippage on stop-loss fills (forced liquidation into thin book)
+STOP_SLIPPAGE_BPS: int = 15  # 0.15%
+
+# Conservative funding rate estimate: 0.005% per hour ≈ 4.4% annualized
+FUNDING_RATE_HOURLY: float = 0.00005
+
+# Minimum age (seconds) before a position can be stopped out.
+# One full tick cycle (5 min) — simulates signal-to-fill delay.
+FILL_DELAY_SECONDS: int = 300
+
 
 class PaperPosition(BaseModel):
     """A simulated open position."""
@@ -39,6 +61,7 @@ class PaperPortfolio(BaseModel):
     realized_pnl: float = 0.0
     unrealized_pnl: float = 0.0
     total_fees: float = 0.0
+    friction_costs: float = 0.0  # Total slippage + funding deducted
     positions: list[PaperPosition] = []
     closed_trades: int = 0
     winning_trades: int = 0
@@ -91,10 +114,21 @@ class PaperTradingEngine:
             logger.warning(f"Insufficient collateral for {symbol}: need ${size_usd:.2f}, have ${self.portfolio.free_collateral:.2f}")
             return None
 
+        # Apply adverse entry slippage (taker spread + market impact)
+        slippage_bps = SLIPPAGE_BPS.get(symbol, DEFAULT_SLIPPAGE_BPS)
+        slippage_pct = slippage_bps / 10000.0
+        if direction == "long":
+            entry_price = current_price * (1 + slippage_pct)  # Buy higher
+        else:
+            entry_price = current_price * (1 - slippage_pct)  # Sell lower
+        slippage_cost = abs(entry_price - current_price) / current_price * size_usd
+        self.portfolio.friction_costs += slippage_cost
+        logger.info(f"Entry slippage {slippage_bps}bps on {symbol}: market ${current_price:.2f} → fill ${entry_price:.2f} (cost ${slippage_cost:.2f})")
+
         position = PaperPosition(
             symbol=symbol,
             direction=direction,
-            entry_price=current_price,
+            entry_price=entry_price,
             current_price=current_price,
             size_usd=size_usd,
             unrealized_pnl=0.0,
@@ -109,7 +143,7 @@ class PaperTradingEngine:
 
         self.portfolio.positions.append(position)
         self.portfolio.free_collateral -= size_usd
-        logger.info(f"Opened paper {direction} {symbol} @ ${current_price:.2f}, size ${size_usd:.2f} (fee ${fee:.2f})")
+        logger.info(f"Opened paper {direction} {symbol} @ ${entry_price:.2f} (mkt ${current_price:.2f}), size ${size_usd:.2f} (fee ${fee:.2f})")
         return position
 
     def update_prices(self, prices: dict[str, float]) -> None:
@@ -135,6 +169,13 @@ class PaperTradingEngine:
                 pnl_pct = (pos.entry_price - pos.current_price) / pos.entry_price
 
             pos.unrealized_pnl = pos.size_usd * pnl_pct
+
+            # Apply funding cost (1/12 of hourly rate per 5-min tick)
+            funding_cost = self._apply_funding(pos)
+            pos.unrealized_pnl -= funding_cost
+            self.portfolio.total_fees += funding_cost
+            self.portfolio.friction_costs += funding_cost
+
             total_unrealized += pos.unrealized_pnl
 
         self.portfolio.unrealized_pnl = total_unrealized
@@ -157,6 +198,19 @@ class PaperTradingEngine:
         if pos is None:
             logger.warning(f"No open position in {symbol}")
             return 0.0
+
+        # Apply adverse exit slippage before calculating P&L
+        slippage_bps = SLIPPAGE_BPS.get(pos.symbol, DEFAULT_SLIPPAGE_BPS)
+        slippage_pct = slippage_bps / 10000.0
+        pre_slip_price = pos.current_price
+        if pos.direction == "long":
+            pos.current_price = pre_slip_price * (1 - slippage_pct)  # Sell lower
+        else:
+            pos.current_price = pre_slip_price * (1 + slippage_pct)  # Buy higher
+        slippage_cost = abs(pos.current_price - pre_slip_price) / pre_slip_price * pos.size_usd
+        self.portfolio.friction_costs += slippage_cost
+        self._update_position_pnl(pos)
+        logger.info(f"Exit slippage {slippage_bps}bps on {symbol}: ${pre_slip_price:.2f} → ${pos.current_price:.2f} (cost ${slippage_cost:.2f})")
 
         # Deduct exit commission
         fee = pos.size_usd * (self.commission_bps / 10000.0)
@@ -226,12 +280,24 @@ class PaperTradingEngine:
             price = prices.get(pos.symbol)
             if price is None:
                 continue
-            # Skip positions opened in the same cycle (prevents lookahead artifacts)
-            if (now - pos.opened_at).total_seconds() < 60:
+            # Skip positions opened recently (signal-to-fill delay simulation)
+            if (now - pos.opened_at).total_seconds() < FILL_DELAY_SECONDS:
                 continue
             reason = self._check_stop_trigger(pos, price, price)
             if reason:
-                pos.current_price = pos.stop_loss if reason == "stop_loss" else pos.take_profit  # type: ignore[assignment]
+                if reason == "stop_loss":
+                    # Stops fill worse than the stop price (slippage on forced exit)
+                    stop_slip = STOP_SLIPPAGE_BPS / 10000.0
+                    if pos.direction == "long":
+                        pos.current_price = pos.stop_loss * (1 - stop_slip)  # type: ignore[operator]
+                    else:
+                        pos.current_price = pos.stop_loss * (1 + stop_slip)  # type: ignore[operator]
+                    slip_cost = abs(pos.current_price - pos.stop_loss) / pos.stop_loss * pos.size_usd  # type: ignore[operator]
+                    self.portfolio.friction_costs += slip_cost
+                    logger.info(f"Stop slippage {STOP_SLIPPAGE_BPS}bps on {pos.symbol}: stop ${pos.stop_loss} → fill ${pos.current_price:.2f}")
+                else:
+                    # TP fills at the take-profit level (already optimistic)
+                    pos.current_price = pos.take_profit  # type: ignore[assignment]
                 self._update_position_pnl(pos)
                 self.close_position(pos.symbol)
                 triggered.append((pos.symbol, reason))
@@ -251,8 +317,18 @@ class PaperTradingEngine:
             low = candle.low if hasattr(candle, "low") else candle["low"]
             reason = self._check_stop_trigger(pos, high, low)
             if reason:
-                exit_price = pos.stop_loss if reason == "stop_loss" else pos.take_profit  # type: ignore[assignment]
-                pos.current_price = exit_price  # type: ignore[assignment]
+                if reason == "stop_loss":
+                    # Stops fill worse than the stop price
+                    stop_slip = STOP_SLIPPAGE_BPS / 10000.0
+                    if pos.direction == "long":
+                        pos.current_price = pos.stop_loss * (1 - stop_slip)  # type: ignore[operator]
+                    else:
+                        pos.current_price = pos.stop_loss * (1 + stop_slip)  # type: ignore[operator]
+                    slip_cost = abs(pos.current_price - pos.stop_loss) / pos.stop_loss * pos.size_usd  # type: ignore[operator]
+                    self.portfolio.friction_costs += slip_cost
+                    logger.info(f"Stop slippage {STOP_SLIPPAGE_BPS}bps on {pos.symbol} (OHLC): stop ${pos.stop_loss} → fill ${pos.current_price:.2f}")
+                else:
+                    pos.current_price = pos.take_profit  # type: ignore[assignment]
                 self._update_position_pnl(pos)
                 self.close_position(pos.symbol)
                 triggered.append((pos.symbol, reason))
@@ -272,6 +348,16 @@ class PaperTradingEngine:
             if pos.take_profit is not None and low <= pos.take_profit:
                 return "take_profit"
         return None
+
+    @staticmethod
+    def _apply_funding(pos: PaperPosition) -> float:
+        """Apply Hyperliquid funding rate cost. Called every tick (5 min).
+
+        Funding is paid/received every hour on Hyperliquid.
+        We apply 1/12th per tick (5 min tick, 60 min funding period).
+        Conservatively charges both longs and shorts.
+        """
+        return pos.size_usd * FUNDING_RATE_HOURLY / 12
 
     def _update_position_pnl(self, pos: PaperPosition) -> None:
         """Recalculate unrealized P&L for a single position."""
@@ -358,6 +444,7 @@ class PaperTradingEngine:
             "unrealized_pnl": round(self.portfolio.unrealized_pnl, 2),
             "realized_pnl": round(self.portfolio.realized_pnl, 2),
             "total_fees": round(self.portfolio.total_fees, 2),
+            "friction_costs": round(self.portfolio.friction_costs, 2),
             "positions": positions_data,
         }
 

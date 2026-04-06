@@ -696,6 +696,7 @@ class AutoTrader:
             "realized_pnl": round(p.realized_pnl, 2),
             "unrealized_pnl": round(p.unrealized_pnl, 2),
             "total_fees": round(p.total_fees, 2),
+            "friction_costs": round(getattr(p, "friction_costs", 0), 2),
             "open_positions": len(p.positions),
             "positions": [pos.model_dump(mode="json") for pos in p.positions],
             "yolo_level": self.yolo_level,
