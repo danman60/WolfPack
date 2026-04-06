@@ -37,6 +37,7 @@ class LPAutoTrader:
         self.rebalance_engine = LPRebalanceEngine()
         self.pool_scanner = LPPoolScanner()
         self._restored = False
+        self._last_snapshot_at: datetime | None = None
         # IL hedge tracking: {lp_position_id: {"hedge_size": float, "hedge_entry": float, "last_adjusted": datetime}}
         self._il_hedges: dict[str, dict] = {}
         # Load watched pools from config as seeds (scanner adds dynamically)
@@ -443,9 +444,13 @@ class LPAutoTrader:
             logger.warning(f"[lp-trader] Failed to store rebalance event: {e}")
 
     def _store_snapshot(self) -> None:
-        """Persist portfolio state to wp_lp_snapshots."""
+        """Persist portfolio state to wp_lp_snapshots (rate-limited to every 30 min)."""
+        now = datetime.now(timezone.utc)
+        if self._last_snapshot_at and (now - self._last_snapshot_at).total_seconds() < 1800:
+            return  # Skip — less than 30 min since last snapshot
         try:
             self.engine.store_snapshot()
+            self._last_snapshot_at = now
         except Exception as e:
             logger.warning(f"[lp-trader] Failed to store snapshot: {e}")
 

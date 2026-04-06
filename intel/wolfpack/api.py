@@ -2,6 +2,7 @@
 
 import asyncio
 import logging
+import os
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
@@ -64,7 +65,45 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.warning(f"[lifespan] Failed to ensure default watchlist: {e}")
 
+    # Restore perp auto-trader from snapshot
+    try:
+        trader = _get_auto_trader()
+        trader.restore_from_snapshot()
+        logger.info("[lifespan] Perp auto-trader restored from snapshot")
+    except Exception as e:
+        logger.warning(f"[lifespan] Perp auto-trader restore failed: {e}")
+
+    # Restore LP positions from snapshot
+    try:
+        lp = _get_lp_trader()
+        lp.restore_from_snapshot()
+        status = lp.get_status()
+        logger.info(f"[lifespan] LP restored: {status['positions']} positions, ${status['total_fees']:.2f} fees")
+    except Exception as e:
+        logger.warning(f"[lifespan] LP restore failed: {e}")
+
+    # Clean up old LP snapshots (keep last 48 hours)
+    try:
+        from wolfpack.db import get_db
+        db = get_db()
+        db.table("wp_lp_snapshots").delete().lt(
+            "created_at", (datetime.now(timezone.utc) - timedelta(hours=48)).isoformat()
+        ).execute()
+        logger.info("[lifespan] Cleaned up old LP snapshots (>48h)")
+    except Exception as e:
+        logger.warning(f"[lifespan] LP snapshot cleanup failed: {e}")
+
+    # Start autonomous background tick loop
+    tick_task = asyncio.create_task(_background_tick_loop())
+
     yield
+
+    # Shutdown — cancel background tick loop
+    tick_task.cancel()
+    try:
+        await tick_task
+    except asyncio.CancelledError:
+        logger.info("[lifespan] Background tick loop stopped")
 
     # Shutdown
     if _telegram_bot:
@@ -2861,6 +2900,32 @@ async def _run_multi_symbol(exchange: str, symbols: list[str]) -> None:
         except Exception as e:
             logger.error(f"[multi] Cycle failed for {symbol}: {e}")
     logger.info(f"[multi] Multi-symbol run complete: {len(symbols)} symbols")
+
+
+async def _background_tick_loop():
+    """Autonomous tick loop — runs every 5 minutes regardless of frontend."""
+    await asyncio.sleep(60)  # Initial delay — let startup complete
+    while True:
+        try:
+            from wolfpack.db import get_db
+            db = get_db()
+            result = db.table("wp_watchlist").select("symbol").execute()
+            symbols = list(set(r["symbol"] for r in (result.data or [])))
+            if not symbols:
+                symbols = ["BTC"]
+
+            exchange = "hyperliquid"
+            for symbol in symbols:
+                try:
+                    await _run_full_cycle(exchange, symbol)
+                except Exception as e:
+                    logger.warning(f"[tick-loop] {symbol} cycle failed: {e}")
+
+            logger.info(f"[tick-loop] Completed cycle for {len(symbols)} symbols")
+        except Exception as e:
+            logger.error(f"[tick-loop] Cycle error: {e}")
+
+        await asyncio.sleep(300)  # 5 minutes
 
 
 # ── Prompt Templates ──
