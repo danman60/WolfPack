@@ -54,6 +54,7 @@ export function useProfit(hours: number) {
     },
     refetchInterval: 60_000,
     retry: false,
+    placeholderData: (prev: unknown) => prev,
   });
 }
 

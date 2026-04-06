@@ -345,7 +345,7 @@ export default function Dashboard() {
 
 function ProfitReport() {
   const [hours, setHours] = useState(24);
-  const { data: profit } = useProfit(hours);
+  const { data: profit, isFetching } = useProfit(hours);
 
   const periods = [
     { label: "1H", value: 1 },
@@ -361,7 +361,7 @@ function ProfitReport() {
   const lp = profit.lp;
 
   return (
-    <div className="wolf-card p-4 md:p-6 animate-in animate-in-1">
+    <div className={`wolf-card p-4 md:p-6 animate-in animate-in-1 transition-opacity duration-200 ${isFetching ? "opacity-70" : "opacity-100"}`}>
       {/* Header + Period Buttons */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
         <div className="flex items-center gap-2">
