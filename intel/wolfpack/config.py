@@ -37,6 +37,9 @@ class Settings(BaseSettings):
     lp_paper_mode: bool = True
     lp_watched_pools: str = ""  # comma-separated pool addresses
     lp_max_positions: int = 6   # LP_MAX_POSITIONS — max concurrent LP positions
+    lp_wallet_private_key: str = ""
+    lp_chain: str = "arbitrum"  # arbitrum or ethereum
+    lp_rpc_url: str = ""  # auto-set based on chain if empty
 
     # Pool screening
     subgraph_api_key: str = ""

@@ -6,9 +6,16 @@ import httpx
 from dataclasses import dataclass
 from typing import Optional
 
+from wolfpack.config import settings
+
 logger = logging.getLogger(__name__)
 
 GECKO_BASE = "https://api.geckoterminal.com/api/v2"
+
+_CHAIN_GECKO_NETWORK = {
+    "arbitrum": "arbitrum",
+    "ethereum": "eth",
+}
 MIN_TVL_USD = 1_000_000        # ignore pools below $1M TVL
 MIN_VOLUME_24H = 100_000       # ignore pools below $100K daily volume
 MAX_POOLS_TO_TRACK = 10        # top N pools to consider
@@ -159,7 +166,8 @@ class LPPoolScanner:
     async def _fetch_top_pools(self) -> list:
         """Fetch top Uniswap V3 Ethereum pools from GeckoTerminal."""
         try:
-            url = f"{GECKO_BASE}/networks/eth/dexes/uniswap_v3/pools"
+            network = _CHAIN_GECKO_NETWORK.get(settings.lp_chain, "arbitrum")
+            url = f"{GECKO_BASE}/networks/{network}/dexes/uniswap_v3/pools"
             params = {"page": 1, "sort": "h24_volume_usd_desc"}
             async with httpx.AsyncClient(timeout=15.0) as client:
                 resp = await client.get(url, params=params, headers={"Accept": "application/json"})

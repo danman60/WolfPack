@@ -30,7 +30,11 @@ class LPAutoTrader:
         from wolfpack.modules.lp_pool_scanner import LPPoolScanner
 
         self._enabled = settings.lp_auto_enabled
-        self.engine = PaperLPEngine(starting_equity=settings.lp_starting_equity)
+        if settings.lp_paper_mode:
+            self.engine = PaperLPEngine(starting_equity=settings.lp_starting_equity)
+        else:
+            from wolfpack.lp_live_engine import LiveLPEngine
+            self.engine = LiveLPEngine()
         self.monitor = LPPositionMonitor()
         self.range_calc = LPRangeCalculator()
         self.fee_manager = LPFeeManager()
@@ -459,7 +463,7 @@ class LPAutoTrader:
         candidates = self.pool_scanner.get_candidates()
         return {
             "enabled": self._enabled,
-            "paper_mode": True,
+            "paper_mode": settings.lp_paper_mode,
             "equity": round(self.engine.portfolio.equity, 2),
             "positions": len(self.engine.portfolio.positions),
             "max_positions": MAX_POSITIONS,

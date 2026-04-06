@@ -6,10 +6,33 @@ import httpx
 from dataclasses import dataclass
 from typing import Optional
 
+from wolfpack.config import settings
+
 logger = logging.getLogger(__name__)
 
-RPC_URL = "https://ethereum-rpc.publicnode.com"
 GECKO_BASE = "https://api.geckoterminal.com/api/v2"
+
+# Chain-aware RPC + GeckoTerminal network
+_CHAIN_CONFIG = {
+    "arbitrum": {
+        "rpc": "https://arb1.arbitrum.io/rpc",
+        "gecko_network": "arbitrum",
+    },
+    "ethereum": {
+        "rpc": "https://ethereum-rpc.publicnode.com",
+        "gecko_network": "eth",
+    },
+}
+
+
+def _get_rpc_url() -> str:
+    if settings.lp_rpc_url:
+        return settings.lp_rpc_url
+    return _CHAIN_CONFIG.get(settings.lp_chain, _CHAIN_CONFIG["arbitrum"])["rpc"]
+
+
+def _get_gecko_network() -> str:
+    return _CHAIN_CONFIG.get(settings.lp_chain, _CHAIN_CONFIG["arbitrum"])["gecko_network"]
 
 OOR_DEBOUNCE_TICKS = 3
 
@@ -134,7 +157,7 @@ class LPPositionMonitor:
 
         try:
             async with httpx.AsyncClient(timeout=10.0) as client:
-                resp = await client.post(RPC_URL, json=calls)
+                resp = await client.post(_get_rpc_url(), json=calls)
                 if resp.status_code != 200:
                     logger.warning(f"RPC batch failed: {resp.status_code}")
                     return {}
@@ -180,7 +203,8 @@ class LPPositionMonitor:
         """Fetch market data from GeckoTerminal multi-pool endpoint."""
         try:
             addrs = ",".join(pool_addresses)
-            url = f"{GECKO_BASE}/networks/eth/pools/multi/{addrs}"
+            network = _get_gecko_network()
+            url = f"{GECKO_BASE}/networks/{network}/pools/multi/{addrs}"
             async with httpx.AsyncClient(timeout=15.0) as client:
                 resp = await client.get(url, headers={"Accept": "application/json"})
                 if resp.status_code != 200:

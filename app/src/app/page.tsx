@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useExchange } from "@/lib/exchange";
-import { useAgentOutputs, useAgentStatus, useRecommendations, usePortfolio, useWatchlist, useAutoTraderStatus, useProfit } from "@/lib/hooks/useIntelligence";
+import { useAgentOutputs, useAgentStatus, useRecommendations, usePortfolio, useWatchlist, useAutoTraderStatus, useProfit, useStrategyMode } from "@/lib/hooks/useIntelligence";
 import { WolfHead } from "@/components/WolfHead";
 import { usePrice, use24hChange } from "@/lib/hooks/useMarketData";
 import { useLPStatus } from "@/lib/hooks/usePools";
@@ -20,12 +20,28 @@ export default function Dashboard() {
   const { data: watchlist } = useWatchlist();
   const { data: autoTrader } = useAutoTraderStatus();
   const { data: lpStatus } = useLPStatus();
+  const { data: strategyMode } = useStrategyMode();
 
   const agents = agentStatus?.agents ?? [];
   const isActive = portfolio?.status === "active";
+  const isLive = strategyMode?.mode === "live";
 
   return (
     <div className="space-y-5 md:space-y-7">
+      {/* Live Mode Banner */}
+      {isLive && (
+        <div className="wolf-card p-3 border-[var(--wolf-red)]/30 bg-red-500/5 flex items-center justify-between animate-in">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-[var(--wolf-red)] pulse-glow" style={{ color: "var(--wolf-red)" }} />
+            <span className="text-[13px] font-semibold text-[var(--wolf-red)]">LIVE TRADING</span>
+            <span className="text-[11px] text-gray-500">Real money active</span>
+          </div>
+          <span className="text-[10px] px-2 py-1 rounded bg-red-500/15 text-red-400 font-semibold">
+            {strategyMode?.mode?.toUpperCase()}
+          </span>
+        </div>
+      )}
+
       {/* Profit Report */}
       <ProfitReport />
 
