@@ -186,10 +186,12 @@ async def get_profit_executor(hours: int = 24) -> dict:
 
             # Benchmark: query avg deployed capital from trade history
             try:
+                from datetime import datetime, timezone, timedelta
+                cutoff = (datetime.now(timezone.utc) - timedelta(hours=hours)).isoformat()
                 size_result = db.table("wp_trade_history").select(
                     "size_usd"
                 ).gte(
-                    "closed_at", f"now() - interval '{int(hours)} hours'"
+                    "closed_at", cutoff
                 ).not_.is_("exit_price", "null").execute()
                 if size_result.data:
                     sizes = [abs(float(t.get("size_usd", 0) or 0)) for t in size_result.data]
