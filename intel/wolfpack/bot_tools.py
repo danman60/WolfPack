@@ -8,7 +8,10 @@ Tools are defined in OpenAI function-calling JSON schema format with:
 
 import asyncio
 import json
+import logging
 from typing import Any
+
+logger = logging.getLogger(__name__)
 try:
     import httpx as _http_lib
     _HTTP = "httpx"
@@ -197,8 +200,8 @@ async def get_profit_executor(hours: int = 24) -> dict:
                     bench = _get_benchmark(hours, perp["total_pnl"], avg_deployed)
                     if bench:
                         perp["benchmark"] = bench
-            except Exception:
-                pass  # benchmark is optional
+            except Exception as e:
+                logger.warning(f"Benchmark calc failed: {e}")
 
             return perp
 
