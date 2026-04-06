@@ -20,6 +20,12 @@ logger = logging.getLogger(__name__)
 # Telegram bot singleton
 _telegram_bot: Any = None
 
+# ── Cycle health watchdog ──
+_startup_time: datetime = datetime.now(timezone.utc)
+_last_successful_cycle: datetime | None = None
+_cycle_failure_count: int = 0
+CYCLE_ALERT_THRESHOLD: int = 6  # Alert after 6 consecutive failures (30 min at 5-min intervals)
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -253,7 +259,14 @@ async def get_profit(hours: int = 24):
 
 @app.get("/health")
 async def health():
-    result = {"status": "ok", "service": "wolfpack-intel"}
+    status = "ok" if _cycle_failure_count < CYCLE_ALERT_THRESHOLD else "degraded"
+    result: dict[str, Any] = {
+        "status": status,
+        "service": "wolfpack-intel",
+        "last_successful_cycle": _last_successful_cycle.isoformat() if _last_successful_cycle else None,
+        "consecutive_failures": _cycle_failure_count,
+        "uptime_seconds": (datetime.now(timezone.utc) - _startup_time).total_seconds(),
+    }
     if _token_tracker is not None:
         result["token_usage_session"] = _token_tracker.get_session_totals()
     return result
@@ -2168,8 +2181,11 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
             engine = _get_paper_engine()
             if latest_price and engine.portfolio.positions:
                 engine.update_prices({symbol: latest_price})
-                engine.store_snapshot(exchange)
-                logger.info(f"[cycle] Paper portfolio snapshot stored (equity: ${engine.portfolio.equity:.2f})")
+                try:
+                    engine.store_snapshot(exchange)
+                    logger.info(f"[cycle] Paper portfolio snapshot stored (equity: ${engine.portfolio.equity:.2f})")
+                except Exception as e:
+                    logger.warning(f"[cycle] Failed to store paper portfolio snapshot: {e}")
 
             # ── Step 6a: Track per-position peak P&L + check emergency exits ──
             try:
@@ -2294,14 +2310,37 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
 
             logger.info(f"[cycle] Full intelligence cycle complete for {symbol} on {exchange}")
 
+            # ── Health watchdog: mark success ──
+            global _last_successful_cycle, _cycle_failure_count
+            _last_successful_cycle = datetime.now(timezone.utc)
+            _cycle_failure_count = 0
+
         except Exception as e:
             logger.error(f"[cycle] Brief agent failed: {e}", exc_info=True)
             ft.record_failure("brief", str(e))
+
+            # ── Health watchdog: track failure ──
+            _cycle_failure_count += 1
+            if _cycle_failure_count == CYCLE_ALERT_THRESHOLD:
+                try:
+                    from wolfpack.notifications import send_telegram
+                    await send_telegram(f"⚠️ CYCLE DOWN: {CYCLE_ALERT_THRESHOLD} consecutive failures. Last error: {str(e)[:200]}")
+                except Exception:
+                    pass
         finally:
             _running.discard("brief")
 
     except Exception as e:
         logger.error(f"[cycle] Intelligence cycle failed: {e}", exc_info=True)
+
+        # ── Health watchdog: track outer failure ──
+        _cycle_failure_count += 1
+        if _cycle_failure_count == CYCLE_ALERT_THRESHOLD:
+            try:
+                from wolfpack.notifications import send_telegram
+                await send_telegram(f"⚠️ CYCLE DOWN: {CYCLE_ALERT_THRESHOLD} consecutive failures. Last error: {str(e)[:200]}")
+            except Exception:
+                pass
     finally:
         _running.discard("quant")
         _running.discard("snoop")

@@ -484,20 +484,34 @@ class AutoTrader:
             logger.error(f"[auto-trader] Failed to store trade: {e}")
 
     def _store_snapshot(self) -> None:
-        """Store auto-trader portfolio snapshot to Supabase."""
+        """Store auto-trader portfolio snapshot to Supabase.
+
+        Resilient to missing DB columns — retries without problematic fields.
+        """
         try:
             from wolfpack.db import get_db
             db = get_db()
             p = self.engine.portfolio
-            db.table("wp_auto_portfolio_snapshots").insert({
+            snapshot = {
                 "equity": round(p.equity, 2),
                 "free_collateral": round(p.free_collateral, 2),
                 "unrealized_pnl": round(p.unrealized_pnl, 2),
                 "realized_pnl": round(p.realized_pnl, 2),
                 "positions": [pos.model_dump(mode="json") for pos in p.positions],
-            }).execute()
+            }
+            try:
+                db.table("wp_auto_portfolio_snapshots").insert(snapshot).execute()
+            except Exception as e:
+                error_msg = str(e).lower()
+                if "column" in error_msg and "schema" in error_msg:
+                    # Missing column — retry without newer fields
+                    for key in ["friction_costs"]:
+                        snapshot.pop(key, None)
+                    db.table("wp_auto_portfolio_snapshots").insert(snapshot).execute()
+                else:
+                    raise
         except Exception as e:
-            logger.error(f"[auto-trader] Failed to store snapshot: {e}")
+            logger.warning(f"[auto-trader] Failed to store snapshot: {e}")
 
     def process_strategy_signals(
         self,

@@ -449,10 +449,27 @@ class PaperTradingEngine:
         }
 
     def store_snapshot(self, exchange: str) -> dict:
-        """Take a snapshot and store it to Supabase."""
+        """Take a snapshot and store it to Supabase.
+
+        Resilient to missing DB columns — retries without problematic fields.
+        """
         from wolfpack.db import get_db
 
         snapshot = self.take_snapshot(exchange)
         db = get_db()
-        result = db.table("wp_portfolio_snapshots").insert(snapshot).execute()
-        return result.data[0] if result.data else snapshot
+        try:
+            result = db.table("wp_portfolio_snapshots").insert(snapshot).execute()
+            return result.data[0] if result.data else snapshot
+        except Exception as e:
+            error_msg = str(e).lower()
+            if "column" in error_msg and "schema" in error_msg:
+                # Missing column — retry without newer fields
+                for key in ["friction_costs"]:
+                    snapshot.pop(key, None)
+                try:
+                    result = db.table("wp_portfolio_snapshots").insert(snapshot).execute()
+                    return result.data[0] if result.data else snapshot
+                except Exception:
+                    pass
+            logger.warning(f"Failed to store snapshot: {e}")
+            return snapshot
