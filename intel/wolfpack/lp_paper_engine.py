@@ -281,9 +281,8 @@ class PaperLPEngine:
                 p.equity = snap_equity
                 p.total_fees_earned = snap.get("total_fees_usd", 0.0)
                 p.total_il = snap.get("total_il_usd", 0.0)
-                p.free_collateral = snap_equity  # reset for now, will be recalculated
-                
-                # Restore positions from snapshot
+                # Restore positions first, then calculate free_collateral
+                p.positions.clear()
                 for pos_data in snap.get("positions", []):
                     pos = PaperLPPosition(
                         position_id=pos_data.get("position_id", ""),
@@ -304,8 +303,10 @@ class PaperLPEngine:
                     )
                     p.positions.append(pos)
                 
-                # Recalculate portfolio state
+                # free_collateral = equity minus locked liquidity
+                locked = sum(pos.liquidity_usd for pos in p.positions if pos.status != "closed")
+                p.free_collateral = max(0, snap_equity - locked)
                 self._recalculate()
-                logger.info(f"Restored LP portfolio from snapshot: ${p.equity:.2f} equity, {len(p.positions)} positions")
+                logger.info(f"Restored LP portfolio from snapshot: ${p.equity:.2f} equity, {len(p.positions)} positions, ${p.free_collateral:.2f} free")
         except Exception as e:
             logger.warning(f"Failed to restore LP portfolio: {e}")
