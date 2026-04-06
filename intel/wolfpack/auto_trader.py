@@ -118,8 +118,19 @@ class AutoTrader:
 
         self.enabled = settings.auto_trade_enabled
         self.conviction_threshold = settings.auto_trade_conviction_threshold
-        self.engine = PaperTradingEngine(starting_equity=settings.auto_trade_equity)
+
+        # Select engine based on strategy mode
+        import wolfpack.api as api_mod
+        mode = getattr(api_mod, "_strategy_mode", "paper")
+        if mode == "live":
+            from wolfpack.live_trading import LiveTradingEngine
+            self.engine = LiveTradingEngine()
+            logger.info("[auto-trader] LIVE MODE — using real Hyperliquid execution")
+        else:
+            self.engine = PaperTradingEngine(starting_equity=settings.auto_trade_equity)
+
         self._restored = False
+        self._last_trade_at: datetime | None = None
         self.yolo_level = 4  # Default to YOLO for paper trading
         self._last_strategy_signals: list[dict] = []
         self._perf_tracker = PerformanceTracker(rolling_window=50)
@@ -285,6 +296,13 @@ class AutoTrader:
             if size_pct <= 0:
                 continue
 
+            # Trade spacing cooldown (5 minutes between trades)
+            if self._last_trade_at:
+                elapsed = (datetime.now(timezone.utc) - self._last_trade_at).total_seconds()
+                if elapsed < 300:
+                    logger.info(f"[auto-trader] Trade spacing: {300 - elapsed:.0f}s remaining")
+                    continue
+
             # Open position
             pos = self.engine.open_position(
                 symbol=symbol,
@@ -296,6 +314,7 @@ class AutoTrader:
             )
 
             if pos:
+                self._last_trade_at = datetime.now(timezone.utc)
                 if rec.get("stop_loss"):
                     pos.stop_loss = rec["stop_loss"]
                 if rec.get("take_profit"):
@@ -570,6 +589,13 @@ class AutoTrader:
                             })
                     continue
 
+                # Trade spacing cooldown (5 minutes between trades)
+                if self._last_trade_at:
+                    elapsed = (datetime.now(timezone.utc) - self._last_trade_at).total_seconds()
+                    if elapsed < 300:
+                        logger.info(f"[auto-trader] Trade spacing: {300 - elapsed:.0f}s remaining, skipping {strategy_name}")
+                        continue
+
                 # Size based on strategy allocation
                 size_pct = allocation * 100  # e.g. 0.20 -> 20%
                 size_pct = min(size_pct, profile["max_size_pct"])
@@ -584,6 +610,8 @@ class AutoTrader:
                 )
 
                 if pos:
+                    self._last_trade_at = datetime.now(timezone.utc)
+
                     # Set stop_loss/take_profit from strategy signal
                     if signal.get("stop_loss"):
                         pos.stop_loss = signal["stop_loss"]
@@ -656,9 +684,12 @@ class AutoTrader:
     def get_status(self) -> dict:
         """Return auto-trader status."""
         self.restore_from_snapshot()
+        import wolfpack.api as api_mod
+        mode = getattr(api_mod, "_strategy_mode", "paper")
         p = self.engine.portfolio
         return {
             "enabled": self.enabled,
+            "mode": mode,
             "conviction_threshold": self.conviction_threshold,
             "equity": round(p.equity, 2),
             "starting_equity": p.starting_equity,

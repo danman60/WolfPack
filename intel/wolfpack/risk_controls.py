@@ -208,6 +208,11 @@ def enforce_hard(recommendation: dict, policy: RiskPolicy, portfolio_state: dict
     if margin_usage_pct > hard.max_margin_usage_pct:
         return False, f"Margin usage {margin_usage_pct:.1f}% exceeds max {hard.max_margin_usage_pct}%"
 
+    # Minimum equity floor — absolute hard stop
+    portfolio_equity = portfolio_state.get("equity", 0)
+    if portfolio_equity < 100:
+        return False, "Equity below $100 minimum floor"
+
     return True, None
 
 

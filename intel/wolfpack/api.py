@@ -430,7 +430,7 @@ async def get_strategy_mode():
 @app.post("/strategy/mode")
 async def set_strategy_mode(mode: str, _auth: None = Depends(require_auth)):
     """Switch strategy mode. Requires all safety checks to go live."""
-    global _strategy_mode
+    global _strategy_mode, _auto_trader
 
     if mode not in ("paper", "live"):
         return {"status": "error", "message": "Mode must be 'paper' or 'live'"}
@@ -446,8 +446,86 @@ async def set_strategy_mode(mode: str, _auth: None = Depends(require_auth)):
             }
 
     _strategy_mode = mode
+    _auto_trader = None  # Force recreation with new engine for the new mode
     logger.info(f"Strategy mode changed to: {mode}")
     return {"status": "ok", "mode": _strategy_mode}
+
+
+@app.post("/emergency-kill")
+async def emergency_kill(_auth: None = Depends(require_auth)):
+    """Emergency: close all positions, cancel all orders, halt trading."""
+    global _strategy_mode, _auto_trader
+    results: dict[str, Any] = {"perp": [], "orders_cancelled": 0}
+
+    try:
+        # 1. Set circuit breaker to EMERGENCY_STOP
+        cb = _get_circuit_breaker()
+        cb.restore_state("EMERGENCY_STOP", reason="Emergency kill switch activated")
+        try:
+            from wolfpack.db import save_cb_state
+            save_cb_state(state="EMERGENCY_STOP", triggers=["emergency_kill_switch"], max_exposure_pct=0.0)
+        except Exception:
+            pass
+
+        # 2. If live mode, close all real positions and cancel orders
+        if _strategy_mode == "live":
+            try:
+                from wolfpack.exchanges.hyperliquid_trading import HyperliquidTrader
+                hl = HyperliquidTrader(settings.hyperliquid_private_key)
+
+                # Cancel all open orders
+                open_orders = await hl.get_open_orders()
+                for order in open_orders:
+                    try:
+                        await hl.cancel_order(order["coin"], order["oid"])
+                        results["orders_cancelled"] += 1
+                    except Exception:
+                        pass
+
+                # Close all positions via market orders
+                positions = await hl.get_positions()
+                for pos in positions:
+                    try:
+                        size = abs(float(pos.get("szi", 0)))
+                        if size > 0:
+                            coin = pos.get("coin", "")
+                            is_long = float(pos.get("szi", 0)) > 0
+                            await hl.place_order(
+                                symbol=coin,
+                                is_buy=not is_long,
+                                size=size,
+                                price=None,
+                                order_type={"limit": {"tif": "Ioc"}},
+                                reduce_only=True,
+                            )
+                            results["perp"].append({"symbol": coin, "side": "sell" if is_long else "buy", "size": size})
+                    except Exception:
+                        pass
+
+                await hl.close()
+            except Exception as e:
+                logger.error(f"[emergency-kill] Error closing live positions: {e}")
+
+        # 3. Disable auto-trader
+        trader = _get_auto_trader()
+        trader.enabled = False
+
+        # 4. Switch to paper mode and recreate auto-trader
+        _strategy_mode = "paper"
+        _auto_trader = None
+
+        # 5. Send Telegram alert
+        try:
+            from wolfpack.notifications import send_telegram
+            await send_telegram("\U0001f6a8 EMERGENCY KILL ACTIVATED \u2014 All positions closed, trading halted. Manual reset required.")
+        except Exception:
+            pass
+
+        logger.critical("[emergency-kill] Emergency kill switch activated")
+        return {"status": "killed", "results": results}
+    except Exception as e:
+        logger.error(f"[emergency-kill] Error: {e}")
+        return {"status": "error", "error": str(e)}
 
 
 def _safety_checklist() -> list[dict]:
