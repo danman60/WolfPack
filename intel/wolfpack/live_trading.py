@@ -459,6 +459,41 @@ class LiveTradingEngine:
         result = db.table("wp_portfolio_snapshots").insert(snapshot).execute()
         return result.data[0] if result.data else snapshot
 
+    def place_exchange_stops(self, symbol: str) -> dict:
+        """Place SL/TP orders on exchange for an open position. Call after setting pos.stop_loss/take_profit."""
+        result = {"sl_placed": False, "tp_placed": False}
+        for pos in self.portfolio.positions:
+            if pos.symbol == symbol:
+                if pos.stop_loss and not pos.stop_order_id:
+                    self._place_stop_order(pos, pos.stop_loss)
+                    result["sl_placed"] = pos.stop_order_id is not None
+                    if not result["sl_placed"]:
+                        logger.critical(f"[live-engine] SL ORDER FAILED for {symbol} @ ${pos.stop_loss}")
+                if pos.take_profit and not pos.tp_order_id:
+                    self._place_tp_order(pos, pos.take_profit)
+                    result["tp_placed"] = pos.tp_order_id is not None
+                break
+        return result
+
+    def verify_stops(self) -> list[dict]:
+        """Cross-reference exchange open orders vs positions with SL/TP. Returns list of issues."""
+        issues = []
+        try:
+            open_orders = self._run_async(self._trader.get_open_orders())
+            order_ids = {o.get("oid") for o in open_orders}
+
+            for pos in self.portfolio.positions:
+                if pos.stop_loss and pos.stop_order_id and pos.stop_order_id not in order_ids:
+                    issues.append({"symbol": pos.symbol, "issue": "SL order missing from exchange", "expected_id": pos.stop_order_id})
+                    # Re-place the stop
+                    self._place_stop_order(pos, pos.stop_loss)
+                if pos.take_profit and pos.tp_order_id and pos.tp_order_id not in order_ids:
+                    issues.append({"symbol": pos.symbol, "issue": "TP order missing from exchange", "expected_id": pos.tp_order_id})
+                    self._place_tp_order(pos, pos.take_profit)
+        except Exception as e:
+            logger.error(f"[live-engine] Stop verification failed: {e}")
+        return issues
+
     # --- Exchange order management ---
 
     def _place_stop_order(self, pos: LivePosition, stop_price: float):
@@ -621,6 +656,76 @@ class LiveTradingEngine:
             }, on_conflict="recommendation_id").execute()
         except Exception as e:
             logger.warning(f"[live-engine] Failed to store closed trade: {e}")
+
+    # --- Position reconciliation ---
+
+    async def reconcile(self) -> dict:
+        """Compare internal positions vs exchange. Returns drift report."""
+        try:
+            exchange_positions = await self._trader.get_positions()
+
+            # Build exchange state map: {symbol: {size, entry_price}}
+            exchange_map = {}
+            for pos_data in exchange_positions:
+                pos_info = pos_data.get("position", {})
+                coin = pos_info.get("coin", "")
+                size = float(pos_info.get("szi", "0"))
+                if abs(size) > 1e-10:
+                    exchange_map[coin] = {
+                        "size": abs(size),
+                        "direction": "long" if size > 0 else "short",
+                        "entry_price": float(pos_info.get("entryPx", "0")),
+                    }
+
+            # Build internal state map
+            internal_map = {pos.symbol: pos for pos in self.portfolio.positions}
+
+            orphaned_internal = []  # in our list but not on exchange
+            orphaned_exchange = []  # on exchange but not in our list
+            mismatched = []
+
+            for sym, pos in internal_map.items():
+                if sym not in exchange_map:
+                    orphaned_internal.append(sym)
+                else:
+                    ex = exchange_map[sym]
+                    if abs(pos.size_units - ex["size"]) / max(pos.size_units, 0.001) > 0.01:
+                        mismatched.append({"symbol": sym, "internal_size": pos.size_units, "exchange_size": ex["size"]})
+
+            for sym in exchange_map:
+                if sym not in internal_map:
+                    orphaned_exchange.append(sym)
+
+            has_drift = bool(orphaned_internal or orphaned_exchange or mismatched)
+
+            # Auto-fix orphaned internal (exchange closed them)
+            for sym in orphaned_internal:
+                logger.warning(f"[reconcile] Removing orphaned internal position: {sym}")
+                self.portfolio.positions = [p for p in self.portfolio.positions if p.symbol != sym]
+
+            if has_drift:
+                from wolfpack.notifications import send_telegram
+                msg = f"\u26a0\ufe0f POSITION DRIFT DETECTED\n"
+                if orphaned_internal:
+                    msg += f"Removed (not on exchange): {orphaned_internal}\n"
+                if orphaned_exchange:
+                    msg += f"On exchange but not tracked: {orphaned_exchange}\n"
+                if mismatched:
+                    msg += f"Size mismatch: {mismatched}\n"
+                try:
+                    await send_telegram(msg)
+                except Exception:
+                    pass
+
+            return {
+                "has_drift": has_drift,
+                "orphaned_internal": orphaned_internal,
+                "orphaned_exchange": orphaned_exchange,
+                "mismatched": mismatched,
+            }
+        except Exception as e:
+            logger.error(f"[reconcile] Failed: {e}")
+            return {"has_drift": False, "error": str(e)}
 
     # --- Emergency ---
 

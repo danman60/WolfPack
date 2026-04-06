@@ -202,6 +202,16 @@ class HyperliquidTrader:
         msg = json.dumps({"action": action, "nonce": timestamp}, separators=(",", ":"), sort_keys=True)
         return encode_defunct(text=msg)
 
+    async def get_user_fills(self, start_time_ms: int | None = None) -> list[dict]:
+        """Fetch trade fills for this wallet."""
+        client = await self._get_client()
+        payload: dict[str, Any] = {"type": "userFills", "user": self.address}
+        if start_time_ms:
+            payload["startTime"] = start_time_ms
+        resp = await client.post(INFO_URL, json=payload)
+        resp.raise_for_status()
+        return resp.json() if isinstance(resp.json(), list) else []
+
     async def close(self) -> None:
         if self._client and not self._client.is_closed:
             await self._client.aclose()

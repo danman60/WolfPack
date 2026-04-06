@@ -156,6 +156,7 @@ _last_runs: dict[str, datetime | None] = {
     "brief": None,
 }
 _running: set[str] = set()
+_cycle_lock = asyncio.Lock()
 
 # Track module last-run timestamps
 _module_last_runs: dict[str, datetime | None] = {
@@ -674,6 +675,10 @@ async def approve_recommendation(rec_id: str, exchange: str = "hyperliquid", _au
                 pos.stop_loss = rec["stop_loss"]
             if rec.get("take_profit"):
                 pos.take_profit = rec["take_profit"]
+
+            # Place exchange stop orders (live mode only)
+            if hasattr(engine, 'place_exchange_stops'):
+                engine.place_exchange_stops(rec["symbol"])
 
             # Enable trailing stop — use Brief's recommendation or default based on vol regime
             trailing_pct = rec.get("trailing_stop_pct")
@@ -1221,7 +1226,7 @@ async def _kraken_cli(*args: str, timeout: float = 15) -> dict | list:
 
 
 @app.post("/kraken/paper/init")
-async def kraken_paper_init(balance: float = 10000):
+async def kraken_paper_init(balance: float = 10000, _auth: None = Depends(require_auth)):
     """Initialize Kraken paper trading with starting balance."""
     try:
         result = await _kraken_cli("paper", "init", "--balance", str(balance))
@@ -1231,7 +1236,7 @@ async def kraken_paper_init(balance: float = 10000):
 
 
 @app.post("/kraken/paper/buy")
-async def kraken_paper_buy(pair: str, volume: float):
+async def kraken_paper_buy(pair: str, volume: float, _auth: None = Depends(require_auth)):
     """Place a paper buy order via Kraken CLI."""
     try:
         result = await _kraken_cli("paper", "buy", pair, str(volume))
@@ -1241,7 +1246,7 @@ async def kraken_paper_buy(pair: str, volume: float):
 
 
 @app.post("/kraken/paper/sell")
-async def kraken_paper_sell(pair: str, volume: float):
+async def kraken_paper_sell(pair: str, volume: float, _auth: None = Depends(require_auth)):
     """Place a paper sell order via Kraken CLI."""
     try:
         result = await _kraken_cli("paper", "sell", pair, str(volume))
@@ -1514,8 +1519,8 @@ async def run_intelligence(
     _auth: None = Depends(require_auth),
 ):
     """Trigger a full intelligence cycle for the specified exchange and symbol."""
-    if _running:
-        return {"status": "already_running", "agents": list(_running)}
+    if _cycle_lock.locked():
+        return {"status": "already_running", "message": "Intelligence cycle in progress"}
 
     background_tasks.add_task(_run_full_cycle, exchange, symbol)
     return {"status": "started", "exchange": exchange, "symbol": symbol}
@@ -1619,707 +1624,738 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
     4. Run Brief agent (consumes the other 3 agents' outputs)
     5. Extract trade recommendations from Brief and store to Supabase
     """
-    try:
-        # Ensure token tracker is initialized before any LLM calls
-        _get_token_tracker()
-
-        from wolfpack.agents.base import Agent
-        Agent._current_symbol = symbol
-
-        from wolfpack.agents.brief import BriefAgent
-        from wolfpack.agents.quant import QuantAgent
-        from wolfpack.agents.sage import SageAgent
-        from wolfpack.agents.snoop import SnoopAgent
-        from wolfpack.db import store_agent_output, store_module_output, store_recommendation
-        from wolfpack.exchanges import get_exchange
-        from wolfpack.modules.correlation import CorrelationIntel
-        from wolfpack.modules.execution import ExecutionTiming
-        from wolfpack.modules.funding import FundingIntel
-        from wolfpack.modules.liquidity import LiquidityIntel
-        from wolfpack.modules.momentum_buckets import MomentumBuckets
-        from wolfpack.modules.regime import RegimeDetector
-        from wolfpack.modules.social_sentiment import SocialSentimentAnalyzer
-        from wolfpack.modules.volatility import VolatilitySignal
-        from wolfpack.modules.whale_tracker import WhaleTracker
-
-        adapter = get_exchange(exchange)  # type: ignore[arg-type]
-
-        # ── Step 1: Fetch market data ──
-        logger.info(f"[cycle] Fetching {symbol} data from {exchange}...")
-        candles_1h = await adapter.get_candles(symbol, interval="1h", limit=300)
-        candles_4h = await adapter.get_candles(symbol, interval="4h", limit=100)
-        candles_1d = await adapter.get_candles(symbol, interval="1d", limit=100)
-        orderbook = await adapter.get_orderbook(symbol, depth=20)
-        funding_rates = await adapter.get_funding_rates()
-
-        # Fetch markets for OI data
-        all_markets = await adapter.get_markets()
-        symbol_market = next((m for m in all_markets if m.symbol == symbol), None)
-        open_interest_usd = symbol_market.open_interest * symbol_market.last_price if symbol_market and symbol_market.open_interest else 0.0
-
-        # Also fetch ETH candles for correlation analysis
-        eth_candles: list = []
-        if symbol != "ETH":
-            try:
-                eth_candles = await adapter.get_candles("ETH", interval="1h", limit=300)
-            except Exception as e:
-                logger.warning(f"[cycle] Could not fetch ETH candles for correlation: {e}")
-
-        # ── Record data freshness ──
-        tracker = _get_freshness_tracker()
-        tracker.record_update(symbol, "candles")
-        tracker.record_update(symbol, "orderbook")
-        if funding_rates:
-            tracker.record_update(symbol, "funding")
-        # Record latest close price for freeze detection
-        if candles_1h:
-            tracker.record_close_price(symbol, candles_1h[-1].close)
-
-        # ── Check if symbol should be skipped (stale/frozen data) ──
-        skip, skip_reason = tracker.should_skip_symbol(symbol)
-        if skip:
-            logger.warning(f"[cycle] Skipping {symbol}: {skip_reason}")
-            return
-
-        # ── Step 2: Run quantitative modules ──
-        logger.info("[cycle] Running quantitative modules...")
-
-        now_utc = datetime.now(timezone.utc)
-
-        # Regime detection
-        global _latest_regime
-        regime_detector = RegimeDetector()
-        regime_output = regime_detector.detect(
-            {"1h": candles_1h, "4h": candles_4h, "1d": candles_1d},
-            asset=symbol,
-        )
-        _latest_regime = regime_output
-        store_module_output("regime_detection", exchange, regime_output.model_dump(), symbol)
-        _module_last_runs["regime_detection"] = now_utc
-
-        # Momentum Buckets (noise-reduced trend detection)
-        momentum_buckets = MomentumBuckets()
-        momentum_output = momentum_buckets.analyze(candles_1h, asset=symbol)
-        store_module_output("momentum_buckets", exchange, momentum_output.model_dump(), symbol)
-        _module_last_runs["momentum_buckets"] = now_utc
-
-        # Liquidity
-        global _latest_liquidity
-        liquidity_intel = LiquidityIntel()
-        liquidity_output = liquidity_intel.analyze(orderbook)
-        _latest_liquidity = liquidity_output
-        store_module_output("liquidity_intel", exchange, liquidity_output.model_dump(), symbol)
-        _module_last_runs["liquidity_intel"] = now_utc
-
-        # Funding
-        funding_intel = FundingIntel()
-        symbol_rate = None
-        for r in funding_rates:
-            if r.symbol == symbol:
-                symbol_rate = r
-                break
-        funding_output = None
-        if symbol_rate:
-            funding_output = funding_intel.analyze(
-                funding=symbol_rate,
-                open_interest_usd=open_interest_usd,
-                oi_change_24h_pct=0,  # Would need previous snapshot to compute delta
+    async with _cycle_lock:
+        try:
+            # Ensure token tracker is initialized before any LLM calls
+            _get_token_tracker()
+    
+            from wolfpack.agents.base import Agent
+            Agent._current_symbol = symbol
+    
+            from wolfpack.agents.brief import BriefAgent
+            from wolfpack.agents.quant import QuantAgent
+            from wolfpack.agents.sage import SageAgent
+            from wolfpack.agents.snoop import SnoopAgent
+            from wolfpack.db import store_agent_output, store_module_output, store_recommendation
+            from wolfpack.exchanges import get_exchange
+            from wolfpack.modules.correlation import CorrelationIntel
+            from wolfpack.modules.execution import ExecutionTiming
+            from wolfpack.modules.funding import FundingIntel
+            from wolfpack.modules.liquidity import LiquidityIntel
+            from wolfpack.modules.momentum_buckets import MomentumBuckets
+            from wolfpack.modules.regime import RegimeDetector
+            from wolfpack.modules.social_sentiment import SocialSentimentAnalyzer
+            from wolfpack.modules.volatility import VolatilitySignal
+            from wolfpack.modules.whale_tracker import WhaleTracker
+    
+            adapter = get_exchange(exchange)  # type: ignore[arg-type]
+    
+            # ── Step 1: Fetch market data ──
+            logger.info(f"[cycle] Fetching {symbol} data from {exchange}...")
+            candles_1h = await adapter.get_candles(symbol, interval="1h", limit=300)
+            candles_4h = await adapter.get_candles(symbol, interval="4h", limit=100)
+            candles_1d = await adapter.get_candles(symbol, interval="1d", limit=100)
+            orderbook = await adapter.get_orderbook(symbol, depth=20)
+            funding_rates = await adapter.get_funding_rates()
+    
+            # Fetch markets for OI data
+            all_markets = await adapter.get_markets()
+            symbol_market = next((m for m in all_markets if m.symbol == symbol), None)
+            open_interest_usd = symbol_market.open_interest * symbol_market.last_price if symbol_market and symbol_market.open_interest else 0.0
+    
+            # Also fetch ETH candles for correlation analysis
+            eth_candles: list = []
+            if symbol != "ETH":
+                try:
+                    eth_candles = await adapter.get_candles("ETH", interval="1h", limit=300)
+                except Exception as e:
+                    logger.warning(f"[cycle] Could not fetch ETH candles for correlation: {e}")
+    
+            # ── Record data freshness ──
+            tracker = _get_freshness_tracker()
+            tracker.record_update(symbol, "candles")
+            tracker.record_update(symbol, "orderbook")
+            if funding_rates:
+                tracker.record_update(symbol, "funding")
+            # Record latest close price for freeze detection
+            if candles_1h:
+                tracker.record_close_price(symbol, candles_1h[-1].close)
+    
+            # ── Check if symbol should be skipped (stale/frozen data) ──
+            skip, skip_reason = tracker.should_skip_symbol(symbol)
+            if skip:
+                logger.warning(f"[cycle] Skipping {symbol}: {skip_reason}")
+                return
+    
+            # ── Step 2: Run quantitative modules ──
+            logger.info("[cycle] Running quantitative modules...")
+    
+            now_utc = datetime.now(timezone.utc)
+    
+            # Regime detection
+            global _latest_regime
+            regime_detector = RegimeDetector()
+            regime_output = regime_detector.detect(
+                {"1h": candles_1h, "4h": candles_4h, "1d": candles_1d},
+                asset=symbol,
             )
-            store_module_output("funding_carry", exchange, funding_output.model_dump(), symbol)
-            _module_last_runs["funding_carry"] = now_utc
-
-        # Drawdown monitor — auto-track peak equity and compute drawdown
-        dd_monitor = _get_drawdown_monitor()
-        engine_dd = _get_paper_engine()
-        dd_info = dd_monitor.update_peaks(exchange, engine_dd.portfolio.equity)
-        auto_drawdown_pct = dd_info["drawdown_pct"]
-
-        # Volatility (fed with auto-computed drawdown from monitor)
-        global _latest_volatility
-        closes = [c.close for c in candles_1h]
-        vol_signal = VolatilitySignal()
-        vol_output = vol_signal.analyze(asset=symbol, closes=closes, current_drawdown_pct=auto_drawdown_pct)
-        _latest_volatility = vol_output
-        store_module_output("volatility", exchange, vol_output.model_dump(), symbol)
-        _module_last_runs["volatility"] = now_utc
-
-        # Correlation (BTC/ETH)
-        correlation_output = None
-        if eth_candles and len(eth_candles) >= 20:
+            _latest_regime = regime_output
+            store_module_output("regime_detection", exchange, regime_output.model_dump(), symbol)
+            _module_last_runs["regime_detection"] = now_utc
+    
+            # Momentum Buckets (noise-reduced trend detection)
+            momentum_buckets = MomentumBuckets()
+            momentum_output = momentum_buckets.analyze(candles_1h, asset=symbol)
+            store_module_output("momentum_buckets", exchange, momentum_output.model_dump(), symbol)
+            _module_last_runs["momentum_buckets"] = now_utc
+    
+            # Liquidity
+            global _latest_liquidity
+            liquidity_intel = LiquidityIntel()
+            liquidity_output = liquidity_intel.analyze(orderbook)
+            _latest_liquidity = liquidity_output
+            store_module_output("liquidity_intel", exchange, liquidity_output.model_dump(), symbol)
+            _module_last_runs["liquidity_intel"] = now_utc
+    
+            # Funding
+            funding_intel = FundingIntel()
+            symbol_rate = None
+            for r in funding_rates:
+                if r.symbol == symbol:
+                    symbol_rate = r
+                    break
+            funding_output = None
+            if symbol_rate:
+                funding_output = funding_intel.analyze(
+                    funding=symbol_rate,
+                    open_interest_usd=open_interest_usd,
+                    oi_change_24h_pct=0,  # Would need previous snapshot to compute delta
+                )
+                store_module_output("funding_carry", exchange, funding_output.model_dump(), symbol)
+                _module_last_runs["funding_carry"] = now_utc
+    
+            # Drawdown monitor — auto-track peak equity and compute drawdown
+            dd_monitor = _get_drawdown_monitor()
+            engine_dd = _get_paper_engine()
+            dd_info = dd_monitor.update_peaks(exchange, engine_dd.portfolio.equity)
+            auto_drawdown_pct = dd_info["drawdown_pct"]
+    
+            # Volatility (fed with auto-computed drawdown from monitor)
+            global _latest_volatility
+            closes = [c.close for c in candles_1h]
+            vol_signal = VolatilitySignal()
+            vol_output = vol_signal.analyze(asset=symbol, closes=closes, current_drawdown_pct=auto_drawdown_pct)
+            _latest_volatility = vol_output
+            store_module_output("volatility", exchange, vol_output.model_dump(), symbol)
+            _module_last_runs["volatility"] = now_utc
+    
+            # Correlation (BTC/ETH)
+            correlation_output = None
+            if eth_candles and len(eth_candles) >= 20:
+                try:
+                    corr_intel = CorrelationIntel()
+                    btc_closes = [c.close for c in candles_1h]
+                    eth_closes = [c.close for c in eth_candles]
+                    correlation_output = corr_intel.analyze(btc_closes, eth_closes)
+                    store_module_output("correlation", exchange, correlation_output.model_dump(), symbol)
+                    _module_last_runs["correlation"] = now_utc
+                except Exception as e:
+                    logger.warning(f"[cycle] Correlation analysis failed: {e}")
+    
+            # Execution timing
+            exec_timing = ExecutionTiming()
+            hourly_volumes = [c.volume for c in candles_1h[-24:]] if len(candles_1h) >= 24 else []
+            current_hour = now_utc.hour
+            exec_output = exec_timing.analyze(hourly_volumes, current_hour)
+            store_module_output("execution_timing", exchange, exec_output.model_dump(), symbol)
+            _module_last_runs["execution_timing"] = now_utc
+    
+            # Monte Carlo stress test — runs on recent trade returns from paper portfolio
+            monte_carlo_output = None
             try:
-                corr_intel = CorrelationIntel()
-                btc_closes = [c.close for c in candles_1h]
-                eth_closes = [c.close for c in eth_candles]
-                correlation_output = corr_intel.analyze(btc_closes, eth_closes)
-                store_module_output("correlation", exchange, correlation_output.model_dump(), symbol)
-                _module_last_runs["correlation"] = now_utc
+                from wolfpack.modules.monte_carlo import MonteCarloEngine
+                engine_mc = _get_paper_engine()
+                # Collect recent trade returns from closed trade history
+                from wolfpack.db import get_db
+                db = get_db()
+                trade_history = db.table("wp_trade_history").select("pnl_usd,size_usd").order("closed_at", desc=True).limit(100).execute()
+                trade_returns_list: list[float] = []
+                if trade_history.data:
+                    for t in trade_history.data:
+                        size = t.get("size_usd", 0)
+                        pnl = t.get("pnl_usd", 0)
+                        if size and size > 0:
+                            trade_returns_list.append(pnl / size)
+    
+                if len(trade_returns_list) >= 10:
+                    mc_engine = MonteCarloEngine(n_simulations=2000, seed=42)
+                    monte_carlo_output = mc_engine.run(trade_returns_list)
+                    store_module_output("monte_carlo", exchange, monte_carlo_output.model_dump(), symbol)
+                    _module_last_runs["monte_carlo"] = now_utc
+                    logger.info(f"[cycle] Monte Carlo: grade={monte_carlo_output.robustness_grade}, calmar_p5={monte_carlo_output.calmar_p5}, ruin={monte_carlo_output.ruin_probability}%")
+                else:
+                    logger.debug(f"[cycle] Monte Carlo skipped: only {len(trade_returns_list)} trades (need 10+)")
             except Exception as e:
-                logger.warning(f"[cycle] Correlation analysis failed: {e}")
-
-        # Execution timing
-        exec_timing = ExecutionTiming()
-        hourly_volumes = [c.volume for c in candles_1h[-24:]] if len(candles_1h) >= 24 else []
-        current_hour = now_utc.hour
-        exec_output = exec_timing.analyze(hourly_volumes, current_hour)
-        store_module_output("execution_timing", exchange, exec_output.model_dump(), symbol)
-        _module_last_runs["execution_timing"] = now_utc
-
-        # Monte Carlo stress test — runs on recent trade returns from paper portfolio
-        monte_carlo_output = None
-        try:
-            from wolfpack.modules.monte_carlo import MonteCarloEngine
-            engine_mc = _get_paper_engine()
-            # Collect recent trade returns from closed trade history
-            from wolfpack.db import get_db
-            db = get_db()
-            trade_history = db.table("wp_trade_history").select("pnl_usd,size_usd").order("closed_at", desc=True).limit(100).execute()
-            trade_returns_list: list[float] = []
-            if trade_history.data:
-                for t in trade_history.data:
-                    size = t.get("size_usd", 0)
-                    pnl = t.get("pnl_usd", 0)
-                    if size and size > 0:
-                        trade_returns_list.append(pnl / size)
-
-            if len(trade_returns_list) >= 10:
-                mc_engine = MonteCarloEngine(n_simulations=2000, seed=42)
-                monte_carlo_output = mc_engine.run(trade_returns_list)
-                store_module_output("monte_carlo", exchange, monte_carlo_output.model_dump(), symbol)
-                _module_last_runs["monte_carlo"] = now_utc
-                logger.info(f"[cycle] Monte Carlo: grade={monte_carlo_output.robustness_grade}, calmar_p5={monte_carlo_output.calmar_p5}, ruin={monte_carlo_output.ruin_probability}%")
-            else:
-                logger.debug(f"[cycle] Monte Carlo skipped: only {len(trade_returns_list)} trades (need 10+)")
-        except Exception as e:
-            logger.warning(f"[cycle] Monte Carlo analysis failed: {e}")
-
-        # Social sentiment + whale tracker (async, non-blocking)
-        social_output = None
-        whale_output = None
-        try:
-            social_analyzer = SocialSentimentAnalyzer()
-            whale_tracker = WhaleTracker()
-            social_result, whale_result = await asyncio.gather(
-                social_analyzer.analyze(symbol),
-                whale_tracker.analyze(symbol),
+                logger.warning(f"[cycle] Monte Carlo analysis failed: {e}")
+    
+            # Social sentiment + whale tracker (async, non-blocking)
+            social_output = None
+            whale_output = None
+            try:
+                social_analyzer = SocialSentimentAnalyzer()
+                whale_tracker = WhaleTracker()
+                social_result, whale_result = await asyncio.gather(
+                    social_analyzer.analyze(symbol),
+                    whale_tracker.analyze(symbol),
+                    return_exceptions=True,
+                )
+                if not isinstance(social_result, Exception):
+                    social_output = social_result
+                    store_module_output("social_sentiment", exchange, social_output.model_dump(), symbol)
+                    _module_last_runs["social_sentiment"] = now_utc
+                else:
+                    logger.warning(f"[cycle] Social sentiment failed: {social_result}")
+                if not isinstance(whale_result, Exception):
+                    whale_output = whale_result
+                    store_module_output("whale_tracker", exchange, whale_output.model_dump(), symbol)
+                    _module_last_runs["whale_tracker"] = now_utc
+                    tracker.record_update(symbol, "whale_trades")
+                else:
+                    logger.warning(f"[cycle] Whale tracker failed: {whale_result}")
+            except Exception as e:
+                logger.warning(f"[cycle] Social/whale modules failed: {e}")
+    
+            # Circuit breaker (uses auto-tracked drawdown from drawdown monitor)
+            cb = _get_circuit_breaker()
+            engine = _get_paper_engine()
+            portfolio = engine.portfolio
+    
+            # Use drawdown from monitor (auto-tracked peak, persisted across restarts)
+            current_dd = auto_drawdown_pct
+            daily_pnl_pct = ((portfolio.equity - portfolio.starting_equity) / portfolio.starting_equity * 100)
+            total_exposure = sum(p.size_usd for p in portfolio.positions) / portfolio.equity * 100 if portfolio.equity > 0 else 0
+    
+            cb_output = cb.check(
+                daily_pnl_pct=daily_pnl_pct,
+                rolling_24h_pnl_pct=daily_pnl_pct,  # Approximate — same as daily for now
+                current_drawdown_pct=current_dd,
+                total_exposure_pct=total_exposure,
+                data_age_s=tracker.get_max_data_age(symbol),
+            )
+            store_module_output("circuit_breakers", exchange, cb_output.model_dump(), symbol)
+            _module_last_runs["circuit_breakers"] = now_utc
+    
+            # Persist CB state to DB (survives restarts)
+            try:
+                from wolfpack.db import save_cb_state
+                save_cb_state(
+                    state=cb_output.state,
+                    triggers=cb_output.violations,
+                    max_exposure_pct=cb_output.total_exposure_pct,
+                    peak_equity=dd_info["peak_equity"],
+                )
+            except Exception as e:
+                logger.warning(f"[cycle] Failed to persist CB state: {e}")
+    
+            if cb_output.state == "EMERGENCY_STOP":
+                logger.critical(f"[cycle] CIRCUIT BREAKER EMERGENCY STOP: {cb_output.reason}")
+            elif cb_output.state == "SUSPENDED":
+                logger.warning(f"[cycle] Circuit breaker SUSPENDED: {cb_output.reason}")
+    
+            # Get latest price for context
+            latest_price: float | None = None
+            if candles_1h:
+                latest_price = candles_1h[-1].close
+    
+            # ── Step 3: Run Quant, Snoop, Sage agents in parallel ──
+            logger.info("[cycle] Running intelligence agents (Quant, Snoop, Sage)...")
+    
+            # Build shared market data dict
+            market_data_base: dict[str, Any] = {
+                "symbol": symbol,
+                "regime": regime_output,
+                "momentum_buckets": momentum_output,
+                "liquidity": liquidity_output,
+                "volatility": vol_output,
+                "funding": funding_output.model_dump() if funding_output else None,
+                "latest_price": latest_price,
+                "open_interest_usd": open_interest_usd,
+                "social_sentiment": social_output.model_dump() if social_output else None,
+                "whale_tracker": whale_output.model_dump() if whale_output else None,
+            }
+    
+            # Quant gets candles + correlation (for stat arb alerts)
+            quant_data = {**market_data_base, "candles": candles_1h}
+            if correlation_output:
+                quant_data["correlation"] = correlation_output
+    
+            # Sage gets correlation + OI
+            sage_data = {**market_data_base}
+            if correlation_output:
+                sage_data["correlation"] = correlation_output
+    
+            quant = QuantAgent()
+            snoop = SnoopAgent()
+            sage = SageAgent()
+    
+            _running.update({"quant", "snoop", "sage"})
+    
+            quant_out, snoop_out, sage_out = await asyncio.gather(
+                _run_agent(quant, quant_data, exchange, store_agent_output),
+                _run_agent(snoop, market_data_base, exchange, store_agent_output),
+                _run_agent(sage, sage_data, exchange, store_agent_output),
                 return_exceptions=True,
             )
-            if not isinstance(social_result, Exception):
-                social_output = social_result
-                store_module_output("social_sentiment", exchange, social_output.model_dump(), symbol)
-                _module_last_runs["social_sentiment"] = now_utc
-            else:
-                logger.warning(f"[cycle] Social sentiment failed: {social_result}")
-            if not isinstance(whale_result, Exception):
-                whale_output = whale_result
-                store_module_output("whale_tracker", exchange, whale_output.model_dump(), symbol)
-                _module_last_runs["whale_tracker"] = now_utc
-                tracker.record_update(symbol, "whale_trades")
-            else:
-                logger.warning(f"[cycle] Whale tracker failed: {whale_result}")
-        except Exception as e:
-            logger.warning(f"[cycle] Social/whale modules failed: {e}")
-
-        # Circuit breaker (uses auto-tracked drawdown from drawdown monitor)
-        cb = _get_circuit_breaker()
-        engine = _get_paper_engine()
-        portfolio = engine.portfolio
-
-        # Use drawdown from monitor (auto-tracked peak, persisted across restarts)
-        current_dd = auto_drawdown_pct
-        daily_pnl_pct = ((portfolio.equity - portfolio.starting_equity) / portfolio.starting_equity * 100)
-        total_exposure = sum(p.size_usd for p in portfolio.positions) / portfolio.equity * 100 if portfolio.equity > 0 else 0
-
-        cb_output = cb.check(
-            daily_pnl_pct=daily_pnl_pct,
-            rolling_24h_pnl_pct=daily_pnl_pct,  # Approximate — same as daily for now
-            current_drawdown_pct=current_dd,
-            total_exposure_pct=total_exposure,
-            data_age_s=tracker.get_max_data_age(symbol),
-        )
-        store_module_output("circuit_breakers", exchange, cb_output.model_dump(), symbol)
-        _module_last_runs["circuit_breakers"] = now_utc
-
-        # Persist CB state to DB (survives restarts)
-        try:
-            from wolfpack.db import save_cb_state
-            save_cb_state(
-                state=cb_output.state,
-                triggers=cb_output.violations,
-                max_exposure_pct=cb_output.total_exposure_pct,
-                peak_equity=dd_info["peak_equity"],
-            )
-        except Exception as e:
-            logger.warning(f"[cycle] Failed to persist CB state: {e}")
-
-        if cb_output.state == "EMERGENCY_STOP":
-            logger.critical(f"[cycle] CIRCUIT BREAKER EMERGENCY STOP: {cb_output.reason}")
-        elif cb_output.state == "SUSPENDED":
-            logger.warning(f"[cycle] Circuit breaker SUSPENDED: {cb_output.reason}")
-
-        # Get latest price for context
-        latest_price: float | None = None
-        if candles_1h:
-            latest_price = candles_1h[-1].close
-
-        # ── Step 3: Run Quant, Snoop, Sage agents in parallel ──
-        logger.info("[cycle] Running intelligence agents (Quant, Snoop, Sage)...")
-
-        # Build shared market data dict
-        market_data_base: dict[str, Any] = {
-            "symbol": symbol,
-            "regime": regime_output,
-            "momentum_buckets": momentum_output,
-            "liquidity": liquidity_output,
-            "volatility": vol_output,
-            "funding": funding_output.model_dump() if funding_output else None,
-            "latest_price": latest_price,
-            "open_interest_usd": open_interest_usd,
-            "social_sentiment": social_output.model_dump() if social_output else None,
-            "whale_tracker": whale_output.model_dump() if whale_output else None,
-        }
-
-        # Quant gets candles + correlation (for stat arb alerts)
-        quant_data = {**market_data_base, "candles": candles_1h}
-        if correlation_output:
-            quant_data["correlation"] = correlation_output
-
-        # Sage gets correlation + OI
-        sage_data = {**market_data_base}
-        if correlation_output:
-            sage_data["correlation"] = correlation_output
-
-        quant = QuantAgent()
-        snoop = SnoopAgent()
-        sage = SageAgent()
-
-        _running.update({"quant", "snoop", "sage"})
-
-        quant_out, snoop_out, sage_out = await asyncio.gather(
-            _run_agent(quant, quant_data, exchange, store_agent_output),
-            _run_agent(snoop, market_data_base, exchange, store_agent_output),
-            _run_agent(sage, sage_data, exchange, store_agent_output),
-            return_exceptions=True,
-        )
-
-        _running.discard("quant")
-        _running.discard("snoop")
-        _running.discard("sage")
-        _last_runs["quant"] = datetime.now(timezone.utc)
-        _last_runs["snoop"] = datetime.now(timezone.utc)
-        _last_runs["sage"] = datetime.now(timezone.utc)
-
-        # Log any agent failures but continue — track in failure tracker
-        ft = _get_failure_tracker()
-        agent_outputs: dict[str, Any] = {}
-        for name, result in [("quant", quant_out), ("snoop", snoop_out), ("sage", sage_out)]:
-            if isinstance(result, Exception):
-                logger.error(f"[cycle] {name} agent failed: {result}")
-                ft.record_failure(name, str(result))
-            else:
-                ft.record_success(name)
-                if isinstance(result, dict):
-                    agent_outputs[name] = result
+    
+            _running.discard("quant")
+            _running.discard("snoop")
+            _running.discard("sage")
+            _last_runs["quant"] = datetime.now(timezone.utc)
+            _last_runs["snoop"] = datetime.now(timezone.utc)
+            _last_runs["sage"] = datetime.now(timezone.utc)
+    
+            # Log any agent failures but continue — track in failure tracker
+            ft = _get_failure_tracker()
+            agent_outputs: dict[str, Any] = {}
+            for name, result in [("quant", quant_out), ("snoop", snoop_out), ("sage", sage_out)]:
+                if isinstance(result, Exception):
+                    logger.error(f"[cycle] {name} agent failed: {result}")
+                    ft.record_failure(name, str(result))
                 else:
-                    agent_outputs[name] = result
-
-        # ── Step 4: Run Brief agent (consumes other agent outputs) ──
-        logger.info("[cycle] Running Brief agent (synthesis)...")
-        _running.add("brief")
-
-        # Build portfolio context for position management
-        portfolio_context: dict[str, Any] | None = None
-        if portfolio.positions:
-            now_ts = datetime.now(timezone.utc)
-            pos_list = []
-            for p in portfolio.positions:
-                current = latest_price if p.symbol == symbol else p.current_price
-                pnl_pct = ((current - p.entry_price) / p.entry_price) * (1 if p.direction == "long" else -1) * 100
-                pos_entry: dict[str, Any] = {
-                    "symbol": p.symbol,
-                    "direction": p.direction,
-                    "entry_price": p.entry_price,
-                    "current_price": current,
-                    "size_usd": p.size_usd,
-                    "pnl_pct": round(pnl_pct, 2),
-                    "stop_loss": p.stop_loss,
-                    "take_profit": p.take_profit,
+                    ft.record_success(name)
+                    if isinstance(result, dict):
+                        agent_outputs[name] = result
+                    else:
+                        agent_outputs[name] = result
+    
+            # ── Step 4: Run Brief agent (consumes other agent outputs) ──
+            logger.info("[cycle] Running Brief agent (synthesis)...")
+            _running.add("brief")
+    
+            # Build portfolio context for position management
+            portfolio_context: dict[str, Any] | None = None
+            if portfolio.positions:
+                now_ts = datetime.now(timezone.utc)
+                pos_list = []
+                for p in portfolio.positions:
+                    current = latest_price if p.symbol == symbol else p.current_price
+                    pnl_pct = ((current - p.entry_price) / p.entry_price) * (1 if p.direction == "long" else -1) * 100
+                    pos_entry: dict[str, Any] = {
+                        "symbol": p.symbol,
+                        "direction": p.direction,
+                        "entry_price": p.entry_price,
+                        "current_price": current,
+                        "size_usd": p.size_usd,
+                        "pnl_pct": round(pnl_pct, 2),
+                        "stop_loss": p.stop_loss,
+                        "take_profit": p.take_profit,
+                    }
+                    # Hold duration
+                    opened = p.opened_at if isinstance(p.opened_at, datetime) else datetime.fromisoformat(str(p.opened_at))
+                    if opened.tzinfo is None:
+                        opened = opened.replace(tzinfo=timezone.utc)
+                    pos_entry["hold_duration_hours"] = round((now_ts - opened).total_seconds() / 3600, 1)
+                    # Distance to stop/tp
+                    if p.stop_loss and current:
+                        pos_entry["distance_to_stop_pct"] = round(abs(current - p.stop_loss) / current * 100, 2)
+                    if p.take_profit and current:
+                        pos_entry["distance_to_tp_pct"] = round(abs(p.take_profit - current) / current * 100, 2)
+                    pos_list.append(pos_entry)
+    
+                long_exposure = sum(p.size_usd for p in portfolio.positions if p.direction == "long")
+                short_exposure = sum(p.size_usd for p in portfolio.positions if p.direction == "short")
+                portfolio_context = {
+                    "equity": round(portfolio.equity, 2),
+                    "positions": pos_list,
+                    "gross_exposure_pct": round((long_exposure + short_exposure) / portfolio.equity * 100, 1) if portfolio.equity > 0 else 0,
+                    "net_exposure_pct": round((long_exposure - short_exposure) / portfolio.equity * 100, 1) if portfolio.equity > 0 else 0,
+                    "free_collateral_pct": round(portfolio.free_collateral / portfolio.equity * 100, 1) if portfolio.equity > 0 else 0,
                 }
-                # Hold duration
-                opened = p.opened_at if isinstance(p.opened_at, datetime) else datetime.fromisoformat(str(p.opened_at))
-                if opened.tzinfo is None:
-                    opened = opened.replace(tzinfo=timezone.utc)
-                pos_entry["hold_duration_hours"] = round((now_ts - opened).total_seconds() / 3600, 1)
-                # Distance to stop/tp
-                if p.stop_loss and current:
-                    pos_entry["distance_to_stop_pct"] = round(abs(current - p.stop_loss) / current * 100, 2)
-                if p.take_profit and current:
-                    pos_entry["distance_to_tp_pct"] = round(abs(p.take_profit - current) / current * 100, 2)
-                pos_list.append(pos_entry)
-
-            long_exposure = sum(p.size_usd for p in portfolio.positions if p.direction == "long")
-            short_exposure = sum(p.size_usd for p in portfolio.positions if p.direction == "short")
-            portfolio_context = {
-                "equity": round(portfolio.equity, 2),
-                "positions": pos_list,
-                "gross_exposure_pct": round((long_exposure + short_exposure) / portfolio.equity * 100, 1) if portfolio.equity > 0 else 0,
-                "net_exposure_pct": round((long_exposure - short_exposure) / portfolio.equity * 100, 1) if portfolio.equity > 0 else 0,
-                "free_collateral_pct": round(portfolio.free_collateral / portfolio.equity * 100, 1) if portfolio.equity > 0 else 0,
+    
+            # Pass YOLO level to Brief so it adjusts conviction floor
+            auto_trader = _get_auto_trader()
+            brief_data: dict[str, Any] = {
+                "symbol": symbol,
+                "latest_price": latest_price,
+                "regime": regime_output,
+                "liquidity": liquidity_output,
+                "volatility": vol_output,
+                "funding": funding_output.model_dump() if funding_output else None,
+                "correlation": correlation_output.model_dump() if correlation_output else None,
+                "circuit_breaker": cb_output.model_dump(),
+                "execution_timing": exec_output.model_dump(),
+                "yolo_level": auto_trader.yolo_level,
             }
-
-        # Pass YOLO level to Brief so it adjusts conviction floor
-        auto_trader = _get_auto_trader()
-        brief_data: dict[str, Any] = {
-            "symbol": symbol,
-            "latest_price": latest_price,
-            "regime": regime_output,
-            "liquidity": liquidity_output,
-            "volatility": vol_output,
-            "funding": funding_output.model_dump() if funding_output else None,
-            "correlation": correlation_output.model_dump() if correlation_output else None,
-            "circuit_breaker": cb_output.model_dump(),
-            "execution_timing": exec_output.model_dump(),
-            "yolo_level": auto_trader.yolo_level,
-        }
-        if monte_carlo_output:
-            brief_data["monte_carlo"] = monte_carlo_output.model_dump()
-        # Note: overfit_score is computed per-backtest, not per-cycle.
-        # It's available when backtests have been run recently.
-        if portfolio_context:
-            brief_data["portfolio_context"] = portfolio_context
-        # Inject performance tracker summary
-        try:
-            if auto_trader.enabled:
-                brief_data["performance_summary"] = auto_trader._perf_tracker.get_performance_summary()
-        except Exception:
-            pass
-        if "quant" in agent_outputs:
-            out = agent_outputs["quant"]
-            brief_data["quant_output"] = out.model_dump() if hasattr(out, "model_dump") else out
-        if "snoop" in agent_outputs:
-            out = agent_outputs["snoop"]
-            brief_data["snoop_output"] = out.model_dump() if hasattr(out, "model_dump") else out
-        if "sage" in agent_outputs:
-            out = agent_outputs["sage"]
-            brief_data["sage_output"] = out.model_dump() if hasattr(out, "model_dump") else out
-
-        brief = BriefAgent()
-        try:
-            brief_out = await brief.analyze(brief_data, exchange)
-            ft.record_success("brief")
-
-            store_agent_output(
-                agent_name=brief_out.agent_name,
-                exchange_id=exchange,
-                summary=brief_out.summary,
-                signals=brief_out.signals,
-                confidence=brief_out.confidence,
-                raw_data=brief_out.raw_data,
-            )
-
-            # ── Step 5: Extract and store trade recommendations ──
-            recs = brief_out.raw_data.get("recommendations", []) if brief_out.raw_data else []
-
-            # Circuit breaker gate — skip new entry recs if not ACTIVE
-            if not cb_output.allow_new_entry:
-                logger.warning(f"[cycle] Circuit breaker blocking new entries ({cb_output.state}), skipping {len(recs)} recs")
-                recs = []
-
-            # Safe mode gate — skip new entry recs if any agent is in consecutive failure
-            if ft.is_safe_mode():
-                failing = ft.get_failing_agents()
-                logger.warning(f"[cycle] SAFE MODE — agents failing: {failing}, skipping {len(recs)} new entry recs")
-                recs = []
-
-            # Veto layer — filter and adjust recs before storing
-            veto = _get_veto()
-            stored_recs: list[dict] = []
-
-            for rec in recs:
-                # Extract quant signals for EMA/VWAP extension check
-                quant_sigs = None
-                if "quant" in agent_outputs:
-                    qo = agent_outputs["quant"]
-                    if hasattr(qo, "signals"):
-                        quant_sigs = qo.signals
-                    elif isinstance(qo, dict):
-                        quant_sigs = qo.get("signals")
-
-                veto_result = veto.evaluate(
-                    rec,
-                    cb_output=cb_output.model_dump(),
-                    vol_output=vol_output.model_dump() if vol_output else None,
-                    quant_signals=quant_sigs,
-                )
-                if veto_result.action == "reject":
-                    logger.info(f"[veto] Rejected {rec.get('symbol', symbol)} {rec.get('direction')}: {veto_result.reasons}")
-                    continue
-
-                conviction = veto_result.final_conviction
-                try:
-                    stored_row = store_recommendation(
-                        exchange_id=exchange,
-                        symbol=rec.get("symbol", symbol),
-                        direction=rec.get("direction", "wait"),
-                        conviction=conviction,
-                        rationale=rec.get("rationale", ""),
-                        entry_price=rec.get("entry_price"),
-                        stop_loss=rec.get("stop_loss"),
-                        take_profit=rec.get("take_profit"),
-                        size_pct=rec.get("size_pct"),
-                    )
-                    stored_recs.append({**rec, "conviction": conviction, "id": stored_row.get("id")})
-
-                    if veto_result.action == "adjust":
-                        logger.info(f"[veto] Adjusted {rec.get('symbol', symbol)}: {veto_result.original_conviction} -> {conviction} ({veto_result.reasons})")
-
-                    # Telegram notification for high-conviction recs — route through digest
-                    auto_trader = _get_auto_trader()
-                    if conviction >= 70 and not auto_trader.enabled:
-                        try:
-                            from wolfpack.notification_digest import get_digest
-                            digest = get_digest()
-                            if digest.mode == "individual":
-                                from wolfpack.notifications import notify_recommendation
-                                rec_id = stored_row.get("id")
-                                await notify_recommendation(
-                                    symbol=rec.get("symbol", symbol),
-                                    direction=rec.get("direction", "wait"),
-                                    conviction=conviction,
-                                    rationale=rec.get("rationale", ""),
-                                    entry_price=rec.get("entry_price"),
-                                    stop_loss=rec.get("stop_loss"),
-                                    take_profit=rec.get("take_profit"),
-                                    rec_id=rec_id,
-                                )
-                            elif digest.mode != "disabled":
-                                digest.add({
-                                    "type": "recommendation",
-                                    "symbol": rec.get("symbol", symbol),
-                                    "direction": rec.get("direction", "wait"),
-                                    "details": f"{'⬆️' if rec.get('direction')=='long' else '⬇️'} {rec.get('direction','').upper()} {rec.get('symbol', symbol)} — conviction {conviction}%",
-                                })
-                        except Exception:
-                            pass  # Don't fail cycle on notification error
-                except Exception as e:
-                    logger.error(f"[cycle] Failed to store recommendation: {e}")
-
-            _last_runs["brief"] = datetime.now(timezone.utc)
-
-            # ── Step 5b: Run mechanical strategies BEFORE Brief recs (sets _last_strategy_signals for Brief sizing) ──
+            if monte_carlo_output:
+                brief_data["monte_carlo"] = monte_carlo_output.model_dump()
+            # Note: overfit_score is computed per-backtest, not per-cycle.
+            # It's available when backtests have been run recently.
+            if portfolio_context:
+                brief_data["portfolio_context"] = portfolio_context
+            # Inject performance tracker summary
             try:
-                auto_trader = _get_auto_trader()
                 if auto_trader.enabled:
-                    # 1h strategies use existing candles
-                    strat_executed = auto_trader.process_strategy_signals(
-                        candles_1h, symbol,
-                        regime_output=regime_output, vol_output=vol_output,
-                        timeframe="1h",
-                    )
-                    if strat_executed:
-                        logger.info(f"[cycle] Strategy signals executed {len(strat_executed)} trades")
-
-                    # 5m candles for ORB session strategy
-                    try:
-                        candles_5m = await adapter.get_candles(symbol, interval="5m", limit=100)
-                        if candles_5m:
-                            strat_5m = auto_trader.process_strategy_signals(
-                                candles_5m, symbol,
-                                regime_output=regime_output, vol_output=vol_output,
-                                timeframe="5m",
-                            )
-                            if strat_5m:
-                                logger.info(f"[cycle] 5m strategy signals executed {len(strat_5m)} trades")
-                    except Exception as e:
-                        logger.warning(f"[cycle] Failed to fetch 5m candles for strategies: {e}")
-
-                    # HTF trailing stop update on 4h bars
-                    try:
-                        auto_trader.update_htf_trailing(candles_4h, symbol)
-                    except Exception as e:
-                        logger.warning(f"[cycle] HTF trailing stop error: {e}")
-            except Exception as e:
-                logger.warning(f"[cycle] Strategy signals error: {e}")
-
-            # ── Step 5b2: Auto-trader processes stored recs (Brief as conviction multiplier) ──
-            try:
-                auto_trader = _get_auto_trader()
-                if auto_trader.enabled and stored_recs:
-                    auto_executed = await auto_trader.process_recommendations(
-                        stored_recs,
-                        cb_output=cb_output,
-                        vol_output=vol_output,
-                        latest_prices={symbol: latest_price} if latest_price else None,
-                    )
-                    if auto_executed:
-                        logger.info(f"[cycle] Auto-trader executed {len(auto_executed)} trades")
-            except Exception as e:
-                logger.warning(f"[cycle] Auto-trader error: {e}")
-
-            # ── Step 5c: Process position actions from Brief ──
-            try:
-                pos_actions = brief_out.raw_data.get("position_actions", []) if brief_out.raw_data else []
-                await _process_position_actions(pos_actions, exchange, symbol, latest_price, engine)
-            except Exception as e:
-                logger.warning(f"[cycle] Position action processing error: {e}")
-
-            # ── Step 5d: Append training data for distillation ──
-            try:
-                from wolfpack.export_training_data import format_training_pair, append_training_pair
-                quant_dict = agent_outputs["quant"].model_dump() if "quant" in agent_outputs and hasattr(agent_outputs["quant"], "model_dump") else agent_outputs.get("quant")
-                snoop_dict = agent_outputs["snoop"].model_dump() if "snoop" in agent_outputs and hasattr(agent_outputs["snoop"], "model_dump") else agent_outputs.get("snoop")
-                sage_dict = agent_outputs["sage"].model_dump() if "sage" in agent_outputs and hasattr(agent_outputs["sage"], "model_dump") else agent_outputs.get("sage")
-                brief_dict = brief_out.model_dump() if hasattr(brief_out, "model_dump") else brief_out
-                pair = format_training_pair(quant_dict, snoop_dict, sage_dict, brief_dict, stored_recs)
-                if pair:
-                    training_dir = os.environ.get("WOLFPACK_TRAINING_DIR", "training_data")
-                    append_training_pair(pair, symbol, training_dir)
-                    logger.info(f"[training] Appended training pair for {symbol}")
-            except Exception as e:
-                logger.warning(f"[training] Failed to append training data: {e}")
-
-            # ── Step 6: Update paper trading portfolio ──
-            engine = _get_paper_engine()
-            if latest_price and engine.portfolio.positions:
-                engine.update_prices({symbol: latest_price})
-                try:
-                    engine.store_snapshot(exchange)
-                    logger.info(f"[cycle] Paper portfolio snapshot stored (equity: ${engine.portfolio.equity:.2f})")
-                except Exception as e:
-                    logger.warning(f"[cycle] Failed to store paper portfolio snapshot: {e}")
-
-            # ── Step 6a: Track per-position peak P&L + check emergency exits ──
-            try:
-                for pos in engine.portfolio.positions:
-                    dd_monitor.update_position_peak(pos.symbol, pos.unrealized_pnl)
-
-                pos_dicts = [
-                    {"symbol": p.symbol, "unrealized_pnl": p.unrealized_pnl, "size_usd": p.size_usd}
-                    for p in engine.portfolio.positions
-                ]
-                emergency_exits = dd_monitor.check_emergency_exits(pos_dicts)
-                for exit_signal in emergency_exits:
-                    sym = exit_signal["symbol"]
-                    logger.warning(f"[drawdown] Emergency close: {sym} — {exit_signal['reason']}")
-                    realized = engine.close_position(sym)
-                    dd_monitor.clear_position_peak(sym)
-                    # Emergency closes ALWAYS send immediately — safety-critical
-                    try:
-                        from wolfpack.notifications import send_telegram
-                        await send_telegram(
-                            f"<b>\U0001f6a8 EMERGENCY CLOSE: {sym}</b>\n"
-                            f"{exit_signal['reason']}\n"
-                            f"Realized P&L: <code>${realized:,.2f}</code>"
-                        )
-                    except Exception:
-                        pass
-                    engine.store_snapshot(exchange)
-            except Exception as e:
-                logger.warning(f"[cycle] Drawdown position tracking error: {e}")
-
-            # ── Step 6b: Update auto-trader prices + check stops ──
-            try:
-                auto_trader = _get_auto_trader()
-                if auto_trader.enabled and latest_price and auto_trader.engine.portfolio.positions:
-                    auto_trader.engine.update_prices({symbol: latest_price})
-                    triggered = auto_trader.engine.check_stops({symbol: latest_price})
-                    if triggered:
-                        for sym, reason in triggered:
-                            logger.info(f"[auto-trader] {reason} triggered for {sym}")
-                            try:
-                                from wolfpack.notification_digest import get_digest
-                                digest = get_digest()
-                                digest.add({
-                                    "type": "stop_triggered",
-                                    "symbol": sym,
-                                    "details": f"{reason.upper()} hit for {sym} @ ${latest_price:,.2f}",
-                                })
-                            except Exception:
-                                pass
-                    auto_trader._store_snapshot()
-            except Exception as e:
-                logger.warning(f"[cycle] Auto-trader price update error: {e}")
-
-            # ── Step 6c: LP position monitoring ──
-            try:
-                lp_trader = _get_lp_trader()
-                if lp_trader.enabled:
-                    lp_result = await lp_trader.process_tick(
-                        regime_output=regime_output,
-                        vol_output=vol_output,
-                    )
-                    if lp_result and lp_result.get("alerts"):
-                        for alert in lp_result["alerts"]:
-                            try:
-                                from wolfpack.notification_digest import get_digest
-                                digest = get_digest()
-                                if digest.mode != "disabled":
-                                    digest.add({
-                                        "type": alert["type"],
-                                        "symbol": alert.get("pair", "LP"),
-                                        "pair": alert.get("pair", ""),
-                                        "message": alert.get("message", ""),
-                                        "details": alert.get("message", ""),
-                                    })
-                            except Exception:
-                                pass
-            except Exception as e:
-                logger.warning(f"[cycle] LP auto-trader error: {e}")
-
-            # Snapshot cleanup — runs once per process lifetime
-            try:
-                from wolfpack.db import cleanup_old_snapshots
-                cleanup_old_snapshots()
-            except Exception as e:
-                logger.warning(f"[cycle] Snapshot cleanup error: {e}")
-
-            # Flush notification digest if interval elapsed — pass portfolio context
-            try:
-                from wolfpack.notification_digest import get_digest
-                digest = get_digest()
-                # Attach current portfolio snapshot for the unified report
-                try:
-                    perp_snap = None
-                    perp_engine = _get_paper_engine()
-                    if perp_engine.portfolio.positions:
-                        perp_snap = {
-                            "positions": [
-                                {"symbol": p.symbol, "direction": p.direction, "unrealized_pnl": p.unrealized_pnl, "size_usd": p.size_usd}
-                                for p in perp_engine.portfolio.positions
-                            ],
-                            "equity": perp_engine.portfolio.equity,
-                            "unrealized_pnl": perp_engine.portfolio.unrealized_pnl,
-                        }
-                    lp_snap = None
-                    lp_tr = _get_lp_trader()
-                    if lp_tr.enabled and lp_tr.engine.portfolio.positions:
-                        lp_snap = {
-                            "positions": [
-                                {"pair": f"{p.token0_symbol}/{p.token1_symbol}", "liquidity_usd": p.liquidity_usd, "fees_earned": p.fees_earned_usd, "il_pct": p.il_pct}
-                                for p in lp_tr.engine.portfolio.positions
-                            ],
-                            "total_fees": lp_tr.engine.portfolio.total_fees_earned,
-                            "total_il": lp_tr.engine.portfolio.total_il,
-                            "equity": lp_tr.engine.portfolio.equity,
-                        }
-                    digest.set_portfolio_snapshot(perp=perp_snap, lp=lp_snap)
-                except Exception:
-                    pass
-                await digest.maybe_flush()
+                    brief_data["performance_summary"] = auto_trader._perf_tracker.get_performance_summary()
             except Exception:
                 pass
+            if "quant" in agent_outputs:
+                out = agent_outputs["quant"]
+                brief_data["quant_output"] = out.model_dump() if hasattr(out, "model_dump") else out
+            if "snoop" in agent_outputs:
+                out = agent_outputs["snoop"]
+                brief_data["snoop_output"] = out.model_dump() if hasattr(out, "model_dump") else out
+            if "sage" in agent_outputs:
+                out = agent_outputs["sage"]
+                brief_data["sage_output"] = out.model_dump() if hasattr(out, "model_dump") else out
+    
+            brief = BriefAgent()
+            try:
+                brief_out = await brief.analyze(brief_data, exchange)
+                ft.record_success("brief")
+    
+                store_agent_output(
+                    agent_name=brief_out.agent_name,
+                    exchange_id=exchange,
+                    summary=brief_out.summary,
+                    signals=brief_out.signals,
+                    confidence=brief_out.confidence,
+                    raw_data=brief_out.raw_data,
+                )
+    
+                # ── Step 5: Extract and store trade recommendations ──
+                recs = brief_out.raw_data.get("recommendations", []) if brief_out.raw_data else []
+    
+                # Circuit breaker gate — skip new entry recs if not ACTIVE
+                if not cb_output.allow_new_entry:
+                    logger.warning(f"[cycle] Circuit breaker blocking new entries ({cb_output.state}), skipping {len(recs)} recs")
+                    recs = []
+    
+                # Safe mode gate — skip new entry recs if any agent is in consecutive failure
+                if ft.is_safe_mode():
+                    failing = ft.get_failing_agents()
+                    logger.warning(f"[cycle] SAFE MODE — agents failing: {failing}, skipping {len(recs)} new entry recs")
+                    recs = []
+    
+                # Veto layer — filter and adjust recs before storing
+                veto = _get_veto()
+                stored_recs: list[dict] = []
+    
+                for rec in recs:
+                    # Extract quant signals for EMA/VWAP extension check
+                    quant_sigs = None
+                    if "quant" in agent_outputs:
+                        qo = agent_outputs["quant"]
+                        if hasattr(qo, "signals"):
+                            quant_sigs = qo.signals
+                        elif isinstance(qo, dict):
+                            quant_sigs = qo.get("signals")
+    
+                    veto_result = veto.evaluate(
+                        rec,
+                        cb_output=cb_output.model_dump(),
+                        vol_output=vol_output.model_dump() if vol_output else None,
+                        quant_signals=quant_sigs,
+                    )
+                    if veto_result.action == "reject":
+                        logger.info(f"[veto] Rejected {rec.get('symbol', symbol)} {rec.get('direction')}: {veto_result.reasons}")
+                        continue
+    
+                    conviction = veto_result.final_conviction
+                    try:
+                        stored_row = store_recommendation(
+                            exchange_id=exchange,
+                            symbol=rec.get("symbol", symbol),
+                            direction=rec.get("direction", "wait"),
+                            conviction=conviction,
+                            rationale=rec.get("rationale", ""),
+                            entry_price=rec.get("entry_price"),
+                            stop_loss=rec.get("stop_loss"),
+                            take_profit=rec.get("take_profit"),
+                            size_pct=rec.get("size_pct"),
+                        )
+                        stored_recs.append({**rec, "conviction": conviction, "id": stored_row.get("id")})
+    
+                        if veto_result.action == "adjust":
+                            logger.info(f"[veto] Adjusted {rec.get('symbol', symbol)}: {veto_result.original_conviction} -> {conviction} ({veto_result.reasons})")
+    
+                        # Telegram notification for high-conviction recs — route through digest
+                        auto_trader = _get_auto_trader()
+                        if conviction >= 70 and not auto_trader.enabled:
+                            try:
+                                from wolfpack.notification_digest import get_digest
+                                digest = get_digest()
+                                if digest.mode == "individual":
+                                    from wolfpack.notifications import notify_recommendation
+                                    rec_id = stored_row.get("id")
+                                    await notify_recommendation(
+                                        symbol=rec.get("symbol", symbol),
+                                        direction=rec.get("direction", "wait"),
+                                        conviction=conviction,
+                                        rationale=rec.get("rationale", ""),
+                                        entry_price=rec.get("entry_price"),
+                                        stop_loss=rec.get("stop_loss"),
+                                        take_profit=rec.get("take_profit"),
+                                        rec_id=rec_id,
+                                    )
+                                elif digest.mode != "disabled":
+                                    digest.add({
+                                        "type": "recommendation",
+                                        "symbol": rec.get("symbol", symbol),
+                                        "direction": rec.get("direction", "wait"),
+                                        "details": f"{'⬆️' if rec.get('direction')=='long' else '⬇️'} {rec.get('direction','').upper()} {rec.get('symbol', symbol)} — conviction {conviction}%",
+                                    })
+                            except Exception:
+                                pass  # Don't fail cycle on notification error
+                    except Exception as e:
+                        logger.error(f"[cycle] Failed to store recommendation: {e}")
+    
+                _last_runs["brief"] = datetime.now(timezone.utc)
+    
+                # ── Step 5b: Run mechanical strategies BEFORE Brief recs (sets _last_strategy_signals for Brief sizing) ──
+                try:
+                    auto_trader = _get_auto_trader()
+                    if auto_trader.enabled:
+                        # 1h strategies use existing candles
+                        strat_executed = auto_trader.process_strategy_signals(
+                            candles_1h, symbol,
+                            regime_output=regime_output, vol_output=vol_output,
+                            timeframe="1h",
+                        )
+                        if strat_executed:
+                            logger.info(f"[cycle] Strategy signals executed {len(strat_executed)} trades")
+    
+                        # 5m candles for ORB session strategy
+                        try:
+                            candles_5m = await adapter.get_candles(symbol, interval="5m", limit=100)
+                            if candles_5m:
+                                strat_5m = auto_trader.process_strategy_signals(
+                                    candles_5m, symbol,
+                                    regime_output=regime_output, vol_output=vol_output,
+                                    timeframe="5m",
+                                )
+                                if strat_5m:
+                                    logger.info(f"[cycle] 5m strategy signals executed {len(strat_5m)} trades")
+                        except Exception as e:
+                            logger.warning(f"[cycle] Failed to fetch 5m candles for strategies: {e}")
+    
+                        # HTF trailing stop update on 4h bars
+                        try:
+                            auto_trader.update_htf_trailing(candles_4h, symbol)
+                        except Exception as e:
+                            logger.warning(f"[cycle] HTF trailing stop error: {e}")
+                except Exception as e:
+                    logger.warning(f"[cycle] Strategy signals error: {e}")
+    
+                # ── Step 5b2: Auto-trader processes stored recs (Brief as conviction multiplier) ──
+                try:
+                    auto_trader = _get_auto_trader()
+                    if auto_trader.enabled and stored_recs:
+                        auto_executed = await auto_trader.process_recommendations(
+                            stored_recs,
+                            cb_output=cb_output,
+                            vol_output=vol_output,
+                            latest_prices={symbol: latest_price} if latest_price else None,
+                        )
+                        if auto_executed:
+                            logger.info(f"[cycle] Auto-trader executed {len(auto_executed)} trades")
+                except Exception as e:
+                    logger.warning(f"[cycle] Auto-trader error: {e}")
+    
+                # ── Step 5c: Process position actions from Brief ──
+                try:
+                    pos_actions = brief_out.raw_data.get("position_actions", []) if brief_out.raw_data else []
+                    await _process_position_actions(pos_actions, exchange, symbol, latest_price, engine)
+                except Exception as e:
+                    logger.warning(f"[cycle] Position action processing error: {e}")
+    
+                # ── Step 5d: Append training data for distillation ──
+                try:
+                    from wolfpack.export_training_data import format_training_pair, append_training_pair
+                    quant_dict = agent_outputs["quant"].model_dump() if "quant" in agent_outputs and hasattr(agent_outputs["quant"], "model_dump") else agent_outputs.get("quant")
+                    snoop_dict = agent_outputs["snoop"].model_dump() if "snoop" in agent_outputs and hasattr(agent_outputs["snoop"], "model_dump") else agent_outputs.get("snoop")
+                    sage_dict = agent_outputs["sage"].model_dump() if "sage" in agent_outputs and hasattr(agent_outputs["sage"], "model_dump") else agent_outputs.get("sage")
+                    brief_dict = brief_out.model_dump() if hasattr(brief_out, "model_dump") else brief_out
+                    pair = format_training_pair(quant_dict, snoop_dict, sage_dict, brief_dict, stored_recs)
+                    if pair:
+                        training_dir = os.environ.get("WOLFPACK_TRAINING_DIR", "training_data")
+                        append_training_pair(pair, symbol, training_dir)
+                        logger.info(f"[training] Appended training pair for {symbol}")
+                except Exception as e:
+                    logger.warning(f"[training] Failed to append training data: {e}")
+    
+                # ── Step 6: Update paper trading portfolio ──
+                engine = _get_paper_engine()
+                if latest_price and engine.portfolio.positions:
+                    engine.update_prices({symbol: latest_price})
+                    try:
+                        engine.store_snapshot(exchange)
+                        logger.info(f"[cycle] Paper portfolio snapshot stored (equity: ${engine.portfolio.equity:.2f})")
+                    except Exception as e:
+                        logger.warning(f"[cycle] Failed to store paper portfolio snapshot: {e}")
+    
+                # ── Step 6a: Track per-position peak P&L + check emergency exits ──
+                try:
+                    for pos in engine.portfolio.positions:
+                        dd_monitor.update_position_peak(pos.symbol, pos.unrealized_pnl)
+    
+                    pos_dicts = [
+                        {"symbol": p.symbol, "unrealized_pnl": p.unrealized_pnl, "size_usd": p.size_usd}
+                        for p in engine.portfolio.positions
+                    ]
+                    emergency_exits = dd_monitor.check_emergency_exits(pos_dicts)
+                    for exit_signal in emergency_exits:
+                        sym = exit_signal["symbol"]
+                        logger.warning(f"[drawdown] Emergency close: {sym} — {exit_signal['reason']}")
+                        realized = engine.close_position(sym)
+                        dd_monitor.clear_position_peak(sym)
+                        # Emergency closes ALWAYS send immediately — safety-critical
+                        try:
+                            from wolfpack.notifications import send_telegram
+                            await send_telegram(
+                                f"<b>\U0001f6a8 EMERGENCY CLOSE: {sym}</b>\n"
+                                f"{exit_signal['reason']}\n"
+                                f"Realized P&L: <code>${realized:,.2f}</code>"
+                            )
+                        except Exception:
+                            pass
+                        engine.store_snapshot(exchange)
+                except Exception as e:
+                    logger.warning(f"[cycle] Drawdown position tracking error: {e}")
+    
+                # ── Step 6b: Update auto-trader prices + check stops ──
+                try:
+                    auto_trader = _get_auto_trader()
+                    if auto_trader.enabled and latest_price and auto_trader.engine.portfolio.positions:
+                        auto_trader.engine.update_prices({symbol: latest_price})
+                        triggered = auto_trader.engine.check_stops({symbol: latest_price})
+                        if triggered:
+                            for sym, reason in triggered:
+                                logger.info(f"[auto-trader] {reason} triggered for {sym}")
+                                try:
+                                    from wolfpack.notification_digest import get_digest
+                                    digest = get_digest()
+                                    digest.add({
+                                        "type": "stop_triggered",
+                                        "symbol": sym,
+                                        "details": f"{reason.upper()} hit for {sym} @ ${latest_price:,.2f}",
+                                    })
+                                except Exception:
+                                    pass
+                        auto_trader._store_snapshot()
+                except Exception as e:
+                    logger.warning(f"[cycle] Auto-trader price update error: {e}")
 
-            logger.info(f"[cycle] Full intelligence cycle complete for {symbol} on {exchange}")
+                # ── Step 6b2: Position reconciliation + stop verification (live mode only) ──
+                if _strategy_mode == "live":
+                    try:
+                        trader = _get_auto_trader()
+                        if hasattr(trader.engine, 'reconcile'):
+                            drift = await trader.engine.reconcile()
+                            if drift.get("has_drift"):
+                                logger.warning(f"[cycle] Position drift: {drift}")
+                        # Also verify stop orders
+                        if hasattr(trader.engine, 'verify_stops'):
+                            stop_issues = trader.engine.verify_stops()
+                            if stop_issues:
+                                logger.warning(f"[cycle] Stop order issues: {stop_issues}")
+                    except Exception as e:
+                        logger.warning(f"[cycle] Position reconciliation error: {e}")
 
-            # ── Health watchdog: mark success ──
-            global _last_successful_cycle, _cycle_failure_count
-            _last_successful_cycle = datetime.now(timezone.utc)
-            _cycle_failure_count = 0
-
+                # ── Step 6c: LP position monitoring ──
+                try:
+                    lp_trader = _get_lp_trader()
+                    if lp_trader.enabled:
+                        lp_result = await lp_trader.process_tick(
+                            regime_output=regime_output,
+                            vol_output=vol_output,
+                        )
+                        if lp_result and lp_result.get("alerts"):
+                            for alert in lp_result["alerts"]:
+                                try:
+                                    from wolfpack.notification_digest import get_digest
+                                    digest = get_digest()
+                                    if digest.mode != "disabled":
+                                        digest.add({
+                                            "type": alert["type"],
+                                            "symbol": alert.get("pair", "LP"),
+                                            "pair": alert.get("pair", ""),
+                                            "message": alert.get("message", ""),
+                                            "details": alert.get("message", ""),
+                                        })
+                                except Exception:
+                                    pass
+                except Exception as e:
+                    logger.warning(f"[cycle] LP auto-trader error: {e}")
+    
+                # Snapshot cleanup — runs once per process lifetime
+                try:
+                    from wolfpack.db import cleanup_old_snapshots
+                    cleanup_old_snapshots()
+                except Exception as e:
+                    logger.warning(f"[cycle] Snapshot cleanup error: {e}")
+    
+                # Flush notification digest if interval elapsed — pass portfolio context
+                try:
+                    from wolfpack.notification_digest import get_digest
+                    digest = get_digest()
+                    # Attach current portfolio snapshot for the unified report
+                    try:
+                        perp_snap = None
+                        perp_engine = _get_paper_engine()
+                        if perp_engine.portfolio.positions:
+                            perp_snap = {
+                                "positions": [
+                                    {"symbol": p.symbol, "direction": p.direction, "unrealized_pnl": p.unrealized_pnl, "size_usd": p.size_usd}
+                                    for p in perp_engine.portfolio.positions
+                                ],
+                                "equity": perp_engine.portfolio.equity,
+                                "unrealized_pnl": perp_engine.portfolio.unrealized_pnl,
+                            }
+                        lp_snap = None
+                        lp_tr = _get_lp_trader()
+                        if lp_tr.enabled and lp_tr.engine.portfolio.positions:
+                            lp_snap = {
+                                "positions": [
+                                    {"pair": f"{p.token0_symbol}/{p.token1_symbol}", "liquidity_usd": p.liquidity_usd, "fees_earned": p.fees_earned_usd, "il_pct": p.il_pct}
+                                    for p in lp_tr.engine.portfolio.positions
+                                ],
+                                "total_fees": lp_tr.engine.portfolio.total_fees_earned,
+                                "total_il": lp_tr.engine.portfolio.total_il,
+                                "equity": lp_tr.engine.portfolio.equity,
+                            }
+                        digest.set_portfolio_snapshot(perp=perp_snap, lp=lp_snap)
+                    except Exception:
+                        pass
+                    await digest.maybe_flush()
+                except Exception:
+                    pass
+    
+                logger.info(f"[cycle] Full intelligence cycle complete for {symbol} on {exchange}")
+    
+                # ── Health watchdog: mark success ──
+                global _last_successful_cycle, _cycle_failure_count
+                _last_successful_cycle = datetime.now(timezone.utc)
+                _cycle_failure_count = 0
+    
+            except Exception as e:
+                logger.error(f"[cycle] Brief agent failed: {e}", exc_info=True)
+                ft.record_failure("brief", str(e))
+    
+                # ── Health watchdog: track failure ──
+                _cycle_failure_count += 1
+                if _cycle_failure_count == CYCLE_ALERT_THRESHOLD:
+                    try:
+                        from wolfpack.notifications import send_telegram
+                        await send_telegram(f"⚠️ CYCLE DOWN: {CYCLE_ALERT_THRESHOLD} consecutive failures. Last error: {str(e)[:200]}")
+                    except Exception:
+                        pass
+            finally:
+                _running.discard("brief")
+    
         except Exception as e:
-            logger.error(f"[cycle] Brief agent failed: {e}", exc_info=True)
-            ft.record_failure("brief", str(e))
-
-            # ── Health watchdog: track failure ──
+            logger.error(f"[cycle] Intelligence cycle failed: {e}", exc_info=True)
+    
+            # ── Health watchdog: track outer failure ──
             _cycle_failure_count += 1
             if _cycle_failure_count == CYCLE_ALERT_THRESHOLD:
                 try:
@@ -2328,24 +2364,10 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                 except Exception:
                     pass
         finally:
+            _running.discard("quant")
+            _running.discard("snoop")
+            _running.discard("sage")
             _running.discard("brief")
-
-    except Exception as e:
-        logger.error(f"[cycle] Intelligence cycle failed: {e}", exc_info=True)
-
-        # ── Health watchdog: track outer failure ──
-        _cycle_failure_count += 1
-        if _cycle_failure_count == CYCLE_ALERT_THRESHOLD:
-            try:
-                from wolfpack.notifications import send_telegram
-                await send_telegram(f"⚠️ CYCLE DOWN: {CYCLE_ALERT_THRESHOLD} consecutive failures. Last error: {str(e)[:200]}")
-            except Exception:
-                pass
-    finally:
-        _running.discard("quant")
-        _running.discard("snoop")
-        _running.discard("sage")
-        _running.discard("brief")
 
 
 # ── Circuit Breaker Endpoints ──
@@ -2415,7 +2437,7 @@ async def list_strategies():
 
 
 @app.post("/backtest/run")
-async def start_backtest(background_tasks: BackgroundTasks, config: dict = Body(...)):
+async def start_backtest(background_tasks: BackgroundTasks, config: dict = Body(...), _auth: None = Depends(require_auth)):
     """Start a backtest run in the background. Returns run_id for polling."""
     from wolfpack.db import store_backtest_run
     from wolfpack.models.backtest_models import BacktestConfig
@@ -2502,7 +2524,7 @@ async def check_backtest_graduation(run_id: str):
 
 
 @app.post("/backtest/compare")
-async def compare_backtests(run_ids: list[str] = Body(...)):
+async def compare_backtests(run_ids: list[str] = Body(...), _auth: None = Depends(require_auth)):
     """Compare metrics for multiple backtest runs side by side."""
     from wolfpack.db import get_backtest_run
 
@@ -2939,7 +2961,7 @@ async def lp_status():
 
 
 @app.post("/lp/toggle")
-async def lp_toggle(enabled: bool = Body(..., embed=True)):
+async def lp_toggle(enabled: bool = Body(..., embed=True), _auth: None = Depends(require_auth)):
     """Enable/disable LP automation."""
     lp = _get_lp_trader()
     lp._enabled = enabled
@@ -2978,7 +3000,7 @@ async def lp_positions():
 
 
 @app.post("/lp/watch")
-async def lp_watch_pool(pool_address: str = Body(..., embed=True)):
+async def lp_watch_pool(pool_address: str = Body(..., embed=True), _auth: None = Depends(require_auth)):
     """Add a pool to the LP watch list."""
     lp = _get_lp_trader()
     lp.add_pool(pool_address)
@@ -2995,8 +3017,8 @@ async def run_all_intelligence(
     _auth: None = Depends(require_auth),
 ):
     """Run intelligence for all watchlist symbols + open position symbols."""
-    if _running:
-        return {"status": "already_running", "agents": list(_running)}
+    if _cycle_lock.locked():
+        return {"status": "already_running", "message": "Intelligence cycle in progress"}
 
     from wolfpack.db import get_watchlist as db_get_watchlist
 
@@ -3027,6 +3049,58 @@ async def _run_multi_symbol(exchange: str, symbols: list[str]) -> None:
     logger.info(f"[multi] Multi-symbol run complete: {len(symbols)} symbols")
 
 
+_last_daily_recon: datetime | None = None
+
+
+async def _daily_reconciliation():
+    """Compare DB trades vs exchange fills. Runs once per day."""
+    global _last_daily_recon
+    now = datetime.now(timezone.utc)
+
+    if _last_daily_recon and (now - _last_daily_recon).total_seconds() < 86400:
+        return  # Already ran today
+
+    if _strategy_mode != "live":
+        return  # Only matters in live mode
+
+    _last_daily_recon = now
+
+    try:
+        from wolfpack.exchanges.hyperliquid_trading import HyperliquidTrader
+        from wolfpack.db import get_db
+
+        if not settings.hyperliquid_private_key:
+            return
+
+        trader = HyperliquidTrader(settings.hyperliquid_private_key)
+
+        # Get exchange fills for last 24h
+        start_ms = int((now - timedelta(hours=24)).timestamp() * 1000)
+        fills = await trader.get_user_fills(start_ms)
+
+        # Get DB trades for last 24h
+        db = get_db()
+        cutoff = (now - timedelta(hours=24)).isoformat()
+        db_trades = db.table("wp_trade_history").select("*").gte("closed_at", cutoff).execute()
+
+        exchange_count = len(fills)
+        db_count = len(db_trades.data or [])
+
+        if exchange_count != db_count:
+            from wolfpack.notifications import send_telegram
+            await send_telegram(
+                f"\U0001f4ca Daily Recon: Exchange has {exchange_count} fills, DB has {db_count} trades (last 24h). "
+                f"Drift: {abs(exchange_count - db_count)} trades unaccounted."
+            )
+            logger.warning(f"[recon] Trade count mismatch: exchange={exchange_count}, db={db_count}")
+        else:
+            logger.info(f"[recon] Daily reconciliation OK: {exchange_count} trades match")
+
+        await trader.close()
+    except Exception as e:
+        logger.warning(f"[recon] Daily reconciliation failed: {e}")
+
+
 async def _background_tick_loop():
     """Autonomous tick loop — runs every 5 minutes regardless of frontend."""
     await asyncio.sleep(60)  # Initial delay — let startup complete
@@ -3049,6 +3123,12 @@ async def _background_tick_loop():
             logger.info(f"[tick-loop] Completed cycle for {len(symbols)} symbols")
         except Exception as e:
             logger.error(f"[tick-loop] Cycle error: {e}")
+
+        # Daily reconciliation — compare DB vs exchange fills
+        try:
+            await _daily_reconciliation()
+        except Exception as e:
+            logger.warning(f"[tick-loop] Daily reconciliation error: {e}")
 
         await asyncio.sleep(300)  # 5 minutes
 

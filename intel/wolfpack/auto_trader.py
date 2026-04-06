@@ -320,6 +320,10 @@ class AutoTrader:
                 if rec.get("take_profit"):
                     pos.take_profit = rec["take_profit"]
 
+                # Place exchange stop orders (live mode only)
+                if hasattr(self.engine, 'place_exchange_stops'):
+                    self.engine.place_exchange_stops(symbol)
+
                 # Enable trailing stop if recommended by Brief
                 trailing_pct = rec.get("trailing_stop_pct")
                 if trailing_pct and trailing_pct > 0:
@@ -420,6 +424,9 @@ class AutoTrader:
                 new_stop = pa.get("suggested_stop")
                 if new_stop:
                     pos.stop_loss = new_stop
+                    # Place exchange stop orders (live mode only)
+                    if hasattr(self.engine, 'place_exchange_stops'):
+                        self.engine.place_exchange_stops(pa_symbol)
                     executed.append({"action": "adjust_stop", "symbol": pa_symbol, "new_stop": new_stop})
 
                     try:
@@ -437,6 +444,9 @@ class AutoTrader:
                 new_tp = pa.get("suggested_tp")
                 if new_tp:
                     pos.take_profit = new_tp
+                    # Place exchange stop orders (live mode only)
+                    if hasattr(self.engine, 'place_exchange_stops'):
+                        self.engine.place_exchange_stops(pa_symbol)
                     executed.append({"action": "adjust_tp", "symbol": pa_symbol, "new_tp": new_tp})
 
                     try:
@@ -631,6 +641,10 @@ class AutoTrader:
                         pos.stop_loss = signal["stop_loss"]
                     if signal.get("take_profit"):
                         pos.take_profit = signal["take_profit"]
+
+                    # Place exchange stop orders (live mode only)
+                    if hasattr(self.engine, 'place_exchange_stops'):
+                        self.engine.place_exchange_stops(symbol)
 
                     # Default trailing stop of 3% if no stop_loss set
                     if pos.stop_loss is None:
