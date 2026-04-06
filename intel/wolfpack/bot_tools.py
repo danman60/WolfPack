@@ -96,6 +96,62 @@ def _get_lp_snapshot() -> dict:
         return {}
 
 
+def _get_benchmark(hours: int, total_pnl: float, avg_deployed: float) -> dict | None:
+    """Compute BTC buy-and-hold benchmark for the given window.
+
+    Returns dict with btc_change_pct, buy_hold_return, and alpha,
+    or None if price data is unavailable.
+    """
+    import time as _time
+    try:
+        now_ms = int(_time.time() * 1000)
+        start_ms = now_ms - (hours * 3600 * 1000)
+
+        # Fetch BTC candles for the window — first candle gives start price
+        resp = httpx.post(
+            "https://api.hyperliquid.xyz/info",
+            json={
+                "type": "candleSnapshot",
+                "req": {"coin": "BTC", "interval": "1h",
+                        "startTime": start_ms, "endTime": start_ms + 3600_000},
+            },
+            timeout=10,
+        )
+        candles = resp.json()
+        if not candles or not isinstance(candles, list) or len(candles) == 0:
+            return None
+        btc_then = float(candles[0].get("o") or candles[0].get("open", 0))
+        if btc_then <= 0:
+            return None
+
+        # Current BTC mid price
+        resp2 = httpx.post(
+            "https://api.hyperliquid.xyz/info",
+            json={"type": "allMids"},
+            timeout=10,
+        )
+        mids = resp2.json()
+        btc_now = float(mids.get("BTC", 0))
+        if btc_now <= 0:
+            return None
+
+        btc_change_pct = (btc_now - btc_then) / btc_then * 100
+        # Benchmark: if avg deployed capital was held as BTC spot
+        buy_hold_return = avg_deployed * (btc_now - btc_then) / btc_then
+        alpha = total_pnl - buy_hold_return
+
+        return {
+            "btc_start": round(btc_then, 2),
+            "btc_now": round(btc_now, 2),
+            "btc_change_pct": round(btc_change_pct, 2),
+            "capital_deployed": round(avg_deployed, 2),
+            "buy_hold_return": round(buy_hold_return, 2),
+            "alpha": round(alpha, 2),
+        }
+    except Exception:
+        return None
+
+
 async def get_profit_executor(hours: int = 24) -> dict:
     """Get P&L for a time window from trade history DB (deduplicated)."""
     from wolfpack.db import get_db
@@ -122,6 +178,26 @@ async def get_profit_executor(hours: int = 24) -> dict:
             if lp:
                 perp["lp"] = lp
                 perp["combined_pnl"] = round(perp["total_pnl"] + lp.get("lp_net_pnl", 0), 2)
+
+            # Benchmark: query avg deployed capital from trade history
+            try:
+                size_result = db.table("wp_trade_history").select(
+                    "size_usd"
+                ).gte(
+                    "closed_at", f"now() - interval '{int(hours)} hours'"
+                ).not_.is_("exit_price", "null").execute()
+                if size_result.data:
+                    sizes = [abs(float(t.get("size_usd", 0) or 0)) for t in size_result.data]
+                    avg_deployed = sum(sizes) / max(len(sizes), 1)
+                else:
+                    avg_deployed = 0
+                if avg_deployed > 0:
+                    bench = _get_benchmark(hours, perp["total_pnl"], avg_deployed)
+                    if bench:
+                        perp["benchmark"] = bench
+            except Exception:
+                pass  # benchmark is optional
+
             return perp
 
         # Fallback: client-side dedup if RPC not available
@@ -163,6 +239,15 @@ async def get_profit_executor(hours: int = 24) -> dict:
         if lp:
             perp["lp"] = lp
             perp["combined_pnl"] = round(perp["total_pnl"] + lp.get("lp_net_pnl", 0), 2)
+
+        # Benchmark: avg deployed capital from the trades we already have
+        sizes = [abs(float(t.get("size_usd", 0) or 0)) for t in unique_trades]
+        avg_deployed = sum(sizes) / max(len(sizes), 1) if sizes else 0
+        if avg_deployed > 0:
+            bench = _get_benchmark(hours, perp["total_pnl"], avg_deployed)
+            if bench:
+                perp["benchmark"] = bench
+
         return perp
     except Exception as e:
         return {"error": str(e)}
@@ -425,7 +510,7 @@ TOOLS = [
     },
     {
         "name": "get_profit",
-        "description": "Get profit/loss for a time window (e.g. last 24h, 72h, 168h for 1 week). Queries closed trades from database.",
+        "description": "Get profit/loss for a time window (e.g. last 24h, 72h, 168h for 1 week). Queries closed trades from database. Includes benchmark comparison vs BTC buy-and-hold (alpha).",
         "parameters": {
             "type": "object",
             "properties": {

@@ -411,6 +411,27 @@ function ProfitReport() {
         }`}>
           {mainPnl >= 0 ? "+" : ""}${Math.abs(mainPnl).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
         </p>
+
+        {/* Benchmark / Alpha */}
+        {profit.benchmark && (
+          <div className="mt-3 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-[12px]">
+            <span className="text-gray-500">
+              BTC {profit.benchmark.btc_change_pct >= 0 ? "+" : ""}{profit.benchmark.btc_change_pct.toFixed(1)}%
+            </span>
+            <span className="text-gray-600 hidden sm:inline">|</span>
+            <span className="text-gray-400">
+              Buy & Hold: <span className={`font-mono ${profit.benchmark.buy_hold_return >= 0 ? "text-gray-300" : "text-[var(--wolf-red)]"}`}>
+                {profit.benchmark.buy_hold_return >= 0 ? "+" : ""}${profit.benchmark.buy_hold_return.toFixed(2)}
+              </span>
+            </span>
+            <span className="text-gray-600 hidden sm:inline">|</span>
+            <span className={`font-semibold ${
+              profit.benchmark.alpha >= 0 ? "text-[var(--wolf-cyan)]" : "text-[var(--wolf-red)]"
+            }`}>
+              Alpha: {profit.benchmark.alpha >= 0 ? "+" : ""}${profit.benchmark.alpha.toFixed(2)}
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Perp + LP Side by Side */}
