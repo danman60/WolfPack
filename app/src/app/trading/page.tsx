@@ -119,7 +119,7 @@ export default function TradingPage() {
   };
 
   return (
-    <div className="space-y-7">
+    <div className="space-y-5 md:space-y-7">
       <div className="page-header">
         <h1 className="page-title">Trading</h1>
         <p className="page-subtitle">
@@ -127,9 +127,9 @@ export default function TradingPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 md:gap-6">
         {/* Order Entry */}
-        <div className="wolf-card p-6">
+        <div className="wolf-card p-4 md:p-6">
           <h2 className="text-lg font-semibold text-white mb-4">Place Order</h2>
           <div className="space-y-4">
             <div>
@@ -192,10 +192,11 @@ export default function TradingPage() {
               <label className="text-xs text-gray-500 uppercase">Size (USD)</label>
               <input
                 type="number"
+                inputMode="decimal"
                 placeholder="0.00"
                 value={sizeUsd}
                 onChange={(e) => setSizeUsd(e.target.value)}
-                className="w-full mt-1 bg-[var(--surface)] border border-[var(--border)] rounded-md px-3 py-2 text-white text-sm"
+                className="w-full mt-1 bg-[var(--surface)] border border-[var(--border)] rounded-md px-3 py-2.5 text-white text-sm min-h-[44px]"
               />
             </div>
             <div>
@@ -223,20 +224,22 @@ export default function TradingPage() {
                 <label className="text-xs text-gray-500 uppercase">Stop Loss</label>
                 <input
                   type="number"
+                  inputMode="decimal"
                   placeholder="Optional"
                   value={stopLoss}
                   onChange={(e) => setStopLoss(e.target.value)}
-                  className="w-full mt-1 bg-[var(--surface)] border border-[var(--border)] rounded-md px-3 py-2 text-white text-sm"
+                  className="w-full mt-1 bg-[var(--surface)] border border-[var(--border)] rounded-md px-3 py-2.5 text-white text-sm min-h-[44px]"
                 />
               </div>
               <div>
                 <label className="text-xs text-gray-500 uppercase">Take Profit</label>
                 <input
                   type="number"
+                  inputMode="decimal"
                   placeholder="Optional"
                   value={takeProfit}
                   onChange={(e) => setTakeProfit(e.target.value)}
-                  className="w-full mt-1 bg-[var(--surface)] border border-[var(--border)] rounded-md px-3 py-2 text-white text-sm"
+                  className="w-full mt-1 bg-[var(--surface)] border border-[var(--border)] rounded-md px-3 py-2.5 text-white text-sm min-h-[44px]"
                 />
               </div>
             </div>
@@ -264,7 +267,7 @@ export default function TradingPage() {
             <button
               onClick={handleOrder}
               disabled={!sizeUsd || !latestPrice || orderSubmitting}
-              className={`w-full py-3 rounded-md font-semibold transition disabled:opacity-50 ${
+              className={`w-full py-3 min-h-[48px] rounded-md font-semibold transition disabled:opacity-50 ${
                 direction === "long"
                   ? "bg-[var(--wolf-emerald)] text-white hover:brightness-110"
                   : "bg-[var(--wolf-red)] text-white hover:brightness-110"
@@ -297,14 +300,14 @@ export default function TradingPage() {
           {/* Paper Portfolio Summary */}
           {isActive && (
             <div className="wolf-card p-4">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div className="flex items-center gap-3">
                   <div className="w-2 h-2 bg-[var(--wolf-emerald)] rounded-full" />
                   <span className="text-sm text-gray-400">
                     Paper Portfolio: <span className="text-white font-semibold">${portfolio.equity.toLocaleString()}</span>
                   </span>
                 </div>
-                <div className="flex items-center gap-4 text-xs">
+                <div className="flex flex-wrap items-center gap-3 md:gap-4 text-xs">
                   <span className={portfolio.unrealized_pnl >= 0 ? "text-[var(--wolf-emerald)]" : "text-[var(--wolf-red)]"}>
                     Unrealized: {portfolio.unrealized_pnl >= 0 ? "+" : ""}${portfolio.unrealized_pnl.toFixed(2)}
                   </span>
@@ -322,8 +325,8 @@ export default function TradingPage() {
       </div>
 
       {/* Watchlist */}
-      <div className="wolf-card p-6">
-        <div className="flex items-center justify-between mb-4">
+      <div className="wolf-card p-4 md:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <div className="flex items-center gap-2">
             <div className="w-1 h-4 rounded-full bg-[var(--wolf-cyan)]" />
             <h2 className="text-lg font-semibold text-white">Watchlist</h2>
@@ -405,7 +408,7 @@ export default function TradingPage() {
       </div>
 
       {/* AI Recommendations */}
-      <div className="wolf-card p-6">
+      <div className="wolf-card p-4 md:p-6">
         <div className="flex items-center gap-2 mb-5">
           <div className="w-1 h-4 rounded-full bg-[var(--wolf-amber)]" />
           <h2 className="section-title">AI Recommendations</h2>
@@ -415,11 +418,11 @@ export default function TradingPage() {
             {recommendations.map((rec) => (
               <div
                 key={rec.id as string}
-                className="border border-[var(--border)] rounded-lg p-4 flex items-center justify-between"
+                className="border border-[var(--border)] rounded-lg p-3 md:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
               >
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3 md:gap-4 min-w-0">
                   <span
-                    className={`px-3 py-1 rounded text-xs font-bold uppercase ${
+                    className={`px-3 py-1 rounded text-xs font-bold uppercase shrink-0 ${
                       rec.direction === "long"
                         ? "bg-[var(--wolf-emerald)]/20 text-[var(--wolf-emerald)]"
                         : "bg-[var(--wolf-red)]/20 text-[var(--wolf-red)]"
@@ -427,13 +430,13 @@ export default function TradingPage() {
                   >
                     {rec.direction as string}
                   </span>
-                  <div>
+                  <div className="min-w-0">
                     <span className="text-white font-mono font-semibold">{rec.symbol as string}</span>
-                    <p className="text-xs text-gray-400 mt-0.5 max-w-md line-clamp-1">
+                    <p className="text-xs text-gray-400 mt-0.5 line-clamp-1 break-all">
                       {rec.rationale as string}
                     </p>
                     {Boolean(rec.entry_price || rec.stop_loss || rec.take_profit) && (
-                      <p className="text-xs text-gray-500 mt-0.5 font-mono">
+                      <p className="text-xs text-gray-500 mt-0.5 font-mono break-all">
                         {rec.entry_price ? `Entry: $${Number(rec.entry_price).toLocaleString()}` : ""}
                         {rec.stop_loss ? ` | SL: $${Number(rec.stop_loss).toLocaleString()}` : ""}
                         {rec.take_profit ? ` | TP: $${Number(rec.take_profit).toLocaleString()}` : ""}
@@ -441,7 +444,7 @@ export default function TradingPage() {
                     )}
                   </div>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3 md:gap-4 shrink-0 justify-between sm:justify-end">
                   <div className="text-right">
                     <div className="text-xs text-gray-500">Conviction</div>
                     <div className="text-sm font-bold text-white">{rec.conviction as number}%</div>
@@ -461,14 +464,14 @@ export default function TradingPage() {
                         })
                       }
                       disabled={approveMutation.isPending}
-                      className="px-3 py-1.5 bg-[var(--wolf-emerald)]/20 text-[var(--wolf-emerald)] rounded text-xs font-semibold hover:bg-[var(--wolf-emerald)]/30 transition disabled:opacity-50"
+                      className="px-3 py-2 min-h-[44px] bg-[var(--wolf-emerald)]/20 text-[var(--wolf-emerald)] rounded text-xs font-semibold hover:bg-[var(--wolf-emerald)]/30 transition disabled:opacity-50"
                     >
                       {approveMutation.isPending ? "..." : "Approve"}
                     </button>
                     <button
                       onClick={() => rejectMutation.mutate(rec.id as string)}
                       disabled={rejectMutation.isPending}
-                      className="px-3 py-1.5 bg-[var(--wolf-red)]/20 text-[var(--wolf-red)] rounded text-xs font-semibold hover:bg-[var(--wolf-red)]/30 transition disabled:opacity-50"
+                      className="px-3 py-2 min-h-[44px] bg-[var(--wolf-red)]/20 text-[var(--wolf-red)] rounded text-xs font-semibold hover:bg-[var(--wolf-red)]/30 transition disabled:opacity-50"
                     >
                       {rejectMutation.isPending ? "..." : "Reject"}
                     </button>

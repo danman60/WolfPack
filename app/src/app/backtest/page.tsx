@@ -138,10 +138,10 @@ export default function BacktestPage() {
   const totalLosses = trades.filter((t) => t.pnl_usd <= 0).length;
 
   return (
-    <div className="space-y-7">
+    <div className="space-y-5 md:space-y-7">
       {/* Header */}
       <div className="page-header animate-in animate-in-1">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h1 className="page-title">Backtest</h1>
             <p className="page-subtitle">
@@ -176,11 +176,11 @@ export default function BacktestPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 md:gap-6">
         {/* ═══ CONFIG PANEL ═══ */}
-        <div className="lg:col-span-4 xl:col-span-3 space-y-5">
+        <div className="lg:col-span-4 xl:col-span-3 space-y-4 md:space-y-5">
           {/* Symbol + Interval Selector */}
-          <div className="wolf-card p-5 animate-in animate-in-2">
+          <div className="wolf-card p-4 md:p-5 animate-in animate-in-2">
             <SectionHeader color="blue" title="Market" />
 
             {/* Symbol Pills */}
@@ -251,7 +251,7 @@ export default function BacktestPage() {
           </div>
 
           {/* Strategy Config */}
-          <div className="wolf-card p-5 animate-in animate-in-3">
+          <div className="wolf-card p-4 md:p-5 animate-in animate-in-3">
             <SectionHeader color="purple" title="Strategy" />
 
             <div className="mt-4 space-y-3">
@@ -336,7 +336,7 @@ export default function BacktestPage() {
           </div>
 
           {/* Execution Params */}
-          <div className="wolf-card p-5 animate-in animate-in-4">
+          <div className="wolf-card p-4 md:p-5 animate-in animate-in-4">
             <SectionHeader color="amber" title="Execution" />
 
             <div className="mt-4 space-y-3">
@@ -558,7 +558,7 @@ export default function BacktestPage() {
 
           {/* Equity Curve */}
           {equityChartData.length > 1 && (
-            <div className="wolf-card p-6 animate-in animate-in-3">
+            <div className="wolf-card p-4 md:p-6 animate-in animate-in-3">
               <div className="flex items-center justify-between mb-5">
                 <SectionHeader color="emerald" title="Equity Curve" />
                 <span className="text-[11px] text-gray-600 font-mono">
@@ -641,7 +641,7 @@ export default function BacktestPage() {
 
           {/* Drawdown Chart */}
           {equityChartData.length > 1 && (
-            <div className="wolf-card p-6 animate-in animate-in-4">
+            <div className="wolf-card p-4 md:p-6 animate-in animate-in-4">
               <div className="flex items-center justify-between mb-5">
                 <SectionHeader color="red" title="Drawdown" />
                 {metrics && (
@@ -744,7 +744,7 @@ export default function BacktestPage() {
 
               {/* Overview Tab */}
               {resultTab === "overview" && metrics && (
-                <div className="wolf-card p-5">
+                <div className="wolf-card p-4 md:p-5">
                   <div className="grid grid-cols-2 gap-x-8 gap-y-3">
                     <DetailRow label="Avg Win" value={`+${metrics.avg_winning_pct.toFixed(2)}%`} color="emerald" />
                     <DetailRow label="Avg Loss" value={`${metrics.avg_losing_pct.toFixed(2)}%`} color="red" />
@@ -834,7 +834,7 @@ export default function BacktestPage() {
 
               {/* Monthly Tab */}
               {resultTab === "monthly" && monthlyReturns.length > 0 && (
-                <div className="wolf-card p-5">
+                <div className="wolf-card p-4 md:p-5">
                   <div className="grid grid-cols-4 md:grid-cols-6 gap-2">
                     {monthlyReturns.map(
                       (m: { month: string; return_pct: number }) => {
@@ -915,7 +915,7 @@ export default function BacktestPage() {
 
       {/* ═══ RUN HISTORY ═══ */}
       {runs.length > 0 && (
-        <div className="wolf-card p-6 animate-in animate-in-6">
+        <div className="wolf-card p-4 md:p-6 animate-in animate-in-6">
           <div className="flex items-center justify-between mb-5">
             <SectionHeader color="amber" title="Run History" />
             <span className="text-[11px] text-gray-600 font-mono">

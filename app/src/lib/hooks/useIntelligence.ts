@@ -43,6 +43,20 @@ interface TradeRecommendation {
 
 /* ── Hooks ── */
 
+// Fetch profit report for a time window
+export function useProfit(hours: number) {
+  return useQuery({
+    queryKey: ["profit", hours],
+    queryFn: async () => {
+      const res = await intelFetch(`/intel/profit?hours=${hours}`);
+      if (!res.ok) return null;
+      return res.json();
+    },
+    refetchInterval: 60_000,
+    retry: false,
+  });
+}
+
 // Fetch latest agent outputs (one per agent)
 export function useAgentOutputs() {
   return useQuery({

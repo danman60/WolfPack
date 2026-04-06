@@ -243,6 +243,14 @@ def _get_drawdown_monitor() -> Any:
     return _drawdown_monitor
 
 
+@app.get("/profit")
+async def get_profit(hours: int = 24):
+    """Get combined perp + LP profit for a time window."""
+    from wolfpack.bot_tools import get_profit_executor
+    result = await get_profit_executor(hours=hours)
+    return result
+
+
 @app.get("/health")
 async def health():
     result = {"status": "ok", "service": "wolfpack-intel"}

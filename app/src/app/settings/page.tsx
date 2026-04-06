@@ -16,7 +16,7 @@ export default function SettingsPage() {
   const checklist = strategyMode?.checklist ?? [];
 
   return (
-    <div className="space-y-7">
+    <div className="space-y-5 md:space-y-7">
       <div className="page-header">
         <h1 className="page-title">Settings</h1>
         <p className="page-subtitle">
@@ -25,7 +25,7 @@ export default function SettingsPage() {
       </div>
 
       {/* Exchange Configuration */}
-      <div className="wolf-card p-6">
+      <div className="wolf-card p-4 md:p-6">
         <h2 className="section-title mb-4">Exchange Configuration</h2>
         <div className="space-y-3">
           {availableExchanges.map((ex) => (
@@ -70,9 +70,9 @@ export default function SettingsPage() {
       </div>
 
       {/* Strategy Mode */}
-      <div className="wolf-card p-6">
+      <div className="wolf-card p-4 md:p-6">
         <h2 className="section-title mb-4">Strategy Mode</h2>
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           <div className="flex-1 p-4 rounded-lg border border-[var(--wolf-emerald)] bg-[var(--wolf-emerald-glow)]">
             <div className="flex items-center gap-2 mb-1">
               <div className="w-2.5 h-2.5 rounded-full bg-[var(--wolf-emerald)]" />
@@ -98,19 +98,19 @@ export default function SettingsPage() {
       </div>
 
       {/* LLM Providers */}
-      <div className="wolf-card p-6">
+      <div className="wolf-card p-4 md:p-6">
         <h2 className="section-title mb-4">LLM Providers</h2>
         <div className="space-y-3">
           {LLM_PROVIDERS.map((provider) => (
             <div
               key={provider.name}
-              className="flex items-center justify-between p-4 rounded-lg border border-[var(--border)] bg-[var(--surface)]"
+              className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg border border-[var(--border)] bg-[var(--surface)] gap-2"
             >
               <div>
                 <span className="text-white font-medium">{provider.name}</span>
                 <p className="text-xs text-gray-500 mt-0.5">{provider.role}</p>
               </div>
-              <div className="text-right">
+              <div className="sm:text-right">
                 <code className="text-xs text-gray-500 font-mono">{provider.env}</code>
                 <p className="text-[10px] text-gray-600 mt-0.5">Configure in .env</p>
               </div>
@@ -120,7 +120,7 @@ export default function SettingsPage() {
       </div>
 
       {/* Telegram Notifications */}
-      <div className="wolf-card p-6">
+      <div className="wolf-card p-4 md:p-6">
         <h2 className="section-title mb-4">Telegram Notifications</h2>
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -158,7 +158,7 @@ export default function SettingsPage() {
       </div>
 
       {/* Safety Checklist — live from backend */}
-      <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-6">
+      <div className="bg-surface-elevated border border-[var(--border)] rounded-lg p-4 md:p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="section-title">Live Trading Safety Checklist</h2>
           <span className="text-xs text-gray-500">

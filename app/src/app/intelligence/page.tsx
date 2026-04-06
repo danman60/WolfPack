@@ -61,8 +61,8 @@ export default function IntelligencePage() {
   })();
 
   return (
-    <div className="space-y-7">
-      <div className="page-header flex items-center justify-between">
+    <div className="space-y-5 md:space-y-7">
+      <div className="page-header flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="page-title">Intelligence Brief</h1>
           <p className="page-subtitle">
@@ -72,19 +72,19 @@ export default function IntelligencePage() {
         <button
           onClick={() => runIntel.mutate({ exchange: activeExchange, symbol: "BTC" })}
           disabled={runIntel.isPending}
-          className="px-5 py-2.5 bg-[var(--wolf-emerald)] text-black text-[13px] font-semibold rounded-lg hover:brightness-110 transition-all disabled:opacity-50 shadow-lg shadow-[var(--wolf-emerald)]/10"
+          className="px-5 py-2.5 min-h-[44px] bg-[var(--wolf-emerald)] text-black text-[13px] font-semibold rounded-lg hover:brightness-110 transition-all disabled:opacity-50 shadow-lg shadow-[var(--wolf-emerald)]/10 w-full sm:w-auto"
         >
           {runIntel.isPending ? "Running..." : "Run Intelligence"}
         </button>
       </div>
 
       {/* Market Intelligence Overview */}
-      <div className="wolf-card p-6">
+      <div className="wolf-card p-4 md:p-6">
         <div className="flex items-center gap-2 mb-5">
           <div className="w-1 h-4 rounded-full bg-[var(--wolf-amber)]" />
           <h2 className="section-title">Market Intelligence</h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center justify-items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 items-center justify-items-center">
           <SentimentGauge value={sentimentValue} />
           <PredictionAccuracy />
         </div>
@@ -94,7 +94,7 @@ export default function IntelligencePage() {
       <IntelProgress running={runIntel.isPending} />
 
       {/* Agent Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
         {AGENTS.map((agent) => {
           const output = agentOutputs?.[agent.key];
           const svc = statusMap.get(agent.key);
@@ -120,7 +120,7 @@ export default function IntelligencePage() {
       <PredictionOverlay />
 
       {/* Signal Feed */}
-      <div className="wolf-card p-5">
+      <div className="wolf-card p-4 md:p-5">
         <div className="flex items-center gap-2 mb-4">
           <div className="w-1 h-4 rounded-full bg-[var(--wolf-purple)]" />
           <h2 className="section-title">Snoop Signal Feed</h2>
@@ -134,7 +134,7 @@ export default function IntelligencePage() {
           <div className="w-1 h-4 rounded-full bg-[var(--wolf-purple)]" />
           <h2 className="section-title">Quantitative Modules</h2>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 md:gap-3">
           {MODULES.map((mod) => {
             const output = moduleOutputs?.[mod.key];
             return (
@@ -158,7 +158,7 @@ export default function IntelligencePage() {
       </div>
 
       {/* Latest Analysis */}
-      <div className="wolf-card p-6">
+      <div className="wolf-card p-4 md:p-6">
         <div className="flex items-center gap-2 mb-4">
           <div className="w-1 h-4 rounded-full bg-[var(--wolf-emerald)]" />
           <h2 className="section-title">Latest Analysis</h2>
@@ -256,7 +256,7 @@ function AgentCard({
   lastRun?: string;
 }) {
   return (
-    <div className="wolf-card wolf-card-interactive p-5">
+    <div className="wolf-card wolf-card-interactive p-4 md:p-5">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-3">
           <WolfHead agent={agentKey as "quant" | "snoop" | "sage" | "brief"} size={40} />

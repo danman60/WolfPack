@@ -22,7 +22,7 @@ export function Nav() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--background)]/80 backdrop-blur-xl backdrop-saturate-150">
-      <nav className="max-w-7xl mx-auto px-5 py-3.5 flex items-center justify-between">
+      <nav className="max-w-7xl mx-auto px-4 md:px-5 py-3.5 flex items-center justify-between">
         <div className="flex items-center gap-10">
           <Link
             href="/"
@@ -66,7 +66,7 @@ export function Nav() {
           {/* Mobile hamburger */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-white/5 transition"
+            className="md:hidden p-2.5 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg hover:bg-white/5 active:bg-white/10 transition"
             aria-label="Toggle menu"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -88,7 +88,7 @@ export function Nav() {
       </nav>
       {/* Mobile dropdown */}
       {mobileOpen && (
-        <div className="md:hidden border-t border-[var(--border)] bg-[var(--background)]/95 backdrop-blur-xl px-5 py-3 space-y-1">
+        <div className="md:hidden border-t border-[var(--border)] bg-[var(--background)]/95 backdrop-blur-xl px-4 py-3 space-y-1 mobile-nav-enter">
           {NAV_LINKS.map((link) => {
             const isActive =
               link.href === "/"
@@ -100,10 +100,10 @@ export function Nav() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileOpen(false)}
-                className={`block py-2.5 px-3 rounded-lg text-sm font-medium transition ${
+                className={`block py-3 px-3 rounded-lg text-sm font-medium transition min-h-[44px] flex items-center ${
                   isActive
-                    ? "bg-[var(--wolf-emerald)]/10 text-[var(--wolf-emerald)]"
-                    : "text-gray-400 hover:text-white hover:bg-white/5"
+                    ? "bg-[var(--wolf-emerald)]/10 text-[var(--wolf-emerald)] border-l-2 border-[var(--wolf-emerald)]"
+                    : "text-gray-400 hover:text-white hover:bg-white/5 active:bg-white/10"
                 }`}
               >
                 {link.label}

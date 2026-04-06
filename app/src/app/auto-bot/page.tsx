@@ -112,9 +112,9 @@ export default function AutoBotPage() {
   };
 
   return (
-    <div className="space-y-7">
+    <div className="space-y-5 md:space-y-7">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="page-header">
           <h1 className="page-title">Auto-Bot</h1>
           <p className="page-subtitle">
@@ -134,7 +134,7 @@ export default function AutoBotPage() {
           <button
             onClick={() => toggleMutation.mutate()}
             disabled={toggleMutation.isPending}
-            className={`px-4 py-2 rounded-lg text-sm font-semibold transition ${
+            className={`px-4 py-2 min-h-[44px] rounded-lg text-sm font-semibold transition ${
               enabled
                 ? "bg-[var(--wolf-red)]/20 text-[var(--wolf-red)] hover:bg-[var(--wolf-red)]/30"
                 : "bg-[var(--wolf-emerald)]/20 text-[var(--wolf-emerald)] hover:bg-[var(--wolf-emerald)]/30"
@@ -146,7 +146,7 @@ export default function AutoBotPage() {
       </div>
 
       {/* How It Works */}
-      <div className="wolf-card p-5 border-l-2 border-[var(--wolf-amber)]">
+      <div className="wolf-card p-4 md:p-5 border-l-2 border-[var(--wolf-amber)]">
         <p className="text-sm text-gray-300 leading-relaxed">
           <span className="text-[var(--wolf-amber)] font-semibold">How it works:</span>{" "}
           The Auto-Bot follows Brief intelligence — when Brief recommends a trade above
@@ -157,7 +157,7 @@ export default function AutoBotPage() {
       </div>
 
       {/* Bucket Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
         <StatCard label="Equity" value={`$${equity.toLocaleString()}`} color="emerald" />
         <StatCard label="Starting" value={`$${startingEquity.toLocaleString()}`} color="blue" />
         <StatCard
@@ -178,7 +178,7 @@ export default function AutoBotPage() {
       </div>
 
       {/* YOLO Meter */}
-      <div className="wolf-card p-6">
+      <div className="wolf-card p-4 md:p-6">
         <div className="flex items-center gap-2 mb-5">
           <div className="w-1 h-4 rounded-full bg-[var(--wolf-amber)]" />
           <h2 className="section-title">YOLO Meter</h2>
@@ -249,7 +249,7 @@ export default function AutoBotPage() {
           const profile = status?.yolo_profile ?? YOLO_DEFAULTS[currentYolo as keyof typeof YOLO_DEFAULTS];
           if (!profile) return null;
           return (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 p-4 rounded-lg bg-[var(--surface)] border border-[var(--border)]">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3 p-3 md:p-4 rounded-lg bg-[var(--surface)] border border-[var(--border)]">
               <ProfileStat label="Conviction" value={`${profile.conviction_threshold}%`} />
               <ProfileStat label="Veto Floor" value={`${profile.veto_floor}%`} />
               <ProfileStat label="Max Trades/Day" value={String(profile.max_trades_per_day)} />
@@ -378,7 +378,7 @@ export default function AutoBotPage() {
       </details>
 
       {/* Open Positions */}
-      <div className="wolf-card p-6">
+      <div className="wolf-card p-4 md:p-6">
         <div className="flex items-center gap-2 mb-5">
           <div className="w-1 h-4 rounded-full bg-[var(--wolf-emerald)]" />
           <h2 className="section-title">Open Positions</h2>
@@ -393,9 +393,9 @@ export default function AutoBotPage() {
               return (
                 <div
                   key={pos.symbol as string}
-                  className="flex items-center justify-between py-3 border-b border-[var(--border)] last:border-0"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between py-3 border-b border-[var(--border)] last:border-0 gap-2 sm:gap-0"
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3 md:gap-4">
                     <span
                       className={`px-3 py-1 rounded text-xs font-bold uppercase ${
                         pos.direction === "long"
@@ -412,7 +412,7 @@ export default function AutoBotPage() {
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-6">
+                  <div className="flex items-center gap-4 md:gap-6 pl-8 sm:pl-0">
                     <div className="text-right">
                       <div className="text-xs text-gray-500">P&L</div>
                       <div className={`text-sm font-bold ${pnl >= 0 ? "text-[var(--wolf-emerald)]" : "text-[var(--wolf-red)]"}`}>
@@ -480,7 +480,7 @@ export default function AutoBotPage() {
       )}
 
       {/* Activity Log */}
-      <div className="wolf-card p-6">
+      <div className="wolf-card p-4 md:p-6">
         <div className="flex items-center gap-2 mb-5">
           <div className="w-1 h-4 rounded-full bg-[var(--wolf-amber)]" />
           <h2 className="section-title">Activity Log</h2>
@@ -493,7 +493,7 @@ export default function AutoBotPage() {
             {trades.map((t) => (
               <div
                 key={t.id}
-                className="flex items-center justify-between py-2.5 px-3 -mx-3 rounded-lg hover:bg-[var(--surface-hover)]/50 transition-colors"
+                className="flex flex-col sm:flex-row sm:items-center justify-between py-2.5 px-3 -mx-3 rounded-lg hover:bg-[var(--surface-hover)]/50 transition-colors gap-1.5 sm:gap-0"
               >
                 <div className="flex items-center gap-3">
                   <span
@@ -510,15 +510,15 @@ export default function AutoBotPage() {
                     @ ${t.entry_price.toLocaleString()}
                   </span>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3 md:gap-4 pl-8 sm:pl-0 flex-wrap">
                   <span className="text-[11px] text-gray-400 font-mono">${t.size_usd.toFixed(0)}</span>
-                  <div className="w-12 h-1.5 rounded-full bg-[var(--surface)] overflow-hidden">
+                  <div className="w-12 h-1.5 rounded-full bg-[var(--surface)] overflow-hidden hidden sm:block">
                     <div
                       className="h-full rounded-full bg-[var(--wolf-amber)]"
                       style={{ width: `${t.conviction}%` }}
                     />
                   </div>
-                  <span className="text-[11px] text-gray-400 font-mono w-8 text-right">{t.conviction}%</span>
+                  <span className="text-[11px] text-gray-400 font-mono">{t.conviction}%</span>
                   <span className={`text-[10px] font-semibold px-2 py-0.5 rounded ${
                     t.status === "open" ? "bg-[var(--wolf-emerald)]/15 text-[var(--wolf-emerald)]" : "bg-[var(--surface)] text-gray-400"
                   }`}>

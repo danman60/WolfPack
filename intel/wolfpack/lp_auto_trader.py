@@ -474,6 +474,21 @@ class LPAutoTrader:
                 {"name": c.name, "apr": c.fee_apr, "score": c.score}
                 for c in candidates[:5]
             ],
+            "position_details": [
+                {
+                    "pair": f"{p.token0_symbol}/{p.token1_symbol}",
+                    "pool": p.pool_address[:10],
+                    "status": p.status,
+                    "liquidity_usd": round(p.liquidity_usd, 2),
+                    "fees_earned": round(p.fees_earned_usd, 2),
+                    "il_pct": round(p.il_pct, 2),
+                    "il_usd": round(p.il_usd, 2),
+                    "net_pnl": round(p.fees_earned_usd - p.il_usd, 2),
+                    "in_range": p.tick_lower <= p.current_tick <= p.tick_upper,
+                }
+                for p in self.engine.portfolio.positions
+                if p.status != "closed"
+            ],
         }
 
     def add_pool(self, pool_address: str) -> None:

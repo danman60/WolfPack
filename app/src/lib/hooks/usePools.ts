@@ -137,6 +137,52 @@ export function usePoolScreening(limit = 20) {
 }
 
 // ---------------------------------------------------------------------------
+// LP Autobot Status
+// ---------------------------------------------------------------------------
+
+interface LPPositionDetail {
+  pair: string;
+  pool: string;
+  status: string;
+  liquidity_usd: number;
+  fees_earned: number;
+  il_pct: number;
+  il_usd: number;
+  net_pnl: number;
+  in_range: boolean;
+}
+
+interface LPStatus {
+  enabled: boolean;
+  paper_mode: boolean;
+  equity: number;
+  positions: number;
+  max_positions: number;
+  total_fees: number;
+  total_il: number;
+  realized_pnl: number;
+  watched_pools: number;
+  active_il_hedges: number;
+  total_hedge_usd: number;
+  scanner_candidates: number;
+  top_pools: { name: string; apr: number; score: number }[];
+  position_details: LPPositionDetail[];
+}
+
+export function useLPStatus() {
+  return useQuery<LPStatus | null>({
+    queryKey: ["lp-status"],
+    queryFn: async () => {
+      const res = await fetch("/intel/lp/status");
+      if (!res.ok) return null;
+      return res.json() as Promise<LPStatus>;
+    },
+    refetchInterval: 30_000,
+    retry: false,
+  });
+}
+
+// ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 

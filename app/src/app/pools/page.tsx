@@ -136,9 +136,9 @@ export default function PoolsPage() {
   const positionCount = positions?.length ?? 0;
 
   return (
-    <div className="space-y-7">
+    <div className="space-y-5 md:space-y-7">
       {/* Header */}
-      <div className="page-header flex items-center justify-between">
+      <div className="page-header flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="page-title">LP Pool Manager</h1>
           <p className="page-subtitle">
@@ -149,20 +149,20 @@ export default function PoolsPage() {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="wolf-card stat-card stat-card-purple p-5">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
+        <div className="wolf-card stat-card stat-card-purple p-4 md:p-5">
           <p className="text-[11px] text-gray-500 uppercase tracking-wider font-medium">Active Positions</p>
           <p className="text-2xl font-bold text-[var(--wolf-purple)] mt-2 tracking-tight">
             {isConnected ? positionCount : "--"}
           </p>
         </div>
-        <div className="wolf-card stat-card stat-card-blue p-5">
+        <div className="wolf-card stat-card stat-card-blue p-4 md:p-5">
           <p className="text-[11px] text-gray-500 uppercase tracking-wider font-medium">Top Pools Loaded</p>
           <p className="text-2xl font-bold text-[var(--wolf-blue)] mt-2 tracking-tight">
             {pools?.length ?? "--"}
           </p>
         </div>
-        <div className="wolf-card stat-card stat-card-emerald p-5">
+        <div className="wolf-card stat-card stat-card-emerald p-4 md:p-5">
           <p className="text-[11px] text-gray-500 uppercase tracking-wider font-medium">Filtered Results</p>
           <p className="text-2xl font-bold text-[var(--wolf-emerald)] mt-2 tracking-tight">
             {displayedPools.length}
@@ -172,7 +172,7 @@ export default function PoolsPage() {
 
       {/* User Positions (wallet connected) */}
       {isConnected && positions && positions.length > 0 && (
-        <div className="wolf-card p-6">
+        <div className="wolf-card p-4 md:p-6">
           <div className="flex items-center gap-2 mb-5">
             <div className="w-1 h-4 rounded-full bg-[var(--wolf-purple)]" />
             <h2 className="section-title">Your Positions</h2>
@@ -187,7 +187,7 @@ export default function PoolsPage() {
 
       {/* Wallet prompt when not connected */}
       {!isConnected && (
-        <div className="wolf-card p-6">
+        <div className="wolf-card p-4 md:p-6">
           <h2 className="section-title mb-2">Your Positions</h2>
           <div className="empty-state">
             Connect your wallet to view your Uniswap V3 LP positions.
@@ -196,15 +196,15 @@ export default function PoolsPage() {
       )}
 
       {/* Pool Browser */}
-      <div className="wolf-card p-6">
-        <div className="flex items-center justify-between mb-5">
+      <div className="wolf-card p-4 md:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
           <div className="flex items-center gap-2">
             <div className="w-1 h-4 rounded-full bg-[var(--wolf-blue)]" />
             <h2 className="section-title">Pool Browser</h2>
           </div>
 
           {/* Fee tier filter */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 flex-wrap">
             {FEE_FILTERS.map((f) => (
               <button
                 key={f.value}
@@ -248,7 +248,7 @@ export default function PoolsPage() {
 
         {/* Pool table */}
         {!poolsLoading && !poolsError && (
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto -mx-4 md:mx-0 px-4 md:px-0">
             <table className="w-full min-w-[700px] text-sm">
               <thead>
                 <tr className="border-b border-[var(--border)]">
@@ -526,7 +526,7 @@ function PositionCard({ position }: { position: SubgraphPosition }) {
 
           {/* Action buttons */}
           {hasLiquidity && (
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2 md:gap-3">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -691,25 +691,25 @@ function AddLiquidityPanel({ pool }: { pool: SubgraphPool }) {
         </div>
       </div>
 
-      <div className="flex items-center gap-3 mt-3">
+      <div className="flex flex-wrap items-center gap-2 md:gap-3 mt-3">
         <button
           onClick={() => approve0.approve(toTokenUnits(amount0 || "0", d0))}
           disabled={!amount0 || approve0.isPending || approve0.isConfirming}
-          className="px-3 py-1.5 bg-[var(--wolf-blue)]/20 text-[var(--wolf-blue)] rounded text-xs font-semibold hover:bg-[var(--wolf-blue)]/30 transition disabled:opacity-50"
+          className="px-3 py-2 min-h-[44px] bg-[var(--wolf-blue)]/20 text-[var(--wolf-blue)] rounded text-xs font-semibold hover:bg-[var(--wolf-blue)]/30 transition disabled:opacity-50"
         >
           {approve0.isPending ? "Signing..." : approve0.isConfirming ? "Confirming..." : `Approve ${pool.token0.symbol}`}
         </button>
         <button
           onClick={() => approve1.approve(toTokenUnits(amount1 || "0", d1))}
           disabled={!amount1 || approve1.isPending || approve1.isConfirming}
-          className="px-3 py-1.5 bg-[var(--wolf-blue)]/20 text-[var(--wolf-blue)] rounded text-xs font-semibold hover:bg-[var(--wolf-blue)]/30 transition disabled:opacity-50"
+          className="px-3 py-2 min-h-[44px] bg-[var(--wolf-blue)]/20 text-[var(--wolf-blue)] rounded text-xs font-semibold hover:bg-[var(--wolf-blue)]/30 transition disabled:opacity-50"
         >
           {approve1.isPending ? "Signing..." : approve1.isConfirming ? "Confirming..." : `Approve ${pool.token1.symbol}`}
         </button>
         <button
           onClick={handleMint}
           disabled={!amount0 || !amount1 || !priceLower || !priceUpper || mintPosition.isPending || mintPosition.isConfirming}
-          className="px-4 py-1.5 bg-[var(--wolf-emerald)]/20 text-[var(--wolf-emerald)] rounded text-xs font-semibold hover:bg-[var(--wolf-emerald)]/30 transition disabled:opacity-50"
+          className="px-4 py-2 min-h-[44px] bg-[var(--wolf-emerald)]/20 text-[var(--wolf-emerald)] rounded text-xs font-semibold hover:bg-[var(--wolf-emerald)]/30 transition disabled:opacity-50"
         >
           {mintPosition.isPending ? "Signing..." : mintPosition.isConfirming ? "Confirming..." : "Mint Position"}
         </button>

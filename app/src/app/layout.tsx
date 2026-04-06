@@ -21,7 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Web3Providers>
           <ExchangeProvider>
             <Nav />
-            <main className="max-w-7xl mx-auto px-5 py-8">{children}</main>
+            <main className="max-w-7xl mx-auto px-4 py-5 md:px-5 md:py-8">{children}</main>
             <Toaster
               theme="dark"
               position="bottom-right"

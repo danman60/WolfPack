@@ -52,12 +52,18 @@
 
 /* ─── Base ─── */
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  touch-action: manipulation;
 }
 
 /* Atmospheric background — radial glow + subtle grid */
@@ -377,11 +383,17 @@ button:disabled {
 }
 
 .page-title {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 700;
   color: white;
   letter-spacing: -0.03em;
   line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+  .page-title {
+    font-size: 24px;
+  }
 }
 
 .page-subtitle {
@@ -412,10 +424,39 @@ thead th {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 48px 24px;
+  padding: 32px 16px;
   color: #4b5563;
   font-size: 13px;
   text-align: center;
+}
+
+@media (min-width: 768px) {
+  .empty-state {
+    padding: 48px 24px;
+  }
+}
+
+/* ─── Mobile nav animation ─── */
+
+.mobile-nav-enter {
+  animation: slideDown 0.2s ease-out both;
+}
+
+/* ─── Mobile-specific utilities ─── */
+
+@media (max-width: 767px) {
+  /* Horizontal scroll wrapper for tables on mobile */
+  .mobile-scroll-x {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Card-based layout for data rows on mobile */
+  .mobile-card-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
 }
 
 /* ─── Tooltip override for recharts ─── */

@@ -47,7 +47,7 @@ export default function PortfolioPage() {
     : 0;
 
   return (
-    <div className="space-y-7">
+    <div className="space-y-5 md:space-y-7">
       <div className="page-header">
         <h1 className="page-title">Portfolio</h1>
         <p className="page-subtitle">
@@ -56,7 +56,7 @@ export default function PortfolioPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
         <StatCard
           label="Equity"
           value={isActive ? `$${portfolio.equity.toLocaleString()}` : "--"}
@@ -99,13 +99,13 @@ export default function PortfolioPage() {
       </div>
 
       {/* Equity Curve */}
-      <div className="wolf-card p-6">
+      <div className="wolf-card p-4 md:p-6">
         <div className="flex items-center gap-2 mb-5">
           <div className="w-1 h-4 rounded-full bg-[var(--wolf-emerald)]" />
           <h2 className="section-title">Equity Curve</h2>
         </div>
         {chartData.length > 1 ? (
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={250} className="md:!h-[300px]">
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
               <XAxis
@@ -146,7 +146,7 @@ export default function PortfolioPage() {
       </div>
 
       {/* Open Positions */}
-      <div className="wolf-card p-6">
+      <div className="wolf-card p-4 md:p-6">
         <h2 className="section-title mb-5">
           Open Positions ({positions.length})
         </h2>
@@ -164,9 +164,9 @@ export default function PortfolioPage() {
               }) => (
                 <div
                   key={pos.symbol}
-                  className="flex items-center justify-between py-3 border-b border-[var(--border)] last:border-0"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between py-3 border-b border-[var(--border)] last:border-0 gap-2 sm:gap-0"
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3 md:gap-4">
                     <span
                       className={`px-3 py-1 rounded text-xs font-bold uppercase ${
                         pos.direction === "long"
@@ -186,9 +186,9 @@ export default function PortfolioPage() {
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-6">
+                  <div className="flex items-center gap-4 md:gap-6 pl-8 sm:pl-0 flex-wrap sm:flex-nowrap">
                     <div className="text-right">
-                      <div className="text-xs text-gray-500">Unrealized P&L</div>
+                      <div className="text-xs text-gray-500">P&L</div>
                       <div
                         className={`text-sm font-bold ${
                           pos.unrealized_pnl >= 0
@@ -200,7 +200,7 @@ export default function PortfolioPage() {
                         {pos.unrealized_pnl.toFixed(2)}
                       </div>
                     </div>
-                    <div className="text-right">
+                    <div className="text-right hidden sm:block">
                       <div className="text-xs text-gray-500">Current</div>
                       <div className="text-sm text-white font-mono">
                         ${pos.current_price.toLocaleString()}
@@ -214,7 +214,7 @@ export default function PortfolioPage() {
                         })
                       }
                       disabled={closeMutation.isPending}
-                      className="px-3 py-1.5 bg-[var(--wolf-red)]/20 text-[var(--wolf-red)] rounded text-xs font-semibold hover:bg-[var(--wolf-red)]/30 transition disabled:opacity-50"
+                      className="px-3 py-2 min-h-[44px] bg-[var(--wolf-red)]/20 text-[var(--wolf-red)] rounded text-xs font-semibold hover:bg-[var(--wolf-red)]/30 transition disabled:opacity-50"
                     >
                       Close
                     </button>
@@ -233,7 +233,7 @@ export default function PortfolioPage() {
       </div>
 
       {/* Trade History */}
-      <div className="wolf-card p-6">
+      <div className="wolf-card p-4 md:p-6">
         <div className="flex items-center gap-2 mb-5">
           <div className="w-1 h-4 rounded-full bg-[var(--wolf-amber)]" />
           <h2 className="section-title">Trade History</h2>
@@ -246,9 +246,9 @@ export default function PortfolioPage() {
             {trades.map((t) => (
               <div
                 key={t.id}
-                className="flex items-center justify-between py-3 border-b border-[var(--border)] last:border-0"
+                className="flex flex-col sm:flex-row sm:items-center justify-between py-3 border-b border-[var(--border)] last:border-0 gap-2 sm:gap-0"
               >
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3 md:gap-4">
                   <span
                     className={`px-3 py-1 rounded text-xs font-bold uppercase ${
                       t.direction === "long"
@@ -265,7 +265,7 @@ export default function PortfolioPage() {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-6">
+                <div className="flex items-center gap-4 md:gap-6 pl-8 sm:pl-0 flex-wrap">
                   <div className="text-right">
                     <div className="text-xs text-gray-500">Size</div>
                     <div className="text-sm text-gray-300 font-mono">${t.size_usd.toFixed(0)}</div>
@@ -276,7 +276,7 @@ export default function PortfolioPage() {
                       {t.pnl_usd >= 0 ? "+" : ""}${t.pnl_usd.toFixed(2)}
                     </div>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right hidden sm:block">
                     <div className="text-xs text-gray-500">Closed</div>
                     <div className="text-xs text-gray-400">{new Date(t.closed_at).toLocaleDateString()}</div>
                   </div>
