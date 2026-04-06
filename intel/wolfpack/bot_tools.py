@@ -72,6 +72,30 @@ async def get_pnl_executor() -> dict:
     }
 
 
+def _get_lp_snapshot() -> dict:
+    """Pull current LP portfolio snapshot."""
+    try:
+        from wolfpack.lp_auto_trader import LPAutoTrader
+        # Access the singleton LP trader from api module
+        import wolfpack.api as api_mod
+        lp = getattr(api_mod, "_lp_trader", None)
+        if lp is None or not lp.enabled:
+            return {}
+        status = lp.get_status()
+        return {
+            "lp_equity": status.get("equity", 0),
+            "lp_positions": status.get("positions", 0),
+            "lp_total_fees": status.get("total_fees", 0),
+            "lp_total_il": status.get("total_il", 0),
+            "lp_realized_pnl": status.get("realized_pnl", 0),
+            "lp_net_pnl": round(status.get("total_fees", 0) - status.get("total_il", 0) + status.get("realized_pnl", 0), 2),
+            "lp_hedges": status.get("active_il_hedges", 0),
+            "lp_hedge_usd": status.get("total_hedge_usd", 0),
+        }
+    except Exception:
+        return {}
+
+
 async def get_profit_executor(hours: int = 24) -> dict:
     """Get P&L for a time window from trade history DB (deduplicated)."""
     from wolfpack.db import get_db
@@ -82,7 +106,7 @@ async def get_profit_executor(hours: int = 24) -> dict:
 
         if result.data and len(result.data) == 1:
             row = result.data[0]
-            return {
+            perp = {
                 "hours": hours,
                 "total_pnl": float(row.get("total_pnl") or 0),
                 "trades": int(row.get("unique_trades") or 0),
@@ -94,6 +118,11 @@ async def get_profit_executor(hours: int = 24) -> dict:
                 "best_trade": float(row.get("best_trade") or 0),
                 "worst_trade": float(row.get("worst_trade") or 0),
             }
+            lp = _get_lp_snapshot()
+            if lp:
+                perp["lp"] = lp
+                perp["combined_pnl"] = round(perp["total_pnl"] + lp.get("lp_net_pnl", 0), 2)
+            return perp
 
         # Fallback: client-side dedup if RPC not available
         result = db.table("wp_trade_history").select(
@@ -118,7 +147,7 @@ async def get_profit_executor(hours: int = 24) -> dict:
         winners = [p for p in pnls if p > 0]
         losers = [p for p in pnls if p < 0]
 
-        return {
+        perp = {
             "hours": hours,
             "total_pnl": round(sum(pnls), 2),
             "trades": len(unique_trades),
@@ -130,6 +159,11 @@ async def get_profit_executor(hours: int = 24) -> dict:
             "best_trade": round(max(pnls), 2) if pnls else 0,
             "worst_trade": round(min(pnls), 2) if pnls else 0,
         }
+        lp = _get_lp_snapshot()
+        if lp:
+            perp["lp"] = lp
+            perp["combined_pnl"] = round(perp["total_pnl"] + lp.get("lp_net_pnl", 0), 2)
+        return perp
     except Exception as e:
         return {"error": str(e)}
 
