@@ -9,7 +9,12 @@ Tools are defined in OpenAI function-calling JSON schema format with:
 import asyncio
 import json
 from typing import Any
-import httpx
+try:
+    import httpx as _http_lib
+    _HTTP = "httpx"
+except ImportError:
+    import requests as _http_lib  # type: ignore
+    _HTTP = "requests"
 
 from wolfpack.config import settings
 from wolfpack.bot_permissions import check_permission
@@ -107,17 +112,19 @@ def _get_benchmark(hours: int, total_pnl: float, avg_deployed: float) -> dict | 
         now_ms = int(_time.time() * 1000)
         start_ms = now_ms - (hours * 3600 * 1000)
 
+        def _post(url, payload):
+            if _HTTP == "httpx":
+                r = _http_lib.post(url, json=payload, timeout=10)
+            else:
+                r = _http_lib.post(url, json=payload, timeout=10)
+            return r.json()
+
         # Fetch BTC candles for the window — first candle gives start price
-        resp = httpx.post(
-            "https://api.hyperliquid.xyz/info",
-            json={
-                "type": "candleSnapshot",
-                "req": {"coin": "BTC", "interval": "1h",
-                        "startTime": start_ms, "endTime": start_ms + 3600_000},
-            },
-            timeout=10,
-        )
-        candles = resp.json()
+        candles = _post("https://api.hyperliquid.xyz/info", {
+            "type": "candleSnapshot",
+            "req": {"coin": "BTC", "interval": "1h",
+                    "startTime": start_ms, "endTime": start_ms + 3600_000},
+        })
         if not candles or not isinstance(candles, list) or len(candles) == 0:
             return None
         btc_then = float(candles[0].get("o") or candles[0].get("open", 0))
@@ -125,12 +132,7 @@ def _get_benchmark(hours: int, total_pnl: float, avg_deployed: float) -> dict | 
             return None
 
         # Current BTC mid price
-        resp2 = httpx.post(
-            "https://api.hyperliquid.xyz/info",
-            json={"type": "allMids"},
-            timeout=10,
-        )
-        mids = resp2.json()
+        mids = _post("https://api.hyperliquid.xyz/info", {"type": "allMids"})
         btc_now = float(mids.get("BTC", 0))
         if btc_now <= 0:
             return None
