@@ -207,11 +207,17 @@ class PaperTradingEngine:
 
     def check_stops(self, prices: dict[str, float]) -> list[tuple[str, str]]:
         """Check stop-losses and take-profits against current prices.
+        Skips positions opened less than 60 seconds ago to prevent same-cycle TP/SL triggers.
         Returns list of (symbol, reason) tuples for closed positions."""
+        from datetime import datetime, timezone
+        now = datetime.now(timezone.utc)
         triggered: list[tuple[str, str]] = []
         for pos in list(self.portfolio.positions):
             price = prices.get(pos.symbol)
             if price is None:
+                continue
+            # Skip positions opened in the same cycle (prevents lookahead artifacts)
+            if (now - pos.opened_at).total_seconds() < 60:
                 continue
             reason = self._check_stop_trigger(pos, price, price)
             if reason:
