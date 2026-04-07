@@ -2,6 +2,7 @@
 
 import json
 import logging
+import os
 from abc import ABC, abstractmethod
 from datetime import datetime, timezone
 from typing import Any
@@ -12,6 +13,24 @@ from wolfpack.config import settings
 from wolfpack.response_parser import extract_json
 
 logger = logging.getLogger(__name__)
+
+
+# Load API keys from ~/.env.keys
+_env_keys: dict[str, str] = {}
+try:
+    with open(os.path.expanduser("~/.env.keys")) as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                key, _, value = line.partition("=")
+                _env_keys[key.strip()] = value.strip()
+except FileNotFoundError:
+    pass
+
+
+def _get_key(key_name: str) -> str:
+    """Load API key from ~/.env.keys file."""
+    return _env_keys.get(key_name, "")
 
 
 class AgentOutput(BaseModel):
@@ -129,24 +148,44 @@ class Agent(ABC):
             return json.dumps({"summary": "No LLM API key configured", "conviction": 0})
 
     async def _call_llm_structured(self, prompt: str, schema: dict) -> dict:
-        """Call LLM with structured output enforcement. Returns parsed dict.
+        """Call LLM with provider fallback: DeepSeek → OpenRouter → Claude.
 
         Anthropic: uses tool_use to guarantee valid JSON matching schema.
         DeepSeek: uses response_format=json_object.
         DeepSeek-Reasoner (R1): uses text response + JSON extraction (no json_object support).
         Falls back to text parsing on error.
         """
-        if settings.anthropic_api_key:
-            return await self._call_anthropic_structured(prompt, schema)
-        elif settings.deepseek_api_key:
-            api_key, base_url, chat_model, reasoner_model = self._get_deepseek_client_config()
-            model = self.model_override or chat_model
-            if model in (settings.deepseek_reasoner_model, reasoner_model):
-                return await self._call_deepseek_reasoner(prompt)
-            return await self._call_deepseek_structured(prompt)
-        else:
-            logger.warning(f"{self.name}: No LLM API key configured")
-            return {"summary": "No LLM API key configured", "conviction": 0}
+        errors = []
+
+        # Try DeepSeek first
+        if settings.deepseek_api_key:
+            try:
+                api_key, base_url, chat_model, reasoner_model = self._get_deepseek_client_config()
+                model = self.model_override or chat_model
+                if model in (settings.deepseek_reasoner_model, reasoner_model):
+                    return await self._call_deepseek_reasoner(prompt)
+                return await self._call_deepseek_structured(prompt)
+            except Exception as e:
+                errors.append(f"DeepSeek: {e}")
+                logger.warning(f"{self.name}: DeepSeek failed, trying OpenRouter: {e}")
+
+        # Try OpenRouter
+        try:
+            return await self._call_openrouter_structured(prompt)
+        except Exception as e:
+            errors.append(f"OpenRouter: {e}")
+            logger.warning(f"{self.name}: OpenRouter failed, trying Anthropic: {e}")
+
+        # Try Anthropic
+        if settings.anthropic_api_key or _get_key("ANTHROPIC_API_KEY"):
+            try:
+                return await self._call_anthropic_structured(prompt, schema)
+            except Exception as e:
+                errors.append(f"Anthropic: {e}")
+                logger.warning(f"{self.name}: Anthropic also failed: {e}")
+
+        logger.error(f"{self.name}: All LLM providers failed: {errors}")
+        return {"summary": f"All providers failed: {'; '.join(errors)}", "conviction": 0}
 
     async def _call_anthropic(self, prompt: str) -> str:
         import anthropic
@@ -279,6 +318,40 @@ class Agent(ABC):
             return self._parse_llm_json(text)
         except Exception as e:
             logger.error(f"{self.name} DeepSeek-Reasoner error: {e}")
+            raise
+
+    async def _call_openrouter_structured(self, prompt: str) -> dict:
+        """Call OpenRouter with JSON mode for structured output.
+
+        OpenRouter uses OpenAI-compatible API format with response_format=json_object.
+        Falls back to text parsing on error.
+        """
+        from openai import AsyncOpenAI
+
+        api_key = os.environ.get("OPENROUTER_API_KEY") or _get_key("OPENROUTER_API_KEY")
+        if not api_key:
+            raise RuntimeError("No OpenRouter API key configured")
+
+        client = AsyncOpenAI(
+            api_key=api_key,
+            base_url="https://openrouter.ai/api/v1",
+        )
+        try:
+            response = await client.chat.completions.create(
+                model="deepseek/deepseek-chat",
+                messages=[
+                    {"role": "system", "content": self.system_prompt},
+                    {"role": "user", "content": prompt},
+                ],
+                max_tokens=1024,
+                temperature=0.3,
+                response_format={"type": "json_object"},
+            )
+            self._record_tokens("openrouter/deepseek-chat", response)
+            text = response.choices[0].message.content or "{}"
+            return self._parse_llm_json(text)
+        except Exception as e:
+            logger.error(f"{self.name} OpenRouter structured error: {e}")
             raise
 
     def _parse_llm_json(self, text: str) -> dict:
