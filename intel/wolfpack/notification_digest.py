@@ -27,6 +27,16 @@ class NotificationDigest:
         self._mode: str = "hourly"  # individual, hourly, daily, disabled
         self._interval_minutes: int = 60  # for hourly mode
         self._portfolio_snapshot: dict | None = None
+        # Recover unflushed count on startup
+        try:
+            from wolfpack.db import get_db
+            db = get_db()
+            result = db.table("wp_notification_buffer").select("id", count="exact").eq("flushed", False).execute()
+            count = result.count or 0
+            if count > 0:
+                logger.info(f"[digest] Recovered {count} unflushed notifications from DB")
+        except Exception:
+            pass  # DB not available yet at startup — that's fine
 
     def set_mode(self, mode: str) -> None:
         """Set digest mode: individual, hourly, daily, disabled."""
@@ -55,47 +65,54 @@ class NotificationDigest:
         self._portfolio_snapshot = {"perp": perp, "lp": lp}
 
     def add(self, notification: dict) -> None:
-        """Add a notification to the buffer.
-
-        notification dict should have:
-        - type: "trade_open", "trade_close", "stop_triggered", "stop_adjusted",
-                "rotation_exit", "rebalance", "fee_harvest", "fee_milestone",
-                "out_of_range", "lp_open", "lp_close", "lp_alert"
-        - symbol: str
-        - direction: str (for perp)
-        - details: str (formatted message)
-        - timestamp: datetime
-        """
+        """Add a notification — persists to DB, falls back to in-memory."""
         notification.setdefault("timestamp", datetime.now(timezone.utc))
-        self._buffer.append(notification)
+        # Persist to DB
+        try:
+            from wolfpack.db import get_db
+            import json
+            db = get_db()
+            # Convert datetime to string for JSON serialization
+            notif_json = notification.copy()
+            if isinstance(notif_json.get("timestamp"), datetime):
+                notif_json["timestamp"] = notif_json["timestamp"].isoformat()
+            db.table("wp_notification_buffer").insert({
+                "notification": notif_json,
+            }).execute()
+        except Exception as e:
+            logger.warning(f"[digest] DB write failed, using in-memory fallback: {e}")
+            self._buffer.append(notification)
 
     async def maybe_flush(self) -> bool:
         """Check if it's time to flush and send digest. Returns True if flushed."""
-        if self._mode == "disabled" or not self._buffer:
+        if self._mode == "disabled":
+            return False
+
+        # Load unflushed notifications from DB
+        buffer = self._load_unflushed()
+        if not buffer:
             return False
 
         if self._mode == "individual":
-            # Individual mode: flush each notification immediately
-            for notif in self._buffer:
+            for notif in buffer:
                 try:
                     from wolfpack.notifications import send_telegram
                     await send_telegram(notif["details"])
                 except Exception:
                     pass
-            self._buffer.clear()
+            self._mark_flushed(buffer)
             self._last_flush = datetime.now(timezone.utc)
             return True
 
-        # Digest modes: check interval
         now = datetime.now(timezone.utc)
         elapsed = (now - self._last_flush).total_seconds() / 60
-
         if self._mode == "hourly" and elapsed < self._interval_minutes:
             return False
         if self._mode == "daily" and elapsed < 1440:
             return False
 
-        # Time to flush
+        # Temporarily set self._buffer for _send_digest compatibility
+        self._buffer = buffer
         await self._send_digest()
         return True
 
@@ -238,13 +255,46 @@ class NotificationDigest:
         except Exception as e:
             logger.warning(f"[digest] Failed to send digest: {e}")
 
-        self._buffer.clear()
+        self._mark_flushed(self._buffer)
+        self._buffer = []
         self._last_flush = datetime.now(timezone.utc)
         self._portfolio_snapshot = None
 
     async def force_flush(self) -> None:
         """Force send digest now regardless of interval."""
         await self._send_digest()
+
+    def _load_unflushed(self) -> list[dict]:
+        """Load unflushed notifications from DB, falling back to in-memory buffer."""
+        try:
+            from wolfpack.db import get_db
+            db = get_db()
+            result = db.table("wp_notification_buffer").select("*").eq("flushed", False).order("created_at").execute()
+            if result.data:
+                notifications = []
+                for row in result.data:
+                    notif = row["notification"]
+                    notif["_db_id"] = row["id"]
+                    notifications.append(notif)
+                # Also include any in-memory fallback items
+                notifications.extend(self._buffer)
+                return notifications
+        except Exception as e:
+            logger.warning(f"[digest] DB read failed, using in-memory buffer: {e}")
+        return list(self._buffer)
+
+    def _mark_flushed(self, buffer: list[dict]) -> None:
+        """Mark notifications as flushed in DB."""
+        db_ids = [n.get("_db_id") for n in buffer if n.get("_db_id")]
+        if db_ids:
+            try:
+                from wolfpack.db import get_db
+                db = get_db()
+                db.table("wp_notification_buffer").update({"flushed": True}).in_("id", db_ids).execute()
+            except Exception as e:
+                logger.warning(f"[digest] Failed to mark notifications as flushed: {e}")
+        # Clear in-memory fallback buffer
+        self._buffer.clear()
 
 
 def _fmt_pnl(value: float) -> str:
