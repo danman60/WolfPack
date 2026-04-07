@@ -7,7 +7,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Any
 
 import httpx
-from fastapi import BackgroundTasks, Body, Depends, FastAPI, HTTPException
+from fastapi import BackgroundTasks, Body, Depends, FastAPI, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
@@ -1189,8 +1189,9 @@ async def flush_notifications(_auth: None = Depends(require_auth)):
 
 
 @app.get("/market/orderbook")
-async def market_orderbook(symbol: str = "BTC", depth: int = 20, exchange: str = "hyperliquid"):
+async def market_orderbook(response: Response, symbol: str = "BTC", depth: int = 20, exchange: str = "hyperliquid"):
     """Fetch orderbook from exchange adapter."""
+    response.headers["Cache-Control"] = "public, max-age=10"
     try:
         from wolfpack.exchanges import get_exchange
 
@@ -1334,12 +1335,14 @@ async def trigger_prediction_scoring(days: int = 7, _auth: None = Depends(requir
 
 @app.get("/market/candles")
 async def market_candles(
+    response: Response,
     symbol: str = "BTC",
     interval: str = "1h",
     limit: int = 100,
     exchange: str = "hyperliquid",
 ):
     """Fetch candlestick data from the exchange adapter."""
+    response.headers["Cache-Control"] = "public, max-age=60"
     try:
         from wolfpack.exchanges import get_exchange
 
@@ -1356,8 +1359,9 @@ async def market_candles(
 
 
 @app.get("/market/price")
-async def market_price(symbol: str = "BTC", exchange: str = "hyperliquid"):
+async def market_price(response: Response, symbol: str = "BTC", exchange: str = "hyperliquid"):
     """Fetch latest price for a symbol."""
+    response.headers["Cache-Control"] = "public, max-age=10"
     try:
         from wolfpack.exchanges import get_exchange
 
@@ -1378,8 +1382,9 @@ async def market_price(symbol: str = "BTC", exchange: str = "hyperliquid"):
 
 
 @app.get("/market/markets")
-async def market_list(exchange: str = "hyperliquid"):
+async def market_list(response: Response, exchange: str = "hyperliquid"):
     """Fetch available markets from exchange."""
+    response.headers["Cache-Control"] = "public, max-age=300"
     try:
         from wolfpack.exchanges import get_exchange
 
