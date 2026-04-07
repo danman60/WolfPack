@@ -55,11 +55,11 @@ class Settings(BaseSettings):
 
     # Trading hours (UTC) — only open new positions during this window
     trading_hours_start: int = 0
-    trading_hours_end: int = 12
+    trading_hours_end: int = 18
 
     # Position size sweet spot (USD)
-    min_position_usd: float = 3000.0
-    max_position_usd: float = 5000.0
+    min_position_usd: float = 500.0
+    max_position_usd: float = 7000.0
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 
