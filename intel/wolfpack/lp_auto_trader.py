@@ -68,6 +68,23 @@ class LPAutoTrader:
 
         try:
             self.engine.restore_from_snapshot()
+            # Purge stale Ethereum mainnet positions when running on Arbitrum
+            if settings.lp_chain == "arbitrum":
+                _ETH_MAINNET_POOLS = {
+                    "0x11b815efb8f581194ae79006d24e0d814b7697f6",
+                    "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
+                    "0xcbcdf9626bc03e24f779434178a73a0b4bad62ed",
+                    "0x3416cf6c708da44db2624d63ea0aaef7113527c6",
+                }
+                stale = [
+                    p for p in self.engine.portfolio.positions
+                    if p.pool_address.lower() in _ETH_MAINNET_POOLS and p.status != "closed"
+                ]
+                for p in stale:
+                    self.engine.close_position(p.pool_address)
+                    logger.warning(f"[lp-trader] Purged stale Ethereum mainnet position: {p.pool_address[:10]}")
+                if stale:
+                    logger.info(f"[lp-trader] Cleared {len(stale)} Ethereum mainnet positions (chain is arbitrum)")
             logger.info("[lp-trader] Restored from snapshot")
         except Exception as e:
             logger.warning(f"[lp-trader] Could not restore from snapshot: {e}")
@@ -210,6 +227,7 @@ class LPAutoTrader:
                 logger.warning(f"[lp-trader] Error processing pool {pool_address[:10]}: {e}")
 
         # Rebalance evaluation — check active positions against recommended ranges
+        self.rebalance_engine.advance_tick()  # once per cycle, not per position
         for pos in list(self.engine.portfolio.positions):
             if pos.status not in ("active", "out_of_range"):
                 continue
@@ -223,7 +241,7 @@ class LPAutoTrader:
                     ema_trend_score=ema_trend,
                     confidence=confidence,
                 )
-                action = self.rebalance_engine.evaluate(pos, recommendation)
+                action = self.rebalance_engine.evaluate(pos, recommendation, pool_address=pos.pool_address)
                 if action and recommendation:
                     # Close old position
                     net_pnl = self.engine.close_position(pos.pool_address)
@@ -240,7 +258,7 @@ class LPAutoTrader:
                         current_tick=pos.current_tick,
                         current_price_ratio=safe_ratio,
                     )
-                    self.rebalance_engine.record_rebalance(pos.position_id)
+                    self.rebalance_engine.record_rebalance(pos.position_id, pool_address=pos.pool_address)
                     # Log rebalance event to wp_lp_events
                     self._store_rebalance_event(action, net_pnl)
                     logger.info(f"[lp-auto] Rebalanced {action['pair']}: {action['reason']}, net PnL ${net_pnl:.2f}")

@@ -164,10 +164,13 @@ class LPPoolScanner:
         return "stable"
 
     async def _fetch_top_pools(self) -> list:
-        """Fetch top Uniswap V3 Ethereum pools from GeckoTerminal."""
+        """Fetch top Uniswap V3 pools from GeckoTerminal for the configured chain."""
         try:
             network = _CHAIN_GECKO_NETWORK.get(settings.lp_chain, "arbitrum")
-            url = f"{GECKO_BASE}/networks/{network}/dexes/uniswap_v3/pools"
+            # Use network-wide top pools (by volume), then filter to Uniswap V3.
+            # The dex-specific endpoint uses chain-dependent identifiers
+            # (e.g. uniswap_v3_arbitrum) which break silently; this is more robust.
+            url = f"{GECKO_BASE}/networks/{network}/pools"
             params = {"page": 1, "sort": "h24_volume_usd_desc"}
             async with httpx.AsyncClient(timeout=15.0) as client:
                 resp = await client.get(url, params=params, headers={"Accept": "application/json"})
@@ -175,7 +178,15 @@ class LPPoolScanner:
                     logger.warning(f"[lp-scanner] GeckoTerminal top pools failed: {resp.status_code}")
                     return []
                 data = resp.json()
-                return data.get("data", [])
+                pools = data.get("data", [])
+                # Filter to Uniswap V3 pools only
+                uniswap_pools = [
+                    p for p in pools
+                    if "uniswap" in (p.get("relationships", {}).get("dex", {}).get("data", {}).get("id", "")).lower()
+                    and "v3" in (p.get("relationships", {}).get("dex", {}).get("data", {}).get("id", "")).lower()
+                ]
+                logger.info(f"[lp-scanner] Fetched {len(pools)} pools, {len(uniswap_pools)} are Uniswap V3")
+                return uniswap_pools if uniswap_pools else pools  # fallback to all if no uni v3 found
         except Exception as e:
             logger.warning(f"[lp-scanner] Fetch error: {e}")
             return []
