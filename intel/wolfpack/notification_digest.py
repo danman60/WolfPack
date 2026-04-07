@@ -169,37 +169,52 @@ class NotificationDigest:
 
             # ── BUILD MESSAGE ──
             combined_equity = perp_equity + lp_equity
+            combined_start = 25000.0  # perp $10K + LP $15K
+            total_return_pct = ((combined_equity - combined_start) / combined_start) * 100
 
             lines: list[str] = []
             lines.append(f"\U0001f43a <b>WOLFPACK P&L</b> \U0001f43a")
             lines.append(f"{vibe}")
             lines.append("")
-            lines.append(f"\U0001f4b5 This 4H: <b>{_fmt_pnl(this_4h)}</b>")
-            lines.append(f"\U0001f4ca Prev 4H: {_fmt_pnl(prev_4h)}  {trend}")
 
-            # Perp/LP split for this period
-            perp_part = f"\u26a1 Perp {_fmt_compact(perp_this_4h['pnl'])}"
+            # Hero: this 4H
+            lines.append(f"\U0001f4b5 <b>Last 4 Hours: {_fmt_pnl(this_4h)}</b>")
             if perp_this_4h['trades'] > 0:
-                wr = round(perp_this_4h['wins'] / perp_this_4h['trades'] * 100) if perp_this_4h['trades'] > 0 else 0
-                perp_part += f" ({perp_this_4h['trades']}t {wr}%W)"
-            lines.append(f"{perp_part}  \U0001f4a7 LP {_fmt_compact(lp_this_4h)}")
+                wr = round(perp_this_4h['wins'] / perp_this_4h['trades'] * 100)
+                lines.append(f"   \u26a1 Perps closed {perp_this_4h['trades']} trades ({perp_this_4h['wins']}W/{perp_this_4h['losses']}L, {wr}% win rate) for {_fmt_pnl(perp_this_4h['pnl'])}")
+            else:
+                lines.append(f"   \u26a1 Perps: no closed trades this period")
+            if lp_this_4h != 0:
+                lines.append(f"   \U0001f4a7 LP pools earned {_fmt_pnl(lp_this_4h)} in fees (net of IL)")
+            else:
+                lines.append(f"   \U0001f4a7 LP pools: holding steady")
             lines.append("")
 
-            # Rolling totals
-            lines.append(f"\U0001f552 8H: {_fmt_pnl(total_8h)}  |  12H: {_fmt_pnl(total_12h)}")
+            # Comparison to previous
+            lines.append(f"\U0001f4ca <b>vs Previous 4H: {_fmt_pnl(prev_4h)}</b>  {trend}")
+            if abs(delta) > 10:
+                if delta > 0:
+                    lines.append(f"   That's {_fmt_pnl(delta)} better than last period \U0001f4aa")
+                else:
+                    lines.append(f"   Down {_fmt_pnl(abs(delta))} from last period")
             lines.append("")
 
-            # State
-            lines.append(f"\U0001f4bc Portfolio: <b>${combined_equity:,.0f}</b>")
-            perp_line = f"\u26a1 ${perp_equity:,.0f}"
+            # Rolling context
+            lines.append(f"\U0001f552 <b>Rolling Totals</b>")
+            lines.append(f"   8H: {_fmt_pnl(total_8h)}  \u2022  12H: {_fmt_pnl(total_12h)}")
+            lines.append("")
+
+            # Portfolio state
+            lines.append(f"\U0001f4bc <b>Portfolio: ${combined_equity:,.0f}</b> ({total_return_pct:+.1f}% all-time)")
             if perp_positions > 0:
-                perp_line += f" \u2022 {perp_positions} open \u2022 {_fmt_pnl(perp_unrealized)} unreal"
-            lines.append(perp_line)
-            lines.append(f"\U0001f4a7 ${lp_equity:,.0f} \u2022 {lp_positions} pos \u2022 ${lp_fees:,.0f} fees")
+                lines.append(f"   \u26a1 Perps: ${perp_equity:,.0f} \u2022 {perp_positions} open positions \u2022 {_fmt_pnl(perp_unrealized)} unrealized")
+            else:
+                lines.append(f"   \u26a1 Perps: ${perp_equity:,.0f} \u2022 no open positions")
+            lines.append(f"   \U0001f4a7 LP: ${lp_equity:,.0f} \u2022 {lp_positions} pools \u2022 ${lp_fees:,.0f} total fees earned")
 
             msg = "\n".join(lines)
             await send_telegram(msg)
-            logger.info(f"[digest] P&L report sent (4H: {_fmt_compact(this_4h)}, {arrow} {_fmt_compact(delta)} vs prev)")
+            logger.info(f"[digest] P&L report sent (4H: {_fmt_compact(this_4h)}, {trend}, delta {_fmt_compact(delta)} vs prev)")
 
         except Exception as e:
             logger.warning(f"[digest] P&L report failed: {e}")
