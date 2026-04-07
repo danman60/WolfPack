@@ -79,24 +79,38 @@ class MeanReversionStrategy(Strategy):
 
         distance = (current_close - mean) / atr
 
-        # Long: price far below mean
+        # Liquidity sweep filter: only enter if a recent candle wicked beyond
+        # the local high/low then reversed (stop hunt / exhaustion pattern).
+        # Conservative: check last 5 candles for a sweep wick.
+        sweep_lookback = 5
+        recent = window[-sweep_lookback:]
+        highs = np.array([c.high for c in window[-mean_period:]], dtype=np.float64)
+        lows = np.array([c.low for c in window[-mean_period:]], dtype=np.float64)
+        local_high = np.max(highs[:-sweep_lookback]) if len(highs) > sweep_lookback else np.max(highs)
+        local_low = np.min(lows[:-sweep_lookback]) if len(lows) > sweep_lookback else np.min(lows)
+
+        # Long: price far below mean + recent wick below local low (sweep)
         if distance < -threshold_atr_mult:
+            swept_low = any(c.low < local_low and c.close > local_low for c in recent)
+            conviction = 70 if swept_low else 55
             return {
                 "symbol": "",
                 "direction": "long",
-                "conviction": 60,
+                "conviction": conviction,
                 "entry_price": current_close,
                 "stop_loss": round(current_close - atr * stop_atr_mult, 2),
                 "take_profit": round(mean, 2),
                 "size_pct": size_pct,
             }
 
-        # Short: price far above mean
+        # Short: price far above mean + recent wick above local high (sweep)
         if distance > threshold_atr_mult:
+            swept_high = any(c.high > local_high and c.close < local_high for c in recent)
+            conviction = 70 if swept_high else 55
             return {
                 "symbol": "",
                 "direction": "short",
-                "conviction": 60,
+                "conviction": conviction,
                 "entry_price": current_close,
                 "stop_loss": round(current_close + atr * stop_atr_mult, 2),
                 "take_profit": round(mean, 2),

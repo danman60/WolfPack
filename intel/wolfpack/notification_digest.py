@@ -124,13 +124,28 @@ class NotificationDigest:
             total_8h = perp_8h['pnl'] + lp_8h
             total_12h = perp_12h['pnl'] + lp_12h
 
-            # Trend arrow
-            if delta > 50:
-                arrow = "\u25b2"  # ▲
-            elif delta < -50:
-                arrow = "\u25bc"  # ▼
+            # Vibe + trend
+            if this_4h > 500:
+                vibe = "\U0001f525\U0001f4b0 PRINTING MONEY"
+            elif this_4h > 100:
+                vibe = "\U0001f4b8 The Pack is Eating"
+            elif this_4h > 0:
+                vibe = "\U0001f43a Grinding"
+            elif this_4h > -100:
+                vibe = "\U0001f629 Paper Cuts"
             else:
-                arrow = "\u2500"  # ─
+                vibe = "\U0001f6a8 Taking Heat"
+
+            if delta > 200:
+                trend = "\U0001f680 MOMENTUM"
+            elif delta > 50:
+                trend = "\u2b06\ufe0f up from prev"
+            elif delta < -200:
+                trend = "\U0001f4c9 cooling off"
+            elif delta < -50:
+                trend = "\u2b07\ufe0f down from prev"
+            else:
+                trend = "\u27a1\ufe0f steady"
 
             # ── Perp state ──
             snap_perp = (self._portfolio_snapshot or {}).get("perp")
@@ -153,29 +168,34 @@ class NotificationDigest:
                 lp_positions = _query_lp_position_count(db)
 
             # ── BUILD MESSAGE ──
+            combined_equity = perp_equity + lp_equity
+
             lines: list[str] = []
-            lines.append("<b>WolfPack P&L</b>")
+            lines.append(f"\U0001f43a <b>WOLFPACK P&L</b> \U0001f43a")
+            lines.append(f"{vibe}")
             lines.append("")
-            lines.append(f"This 4H: <b>{_fmt_pnl(this_4h)}</b>")
-            lines.append(f"Prev 4H: {_fmt_pnl(prev_4h)}   {arrow} {_fmt_pnl(delta)} vs prev")
+            lines.append(f"\U0001f4b5 This 4H: <b>{_fmt_pnl(this_4h)}</b>")
+            lines.append(f"\U0001f4ca Prev 4H: {_fmt_pnl(prev_4h)}  {trend}")
 
             # Perp/LP split for this period
-            perp_part = f"Perp {_fmt_compact(perp_this_4h['pnl'])}"
+            perp_part = f"\u26a1 Perp {_fmt_compact(perp_this_4h['pnl'])}"
             if perp_this_4h['trades'] > 0:
-                perp_part += f" ({perp_this_4h['trades']}t, {perp_this_4h['wins']}W/{perp_this_4h['losses']}L)"
-            lines.append(f"  {perp_part} | LP {_fmt_compact(lp_this_4h)}")
+                wr = round(perp_this_4h['wins'] / perp_this_4h['trades'] * 100) if perp_this_4h['trades'] > 0 else 0
+                perp_part += f" ({perp_this_4h['trades']}t {wr}%W)"
+            lines.append(f"{perp_part}  \U0001f4a7 LP {_fmt_compact(lp_this_4h)}")
             lines.append("")
 
             # Rolling totals
-            lines.append(f"8H: {_fmt_pnl(total_8h)} | 12H: {_fmt_pnl(total_12h)}")
+            lines.append(f"\U0001f552 8H: {_fmt_pnl(total_8h)}  |  12H: {_fmt_pnl(total_12h)}")
             lines.append("")
 
             # State
-            perp_line = f"Perp ${perp_equity:,.0f}"
+            lines.append(f"\U0001f4bc Portfolio: <b>${combined_equity:,.0f}</b>")
+            perp_line = f"\u26a1 ${perp_equity:,.0f}"
             if perp_positions > 0:
-                perp_line += f" ({perp_positions} open, {_fmt_pnl(perp_unrealized)})"
+                perp_line += f" \u2022 {perp_positions} open \u2022 {_fmt_pnl(perp_unrealized)} unreal"
             lines.append(perp_line)
-            lines.append(f"LP ${lp_equity:,.0f} ({lp_positions} pos, ${lp_fees:,.0f} fees, ${lp_il:,.0f} IL)")
+            lines.append(f"\U0001f4a7 ${lp_equity:,.0f} \u2022 {lp_positions} pos \u2022 ${lp_fees:,.0f} fees")
 
             msg = "\n".join(lines)
             await send_telegram(msg)
