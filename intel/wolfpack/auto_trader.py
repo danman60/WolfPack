@@ -219,6 +219,15 @@ class AutoTrader:
 
         executed: list[dict] = []
 
+        # Check regime transition cooldown
+        if recs:
+            symbol = recs[0].get("symbol", "UNKNOWN")
+            from wolfpack.modules.regime_transition import get_transition_manager
+            tm = get_transition_manager()
+            if tm.is_in_cooldown(symbol):
+                logger.info(f"[auto-trader] {symbol} in regime transition cooldown, blocking new entries")
+                return []
+
         for rec in recs:
             symbol = rec.get("symbol", "UNKNOWN")
             direction = rec.get("direction", "wait")
@@ -251,6 +260,12 @@ class AutoTrader:
                 if cb_state == "SUSPENDED" and self.yolo_level < 4:
                     logger.info(f"[auto-trader] CB suspended and YOLO level {self.yolo_level} < 4, skipping {symbol}")
                     continue
+
+            # Trading hours restriction — only open new positions during allowed UTC hours
+            current_utc_hour = datetime.now(timezone.utc).hour
+            if not (settings.trading_hours_start <= current_utc_hour < settings.trading_hours_end):
+                logger.info(f"[auto-trader] {symbol} {direction} blocked: UTC hour {current_utc_hour} outside {settings.trading_hours_start}-{settings.trading_hours_end}")
+                continue
 
             # Get entry price
             entry_price = rec.get("entry_price")
@@ -563,6 +578,13 @@ class AutoTrader:
             self._store_snapshot()
             return []
 
+        # Check regime transition cooldown
+        from wolfpack.modules.regime_transition import get_transition_manager
+        tm = get_transition_manager()
+        if tm.is_in_cooldown(symbol):
+            logger.info(f"[auto-trader] {symbol} in regime transition cooldown, blocking new entries")
+            return []
+
         profile = YOLO_PROFILES.get(self.yolo_level, YOLO_PROFILES[2])
         executed: list[dict] = []
         current_idx = len(candles) - 1
@@ -611,6 +633,12 @@ class AutoTrader:
                                 "strategy": strategy_name,
                                 "realized_pnl": pnl,
                             })
+                    continue
+
+                # Trading hours restriction — only open new positions during allowed UTC hours
+                current_utc_hour = datetime.now(timezone.utc).hour
+                if not (settings.trading_hours_start <= current_utc_hour < settings.trading_hours_end):
+                    logger.info(f"[auto-trader] Strategy {strategy_name} {symbol} {direction} blocked: UTC hour {current_utc_hour} outside trading hours")
                     continue
 
                 # Trade spacing cooldown (5 minutes between trades)

@@ -1,0 +1,25 @@
+# Transcript: 1.3K views · 88 reactions | Are you paying a trading guru in 2026? Seriously, if you are you need to ask yourself a few questions: - Am I getting educational value out of this? - Am I making more money then I lose after a large sample size of trades (and accounting for monthly guru fees)? - Does the person I follow have a proven track record or real broker statements to share? Times are changing and people are quickly catching on to the vast majority of the “fake” ones out there. If you’ve got someone in mind that you want to see broker statements from, tag them in the comments. Let’s see if they’ll respond 😉 If you’re fed up with trading gurus, follow us here @thealphainsider #trading #alphainsider #tradingtips #tradingguru | Alpha Insider
+# Source: https://www.facebook.com/share/r/1GFx4iHtKa/
+# Project: WolfPack
+# Model: base | Language: en | Duration: 75.0s
+# Transcribed: 2026-04-06 21:21:02
+
+[0.0s - 6.7s] I am legitimately not sure why people pay for trading gurus when a site like this exists.
+[6.7s - 11.4s] So there's this site called alphanseider.com that forward test trading strategies. So instead of
+[11.4s - 17.4s] a back test, all of these trading strategies are tracked live with real trades, not hypothetical
+[17.4s - 23.4s] and not hand picking a perfect set of trades that just fit a perfect criteria to make the perfect
+[23.4s - 27.4s] sloping curve. The site's free, by the way, and when you find a strategy that you like, you can
+[27.4s - 32.2s] actually go up here and you can set alerts to be alert every time a trade is taken. This way,
+[32.2s - 36.5s] you could copy the strategy on your own, but then there's this auto trade button right here
+[36.5s - 40.6s] where you can actually connect this trading strategy to your own brokerage account and it will
+[40.6s - 45.4s] trade for you every time it takes a trade. So see this timeline right here, imagine if all of these
+[45.4s - 51.4s] trades in the past year were taken for you, well, you'd be up 92% on just this trading strategy.
+[51.4s - 56.2s] You can even build out your trading bot that has multiple strategies and set the custom allocations
+[56.2s - 60.6s] so you can set exactly how much money you want to put into each one. You are legitimately
+[60.6s - 65.7s] better off making your own strategy backtesting an on trading view than trusting a trading guru
+[65.7s - 70.5s] who is not going to show you broker statements or have a live track track record that you could
+[70.5s - 75.0s] actually follow and trust. Tag the guru that you want to see broker statements from in the comments.
+
+---
+
+I am legitimately not sure why people pay for trading gurus when a site like this exists. So there's this site called alphanseider.com that forward test trading strategies. So instead of a back test, all of these trading strategies are tracked live with real trades, not hypothetical and not hand picking a perfect set of trades that just fit a perfect criteria to make the perfect sloping curve. The site's free, by the way, and when you find a strategy that you like, you can actually go up here and you can set alerts to be alert every time a trade is taken. This way, you could copy the strategy on your own, but then there's this auto trade button right here where you can actually connect this trading strategy to your own brokerage account and it will trade for you every time it takes a trade. So see this timeline right here, imagine if all of these trades in the past year were taken for you, well, you'd be up 92% on just this trading strategy. You can even build out your trading bot that has multiple strategies and set the custom allocations so you can set exactly how much money you want to put into each one. You are legitimately better off making your own strategy backtesting an on trading view than trusting a trading guru who is not going to show you broker statements or have a live track track record that you could actually follow and trust. Tag the guru that you want to see broker statements from in the comments.

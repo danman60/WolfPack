@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     # LLM providers
     anthropic_api_key: str = ""
     openai_api_key: str = ""          # Also used for DeepSeek via base_url override
+    openrouter_api_key: str = ""      # OpenRouter API key
     # DeepSeek (financial-tuned model)
     deepseek_api_key: str = ""
     deepseek_base_url: str = "https://api.deepseek.com"
@@ -51,6 +52,10 @@ class Settings(BaseSettings):
     tick_interval_seconds: int = 300   # 5 minutes
     log_level: str = "INFO"
     api_secret_key: str = ""           # Bearer token for protected endpoints
+
+    # Trading hours (UTC) — only open new positions during this window
+    trading_hours_start: int = 0
+    trading_hours_end: int = 12
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 

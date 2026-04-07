@@ -323,3 +323,8 @@ Saved to `docs/transcripts/20260404_192356_20k-views--196-reactions--here-is-the
 ### New Transcription: $BTC Trade Idea | Forex Signals
 **Source:** https://www.facebook.com/share/r/1CPraC9z8K/
 Saved to `docs/transcripts/20260406_061842_btc-trade-idea--forex-signals.txt`. Whisper base model, auto-transcribed.
+
+## From sysadmin-2 — 2026-04-06 21:21
+### New Transcription: 1.3K views · 88 reactions | Are you paying a trading guru in 2026? Seriously, if you are you need to ask yourself a few questions: - Am I getting educational value out of this? - Am I making more money then I lose after a large sample size of trades (and accounting for monthly guru fees)? - Does the person I follow have a proven track record or real broker statements to share? Times are changing and people are quickly catching on to the vast majority of the “fake” ones out there. If you’ve got someone in mind that you want to see broker statements from, tag them in the comments. Let’s see if they’ll respond 😉 If you’re fed up with trading gurus, follow us here @thealphainsider #trading #alphainsider #tradingtips #tradingguru | Alpha Insider
+**Source:** https://www.facebook.com/share/r/1GFx4iHtKa/
+Saved to `docs/transcripts/20260406_212056_13k-views--88-reactions--are-you-paying-a-trading-guru-in-2026-seriously-if-you-.txt`. Whisper base model, auto-transcribed.

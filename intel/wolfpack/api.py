@@ -2145,7 +2145,39 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                             logger.warning(f"[cycle] HTF trailing stop error: {e}")
                 except Exception as e:
                     logger.warning(f"[cycle] Strategy signals error: {e}")
-    
+
+                # ── Regime transition management ──
+                try:
+                    from wolfpack.modules.regime_transition import get_transition_manager
+                    from wolfpack.strategies.regime_router import get_regime_state
+                    tm = get_transition_manager()
+                    # Tick cooldown
+                    tm.tick(symbol)
+                    # Get current regime from the routing done inside process_strategy_signals
+                    regime_state = get_regime_state(symbol)
+                    current_macro = regime_state["current_macro"]
+                    actions = tm.check_transition(symbol, current_macro, engine.portfolio.positions)
+                    if actions.regime_shifted:
+                        logger.info(f"[cycle] Regime transition {actions.old_regime} -> {actions.new_regime}")
+                        for rid in actions.close_positions:
+                            # Find and close the position
+                            for pos in list(engine.portfolio.positions):
+                                if pos.recommendation_id == rid:
+                                    pnl = engine.close_position(pos.symbol)
+                                    logger.info(f"[cycle] Regime transition closed {pos.symbol} {pos.direction}: P&L ${pnl:,.2f}")
+                        if actions.tighten_stop_factor < 1.0:
+                            for pos in engine.portfolio.positions:
+                                if pos.stop_loss and pos.current_price:
+                                    distance = abs(pos.current_price - pos.stop_loss)
+                                    new_distance = distance * actions.tighten_stop_factor
+                                    if pos.direction == "long":
+                                        pos.stop_loss = pos.current_price - new_distance
+                                    else:
+                                        pos.stop_loss = pos.current_price + new_distance
+                                    logger.info(f"[cycle] Tightened stop for {pos.symbol} to ${pos.stop_loss:,.2f}")
+                except Exception as e:
+                    logger.warning(f"[cycle] Regime transition error: {e}")
+
                 # ── Step 5b2: Auto-trader processes stored recs (Brief as conviction multiplier) ──
                 try:
                     auto_trader = _get_auto_trader()
