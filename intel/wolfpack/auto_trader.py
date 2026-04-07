@@ -133,6 +133,7 @@ class AutoTrader:
         self._last_trade_at: datetime | None = None
         self.yolo_level = 4  # Default to YOLO for paper trading
         self._last_strategy_signals: list[dict] = []
+        self._current_regime: str = "unknown"
         self._perf_tracker = PerformanceTracker(rolling_window=50)
         self._apply_yolo_profile()
 
@@ -191,6 +192,10 @@ class AutoTrader:
         profile = YOLO_PROFILES.get(self.yolo_level, YOLO_PROFILES[2])
         self.conviction_threshold = profile["conviction_threshold"]
         self._yolo_profile = profile
+
+    def set_regime(self, macro_regime: str) -> None:
+        """Store current macro regime for filtering decisions."""
+        self._current_regime = macro_regime
 
     async def process_recommendations(
         self,
@@ -260,6 +265,12 @@ class AutoTrader:
                 if cb_state == "SUSPENDED" and self.yolo_level < 4:
                     logger.info(f"[auto-trader] CB suspended and YOLO level {self.yolo_level} < 4, skipping {symbol}")
                     continue
+
+            # Block mean_reversion longs in RANGING regime
+            strategy = rec.get("strategy", "")
+            if self._current_regime == "RANGING" and direction == "long" and strategy == "mean_reversion":
+                logger.info(f"[auto-trader] {symbol} long blocked: mean_reversion longs disabled in RANGING regime")
+                continue
 
             # Trading hours restriction — only open new positions during allowed UTC hours
             current_utc_hour = datetime.now(timezone.utc).hour
@@ -618,6 +629,11 @@ class AutoTrader:
 
                 direction = signal.get("direction", "wait")
                 if direction == "wait":
+                    continue
+
+                # Block mean_reversion longs in RANGING regime
+                if routing["macro_regime"] == "RANGING" and direction == "long" and strategy_name == "mean_reversion":
+                    logger.info(f"[auto-trader] {symbol} long blocked: mean_reversion longs disabled in RANGING regime")
                     continue
 
                 rec_id = f"strat-{strategy_name}-{symbol}-{timestamp}"

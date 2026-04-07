@@ -2111,6 +2111,14 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
     
                 _last_runs["brief"] = datetime.now(timezone.utc)
     
+                # Set current regime on auto_trader for filtering
+                try:
+                    from wolfpack.strategies.regime_router import get_regime_state
+                    regime_state_info = get_regime_state(symbol)
+                    auto_trader.set_regime(regime_state_info["current_macro"])
+                except Exception:
+                    pass
+
                 # ── Step 5b: Run mechanical strategies BEFORE Brief recs (sets _last_strategy_signals for Brief sizing) ──
                 try:
                     auto_trader = _get_auto_trader()
