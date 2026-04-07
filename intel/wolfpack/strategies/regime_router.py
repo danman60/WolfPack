@@ -45,7 +45,7 @@ def _classify_macro(regime: str, agreement: float, vol_regime: str) -> tuple[str
         return (
             "TRENDING",
             f"regime={regime}, agreement={agreement:.2f}",
-            ["ema_crossover", "turtle_donchian", "orb_session", "regime_momentum"],
+            ["ema_crossover", "turtle_donchian", "orb_session"],
         )
 
     # RANGING: choppy, low_vol_grind, or poor TF agreement
@@ -121,7 +121,7 @@ def route_strategies(regime_output, vol_output=None, symbol: str = "BTC") -> dic
     # Return based on CURRENT (debounced) macro, not raw
     if state.current_macro == "TRENDING":
         return {
-            "allowed": ["ema_crossover", "turtle_donchian", "orb_session", "regime_momentum"],
+            "allowed": ["ema_crossover", "turtle_donchian", "orb_session"],
             "macro_regime": "TRENDING",
             "reason": state.last_reason,
             "debounce": f"pending={state.pending_macro}({state.pending_count}/{DEBOUNCE_TICKS})",

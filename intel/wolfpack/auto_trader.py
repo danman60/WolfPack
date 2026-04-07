@@ -20,9 +20,8 @@ STRATEGY_ALLOCATIONS = {
     "ema_crossover": 0.15,
     "turtle_donchian": 0.10,
     "orb_session": 0.10,
-    "regime_momentum": 0.05,
     # Ranging strategies
-    "mean_reversion": 0.25,
+    "mean_reversion": 0.30,
     "measured_move": 0.10,
     # Brief-driven: remaining ~25%
 }
@@ -76,7 +75,6 @@ def _get_dynamic_allocations(perf_tracker) -> dict[str, float]:
 STRATEGY_TIMEFRAMES = {
     "ema_crossover": "1h",
     "turtle_donchian": "1h",
-    "regime_momentum": "1h",
     "mean_reversion": "1h",
     "orb_session": "5m",
     "measured_move": "5m",
