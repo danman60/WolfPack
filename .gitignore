@@ -42,3 +42,4 @@ coverage/
 app/.env.production
 .vercel
 .gitnexus
+intel/uv.lock

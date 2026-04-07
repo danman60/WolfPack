@@ -24,7 +24,7 @@ export function Nav() {
   useEffect(() => {
     const fetchCB = async () => {
       try {
-        const res = await fetch("/intel/modules?module=circuit_breakers");
+        const res = await fetch("/intel/circuit-breaker");
         if (res.ok) {
           const data = await res.json();
           // The modules endpoint returns the latest module output

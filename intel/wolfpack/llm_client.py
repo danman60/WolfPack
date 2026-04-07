@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 # Load API keys from ~/.env.keys
 _env_keys: dict[str, str] = {}
 try:
-    with open("/home/danman60/.env.keys") as f:
+    with open(os.path.expanduser("~/.env.keys")) as f:
         for line in f:
             line = line.strip()
             if line and not line.startswith("#") and "=" in line:
