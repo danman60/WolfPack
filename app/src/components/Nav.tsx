@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ExchangeToggle } from "./ExchangeToggle";
@@ -19,6 +19,36 @@ const NAV_LINKS = [
 export function Nav() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [cbState, setCbState] = useState<string>("unknown");
+
+  useEffect(() => {
+    const fetchCB = async () => {
+      try {
+        const res = await fetch("/intel/modules?module=circuit_breakers");
+        if (res.ok) {
+          const data = await res.json();
+          // The modules endpoint returns the latest module output
+          const state = data?.output?.state || data?.state || "unknown";
+          setCbState(state);
+        }
+      } catch {
+        // Silently fail — badge just stays unknown
+      }
+    };
+
+    fetchCB();
+    const interval = setInterval(fetchCB, 30000); // every 30s
+    return () => clearInterval(interval);
+  }, []);
+
+  const cbColor = cbState === "ACTIVE" ? "bg-green-500" :
+                  cbState === "SUSPENDED" ? "bg-amber-500" :
+                  cbState === "EMERGENCY_STOP" ? "bg-red-500" :
+                  "bg-gray-500";
+  const cbLabel = cbState === "ACTIVE" ? "Circuit Breaker: Active" :
+                  cbState === "SUSPENDED" ? "Circuit Breaker: Suspended" :
+                  cbState === "EMERGENCY_STOP" ? "Circuit Breaker: Emergency Stop" :
+                  "Circuit Breaker: Unknown";
 
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--background)]/80 backdrop-blur-xl backdrop-saturate-150">
@@ -35,8 +65,12 @@ export function Nav() {
                 <path d="M2 12l10 5 10-5" />
               </svg>
             </div>
-            <span className="font-bold text-[15px] tracking-tight text-white">
+            <span className="font-bold text-[15px] tracking-tight text-white flex items-center gap-1.5">
               WolfPack
+              <span
+                className={`${cbColor} rounded-full w-2 h-2 inline-block`}
+                title={cbLabel}
+              />
             </span>
           </Link>
           {/* Desktop nav */}
