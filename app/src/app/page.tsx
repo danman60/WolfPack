@@ -3,11 +3,12 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useExchange } from "@/lib/exchange";
-import { useAgentOutputs, useAgentStatus, useRecommendations, usePortfolio, useWatchlist, useAutoTraderStatus, useProfit, useStrategyMode } from "@/lib/hooks/useIntelligence";
+import { useAgentOutputs, useAgentStatus, useRecommendations, usePortfolio, usePortfolioHistory, useWatchlist, useAutoTraderStatus, useProfit, useStrategyMode } from "@/lib/hooks/useIntelligence";
 import { WolfHead } from "@/components/WolfHead";
 import { usePrice, use24hChange } from "@/lib/hooks/useMarketData";
 import { useLPStatus } from "@/lib/hooks/usePools";
 import { Term } from "@/components/Term";
+import { AreaChart, Area, ResponsiveContainer } from "recharts";
 
 export default function Dashboard() {
   const { config } = useExchange();
@@ -21,10 +22,23 @@ export default function Dashboard() {
   const { data: autoTrader } = useAutoTraderStatus();
   const { data: lpStatus } = useLPStatus();
   const { data: strategyMode } = useStrategyMode();
+  const { data: history } = usePortfolioHistory(200);
 
   const agents = agentStatus?.agents ?? [];
   const isActive = portfolio?.status === "active";
   const isLive = strategyMode?.mode === "live";
+
+  // Compact equity curve data
+  const snapshots = history?.snapshots ?? [];
+  const equityData = snapshots.map(
+    (s: { created_at: string; equity: number }) => ({
+      time: new Date(s.created_at).getTime(),
+      equity: s.equity,
+    })
+  );
+  const currentEquity = equityData.length > 0 ? equityData[equityData.length - 1].equity : null;
+  const startEquity = equityData.length > 0 ? equityData[0].equity : null;
+  const equityUp = currentEquity && startEquity ? currentEquity >= startEquity : true;
 
   return (
     <div className="space-y-5 md:space-y-7">
@@ -44,6 +58,41 @@ export default function Dashboard() {
 
       {/* Profit Report */}
       <ProfitReport />
+
+      {/* 7-Day Equity Curve */}
+      {equityData.length > 1 && (
+        <div className="wolf-card p-4 relative">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] font-medium text-gray-500 uppercase tracking-wider">Equity Curve (7d)</span>
+            {currentEquity && (
+              <span className={`text-[15px] font-bold ${equityUp ? "text-emerald-400" : "text-red-400"}`}>
+                ${currentEquity.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </span>
+            )}
+          </div>
+          <div style={{ height: 120 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={equityData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="equityGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={equityUp ? "#10b981" : "#ef4444"} stopOpacity={0.3} />
+                    <stop offset="100%" stopColor={equityUp ? "#10b981" : "#ef4444"} stopOpacity={0.0} />
+                  </linearGradient>
+                </defs>
+                <Area
+                  type="monotone"
+                  dataKey="equity"
+                  stroke={equityUp ? "#10b981" : "#ef4444"}
+                  strokeWidth={2}
+                  fill="url(#equityGrad)"
+                  dot={false}
+                  isAnimationActive={false}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      )}
 
       {/* Portfolio Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
