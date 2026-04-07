@@ -369,6 +369,7 @@ class AutoTrader:
                     "size_usd": pos.size_usd,
                     "size_pct": size_pct,
                     "conviction": veto_result.final_conviction,
+                    "strategy": rec.get("strategy", "brief"),
                 }
                 executed.append(trade)
 
@@ -513,7 +514,7 @@ class AutoTrader:
         try:
             from wolfpack.db import get_db
             db = get_db()
-            db.table("wp_auto_trades").insert({
+            row = {
                 "recommendation_id": rec_id,
                 "symbol": trade["symbol"],
                 "direction": trade["direction"],
@@ -522,7 +523,11 @@ class AutoTrader:
                 "size_pct": trade["size_pct"],
                 "conviction": trade["conviction"],
                 "status": "open",
-            }).execute()
+            }
+            # Include strategy if present
+            if trade.get("strategy"):
+                row["strategy"] = trade["strategy"]
+            db.table("wp_auto_trades").insert(row).execute()
         except Exception as e:
             logger.error(f"[auto-trader] Failed to store trade: {e}")
 
