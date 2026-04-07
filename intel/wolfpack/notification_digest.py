@@ -1,7 +1,7 @@
 """Notification digest — periodic P&L report combining perp + LP into one TG message.
 
-Sends a unified 4-hour report with P&L across 4H / 8H / 12H windows.
-Queries DB directly — no buffering needed for the report itself.
+Sends a 4-hour report comparing current period vs previous, plus 8H/12H rolling totals.
+Queries DB directly for all numbers.
 """
 
 import logging
@@ -84,25 +84,26 @@ class NotificationDigest:
         return True
 
     async def _send_pnl_report(self) -> None:
-        """Send unified P&L report: perp + LP across 4H / 8H / 12H."""
+        """Send unified P&L report: this 4H vs prev 4H + rolling 8H/12H."""
         try:
             from wolfpack.db import get_db
             from wolfpack.notifications import send_telegram
 
             db = get_db()
 
-            # ── PERP P&L ──
-            perp_4h = _query_perp_pnl(db, 4)
-            perp_8h = _query_perp_pnl(db, 8)
-            perp_12h = _query_perp_pnl(db, 12)
+            # ── PERP: this 4H vs previous 4H ──
+            perp_this_4h = _query_perp_pnl(db, 0, 4)
+            perp_prev_4h = _query_perp_pnl(db, 4, 8)
+            perp_8h = _query_perp_pnl(db, 0, 8)
+            perp_12h = _query_perp_pnl(db, 0, 12)
 
-            # ── LP snapshots for delta calc ──
-            lp_current = _query_lp_snapshot(db, 0)   # latest snapshot = "now"
+            # ── LP: current vs snapshots ──
+            lp_current = _query_lp_snapshot(db, 0)
             lp_4h_ago = _query_lp_snapshot(db, 4)
             lp_8h_ago = _query_lp_snapshot(db, 8)
             lp_12h_ago = _query_lp_snapshot(db, 12)
 
-            # Override with live snapshot if available
+            # Override current with live snapshot if available
             snap_lp = (self._portfolio_snapshot or {}).get("lp")
             if snap_lp:
                 lp_current = {
@@ -111,13 +112,25 @@ class NotificationDigest:
                     "equity": snap_lp.get("equity", 0),
                 }
 
-            lp_fees = lp_current.get("fees", 0)
-            lp_il = lp_current.get("il", 0)
-            lp_equity = lp_current.get("equity", 0)
+            lp_this_4h = _lp_delta(lp_current, lp_4h_ago)
+            lp_prev_4h = _lp_delta(lp_4h_ago, lp_8h_ago)
+            lp_8h = _lp_delta(lp_current, lp_8h_ago)
+            lp_12h = _lp_delta(lp_current, lp_12h_ago)
 
-            lp_delta_4h = _lp_delta(lp_current, lp_4h_ago)
-            lp_delta_8h = _lp_delta(lp_current, lp_8h_ago)
-            lp_delta_12h = _lp_delta(lp_current, lp_12h_ago)
+            # ── Totals ──
+            this_4h = perp_this_4h['pnl'] + lp_this_4h
+            prev_4h = perp_prev_4h['pnl'] + lp_prev_4h
+            delta = this_4h - prev_4h
+            total_8h = perp_8h['pnl'] + lp_8h
+            total_12h = perp_12h['pnl'] + lp_12h
+
+            # Trend arrow
+            if delta > 50:
+                arrow = "\u25b2"  # ▲
+            elif delta < -50:
+                arrow = "\u25bc"  # ▼
+            else:
+                arrow = "\u2500"  # ─
 
             # ── Perp state ──
             snap_perp = (self._portfolio_snapshot or {}).get("perp")
@@ -130,43 +143,43 @@ class NotificationDigest:
                 perp_positions = 0
                 perp_unrealized = 0
 
-            # LP position count from snapshot or DB
+            # LP state
+            lp_equity = lp_current.get("equity", 0)
+            lp_fees = lp_current.get("fees", 0)
+            lp_il = lp_current.get("il", 0)
             if snap_lp:
                 lp_positions = len(snap_lp.get("positions", []))
             else:
                 lp_positions = _query_lp_position_count(db)
 
             # ── BUILD MESSAGE ──
-            total_4h = perp_4h['pnl'] + lp_delta_4h
-            total_8h = perp_8h['pnl'] + lp_delta_8h
-            total_12h = perp_12h['pnl'] + lp_delta_12h
-
             lines: list[str] = []
-            lines.append("<b>WolfPack P&L Report</b>")
+            lines.append("<b>WolfPack P&L</b>")
             lines.append("")
-            lines.append("<pre>")
-            lines.append(f"{'':8s} {'4H':>10s} {'8H':>10s} {'12H':>10s}")
-            lines.append(f"{'Perp':8s} {_fmt_compact(perp_4h['pnl']):>10s} {_fmt_compact(perp_8h['pnl']):>10s} {_fmt_compact(perp_12h['pnl']):>10s}")
-            lines.append(f"{'LP':8s} {_fmt_compact(lp_delta_4h):>10s} {_fmt_compact(lp_delta_8h):>10s} {_fmt_compact(lp_delta_12h):>10s}")
-            lines.append(f"{'─' * 40}")
-            lines.append(f"{'Total':8s} {_fmt_compact(total_4h):>10s} {_fmt_compact(total_8h):>10s} {_fmt_compact(total_12h):>10s}")
-            lines.append("</pre>")
+            lines.append(f"This 4H: <b>{_fmt_pnl(this_4h)}</b>")
+            lines.append(f"Prev 4H: {_fmt_pnl(prev_4h)}   {arrow} {_fmt_pnl(delta)} vs prev")
 
-            # Perp detail line
+            # Perp/LP split for this period
+            perp_part = f"Perp {_fmt_compact(perp_this_4h['pnl'])}"
+            if perp_this_4h['trades'] > 0:
+                perp_part += f" ({perp_this_4h['trades']}t, {perp_this_4h['wins']}W/{perp_this_4h['losses']}L)"
+            lines.append(f"  {perp_part} | LP {_fmt_compact(lp_this_4h)}")
             lines.append("")
-            perp_line = f"<b>Perp</b>: ${perp_equity:,.0f}"
+
+            # Rolling totals
+            lines.append(f"8H: {_fmt_pnl(total_8h)} | 12H: {_fmt_pnl(total_12h)}")
+            lines.append("")
+
+            # State
+            perp_line = f"Perp ${perp_equity:,.0f}"
             if perp_positions > 0:
-                perp_line += f" | {perp_positions} open | {_fmt_pnl(perp_unrealized)} unreal"
+                perp_line += f" ({perp_positions} open, {_fmt_pnl(perp_unrealized)})"
             lines.append(perp_line)
-            if perp_4h['trades'] > 0:
-                lines.append(f"  4H: {perp_4h['trades']} trades ({perp_4h['wins']}W/{perp_4h['losses']}L)")
-
-            # LP detail line
-            lines.append(f"<b>LP</b>: ${lp_equity:,.0f} | {lp_positions} pos | fees ${lp_fees:,.2f} | IL ${lp_il:,.2f}")
+            lines.append(f"LP ${lp_equity:,.0f} ({lp_positions} pos, ${lp_fees:,.0f} fees, ${lp_il:,.0f} IL)")
 
             msg = "\n".join(lines)
             await send_telegram(msg)
-            logger.info(f"[digest] Sent P&L report (4H: {_fmt_compact(total_4h)})")
+            logger.info(f"[digest] P&L report sent (4H: {_fmt_compact(this_4h)}, {arrow} {_fmt_compact(delta)} vs prev)")
 
         except Exception as e:
             logger.warning(f"[digest] P&L report failed: {e}")
@@ -196,11 +209,23 @@ class NotificationDigest:
 
 # ── DB query helpers ──
 
-def _query_perp_pnl(db, hours: int) -> dict:
-    """Query perp P&L for the last N hours from wp_trade_history."""
+def _query_perp_pnl(db, hours_ago_start: int, hours_ago_end: int) -> dict:
+    """Query perp P&L for a time window (hours_ago_start to hours_ago_end hours ago).
+
+    Example: _query_perp_pnl(db, 0, 4) = last 4 hours
+             _query_perp_pnl(db, 4, 8) = 4-8 hours ago (the previous 4H window)
+    """
     try:
-        cutoff = (datetime.now(timezone.utc) - timedelta(hours=hours)).isoformat()
-        result = db.table("wp_trade_history").select("pnl_usd").gte("closed_at", cutoff).execute()
+        now = datetime.now(timezone.utc)
+        start = (now - timedelta(hours=hours_ago_end)).isoformat()
+        end = (now - timedelta(hours=hours_ago_start)).isoformat()
+        result = (
+            db.table("wp_trade_history")
+            .select("pnl_usd")
+            .gte("closed_at", start)
+            .lte("closed_at", end)
+            .execute()
+        )
         pnls = [float(r["pnl_usd"]) for r in (result.data or []) if r.get("pnl_usd") is not None]
         return {
             "pnl": sum(pnls),
@@ -209,7 +234,7 @@ def _query_perp_pnl(db, hours: int) -> dict:
             "losses": sum(1 for p in pnls if p < 0),
         }
     except Exception as e:
-        logger.warning(f"[digest] Perp query failed ({hours}h): {e}")
+        logger.warning(f"[digest] Perp query failed ({hours_ago_start}-{hours_ago_end}h): {e}")
         return {"pnl": 0, "trades": 0, "wins": 0, "losses": 0}
 
 
@@ -248,7 +273,7 @@ def _query_lp_snapshot(db, hours: int) -> dict:
 
 def _lp_delta(current: dict, past: dict) -> float:
     """Compute LP net profit delta between two snapshots."""
-    if not past:
+    if not current or not past:
         return 0.0
     fee_gain = current.get("fees", 0) - past.get("fees", 0)
     il_gain = current.get("il", 0) - past.get("il", 0)
@@ -256,7 +281,6 @@ def _lp_delta(current: dict, past: dict) -> float:
 
 
 def _query_perp_equity(db) -> float:
-    """Get latest perp equity from snapshot table."""
     try:
         result = (
             db.table("wp_auto_portfolio_snapshots")
@@ -273,7 +297,6 @@ def _query_perp_equity(db) -> float:
 
 
 def _query_lp_position_count(db) -> int:
-    """Get active LP position count."""
     try:
         result = (
             db.table("wp_lp_snapshots")
