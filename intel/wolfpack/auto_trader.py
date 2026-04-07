@@ -327,6 +327,15 @@ class AutoTrader:
                     logger.info(f"[auto-trader] Trade spacing: {300 - elapsed:.0f}s remaining")
                     continue
 
+            # Enforce $3K-$5K position size sweet spot
+            estimated_usd = self.engine.portfolio.equity * (size_pct / 100)
+            if estimated_usd < settings.min_position_usd:
+                logger.info(f"[auto-trader] {symbol} {direction} skipped: ${estimated_usd:.0f} < ${settings.min_position_usd:.0f} minimum")
+                continue
+            if estimated_usd > settings.max_position_usd:
+                size_pct = (settings.max_position_usd / self.engine.portfolio.equity) * 100
+                logger.info(f"[auto-trader] {symbol} {direction} capped at ${settings.max_position_usd:.0f}")
+
             # Open position
             pos = self.engine.open_position(
                 symbol=symbol,
@@ -665,6 +674,15 @@ class AutoTrader:
                 # Size based on strategy allocation
                 size_pct = allocation * 100  # e.g. 0.20 -> 20%
                 size_pct = min(size_pct, profile["max_size_pct"])
+
+                # Enforce $3K-$5K position size sweet spot
+                estimated_usd = self.engine.portfolio.equity * (size_pct / 100)
+                if estimated_usd < settings.min_position_usd:
+                    logger.info(f"[auto-trader] Strategy {strategy_name} {symbol} {direction} skipped: ${estimated_usd:.0f} < ${settings.min_position_usd:.0f} minimum")
+                    continue
+                if estimated_usd > settings.max_position_usd:
+                    size_pct = (settings.max_position_usd / self.engine.portfolio.equity) * 100
+                    logger.info(f"[auto-trader] Strategy {strategy_name} {symbol} {direction} capped at ${settings.max_position_usd:.0f}")
 
                 pos = self.engine.open_position(
                     symbol=symbol,
