@@ -59,8 +59,18 @@ def extract_json(raw_response: str) -> Tuple[Optional[Any], str]:
         if parsed is not None:
             return parsed, reasoning
 
+    # Strategy 5: Repair truncated JSON (missing closing braces)
+    parsed = _repair_truncated_json(cleaned)
+    if parsed is not None:
+        return parsed, reasoning
+
     # Total failure
-    logger.warning(f"Failed to extract JSON from response ({len(raw_response)} chars)")
+    open_b = raw_response.count('{')
+    close_b = raw_response.count('}')
+    logger.warning(
+        f"Failed to extract JSON from response ({len(raw_response)} chars, "
+        f"braces: {open_b} open / {close_b} close)"
+    )
     logger.debug(f"Raw response preview: {raw_response[:500]}")
     return None, raw_response
 
@@ -101,11 +111,12 @@ def _extract_braces(text: str) -> Tuple[Optional[Any], int]:
     candidates.sort(key=lambda x: x[0])
 
     for start, end in candidates:
+        candidate = text[start:end].strip().strip('\x00\x01\x02\x03')
         try:
-            parsed = json.loads(text[start:end])
+            parsed = json.loads(candidate)
             return parsed, start
         except json.JSONDecodeError:
-            fixed = _fix_common_issues(text[start:end])
+            fixed = _fix_common_issues(candidate)
             try:
                 parsed = json.loads(fixed)
                 return parsed, start
@@ -149,6 +160,25 @@ def _fix_common_issues(text: str) -> str:
         text = text.replace("'", '"')
 
     return text
+
+
+def _repair_truncated_json(text: str) -> Optional[Any]:
+    """Attempt to close truncated JSON by counting open/close braces."""
+    open_braces = text.count('{') - text.count('}')
+    open_brackets = text.count('[') - text.count(']')
+    if open_braces > 0 or open_brackets > 0:
+        # Try adding missing closers
+        repaired = text
+        # Close any open strings (find last unmatched quote)
+        if repaired.count('"') % 2 != 0:
+            repaired += '"'
+        repaired += ']' * open_brackets
+        repaired += '}' * open_braces
+        try:
+            return json.loads(repaired)
+        except json.JSONDecodeError:
+            pass
+    return None
 
 
 def validate_recommendation(rec: dict) -> Tuple[bool, list]:
