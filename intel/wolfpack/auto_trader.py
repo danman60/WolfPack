@@ -195,6 +195,41 @@ class AutoTrader:
         """Store current macro regime for filtering decisions."""
         self._current_regime = macro_regime
 
+    def _is_pumping(self, symbol: str, latest_prices: dict[str, float]) -> bool:
+        """Check if price moved up >2% recently by comparing to 1h-ago snapshot.
+
+        Uses the last stored price from wp_auto_portfolio_snapshots as baseline.
+        Conservative: only blocks shorts, never blocks longs.
+        """
+        try:
+            current = latest_prices.get(symbol)
+            if not current:
+                return False
+            from wolfpack.db import get_db
+            db = get_db()
+            # Get price from ~1 hour ago via candle data or snapshot
+            result = (
+                db.table("wp_auto_portfolio_snapshots")
+                .select("positions")
+                .order("created_at", desc=True)
+                .limit(12)  # ~1 hour of 5-min snapshots
+                .execute()
+            )
+            if not result.data:
+                return False
+            # Find the oldest snapshot's price for this symbol
+            for snap in reversed(result.data):
+                for pos in (snap.get("positions") or []):
+                    if pos.get("symbol") == symbol and pos.get("entry_price"):
+                        old_price = pos["entry_price"]
+                        move_pct = (current - old_price) / old_price * 100
+                        if move_pct > 2.0:
+                            return True
+                        return False
+            return False
+        except Exception:
+            return False
+
     async def process_recommendations(
         self,
         recs: list[dict],
@@ -275,6 +310,17 @@ class AutoTrader:
             if not (settings.trading_hours_start <= current_utc_hour < settings.trading_hours_end):
                 logger.info(f"[auto-trader] {symbol} {direction} blocked: UTC hour {current_utc_hour} outside {settings.trading_hours_start}-{settings.trading_hours_end}")
                 continue
+
+            # Pump guard — cap short exposure to prevent cascade losses on sudden pumps
+            if direction == "short":
+                open_shorts = sum(1 for p in self.engine.portfolio.positions if p.direction == "short")
+                if open_shorts >= 3:
+                    logger.info(f"[auto-trader] {symbol} short blocked: {open_shorts} shorts open (max 3)")
+                    continue
+                # Don't open new shorts if any watched symbol pumped >2% in last hour
+                if latest_prices and self._is_pumping(symbol, latest_prices):
+                    logger.info(f"[auto-trader] {symbol} short blocked: pump detected (>2% move in last hour)")
+                    continue
 
             # Get entry price
             entry_price = rec.get("entry_price")
