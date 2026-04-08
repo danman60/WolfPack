@@ -128,6 +128,19 @@ class Agent(ABC):
     def _now(self) -> datetime:
         return datetime.now(timezone.utc)
 
+    @staticmethod
+    def _is_fallback_result(result: dict) -> bool:
+        """Check if a structured result is a parse-failure fallback (not real analysis)."""
+        if not isinstance(result, dict):
+            return True
+        # Fallback results have conviction=30 and a raw text summary
+        if result.get("conviction") == 30 and "summary" in result and len(result) <= 3:
+            return True
+        # Also catch conviction=0 all-provider-failed results
+        if result.get("conviction") == 0:
+            return True
+        return False
+
     def _get_deepseek_client_config(self) -> tuple[str, str, str, str]:
         """Return (api_key, base_url, chat_model, reasoner_model) for DeepSeek calls."""
         return (
@@ -163,15 +176,25 @@ class Agent(ABC):
                 api_key, base_url, chat_model, reasoner_model = self._get_deepseek_client_config()
                 model = self.model_override or chat_model
                 if model in (settings.deepseek_reasoner_model, reasoner_model):
-                    return await self._call_deepseek_reasoner(prompt)
-                return await self._call_deepseek_structured(prompt)
+                    result = await self._call_deepseek_reasoner(prompt)
+                else:
+                    result = await self._call_deepseek_structured(prompt)
+                # Check if result is a parse-failure fallback (truncated response)
+                if not self._is_fallback_result(result):
+                    return result
+                errors.append("DeepSeek: truncated/unparseable response")
+                logger.warning(f"{self.name}: DeepSeek returned fallback, trying OpenRouter")
             except Exception as e:
                 errors.append(f"DeepSeek: {e}")
                 logger.warning(f"{self.name}: DeepSeek failed, trying OpenRouter: {e}")
 
         # Try OpenRouter
         try:
-            return await self._call_openrouter_structured(prompt)
+            result = await self._call_openrouter_structured(prompt)
+            if not self._is_fallback_result(result):
+                return result
+            errors.append("OpenRouter: truncated/unparseable response")
+            logger.warning(f"{self.name}: OpenRouter returned fallback, trying Anthropic")
         except Exception as e:
             errors.append(f"OpenRouter: {e}")
             logger.warning(f"{self.name}: OpenRouter failed, trying Anthropic: {e}")
