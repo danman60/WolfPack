@@ -256,32 +256,26 @@ Example 3 — Position management (adjust_stop on profitable long):
                 "confidence": sgo.get("confidence") if isinstance(sgo, dict) else sgo.confidence,
             }
 
-        # Pass through raw data for context
+        # Pass through essential raw data only (slim to prevent DeepSeek truncation)
         if market_data.get("latest_price"):
             context["latest_price"] = market_data["latest_price"]
-        if market_data.get("regime"):
-            regime = market_data["regime"]
-            context["regime"] = regime if isinstance(regime, dict) else regime.model_dump()
-        if market_data.get("circuit_breaker"):
-            context["circuit_breaker"] = market_data["circuit_breaker"]
-        if market_data.get("liquidity"):
-            liq = market_data["liquidity"]
-            context["liquidity"] = liq if isinstance(liq, dict) else liq.model_dump()
-        if market_data.get("volatility"):
-            vol = market_data["volatility"]
-            context["volatility"] = vol if isinstance(vol, dict) else vol.model_dump()
-        if market_data.get("funding"):
-            funding = market_data["funding"]
-            context["funding"] = funding if isinstance(funding, dict) else funding
-        if market_data.get("correlation"):
-            corr = market_data["correlation"]
-            context["correlation"] = corr if isinstance(corr, dict) else corr
-        if market_data.get("monte_carlo"):
-            mc = market_data["monte_carlo"]
-            context["monte_carlo"] = mc if isinstance(mc, dict) else mc.model_dump()
-        if market_data.get("overfit_score"):
-            ovf = market_data["overfit_score"]
-            context["overfit_score"] = ovf if isinstance(ovf, dict) else ovf.model_dump()
+        regime = market_data.get("regime")
+        if regime:
+            rd = regime if isinstance(regime, dict) else regime.model_dump()
+            context["regime"] = rd.get("regime") if isinstance(rd, dict) else rd
+        cb = market_data.get("circuit_breaker")
+        if cb:
+            cbd = cb if isinstance(cb, dict) else cb.model_dump()
+            context["circuit_breaker_state"] = cbd.get("state", "unknown") if isinstance(cbd, dict) else "unknown"
+        vol = market_data.get("volatility")
+        if vol:
+            vd = vol if isinstance(vol, dict) else vol.model_dump()
+            context["vol_regime"] = vd.get("vol_regime")
+            context["vol_zscore"] = vd.get("vol_zscore")
+        funding = market_data.get("funding")
+        if funding:
+            fd = funding if isinstance(funding, dict) else funding
+            context["funding_rate"] = fd.get("rate") or fd.get("funding_rate") if isinstance(fd, dict) else None
         if market_data.get("portfolio_context"):
             context["portfolio_context"] = market_data["portfolio_context"]
 
