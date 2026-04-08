@@ -176,14 +176,17 @@ class LPAutoTrader:
 
                 pools_checked += 1
 
-                # Compute price ratio from sqrtPriceX96
-                price_ratio = self.monitor.compute_price_ratio(state.sqrt_price_x96)
+                # Use USD-based price ratio (decimal-safe, consistent across all pools).
+                # sqrtPriceX96 requires per-pool token decimals which we don't track;
+                # USD prices from GeckoTerminal are always correct.
+                price_ratio = self.monitor.compute_price_ratio_from_usd(
+                    state.token0_price_usd, state.token1_price_usd
+                )
                 if price_ratio <= 0:
-                    # Fallback: use USD prices if available
-                    if state.token1_price_usd and state.token1_price_usd > 0:
-                        price_ratio = state.token0_price_usd / state.token1_price_usd
-                    else:
-                        continue
+                    # Last resort: try sqrtPriceX96 with default decimals
+                    price_ratio = self.monitor.compute_price_ratio(state.sqrt_price_x96)
+                if price_ratio <= 0:
+                    continue
 
                 # Auto-open: if no existing position and under MAX_POSITIONS
                 if pool_address.lower() not in active_pools and active_count < MAX_POSITIONS:
@@ -227,7 +230,6 @@ class LPAutoTrader:
                 logger.warning(f"[lp-trader] Error processing pool {pool_address[:10]}: {e}")
 
         # Rebalance evaluation — check active positions against recommended ranges
-        self.rebalance_engine.advance_tick()  # once per cycle, not per position
         for pos in list(self.engine.portfolio.positions):
             if pos.status not in ("active", "out_of_range"):
                 continue
@@ -416,8 +418,11 @@ class LPAutoTrader:
             if best.address.lower() != position.pool_address.lower() and best.fee_apr > current_candidate.fee_apr * 1.5:
                 return True, f"APR declining, better alternative: {best.name} ({best.fee_apr:.1f}% vs {current_candidate.fee_apr:.1f}%)"
 
-        # If IL is eating all the fees
-        if position.il_usd > position.fees_earned_usd * 2 and position.fees_earned_usd > 0:
+        # If IL is eating all the fees — but only check after 2 hours
+        # Fresh positions have near-zero fees; any IL triggers exit prematurely,
+        # realizing loss that would recover if given time to earn fees.
+        hold_hours = (datetime.now(timezone.utc) - position.opened_at).total_seconds() / 3600
+        if hold_hours >= 2 and position.fees_earned_usd > 1.0 and position.il_usd > position.fees_earned_usd * 2:
             return True, f"IL (${position.il_usd:.2f}) exceeding 2x fees (${position.fees_earned_usd:.2f})"
 
         return False, ""

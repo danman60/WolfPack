@@ -242,6 +242,17 @@ class LPPositionMonitor:
         except Exception:
             return 0.0
 
+    @staticmethod
+    def compute_price_ratio_from_usd(token0_price_usd: float, token1_price_usd: float) -> float:
+        """Compute price ratio from USD prices (decimal-safe, no sqrtPriceX96 needed).
+
+        Returns token0_price / token1_price. Always correct regardless of token decimals.
+        Preferred over sqrtPriceX96 for IL calculations where scale consistency matters.
+        """
+        if token1_price_usd and token1_price_usd > 0 and token0_price_usd and token0_price_usd > 0:
+            return token0_price_usd / token1_price_usd
+        return 0.0
+
     def check_alerts(self, positions: list) -> list[dict]:
         """Check for out-of-range and IL alerts. Returns list of alert dicts."""
         alerts = []
