@@ -299,11 +299,11 @@ class AutoTrader:
                     logger.info(f"[auto-trader] CB suspended and YOLO level {self.yolo_level} < 4, skipping {symbol}")
                     continue
 
-            # Block mean_reversion longs in RANGING regime
+            # Penalize (don't block) mean_reversion longs in RANGING regime
             strategy = rec.get("strategy", "")
             if self._current_regime == "RANGING" and direction == "long" and strategy == "mean_reversion":
-                logger.info(f"[auto-trader] {symbol} long blocked: mean_reversion longs disabled in RANGING regime")
-                continue
+                conviction = max(conviction - 10, 0)
+                logger.info(f"[auto-trader] {symbol} long penalized -10 conviction in RANGING (now {conviction})")
 
             # Trading hours restriction — only open new positions during allowed UTC hours
             current_utc_hour = datetime.now(timezone.utc).hour
