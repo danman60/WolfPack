@@ -194,7 +194,7 @@ class Agent(ABC):
         try:
             response = await client.messages.create(
                 model="claude-sonnet-4-20250514",
-                max_tokens=1024,
+                max_tokens=2048,
                 system=self.system_prompt,
                 messages=[{"role": "user", "content": prompt}],
             )
@@ -254,7 +254,7 @@ class Agent(ABC):
                     {"role": "system", "content": self.system_prompt},
                     {"role": "user", "content": prompt},
                 ],
-                "max_tokens": 1024,
+                "max_tokens": 2048,
             }
             # R1 (deepseek-reasoner) does not support temperature
             if model not in (settings.deepseek_reasoner_model, reasoner_model):
@@ -280,7 +280,7 @@ class Agent(ABC):
                     {"role": "system", "content": self.system_prompt},
                     {"role": "user", "content": prompt},
                 ],
-                max_tokens=1024,
+                max_tokens=2048,
                 temperature=0.3,
                 response_format={"type": "json_object"},
             )
@@ -343,7 +343,7 @@ class Agent(ABC):
                     {"role": "system", "content": self.system_prompt},
                     {"role": "user", "content": prompt},
                 ],
-                max_tokens=1024,
+                max_tokens=2048,
                 temperature=0.3,
                 response_format={"type": "json_object"},
             )
