@@ -378,10 +378,18 @@ _STRATEGY_MAP: dict[Regime, STRATEGY_TYPE] = {
 }
 
 
-def _classify_regime(adx: float, atr_pct: float, direction_score: float) -> Regime:
-    """Classify regime from indicator values per spec thresholds."""
+def _classify_regime(adx: float, atr_pct: float, direction_score: float, atr_value: float = 0.0, price: float = 0.0) -> Regime:
+    """Classify regime from indicator values per spec thresholds.
+
+    PANIC requires BOTH high ATR percentile AND meaningful absolute move.
+    A 2% day after a quiet week shouldn't trigger panic — crypto moves 2% regularly.
+    """
     if atr_pct > 0.92:
-        return Regime.PANIC
+        # Absolute check: ATR must be > 3% of price to be real panic (not just relative spike)
+        if price > 0 and atr_value > 0 and (atr_value / price) < 0.03:
+            pass  # Relative spike but absolute move is normal — don't panic
+        else:
+            return Regime.PANIC
     if adx > 25 and direction_score > 0.2:
         return Regime.TRENDING_UP
     if adx > 25 and direction_score < -0.2:
@@ -503,10 +511,19 @@ class RegimeDetector:
         primary_sub = primary_sub.model_copy(update={"multi_tf_agreement": round(agreement, 2)})
 
         # ----- Classify regime -----
+        # Pass absolute ATR + price so panic requires real absolute move, not just relative spike
+        _, p_highs, p_lows, p_closes = _to_arrays(candles_by_tf[primary_tf])
+        _raw_atr = float(np.mean([
+            max(p_highs[i] - p_lows[i], abs(p_highs[i] - p_closes[i-1]), abs(p_lows[i] - p_closes[i-1]))
+            for i in range(max(1, len(p_closes)-14), len(p_closes))
+        ])) if len(p_closes) > 14 else 0.0
+
         regime = _classify_regime(
             adx=primary_sub.adx_proxy,
             atr_pct=primary_sub.atr_percentile,
             direction_score=direction_score,
+            atr_value=_raw_atr,
+            price=float(p_closes[-1]) if len(p_closes) > 0 else 0.0,
         )
 
         # ----- Confidence -----
