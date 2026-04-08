@@ -161,16 +161,14 @@ class Agent(ABC):
             return json.dumps({"summary": "No LLM API key configured", "conviction": 0})
 
     async def _call_llm_structured(self, prompt: str, schema: dict) -> dict:
-        """Call LLM with provider fallback: DeepSeek → OpenRouter → Claude.
+        """Call LLM with provider fallback: DeepSeek → Minimax → Kimi → OpenRouter → Claude.
 
-        Anthropic: uses tool_use to guarantee valid JSON matching schema.
-        DeepSeek: uses response_format=json_object.
-        DeepSeek-Reasoner (R1): uses text response + JSON extraction (no json_object support).
-        Falls back to text parsing on error.
+        All free providers tried before paid ones. Each provider uses OpenAI-compatible
+        API format with json_object response mode.
         """
         errors = []
 
-        # Try DeepSeek first
+        # 1. DeepSeek (paid but primary)
         if settings.deepseek_api_key:
             try:
                 api_key, base_url, chat_model, reasoner_model = self._get_deepseek_client_config()
@@ -179,22 +177,52 @@ class Agent(ABC):
                     result = await self._call_deepseek_reasoner(prompt)
                 else:
                     result = await self._call_deepseek_structured(prompt)
-                # Check if result is a parse-failure fallback (truncated response)
                 if not self._is_fallback_result(result):
                     return result
-                errors.append("DeepSeek: truncated/unparseable response")
-                logger.warning(f"{self.name}: DeepSeek returned fallback, trying OpenRouter")
+                errors.append("DeepSeek: truncated/unparseable")
+                logger.warning(f"{self.name}: DeepSeek truncated, trying Minimax")
             except Exception as e:
                 errors.append(f"DeepSeek: {e}")
-                logger.warning(f"{self.name}: DeepSeek failed, trying OpenRouter: {e}")
+                logger.warning(f"{self.name}: DeepSeek failed, trying Minimax: {e}")
 
-        # Try OpenRouter
+        # 2. Minimax (free, via ollama cloud proxy)
+        try:
+            result = await self._call_cloud_structured(
+                prompt, base_url="http://100.75.112.14:11434/v1",
+                model="minimax-m2.7:cloud", provider_name="Minimax",
+            )
+            if not self._is_fallback_result(result):
+                return result
+            errors.append("Minimax: truncated/unparseable")
+            logger.warning(f"{self.name}: Minimax fallback, trying Kimi")
+        except Exception as e:
+            errors.append(f"Minimax: {e}")
+            logger.warning(f"{self.name}: Minimax failed, trying Kimi: {e}")
+
+        # 3. Kimi (free, via NIM)
+        nim_key = _get_key("NIM_API_KEY") or os.environ.get("NIM_API_KEY", "")
+        if nim_key:
+            try:
+                result = await self._call_cloud_structured(
+                    prompt, base_url="https://integrate.api.nvidia.com/v1",
+                    model="kimi-k2.5", provider_name="Kimi",
+                    api_key=nim_key,
+                )
+                if not self._is_fallback_result(result):
+                    return result
+                errors.append("Kimi: truncated/unparseable")
+                logger.warning(f"{self.name}: Kimi fallback, trying OpenRouter")
+            except Exception as e:
+                errors.append(f"Kimi: {e}")
+                logger.warning(f"{self.name}: Kimi failed, trying OpenRouter: {e}")
+
+        # 4. OpenRouter (free tier / paid)
         try:
             result = await self._call_openrouter_structured(prompt)
             if not self._is_fallback_result(result):
                 return result
-            errors.append("OpenRouter: truncated/unparseable response")
-            logger.warning(f"{self.name}: OpenRouter returned fallback, trying Anthropic")
+            errors.append("OpenRouter: truncated/unparseable")
+            logger.warning(f"{self.name}: OpenRouter fallback, trying Anthropic")
         except Exception as e:
             errors.append(f"OpenRouter: {e}")
             logger.warning(f"{self.name}: OpenRouter failed, trying Anthropic: {e}")
@@ -341,6 +369,31 @@ class Agent(ABC):
             return self._parse_llm_json(text)
         except Exception as e:
             logger.error(f"{self.name} DeepSeek-Reasoner error: {e}")
+            raise
+
+    async def _call_cloud_structured(
+        self, prompt: str, base_url: str, model: str,
+        provider_name: str = "cloud", api_key: str = "ollama",
+    ) -> dict:
+        """Generic OpenAI-compatible structured call for any cloud provider."""
+        from openai import AsyncOpenAI
+        client = AsyncOpenAI(api_key=api_key, base_url=base_url)
+        try:
+            response = await client.chat.completions.create(
+                model=model,
+                messages=[
+                    {"role": "system", "content": self.system_prompt},
+                    {"role": "user", "content": prompt},
+                ],
+                max_tokens=2048,
+                temperature=0.3,
+                response_format={"type": "json_object"},
+            )
+            self._record_tokens(f"{provider_name}/{model}", response)
+            text = response.choices[0].message.content or "{}"
+            return self._parse_llm_json(text)
+        except Exception as e:
+            logger.error(f"{self.name} {provider_name} structured error: {e}")
             raise
 
     async def _call_openrouter_structured(self, prompt: str) -> dict:
