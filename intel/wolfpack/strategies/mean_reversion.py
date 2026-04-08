@@ -89,14 +89,28 @@ class MeanReversionStrategy(Strategy):
         local_high = np.max(highs[:-sweep_lookback]) if len(highs) > sweep_lookback else np.max(highs)
         local_low = np.min(lows[:-sweep_lookback]) if len(lows) > sweep_lookback else np.min(lows)
 
+        # Displacement: body % of total range on the entry candle.
+        # Exhaustion candle (small body, big wicks closing toward mean) = higher conviction.
+        # Strong push candle (big body away from mean) = move may not be done.
+        entry_candle = window[-1]
+        displacement = _compute_displacement(entry_candle)
+        # Which direction is the body closing relative to the mean?
+        closing_toward_mean_long = entry_candle.close > entry_candle.open  # green candle when below mean
+        closing_toward_mean_short = entry_candle.close < entry_candle.open  # red candle when above mean
+
         # Long: price far below mean + recent wick below local low (sweep)
         if distance < -threshold_atr_mult:
             swept_low = any(c.low < local_low and c.close > local_low for c in recent)
             conviction = 70 if swept_low else 55
+            # Displacement adjustment
+            if displacement < 0.40 and closing_toward_mean_long:
+                conviction += 10  # exhaustion wick closing back up = reversal likely
+            elif displacement > 0.70 and not closing_toward_mean_long:
+                conviction -= 15  # strong red body pushing lower = move not done
             return {
                 "symbol": "",
                 "direction": "long",
-                "conviction": conviction,
+                "conviction": min(conviction, 90),
                 "entry_price": current_close,
                 "stop_loss": round(current_close - atr * stop_atr_mult, 2),
                 "take_profit": round(mean, 2),
@@ -107,10 +121,15 @@ class MeanReversionStrategy(Strategy):
         if distance > threshold_atr_mult:
             swept_high = any(c.high > local_high and c.close < local_high for c in recent)
             conviction = 70 if swept_high else 55
+            # Displacement adjustment
+            if displacement < 0.40 and closing_toward_mean_short:
+                conviction += 10  # exhaustion wick closing back down = reversal likely
+            elif displacement > 0.70 and not closing_toward_mean_short:
+                conviction -= 15  # strong green body pushing higher = move not done
             return {
                 "symbol": "",
                 "direction": "short",
-                "conviction": conviction,
+                "conviction": min(conviction, 90),
                 "entry_price": current_close,
                 "stop_loss": round(current_close + atr * stop_atr_mult, 2),
                 "take_profit": round(mean, 2),
@@ -137,3 +156,16 @@ class MeanReversionStrategy(Strategy):
             true_ranges.append(tr)
 
         return sum(true_ranges) / len(true_ranges) if true_ranges else 0.0
+
+
+def _compute_displacement(candle) -> float:
+    """Body percentage of total candle range (0.0 = doji, 1.0 = marubozu).
+
+    Measures directional commitment: high displacement = strong move,
+    low displacement = rejection/exhaustion (big wicks, small body).
+    """
+    total_range = candle.high - candle.low
+    if total_range <= 0:
+        return 0.0
+    body = abs(candle.close - candle.open)
+    return body / total_range
