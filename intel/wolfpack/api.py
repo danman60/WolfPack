@@ -2126,6 +2126,18 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                 except Exception:
                     pass
 
+                # Set VWAP for long entry filtering
+                try:
+                    if candles_1h and len(candles_1h) >= 20:
+                        closes = [c.close for c in candles_1h[-20:]]
+                        volumes = [c.volume for c in candles_1h[-20:]]
+                        total_vol = sum(volumes)
+                        if total_vol > 0:
+                            vwap = sum(c * v for c, v in zip(closes, volumes)) / total_vol
+                            auto_trader.set_vwap(symbol, vwap)
+                except Exception:
+                    pass
+
                 # ── Step 5b: Run mechanical strategies BEFORE Brief recs (sets _last_strategy_signals for Brief sizing) ──
                 try:
                     auto_trader = _get_auto_trader()

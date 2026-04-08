@@ -132,6 +132,7 @@ class AutoTrader:
         self.yolo_level = 4  # Default to YOLO for paper trading
         self._last_strategy_signals: list[dict] = []
         self._current_regime: str = "unknown"
+        self._latest_vwaps: dict[str, float] = {}  # symbol -> VWAP
         self._perf_tracker = PerformanceTracker(rolling_window=50)
         self._apply_yolo_profile()
 
@@ -194,6 +195,11 @@ class AutoTrader:
     def set_regime(self, macro_regime: str) -> None:
         """Store current macro regime for filtering decisions."""
         self._current_regime = macro_regime
+
+    def set_vwap(self, symbol: str, vwap: float) -> None:
+        """Store latest VWAP for a symbol. Called from the intelligence cycle."""
+        if vwap > 0:
+            self._latest_vwaps[symbol] = vwap
 
     def _is_pumping(self, symbol: str, latest_prices: dict[str, float]) -> bool:
         """Check if price moved up >2% recently by comparing to 1h-ago snapshot.
@@ -299,11 +305,19 @@ class AutoTrader:
                     logger.info(f"[auto-trader] CB suspended and YOLO level {self.yolo_level} < 4, skipping {symbol}")
                     continue
 
-            # Penalize (don't block) mean_reversion longs in RANGING regime
+            # Penalize mean_reversion longs in RANGING regime
             strategy = rec.get("strategy", "")
             if self._current_regime == "RANGING" and direction == "long" and strategy == "mean_reversion":
                 conviction = max(conviction - 10, 0)
                 logger.info(f"[auto-trader] {symbol} long penalized -10 conviction in RANGING (now {conviction})")
+
+            # VWAP filter: only long when price is above VWAP
+            if direction == "long":
+                vwap = self._latest_vwaps.get(symbol, 0)
+                current_price = (latest_prices or {}).get(symbol, 0)
+                if vwap > 0 and current_price > 0 and current_price < vwap:
+                    logger.info(f"[auto-trader] {symbol} long blocked: price ${current_price:,.2f} below VWAP ${vwap:,.2f}")
+                    continue
 
             # Trading hours restriction — only open new positions during allowed UTC hours
             current_utc_hour = datetime.now(timezone.utc).hour
@@ -689,10 +703,18 @@ class AutoTrader:
                 if direction == "wait":
                     continue
 
-                # Block mean_reversion longs in RANGING regime
+                # Penalize mean_reversion longs in RANGING regime (conviction -10)
                 if routing["macro_regime"] == "RANGING" and direction == "long" and strategy_name == "mean_reversion":
-                    logger.info(f"[auto-trader] {symbol} long blocked: mean_reversion longs disabled in RANGING regime")
-                    continue
+                    signal["conviction"] = max(signal.get("conviction", 60) - 10, 0)
+                    logger.info(f"[auto-trader] {symbol} mech long penalized in RANGING")
+
+                # VWAP filter on mechanical longs
+                if direction == "long":
+                    vwap = self._latest_vwaps.get(symbol, 0)
+                    current_price = (latest_prices or {}).get(symbol, 0)
+                    if vwap > 0 and current_price > 0 and current_price < vwap:
+                        logger.info(f"[auto-trader] {symbol} mech long blocked: below VWAP")
+                        continue
 
                 rec_id = f"strat-{strategy_name}-{symbol}-{timestamp}"
 
