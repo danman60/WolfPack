@@ -15,6 +15,8 @@ from contextlib import asynccontextmanager
 
 from wolfpack.config import settings
 
+# Configure root logger so all wolfpack.* loggers output to stderr (visible in journald)
+logging.basicConfig(level=logging.INFO, format="%(message)s")
 logger = logging.getLogger(__name__)
 
 # Telegram bot singleton
