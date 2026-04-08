@@ -163,10 +163,13 @@ Example 2 — Choppy uncertain regime:
                 context["latest_price"] = last.get("close", 0)
                 context["latest_volume"] = last.get("volume", 0)
 
+        # Trim context to essential data — large prompts cause DeepSeek truncation
+        slim_context = _slim_context(context)
+
         # Call LLM with structured output
         prompt = f"""Analyze the following quantitative signals for {symbol} on {exchange}:
 
-{json.dumps(context, indent=2, default=str)}"""
+{json.dumps(slim_context, indent=2, default=str)}"""
 
         parsed = await self._call_llm_structured(prompt, QUANT_SCHEMA)
 
@@ -303,3 +306,55 @@ Example 2 — Choppy uncertain regime:
             return 100.0
         rs = avg_gain / avg_loss
         return 100 - (100 / (1 + rs))
+
+
+def _slim_context(ctx: dict) -> dict:
+    """Trim context to essential fields — prevents DeepSeek response truncation.
+
+    Full module outputs can be 3000+ tokens. LLM only needs the key numbers.
+    """
+    slim: dict = {
+        "symbol": ctx.get("symbol"),
+        "exchange": ctx.get("exchange"),
+        "latest_price": ctx.get("latest_price"),
+        "technical_signals": ctx.get("technical_signals", []),
+    }
+
+    # Regime: just the key fields
+    r = ctx.get("regime")
+    if r and isinstance(r, dict):
+        slim["regime"] = {
+            "regime": r.get("regime"),
+            "confidence": r.get("confidence"),
+            "risk_scalar": r.get("risk_scalar"),
+        }
+
+    # Volatility: key numbers only
+    v = ctx.get("volatility")
+    if v and isinstance(v, dict):
+        slim["volatility"] = {
+            "vol_regime": v.get("vol_regime"),
+            "realized_vol_1d": v.get("realized_vol_1d"),
+            "vol_zscore": v.get("vol_zscore"),
+            "risk_state": v.get("risk_state"),
+        }
+
+    # Liquidity: just the spread and depth
+    liq = ctx.get("liquidity")
+    if liq and isinstance(liq, dict):
+        slim["liquidity"] = {
+            "spread_bps": liq.get("spread_bps"),
+            "bid_depth_usd": liq.get("bid_depth_usd"),
+            "ask_depth_usd": liq.get("ask_depth_usd"),
+        }
+
+    # Funding: just the rate
+    f = ctx.get("funding")
+    if f and isinstance(f, dict):
+        slim["funding_rate"] = f.get("rate") or f.get("funding_rate")
+
+    # Correlation: just the stat arb alert if present
+    if ctx.get("stat_arb_alert"):
+        slim["stat_arb_alert"] = ctx["stat_arb_alert"]
+
+    return slim
