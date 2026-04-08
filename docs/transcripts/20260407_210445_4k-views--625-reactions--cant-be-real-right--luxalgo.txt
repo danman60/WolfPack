@@ -1,0 +1,24 @@
+# Transcript: 4K views · 625 reactions | Can’t be real right?😳 | LuxAlgo
+# Source: https://www.facebook.com/share/r/1B7xremQcF/
+# Project: WolfPack
+# Model: base | Language: en | Duration: 103.7s
+# Transcribed: 2026-04-07 21:04:50
+
+[0.0s - 7.7s] me, I mean, it's all over the map. There we go. Day. What the? I can pour it up on
+[7.7s - 14.2s] trading view hold on. Look at this. It's it's right. It's 100% right. Holy crap.
+[14.2s - 25.8s] Probably CO strategy that trades the five minute and has at least 50 trades and exit conditions.
+[26.7s - 36.1s] Start there. Okay, okay. Now I kind of want to see a better profit factor, factor over two and
+[36.1s - 42.7s] try this. I think you can find a price action strategy. Still with at least 50 trades.
+[42.7s - 47.4s] You got to be so specific. There's me and it's all over the map. There we go. Day.
+[49.2s - 51.3s] What the? Hello?
+[56.6s - 66.0s] That is that can't be right. Right? Holy crap. Says it currently has an open short.
+[66.9s - 74.1s] Yeah, that's that's the most insane one I've seen so far. Let's pull up the strategy.
+[75.0s - 79.7s] I can pull it up on trading view hold on. All right, this strategy uses the oscillator
+[79.7s - 85.1s] and the signals and overlays back tester. It's in its biggest drawdown right now. Look at this.
+[86.2s - 90.6s] It's it's right. It's 100% right. Holy crap.
+[91.4s - 96.6s] Okay, so utilizing replicate on trading view, we brought it over. It just had like the run of
+[96.6s - 103.0s] its life until now. It just had its biggest drawdown. Dude, that's crazy.
+
+---
+
+me, I mean, it's all over the map. There we go. Day. What the? I can pour it up on trading view hold on. Look at this. It's it's right. It's 100% right. Holy crap. Probably CO strategy that trades the five minute and has at least 50 trades and exit conditions. Start there. Okay, okay. Now I kind of want to see a better profit factor, factor over two and try this. I think you can find a price action strategy. Still with at least 50 trades. You got to be so specific. There's me and it's all over the map. There we go. Day. What the? Hello? That is that can't be right. Right? Holy crap. Says it currently has an open short. Yeah, that's that's the most insane one I've seen so far. Let's pull up the strategy. I can pull it up on trading view hold on. All right, this strategy uses the oscillator and the signals and overlays back tester. It's in its biggest drawdown right now. Look at this. It's it's right. It's 100% right. Holy crap. Okay, so utilizing replicate on trading view, we brought it over. It just had like the run of its life until now. It just had its biggest drawdown. Dude, that's crazy.

@@ -328,3 +328,28 @@ Saved to `docs/transcripts/20260406_061842_btc-trade-idea--forex-signals.txt`. W
 ### New Transcription: 1.3K views · 88 reactions | Are you paying a trading guru in 2026? Seriously, if you are you need to ask yourself a few questions: - Am I getting educational value out of this? - Am I making more money then I lose after a large sample size of trades (and accounting for monthly guru fees)? - Does the person I follow have a proven track record or real broker statements to share? Times are changing and people are quickly catching on to the vast majority of the “fake” ones out there. If you’ve got someone in mind that you want to see broker statements from, tag them in the comments. Let’s see if they’ll respond 😉 If you’re fed up with trading gurus, follow us here @thealphainsider #trading #alphainsider #tradingtips #tradingguru | Alpha Insider
 **Source:** https://www.facebook.com/share/r/1GFx4iHtKa/
 Saved to `docs/transcripts/20260406_212056_13k-views--88-reactions--are-you-paying-a-trading-guru-in-2026-seriously-if-you-.txt`. Whisper base model, auto-transcribed.
+
+## From projects — 2026-04-07 21:04
+### New Transcription: 4K views · 625 reactions | Can’t be real right?😳 | LuxAlgo
+**Source:** https://www.facebook.com/share/r/1B7xremQcF/
+Saved to `docs/transcripts/20260407_210445_4k-views--625-reactions--cant-be-real-right--luxalgo.txt`. Whisper base model, auto-transcribed.
+
+## From CommandCentered — 2026-04-07 22:23
+### New Transcription: 33K views · 346 reactions | Liquidity sweep, break off structure, enter off of it, there you go. #trading #daytrading #tradingforbeginners #strategy | Tradingwithmustafah
+**Source:** https://www.facebook.com/share/r/1CadyE6hGa/
+Saved to `docs/transcripts/20260407_222352_33k-views--346-reactions--liquidity-sweep-break-off-structure-enter-off-of-it-th.txt`. Whisper base model, auto-transcribed.
+
+## From CommandCentered — 2026-04-08 07:10
+### New Transcription: 34K views · 731 reactions | How to catch the reversal 📈📉 #daytrading #liquidity #smartmoney #tradingeducation #tradingstrategy | Rick Traders
+**Source:** https://www.facebook.com/share/r/1B2L1dtbku/
+Saved to `docs/transcripts/20260408_071026_34k-views--731-reactions--how-to-catch-the-reversal--daytrading-liquidity-smartm.txt`. Whisper base model, auto-transcribed.
+
+## From CommandCentered — 2026-04-08 07:15
+### New Transcription: 313 reactions · 43 shares | ♾️ 💰 🔥 | Jackson Locschinskey
+**Source:** https://www.facebook.com/share/r/18AtUTBmAK/
+Saved to `docs/transcripts/20260408_071538_313-reactions--43-shares------jackson-locschinskey.txt`. Whisper base model, auto-transcribed.
+
+## From sysadmin-3 — 2026-04-08 19:27
+### New Transcription: 7.3K views · 837 reactions | Remove ALL of your INDICATORS and shop chasing for good. Less is more - I used THESE 2 indicators to quit my job 6 years ago. #howtotrade #momentum #tradingeducation #daytrading #stockstowatch | Momentum.
+**Source:** https://www.facebook.com/share/v/1BQJjVxAJ4/
+Saved to `docs/transcripts/20260408_192735_73k-views--837-reactions--remove-all-of-your-indicators-and-shop-chasing-for-goo.txt`. Whisper base model, auto-transcribed.
