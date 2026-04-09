@@ -1,5 +1,108 @@
 # Current Work - WolfPack
 
+## ACTIVE — 2026-04-09 22:32 UTC — Phase 1 instrumentation deployed + 2 emergency bugs fixed
+
+**Droplet intel service:** PID 4023742, active since 22:28:47 UTC, last successful cycle 22:32:25.
+
+**Open positions (paper_perp):**
+- DOGE long @ $0.09009 | SL $0.09 (old-style rounding, tight but valid for long) | TP $0.10 | +$10.60
+- AVAX short @ $9.5432 | SL $9.67 | TP $9.20 | -$6.30 (proof of new round_price() fix)
+
+Equity $25,063.70 (inflated legacy display) / real paper engine ~$10,068. Realized today $59.40, unrealized $4.30. Circuit breaker ACTIVE. `regime_drift` endpoint active with 4 symbols reporting.
+
+**Phase 1 of profitability+execution plan SHIPPED (commit `f8afdce`):**
+1. ✅ `wp_cycle_metrics` table + CycleMetricsRecorder (per-cycle telemetry)
+2. ✅ `wp_veto_log` table + writer in veto.py (every Brief rec → pass/adjust/reject audit row)
+3. ✅ `wp_watchdog_state` table (for future migration from /tmp state file)
+4. ✅ Quant/Snoop/Sage outputs now persist to `wp_agent_outputs` alongside Brief
+5. ✅ LLM `completion_reason` + `tokens_used` logged in agent raw_data
+6. ✅ `BriefVeto(profile=...)` wiring — now resolves from `RISK_PRESETS` (no behavioral change, but unblocks per-wallet profiles)
+7. ✅ `CYCLE_ALERT_THRESHOLD` 6→3 (alert after 15 min failures, not 30)
+8. ✅ `regime_drift` field in `/health/deep` (per-symbol regime age)
+9. ✅ Migration `20260410_cycle_telemetry` applied via Supabase MCP
+
+Plan file: `/home/danman60/.claude/plans/crystalline-splashing-cerf.md`
+
+**2 emergency bugs fixed during Phase 1 verification:**
+
+1. **Phantom drawdown trip (commit `20a1fc9`)** — `wp_equity_highwater` stored peak $25,058 (wallet snapshot-inflated equity) but current checks used PaperTradingEngine equity $10,058 (real), creating phantom 59.86% drawdown → Max drawdown CB trip → EMERGENCY_STOP → all new entries blocked. Added sanity guard in `drawdown_monitor.py::update_peaks`: if current < peak × 0.5, reset peak to current instead of computing phantom drawdown. Also: reset the `wp_equity_highwater` + `wp_circuit_breaker_state` DB rows and called `/circuit-breaker/reset` via API (key is on droplet `/root/WolfPack/intel/.env`, NOT in `~/.env.keys`).
+
+2. **SL/TP rounding bug (commit `eebd5e9`)** — `round(price, 2)` everywhere in auto_trader/paper_trading/strategies collapsed DOGE SL from $0.09306 to $0.09 (0.1% stop instead of 3.5%). A DOGE short with SL==TP==$0.09 bled $342 before any stop fired. Replaced all price roundings with new `intel/wolfpack/price_utils.py::round_price()` which uses magnitude-aware precision (2/3/5/6/8 decimals based on price scale). Fixed files: `auto_trader.py` (5 sites including `_compute_default_stop_loss` and HTF trailing stop), `paper_trading.py` (trailing stop), `strategies/measured_move.py`, `strategies/turtle_donchian.py`. Also manually surgically removed the phantom DOGE short from `wp_portfolio_snapshots` by setting positions='[]' on the latest paper_perp snapshot row, then stop/start service.
+
+**Gaps flagged for Phase 1 cleanup (not blocking):**
+- `agent_outputs_stored` and `strategies_activated` jsonb fields in wp_cycle_metrics are consistently `{}` — the recorder hooks don't reach the agent execution or strategy activation paths yet. Only the top-level counters (recs_produced, veto counts, positions_opened/closed, cb_state, regime_state_per_symbol) are populated.
+- `wp_agent_outputs` uses `on_conflict (agent_name, exchange_id)` upsert → only 1 row per (agent, exchange) at a time, so historical agent output rewind requires schema change (add cycle_id or drop the unique constraint). Deferred — out of Phase 1's additive-only scope.
+- Price rounding NOT YET fixed in: `backtest_engine.py` (backtest accuracy), `live_trading.py` (live order prices — LIVE TRADING WILL HAVE SAME BUG). These don't affect current paper trading but must be fixed before live cutover Apr 13.
+- YOLO profile still at level 4 on paper_perp (user chose; main cycle veto uses balanced but auto-trader uses YOLO — split personality). Leave as-is until user decides.
+- `wp_portfolio_snapshots.exchange_id`-vs-`wallet_id` dual-keyed rows cause the `_get_paper_engine()` legacy path and wallet-aware `_get_perp_trader("paper_perp")` to diverge. The legacy `/portfolio/close/{symbol}` endpoint closes the wrong engine.
+
+**Next in plan (Phases 2-4, not yet started):**
+- Phase 2: profitability audit — trade journal decomposition, veto leakage estimate (needs 48h wp_veto_log), Tier-2 reel strategy backtests, audit report
+- Phase 3: power tweaks informed by audit (asymmetric gating, per-strategy conviction floors, SL/TP tuning from MFE/MAE)
+- Phase 4: daily report cron, reconcile cron, canary trade cron, severity-routed Telegram, watchdog harden
+
+**Known remaining backlog (non-blocking):**
+- Wave-5 equity inflation ($25K vs $10K) — the root cause of the phantom drawdown. Sanity guard is a band-aid; real fix requires unifying equity sources.
+- `exit_reason` not set correctly on strategy-path closes (DOGE close showed "manual")
+- Brief-only size multiplier 0.25× may still produce sub-$200 positions occasionally
+- Wave 1 migration strict CHECK/UNIQUE constraints not applied
+
+---
+
+## Previous snapshot — 2026-04-09 ~21:12 UTC (fresh restart point)
+
+**State snapshot for fresh session pickup:**
+
+**Droplet intel service:** PID 4007241, active, running 24/7 trading loop. 16 commits shipped today ending at `6da4539` (exchange_id NOT NULL fix + position_actions duplicate spam fix).
+
+**Open positions** (via `/auto-trader/status?wallet=paper_perp`):
+- BTC long @ $67,048 | SL $70,000 | +$17.75 (~+7%)
+- ETH long @ $2,033 | SL $2,100 | +$20.20 (~+8%)
+
+**Today's realized P&L:** 1 trade closed (DOGE short −$25.09, stopped out cleanly — proof the auto-SL fix works). Equity showing $25K-ish (pre-existing legacy inflation from `wp_auto_portfolio_snapshots`, not a today-bug).
+
+**All 3 log-poisoning bugs fixed and deployed:**
+1. ✅ Veto latching loop (commit `6abea8e`) — `_record_rejection` preserves first-rejection time
+2. ✅ "wait" no longer creates cooldown (commit `fd0c5cc`)
+3. ✅ `wp_portfolio_snapshots.exchange_id` NOT NULL (commit `6da4539`) — THE reason wave-5 trades weren't persisting across restarts
+4. ✅ `wp_position_actions` duplicate-key spam (commit `6da4539`) — 9/cycle gone
+5. ✅ Balanced profile conviction floor 55→50 + cooldown 2h→1h (commit `b450916`)
+6. ✅ 24/7 trading window + $200 min position (commit `592d947`)
+7. ✅ Auto stop-loss mandatory on every open (BTC 2% / ETH 2.5% / alts 3.5%) (commit `34a723e`)
+8. ✅ `/portfolio?wallet=X` routes to live trader, not legacy engine (commit `34a723e`)
+9. ✅ Backfill applied to DB: 100% wallet_id coverage across all 8 data tables
+10. ✅ LLM fallback chain rewritten: DeepSeek → Minimax(Ollama Cloud) → GLM → Kimi (no more OpenRouter/Anthropic — commit `37e0588`)
+11. ✅ Zero-trade watchdog cron on SpyBalloon — NOW 24/7 (`*/15 * * * *`)
+
+**4 Facebook reels transcribed + analyzed today** — stored at `docs/transcripts/`. Backlog entries for:
+- Value zone SMA 200/400 envelope
+- HTF sweep + 1m BOS confirmation gate
+- 15-minute ORB as new strategy
+- (Reel 4 was a promo, no content)
+
+Implementation priority from the reel analysis:
+- **Tier 1 DONE**: auto SL (shipped this session)
+- **Tier 1 DONE**: `/portfolio` routing fix (shipped this session)
+- **Tier 2 BACKLOG**: 1m BOS gate on liquidity_sweep_filter, band compression filter
+- **Tier 3 BACKLOG**: ORB 15m strategy
+
+**Reason for refresh:** context rot — ~200+ tool calls, 16 commits, deep wave 1-6 work + tier-1 fixes + 4 video transcriptions. Starting fresh to preserve attention on overnight monitoring.
+
+**Next session should:**
+1. First priority: **CHECK TRADING ACTIVITY** — are new opens happening since 20:53 UTC? Query `wp_trade_history` for opened_at > 20:53 or check `/auto-trader/status?wallet=paper_perp` positions count.
+2. If watchdog has alerted (check `/tmp/wolfpack-zero-trade.log`), investigate.
+3. User's goal: get to +$500 overnight. Central estimate is $100-$400, with $500+ plausible at ~30-40% probability.
+4. Do NOT start any strategy work (BOS gate, ORB, compression filter) — those are backlog. Wait for user direction.
+5. If user asks "how did overnight go?", query `wp_trade_history` for trades closed since 2026-04-09 21:00 UTC and summarize P&L by symbol/strategy.
+
+**Known remaining backlog (non-blocking):**
+- Wave-5 equity inflation ($25K vs $10K — legacy snapshot table issue, not fixed yet)
+- `exit_reason` not being set correctly on strategy-path closes (DOGE close showed "manual" in DB instead of "stop_loss")
+- Brief-only size multiplier 0.25× may still produce sub-$200 positions occasionally
+- Wave 1 migration strict CHECK/UNIQUE constraints not applied (only additive migration ran)
+
+---
+
 ## Strategy Idea Backlog — "Value Zone" SMA Envelope (2026-04-09)
 
 From Facebook reel transcript at `docs/transcripts/20260409_194801_facebook-reel-883553434413015.txt`. Worth a backtest, not a priority.
