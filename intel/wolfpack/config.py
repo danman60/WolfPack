@@ -9,14 +9,17 @@ class Settings(BaseSettings):
     supabase_key: str = ""
 
     # LLM providers
-    anthropic_api_key: str = ""
+    anthropic_api_key: str = ""       # Retained for non-fallback use; NOT in fallback chain
     openai_api_key: str = ""          # Also used for DeepSeek via base_url override
-    openrouter_api_key: str = ""      # OpenRouter API key
-    # DeepSeek (financial-tuned model)
+    openrouter_api_key: str = ""      # Retained for compat; NOT in fallback chain
+    # DeepSeek (financial-tuned model) — primary
     deepseek_api_key: str = ""
     deepseek_base_url: str = "https://api.deepseek.com"
     deepseek_model: str = "deepseek-chat"
     deepseek_reasoner_model: str = "deepseek-reasoner"
+    # Ollama Cloud (for Minimax and GLM via https://ollama.com/v1)
+    ollama_api_key: str = ""
+    ollama_cloud_base_url: str = "https://ollama.com/v1"
 
     # Exchange API
     hyperliquid_wallet: str = ""

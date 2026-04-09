@@ -161,14 +161,18 @@ class Agent(ABC):
             return json.dumps({"summary": "No LLM API key configured", "conviction": 0})
 
     async def _call_llm_structured(self, prompt: str, schema: dict) -> dict:
-        """Call LLM with provider fallback: DeepSeek → Minimax → Kimi → OpenRouter → Claude.
+        """Call LLM with provider fallback: DeepSeek → Minimax → GLM → Kimi.
 
-        All free providers tried before paid ones. Each provider uses OpenAI-compatible
-        API format with json_object response mode.
+        Policy: Only DeepSeek native + pre-configured cloud models (Minimax, GLM
+        via Ollama Cloud; Kimi via NVIDIA NIM). OpenRouter and Anthropic are
+        NOT in this chain — both ran out of credits in prod and the user wants
+        to avoid hitting them at all.
+
+        Each provider uses OpenAI-compatible API format with json_object mode.
         """
         errors = []
 
-        # 1. DeepSeek (paid but primary)
+        # 1. DeepSeek native (paid, primary)
         if settings.deepseek_api_key:
             try:
                 api_key, base_url, chat_model, reasoner_model = self._get_deepseek_client_config()
@@ -185,21 +189,46 @@ class Agent(ABC):
                 errors.append(f"DeepSeek: {e}")
                 logger.warning(f"{self.name}: DeepSeek failed, trying Minimax: {e}")
 
-        # 2. Minimax (free, via ollama cloud proxy)
-        try:
-            result = await self._call_cloud_structured(
-                prompt, base_url="http://100.75.112.14:11434/v1",
-                model="minimax-m2.7:cloud", provider_name="Minimax",
-            )
-            if not self._is_fallback_result(result):
-                return result
-            errors.append("Minimax: truncated/unparseable")
-            logger.warning(f"{self.name}: Minimax fallback, trying Kimi")
-        except Exception as e:
-            errors.append(f"Minimax: {e}")
-            logger.warning(f"{self.name}: Minimax failed, trying Kimi: {e}")
+        # 2. Minimax via Ollama Cloud (https://ollama.com/v1 with OLLAMA_API_KEY)
+        ollama_key = settings.ollama_api_key or _get_key("OLLAMA_API_KEY") or os.environ.get("OLLAMA_API_KEY", "")
+        if ollama_key:
+            try:
+                result = await self._call_cloud_structured(
+                    prompt,
+                    base_url=settings.ollama_cloud_base_url,
+                    model="minimax-m2.7:cloud",
+                    provider_name="Minimax",
+                    api_key=ollama_key,
+                )
+                if not self._is_fallback_result(result):
+                    return result
+                errors.append("Minimax: truncated/unparseable")
+                logger.warning(f"{self.name}: Minimax truncated, trying GLM")
+            except Exception as e:
+                errors.append(f"Minimax: {e}")
+                logger.warning(f"{self.name}: Minimax failed, trying GLM: {e}")
 
-        # 3. Kimi (free, via NIM)
+            # 3. GLM via Ollama Cloud (same endpoint, same key)
+            try:
+                result = await self._call_cloud_structured(
+                    prompt,
+                    base_url=settings.ollama_cloud_base_url,
+                    model="glm-5.1:cloud",
+                    provider_name="GLM",
+                    api_key=ollama_key,
+                )
+                if not self._is_fallback_result(result):
+                    return result
+                errors.append("GLM: truncated/unparseable")
+                logger.warning(f"{self.name}: GLM truncated, trying Kimi")
+            except Exception as e:
+                errors.append(f"GLM: {e}")
+                logger.warning(f"{self.name}: GLM failed, trying Kimi: {e}")
+        else:
+            errors.append("Ollama Cloud: no OLLAMA_API_KEY configured — skipping Minimax + GLM")
+            logger.warning(f"{self.name}: No OLLAMA_API_KEY — skipping Minimax + GLM, trying Kimi")
+
+        # 4. Kimi via NVIDIA NIM (last-resort cloud fallback)
         nim_key = _get_key("NIM_API_KEY") or os.environ.get("NIM_API_KEY", "")
         if nim_key:
             try:
@@ -211,31 +240,16 @@ class Agent(ABC):
                 if not self._is_fallback_result(result):
                     return result
                 errors.append("Kimi: truncated/unparseable")
-                logger.warning(f"{self.name}: Kimi fallback, trying OpenRouter")
+                logger.warning(f"{self.name}: Kimi truncated — end of fallback chain")
             except Exception as e:
                 errors.append(f"Kimi: {e}")
-                logger.warning(f"{self.name}: Kimi failed, trying OpenRouter: {e}")
+                logger.warning(f"{self.name}: Kimi failed — end of fallback chain: {e}")
+        else:
+            errors.append("Kimi: no NIM_API_KEY configured")
 
-        # 4. OpenRouter (free tier / paid)
-        try:
-            result = await self._call_openrouter_structured(prompt)
-            if not self._is_fallback_result(result):
-                return result
-            errors.append("OpenRouter: truncated/unparseable")
-            logger.warning(f"{self.name}: OpenRouter fallback, trying Anthropic")
-        except Exception as e:
-            errors.append(f"OpenRouter: {e}")
-            logger.warning(f"{self.name}: OpenRouter failed, trying Anthropic: {e}")
-
-        # Try Anthropic
-        if settings.anthropic_api_key or _get_key("ANTHROPIC_API_KEY"):
-            try:
-                return await self._call_anthropic_structured(prompt, schema)
-            except Exception as e:
-                errors.append(f"Anthropic: {e}")
-                logger.warning(f"{self.name}: Anthropic also failed: {e}")
-
-        logger.error(f"{self.name}: All LLM providers failed: {errors}")
+        # Exhausted all whitelisted providers. Do NOT fall through to OpenRouter
+        # or Anthropic — the user explicitly excluded those to avoid paid overage.
+        logger.error(f"{self.name}: All whitelisted LLM providers failed: {errors}")
         return {"summary": f"All providers failed: {'; '.join(errors)}", "conviction": 0}
 
     async def _call_anthropic(self, prompt: str) -> str:
