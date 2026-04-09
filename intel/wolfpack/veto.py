@@ -211,6 +211,14 @@ class BriefVeto:
         )
 
     def _record_rejection(self, symbol: str) -> None:
+        # Do NOT refresh the timer if already in cooldown.
+        # Previously this latched symbols out forever: the -20 recent-rejection
+        # penalty (line 190) would drop conviction below floor, trigger another
+        # rejection at line 197, which refreshed the timer, extending cooldown
+        # indefinitely. With this guard, the 2h cooldown is absolute from the
+        # FIRST rejection — symbol is guaranteed to escape exactly 2h later.
+        if symbol in self._recent_rejections and self._recently_rejected(symbol):
+            return
         self._recent_rejections[symbol] = datetime.now(timezone.utc)
 
     def _recently_rejected(self, symbol: str) -> bool:
