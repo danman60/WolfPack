@@ -10,6 +10,8 @@ from typing import Any
 
 from pydantic import BaseModel
 
+from wolfpack.price_utils import round_price
+
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
@@ -455,7 +457,7 @@ class PaperTradingEngine:
             new_stop = pos.trailing_stop_peak * (1.0 - trail_frac)
             # Only tighten, never loosen
             if pos.stop_loss is None or new_stop > pos.stop_loss:
-                pos.stop_loss = round(new_stop, 2)
+                pos.stop_loss = round_price(new_stop)
         else:
             # Short: track lowest price seen
             if pos.trailing_stop_peak is None or pos.current_price < pos.trailing_stop_peak:
@@ -464,7 +466,7 @@ class PaperTradingEngine:
             new_stop = pos.trailing_stop_peak * (1.0 + trail_frac)
             # Only tighten (lower for shorts), never loosen
             if pos.stop_loss is None or new_stop < pos.stop_loss:
-                pos.stop_loss = round(new_stop, 2)
+                pos.stop_loss = round_price(new_stop)
 
     def enable_trailing_stop(self, symbol: str, trail_pct: float) -> bool:
         """Enable trailing stop on an open position.

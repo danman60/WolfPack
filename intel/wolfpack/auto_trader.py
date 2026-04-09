@@ -107,6 +107,9 @@ def _build_yolo_profiles() -> dict:
 YOLO_PROFILES = _build_yolo_profiles()
 
 
+from wolfpack.price_utils import round_price
+
+
 def _compute_default_stop_loss(symbol: str, direction: str, entry_price: float) -> float:
     """Compute a mechanical stop_loss price based on per-symbol bps distance.
 
@@ -128,9 +131,9 @@ def _compute_default_stop_loss(symbol: str, direction: str, entry_price: float) 
         bps = settings.default_stop_loss_bps_alt
     frac = bps / 10000.0
     if direction == "long":
-        return round(entry_price * (1 - frac), 6)
+        return round_price(entry_price * (1 - frac))
     else:  # short
-        return round(entry_price * (1 + frac), 6)
+        return round_price(entry_price * (1 + frac))
 
 
 class AutoTrader:
@@ -498,7 +501,7 @@ class AutoTrader:
             pos = self.engine.open_position(
                 symbol=symbol,
                 direction=direction,
-                current_price=round(entry_price, 2),
+                current_price=round_price(entry_price),
                 size_pct=min(size_pct, profile["max_size_pct"]),
                 recommendation_id=f"auto-{rec.get('id', 'unknown')}",
                 max_positions_per_symbol=profile.get("max_positions_per_symbol", 1),
@@ -915,7 +918,7 @@ class AutoTrader:
                 pos = self.engine.open_position(
                     symbol=symbol,
                     direction=direction,
-                    current_price=round(signal.get("entry_price", candles[current_idx].close), 2),
+                    current_price=round_price(signal.get("entry_price", candles[current_idx].close)),
                     size_pct=size_pct,
                     recommendation_id=rec_id,
                     max_positions_per_symbol=profile.get("max_positions_per_symbol", 1),
@@ -994,18 +997,18 @@ class AutoTrader:
                     buffer = current_bar.close * 0.005
                     new_stop = current_bar.low - buffer
                     if new_stop > pos.stop_loss:
-                        pos.stop_loss = round(new_stop, 2)
+                        pos.stop_loss = round_price(new_stop)
                         changed = True
-                        logger.info(f"[auto-trader] HTF trailing: {symbol} long stop -> ${new_stop:,.2f}")
+                        logger.info(f"[auto-trader] HTF trailing: {symbol} long stop -> ${pos.stop_loss}")
 
             elif pos.direction == "short":
                 if current_bar.low < prev_bar.low:
                     buffer = current_bar.close * 0.005
                     new_stop = current_bar.high + buffer
                     if new_stop < pos.stop_loss:
-                        pos.stop_loss = round(new_stop, 2)
+                        pos.stop_loss = round_price(new_stop)
                         changed = True
-                        logger.info(f"[auto-trader] HTF trailing: {symbol} short stop -> ${new_stop:,.2f}")
+                        logger.info(f"[auto-trader] HTF trailing: {symbol} short stop -> ${pos.stop_loss}")
 
         if changed:
             self._store_snapshot()

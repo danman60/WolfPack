@@ -7,6 +7,7 @@ the breakout with measured-move targets. Pure numpy implementation.
 from datetime import datetime, timedelta, timezone
 
 from wolfpack.exchanges.base import Candle
+from wolfpack.price_utils import round_price
 from wolfpack.strategies.base import Strategy
 
 # Session open times in UTC (minutes from midnight)
@@ -162,8 +163,8 @@ class MeasuredMoveStrategy(Strategy):
                 "direction": "long",
                 "conviction": 70,
                 "entry_price": current.close,
-                "stop_loss": round(current.close - risk, 2),
-                "take_profit": round(consol_low + measured_move, 2),
+                "stop_loss": round_price(current.close - risk),
+                "take_profit": round_price(consol_low + measured_move),
                 "size_pct": size_pct,
             }
 
@@ -174,8 +175,8 @@ class MeasuredMoveStrategy(Strategy):
                 "direction": "short",
                 "conviction": 70,
                 "entry_price": current.close,
-                "stop_loss": round(current.close + risk, 2),
-                "take_profit": round(consol_high - measured_move, 2),
+                "stop_loss": round_price(current.close + risk),
+                "take_profit": round_price(consol_high - measured_move),
                 "size_pct": size_pct,
             }
 

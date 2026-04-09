@@ -8,6 +8,7 @@ Pure numpy implementation.
 import numpy as np
 
 from wolfpack.exchanges.base import Candle
+from wolfpack.price_utils import round_price
 from wolfpack.strategies.base import Strategy
 
 
@@ -113,7 +114,7 @@ class TurtleDonchianStrategy(Strategy):
 
         # Long breakout: close > previous highest high AND above SMA
         if current_close > highest_high and current_close > sma:
-            stop_loss = round(current_close - atr * atr_stop_mult, 2)
+            stop_loss = round_price(current_close - atr * atr_stop_mult)
             return {
                 "symbol": "",
                 "direction": "long",
@@ -126,7 +127,7 @@ class TurtleDonchianStrategy(Strategy):
 
         # Short breakout: close < previous lowest low AND below SMA
         if current_close < lowest_low and current_close < sma:
-            stop_loss = round(current_close + atr * atr_stop_mult, 2)
+            stop_loss = round_price(current_close + atr * atr_stop_mult)
             return {
                 "symbol": "",
                 "direction": "short",
