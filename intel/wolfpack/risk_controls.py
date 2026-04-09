@@ -29,8 +29,15 @@ class HardLimits:
 
 @dataclass
 class SoftLimits:
-    """AI-guided limits. Applied as conviction penalties, not hard rejections."""
-    conviction_floor: int = 55                # veto.py default floor
+    """AI-guided limits. Applied as conviction penalties, not hard rejections.
+
+    NOTE: veto.py constructs `_soft = SoftLimits()` at module load and uses
+    these DEFAULTS (not the RISK_PRESETS profile values) for conviction_floor
+    and penalty settings. If you change a value here, it takes effect globally.
+    """
+    conviction_floor: int = 50                # lowered 55→50: too many recs
+                                              # stuck at 50 in choppy markets,
+                                              # blocking trading entirely
     max_trades_per_day: int = 4               # circuit_breaker soft violation
     max_exposure_pct: float = 50.0            # circuit_breaker soft violation
     max_data_age_s: float = 120.0             # circuit_breaker soft violation
@@ -46,7 +53,8 @@ class SoftLimits:
     vwap_extended_penalty: int = 5            # VWAP distance >5%
     recent_rejection_penalty: int = 20
     penalty_multiplier: float = 1.0           # scales all soft penalties
-    rejection_cooldown_hours: float = 2.0
+    rejection_cooldown_hours: float = 1.0     # halved 2.0→1.0: faster recovery
+                                              # from single bad-rec cooldowns
     max_positions_per_symbol: int = 1
 
 
