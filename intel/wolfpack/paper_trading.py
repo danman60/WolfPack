@@ -50,6 +50,13 @@ class PaperPosition(BaseModel):
     take_profit: float | None = None
     trailing_stop_pct: float | None = None  # e.g. 2.0 = trail 2% from peak
     trailing_stop_peak: float | None = None  # highest (long) or lowest (short) price seen
+    # Wave 2 enrichment fields — all default so existing callers keep working
+    mfe: float = 0.0  # max favorable excursion (best unrealized P&L seen)
+    mae: float = 0.0  # max adverse excursion (worst unrealized P&L seen)
+    accumulated_funding: float = 0.0  # per-position funding cost accumulator
+    regime_at_entry: str | None = None
+    conviction_at_entry: int | None = None
+    entry_slippage_bps: float | None = None
 
 
 class PaperPortfolio(BaseModel):
@@ -70,9 +77,16 @@ class PaperPortfolio(BaseModel):
 class PaperTradingEngine:
     """Manages a simulated portfolio from approved trade recommendations."""
 
-    def __init__(self, starting_equity: float = 10000.0, commission_bps: float = 5.0, persist_trades: bool = True):
+    def __init__(
+        self,
+        starting_equity: float = 10000.0,
+        commission_bps: float = 5.0,
+        persist_trades: bool = True,
+        wallet_id: str | None = None,
+    ):
         self.commission_bps = commission_bps
         self.persist_trades = persist_trades  # False for backtest — avoids polluting wp_trade_history
+        self.wallet_id = wallet_id  # Wave 2: canonical wallet binding
         self.portfolio = PaperPortfolio(
             starting_equity=starting_equity,
             equity=starting_equity,
@@ -87,6 +101,8 @@ class PaperTradingEngine:
         size_pct: float,
         recommendation_id: str,
         max_positions_per_symbol: int = 3,
+        regime_at_entry: str | None = None,
+        conviction_at_entry: int | None = None,
     ) -> PaperPosition | None:
         """Open a new paper position.
 
@@ -134,6 +150,9 @@ class PaperTradingEngine:
             unrealized_pnl=0.0,
             recommendation_id=recommendation_id,
             opened_at=datetime.now(timezone.utc),
+            regime_at_entry=regime_at_entry,
+            conviction_at_entry=conviction_at_entry,
+            entry_slippage_bps=float(slippage_bps),
         )
 
         # Deduct entry commission
@@ -173,8 +192,15 @@ class PaperTradingEngine:
             # Apply funding cost (1/12 of hourly rate per 5-min tick)
             funding_cost = self._apply_funding(pos)
             pos.unrealized_pnl -= funding_cost
+            pos.accumulated_funding += funding_cost
             self.portfolio.total_fees += funding_cost
             self.portfolio.friction_costs += funding_cost
+
+            # Wave 2: track per-position MFE / MAE for exit analytics
+            if pos.unrealized_pnl > pos.mfe:
+                pos.mfe = pos.unrealized_pnl
+            if pos.unrealized_pnl < pos.mae:
+                pos.mae = pos.unrealized_pnl
 
             total_unrealized += pos.unrealized_pnl
 
@@ -185,7 +211,12 @@ class PaperTradingEngine:
             + self.portfolio.unrealized_pnl
         )
 
-    def close_position(self, symbol: str) -> float:
+    def close_position(
+        self,
+        symbol: str,
+        exit_reason: str = "manual",
+        regime_at_exit: str | None = None,
+    ) -> float:
         """Close a position and realize P&L. Returns realized P&L."""
         pos = None
         idx = -1
@@ -224,8 +255,22 @@ class PaperTradingEngine:
         if realized > 0:
             self.portfolio.winning_trades += 1
 
-        # Store closed trade to history
-        self._store_closed_trade(pos, realized)
+        # Compute hold duration for enrichment
+        closed_at = datetime.now(timezone.utc)
+        try:
+            hold_duration_seconds = int((closed_at - pos.opened_at).total_seconds())
+        except Exception:
+            hold_duration_seconds = None
+
+        # Store closed trade to history with Wave 2 enrichment fields
+        self._store_closed_trade(
+            pos,
+            realized,
+            exit_reason=exit_reason,
+            regime_at_exit=regime_at_exit,
+            hold_duration_seconds=hold_duration_seconds,
+            exit_slippage_bps=float(slippage_bps),
+        )
 
         # Recalculate
         self.portfolio.unrealized_pnl = sum(p.unrealized_pnl for p in self.portfolio.positions)
@@ -238,7 +283,15 @@ class PaperTradingEngine:
         logger.info(f"Closed paper {pos.direction} {symbol}: P&L ${realized:.2f}")
         return realized
 
-    def _store_closed_trade(self, pos: PaperPosition, pnl: float) -> None:
+    def _store_closed_trade(
+        self,
+        pos: PaperPosition,
+        pnl: float,
+        exit_reason: str | None = None,
+        regime_at_exit: str | None = None,
+        hold_duration_seconds: int | None = None,
+        exit_slippage_bps: float | None = None,
+    ) -> None:
         """Store a closed trade to wp_trade_history. Skipped in backtest mode."""
         if not self.persist_trades:
             return
@@ -254,7 +307,7 @@ class PaperTradingEngine:
                 if m:
                     strategy = m.group(1)
 
-            db.table("wp_trade_history").upsert({
+            row: dict[str, Any] = {
                 "symbol": pos.symbol,
                 "direction": pos.direction,
                 "entry_price": pos.entry_price,
@@ -265,7 +318,22 @@ class PaperTradingEngine:
                 "source": "manual",
                 "opened_at": pos.opened_at.isoformat(),
                 "strategy": strategy,
-            }, on_conflict="recommendation_id").execute()
+                # Wave 2 enrichment
+                "wallet_id": self.wallet_id,
+                "exit_reason": exit_reason,
+                "hold_duration_seconds": hold_duration_seconds,
+                "entry_slippage_bps": pos.entry_slippage_bps,
+                "exit_slippage_bps": exit_slippage_bps,
+                "funding_cost_usd": round(pos.accumulated_funding, 4),
+                "regime_at_entry": pos.regime_at_entry,
+                "regime_at_exit": regime_at_exit,
+                "conviction_at_entry": pos.conviction_at_entry,
+                "max_favorable_excursion": round(pos.mfe, 4),
+                "max_adverse_excursion": round(pos.mae, 4),
+            }
+            db.table("wp_trade_history").upsert(
+                row, on_conflict="recommendation_id"
+            ).execute()
         except Exception as e:
             logger.warning(f"Failed to store closed trade: {e}")
 
@@ -448,7 +516,7 @@ class PaperTradingEngine:
             "positions": positions_data,
         }
 
-    def store_snapshot(self, exchange: str) -> dict:
+    def store_snapshot(self, exchange: str, regime_state: str | None = None) -> dict:
         """Take a snapshot and store it to Supabase.
 
         Resilient to missing DB columns — retries without problematic fields.
@@ -456,6 +524,15 @@ class PaperTradingEngine:
         from wolfpack.db import get_db
 
         snapshot = self.take_snapshot(exchange)
+
+        # Wave 2 enrichment: wallet_id + position/exposure/regime columns
+        snapshot["wallet_id"] = self.wallet_id
+        snapshot["open_position_count"] = len(self.portfolio.positions)
+        snapshot["total_exposure_usd"] = round(
+            sum(p.size_usd for p in self.portfolio.positions), 2
+        )
+        snapshot["regime_state"] = regime_state
+
         db = get_db()
         try:
             result = db.table("wp_portfolio_snapshots").insert(snapshot).execute()
@@ -464,7 +541,13 @@ class PaperTradingEngine:
             error_msg = str(e).lower()
             if "column" in error_msg and "schema" in error_msg:
                 # Missing column — retry without newer fields
-                for key in ["friction_costs"]:
+                for key in [
+                    "friction_costs",
+                    "wallet_id",
+                    "open_position_count",
+                    "total_exposure_usd",
+                    "regime_state",
+                ]:
                     snapshot.pop(key, None)
                 try:
                     result = db.table("wp_portfolio_snapshots").insert(snapshot).execute()
