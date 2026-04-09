@@ -1,5 +1,24 @@
 # Current Work - WolfPack
 
+## Strategy Idea Backlog — "Value Zone" SMA Envelope (2026-04-09)
+
+From Facebook reel transcript at `docs/transcripts/20260409_194801_facebook-reel-883553434413015.txt`. Worth a backtest, not a priority.
+
+**Setup:** Plot SMA 200 and SMA 400 on 5-minute chart. The band between them is the "value zone." When price enters a *tight* value zone and consolidates, take the breakout in either direction.
+
+**Candidate filter for `mean_reversion` or a new `value_zone_breakout` strategy:**
+- Condition 1: `SMA200_5m < price < SMA400_5m` (or inverse, price inside the band)
+- Condition 2: `abs(SMA200 - SMA400) / price < 0.5%` (tight band — volatility compression)
+- Condition 3: Recent N-bar consolidation inside the band (ATR contraction)
+- Entry: on breakout of the consolidation range
+- Direction: aligned with breakout direction, not pre-committed
+
+**How it overlaps existing stack:** already have VWAP mean-reversion + displacement + liquidity-sweep filters. The new bit is the *band-tightness* compression filter. Could be added as `vol_compression_filter` module, reused across strategies.
+
+**Next step when you want to pick this up:** backtest `value_zone_breakout` against Apr 5–8 profitable window (67% WR shorts). If it adds >5% win rate or R:R on the same trades, add to strategies folder and wire into `auto_trader.process_strategy_signals`.
+
+---
+
 ## Session Summary (2026-04-09) — Veto Latching Fix + Zero-Trade Watchdog
 
 User reported "1h/4h/12h on the site are all the same" on the mobile Profit Report. Investigation confirmed: the periods were all showing $0 because **trading had been silent for 39 hours** despite a healthy service. Root cause was a veto latching loop, fixed this session. Also installed a persistent zero-trade watchdog since this was the 5th no-trade outage.
