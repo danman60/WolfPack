@@ -88,8 +88,13 @@ class BriefVeto:
         # ── Hard veto rules (reject immediately) ──
 
         if direction == "wait":
+            # Do NOT record a rejection for 'wait' — it's a signal-neutral
+            # decision from Brief ("no setup right now"), not a symbol
+            # failure. Recording it caused any symbol that ever got a 'wait'
+            # to enter a 2h cooldown, then the next directional rec for
+            # that symbol would hit the -20 penalty and fall below the
+            # 55 floor, creating a chronic lockout.
             reasons.append("direction is 'wait'")
-            self._record_rejection(symbol)
             return VetoResult(
                 action="reject",
                 original_conviction=conviction,
