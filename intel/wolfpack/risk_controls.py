@@ -85,12 +85,16 @@ RISK_PRESETS: Dict[str, RiskPolicy] = {
             require_stop_loss=True,
         ),
         soft=SoftLimits(
-            conviction_floor=55,
+            conviction_floor=50,          # lowered 55→50: many 50-conviction
+                                          # recs were getting vetoed in choppy
+                                          # markets, blocking trading entirely
             max_trades_per_day=4,
             cooldown_seconds=1800.0,
             base_pct=10.0,
             penalty_multiplier=1.0,
-            rejection_cooldown_hours=2.0,
+            rejection_cooldown_hours=1.0, # 2.0→1.0: shorter cooldown lets
+                                          # symbols recover faster in choppy
+                                          # conditions
             max_positions_per_symbol=1,
         ),
     ),
