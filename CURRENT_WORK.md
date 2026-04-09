@@ -50,10 +50,25 @@ Root cause chain in `intel/wolfpack/auto_trader.py:372-378`:
 The system REQUIRES Brief+mechanical alignment for full-size trades. When The Quant's DeepSeek truncates (happening ~50% of the time) and fallback chain is exhausted (OpenRouter 402, Anthropic 400), mechanical signals may not fire reliably, leaving Brief solo at 0.25x size.
 
 **Mitigation options (not chosen yet):**
-1. Top up OpenRouter or Anthropic credits so The Quant has working fallback
+1. ~~Top up OpenRouter or Anthropic credits~~ — RULED OUT. User directive: those are out of the fallback chain entirely (commit `37e0588`).
 2. Lower the min_position_usd floor (e.g., $200) to let Brief-only trades through
 3. Raise the Brief-only multiplier from 0.25 → 0.5
 4. Fix DeepSeek truncation more aggressively (smaller max_tokens, simpler schemas)
+
+### LLM fallback chain rewritten (commit `37e0588`)
+
+**Old chain:** DeepSeek → Minimax(Tailscale) → Kimi → OpenRouter → Anthropic
+**New chain:** DeepSeek → Minimax(Ollama Cloud) → GLM(Ollama Cloud) → Kimi(NIM) → stop
+
+Key changes in `intel/wolfpack/agents/base.py::_call_llm_structured`:
+- **Removed OpenRouter and Anthropic entirely.** The chain now returns a fallback result instead of burning paid API credits. Anthropic and OpenRouter API keys are retained in config for any non-fallback uses but are not in `_call_llm_structured`.
+- **Fixed Minimax endpoint.** Was `http://100.75.112.14:11434/v1` (FIRMAMENT's Tailscale IP — unreachable from droplet). Now `https://ollama.com/v1` via `OLLAMA_API_KEY` from config. Verified working with curl from SpyBalloon.
+- **Added GLM block** (`glm-5.1:cloud`) using same Ollama Cloud endpoint and key. Verified working (reasoning-heavy so slower, but OK at 2048 max_tokens).
+- **Kimi via NIM** unchanged — already worked.
+- Added `ollama_api_key` and `ollama_cloud_base_url` to `config.py`.
+- Appended `OLLAMA_API_KEY` to droplet's `/root/WolfPack/intel/.env`.
+
+Verified post-deploy: service restarted (PID 3956180 at 16:55:24 UTC), DeepSeek responding cleanly, zero calls to `openrouter.ai` or `api.anthropic.com` across new cycles.
 
 ### Backlog items (discovered, not addressed)
 
