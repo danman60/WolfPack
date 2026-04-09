@@ -9,6 +9,8 @@ import {
   usePositionActions,
   useSetYoloLevel,
 } from "@/lib/hooks/useIntelligence";
+import { useWalletContext } from "@/lib/wallet/context";
+import { WalletSelector } from "@/components/WalletSelector";
 import { intelFetch } from "@/lib/intel";
 
 const YOLO_LABELS = [
@@ -28,13 +30,14 @@ const YOLO_DEFAULTS: Record<number, { conviction_threshold: number; veto_floor: 
 };
 
 export default function AutoBotPage() {
-  const { data: status } = useAutoTraderStatus();
-  const { data: trades } = useAutoTraderTrades(30);
+  const { perpWallet } = useWalletContext();
+  const { data: status } = useAutoTraderStatus(perpWallet);
+  const { data: trades } = useAutoTraderTrades(perpWallet, 30);
   const { data: positionActions } = usePositionActions("pending");
-  const toggleMutation = useToggleAutoTrader();
-  const configMutation = useConfigureAutoTrader();
+  const toggleMutation = useToggleAutoTrader(perpWallet);
+  const configMutation = useConfigureAutoTrader(perpWallet);
 
-  const yoloMutation = useSetYoloLevel();
+  const yoloMutation = useSetYoloLevel(perpWallet);
   const [pendingYolo, setPendingYolo] = useState<number | null>(null);
 
   const [editEquity, setEditEquity] = useState("");
@@ -121,7 +124,8 @@ export default function AutoBotPage() {
             Autonomous trading powered by Brief intelligence
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-wrap">
+          <WalletSelector type="perp" />
           <span
             className={`px-3 py-1 rounded-full text-xs font-bold ${
               enabled

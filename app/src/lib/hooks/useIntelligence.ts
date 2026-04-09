@@ -211,13 +211,13 @@ export function useRejectRecommendation() {
 }
 
 // Fetch portfolio state — tries VPS first, falls back to Supabase snapshot
-export function usePortfolio() {
+export function usePortfolio(wallet: string = "paper_perp") {
   return useQuery({
-    queryKey: ["portfolio"],
+    queryKey: ["portfolio", wallet],
     queryFn: async () => {
       // Try VPS intel service first
       try {
-        const res = await intelFetch("/intel/portfolio");
+        const res = await intelFetch(`/intel/portfolio?wallet=${wallet}`);
         if (res.ok) {
           const data = await res.json();
           if (data.status === "active") return data;
@@ -255,11 +255,16 @@ export function usePortfolio() {
 }
 
 // Fetch portfolio snapshot history
-export function usePortfolioHistory(limit: number = 100) {
+export function usePortfolioHistory(
+  wallet: string = "paper_perp",
+  limit: number = 100
+) {
   return useQuery({
-    queryKey: ["portfolio-history", limit],
+    queryKey: ["portfolio-history", wallet, limit],
     queryFn: async () => {
-      const res = await intelFetch(`/intel/portfolio/history?limit=${limit}`);
+      const res = await intelFetch(
+        `/intel/portfolio/history?wallet=${wallet}&limit=${limit}`
+      );
       if (!res.ok) return { snapshots: [] };
       return res.json();
     },
@@ -515,11 +520,16 @@ interface TradeHistoryItem {
   closed_at: string;
 }
 
-export function useTradeHistory(limit: number = 50) {
+export function useTradeHistory(
+  wallet: string = "paper_perp",
+  limit: number = 50
+) {
   return useQuery({
-    queryKey: ["trade-history", limit],
+    queryKey: ["trade-history", wallet, limit],
     queryFn: async () => {
-      const res = await intelFetch(`/intel/portfolio/trades?limit=${limit}`);
+      const res = await intelFetch(
+        `/intel/portfolio/trades?wallet=${wallet}&limit=${limit}`
+      );
       if (!res.ok) return [];
       const data = await res.json();
       return (data.trades ?? []) as TradeHistoryItem[];
@@ -553,11 +563,11 @@ interface AutoTraderStatus {
   };
 }
 
-export function useAutoTraderStatus() {
+export function useAutoTraderStatus(wallet: string = "paper_perp") {
   return useQuery({
-    queryKey: ["auto-trader-status"],
+    queryKey: ["auto-trader-status", wallet],
     queryFn: async () => {
-      const res = await intelFetch("/intel/auto-trader/status");
+      const res = await intelFetch(`/intel/auto-trader/status?wallet=${wallet}`);
       if (!res.ok) return null;
       return res.json() as Promise<AutoTraderStatus>;
     },
@@ -566,14 +576,17 @@ export function useAutoTraderStatus() {
   });
 }
 
-export function useToggleAutoTrader() {
+export function useToggleAutoTrader(wallet: string = "paper_perp") {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async () => {
-      const res = await intelFetch("/intel/auto-trader/toggle", {
-        method: "POST",
-      });
+      const res = await intelFetch(
+        `/intel/auto-trader/toggle?wallet=${wallet}`,
+        {
+          method: "POST",
+        }
+      );
       if (!res.ok) throw new Error(`Toggle failed: ${res.status}`);
       return res.json();
     },
@@ -597,11 +610,16 @@ interface AutoTraderTrade {
   opened_at: string;
 }
 
-export function useAutoTraderTrades(limit: number = 50) {
+export function useAutoTraderTrades(
+  wallet: string = "paper_perp",
+  limit: number = 50
+) {
   return useQuery({
-    queryKey: ["auto-trader-trades", limit],
+    queryKey: ["auto-trader-trades", wallet, limit],
     queryFn: async () => {
-      const res = await intelFetch(`/intel/auto-trader/trades?limit=${limit}`);
+      const res = await intelFetch(
+        `/intel/auto-trader/trades?wallet=${wallet}&limit=${limit}`
+      );
       if (!res.ok) return [];
       const data = await res.json();
       return (data.trades ?? []) as AutoTraderTrade[];
@@ -612,12 +630,12 @@ export function useAutoTraderTrades(limit: number = 50) {
 }
 
 // Configure auto-trader (equity + conviction threshold)
-export function useConfigureAutoTrader() {
+export function useConfigureAutoTrader(wallet: string = "paper_perp") {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ equity, conviction_threshold }: { equity?: number; conviction_threshold?: number }) => {
-      const res = await intelFetch("/intel/auto-trader/config", {
+      const res = await intelFetch(`/intel/auto-trader/config?wallet=${wallet}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ equity, conviction_threshold }),
@@ -633,22 +651,39 @@ export function useConfigureAutoTrader() {
 }
 
 // Set YOLO meter level
-export function useSetYoloLevel() {
+export function useSetYoloLevel(wallet: string = "paper_perp") {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (level: number) => {
-      const res = await intelFetch("/intel/auto-trader/yolo-level", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ level }),
-      });
+      const res = await intelFetch(
+        `/intel/auto-trader/yolo-level?wallet=${wallet}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ level }),
+        }
+      );
       if (!res.ok) throw new Error(`YOLO level update failed: ${res.status}`);
       return res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["auto-trader-status"] });
     },
+  });
+}
+
+// Fetch list of all 4 wallets with status and equity
+export function useWallets() {
+  return useQuery({
+    queryKey: ["wallets"],
+    queryFn: async () => {
+      const res = await intelFetch("/intel/wallets");
+      if (!res.ok) return { wallets: [] };
+      return res.json();
+    },
+    refetchInterval: 30_000,
+    retry: false,
   });
 }
 

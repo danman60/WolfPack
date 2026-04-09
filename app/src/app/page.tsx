@@ -22,7 +22,7 @@ export default function Dashboard() {
   const { data: autoTrader } = useAutoTraderStatus();
   const { data: lpStatus } = useLPStatus();
   const { data: strategyMode } = useStrategyMode();
-  const { data: history } = usePortfolioHistory(200);
+  const { data: history } = usePortfolioHistory("paper_perp", 200);
 
   const agents = agentStatus?.agents ?? [];
   const isActive = portfolio?.status === "active";

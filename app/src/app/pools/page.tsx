@@ -2,11 +2,13 @@
 
 import { useState, useMemo, useCallback } from "react";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
+import { WalletSelector } from "@/components/WalletSelector";
 import {
   useTopPools,
   usePoolDetail,
   useUserPositions,
   usePoolScreening,
+  useLPStatus,
   feeTierLabel,
   calcFeeApr,
   fmtUsd,
@@ -14,6 +16,7 @@ import {
   type SubgraphPool,
   type SubgraphPosition,
 } from "@/lib/hooks/usePools";
+import { useWalletContext } from "@/lib/wallet/context";
 import {
   useCollectFees,
   useRemoveLiquidity,
@@ -45,11 +48,13 @@ type SortDir = "asc" | "desc";
 
 export default function PoolsPage() {
   const { address, isConnected } = useAccount();
+  const { lpWallet } = useWalletContext();
 
   // Pool data
   const { data: pools, isLoading: poolsLoading, error: poolsError } = useTopPools(50);
   const { data: positions } = useUserPositions(isConnected ? address : undefined);
   const { data: screenedPools } = usePoolScreening(50);
+  const { data: lpStatus } = useLPStatus(lpWallet);
 
   // Build score lookup map from screening data
   const scoreMap = useMemo(() => {
@@ -145,15 +150,24 @@ export default function PoolsPage() {
             Browse Uniswap V3 pools and manage liquidity positions
           </p>
         </div>
-        <WalletButton isConnected={isConnected} address={address} />
+        <div className="flex items-center gap-3 flex-wrap">
+          <WalletSelector type="lp" />
+          <WalletButton isConnected={isConnected} address={address} />
+        </div>
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
         <div className="wolf-card stat-card stat-card-purple p-4 md:p-5">
           <p className="text-[11px] text-gray-500 uppercase tracking-wider font-medium">Active Positions</p>
           <p className="text-2xl font-bold text-[var(--wolf-purple)] mt-2 tracking-tight">
             {isConnected ? positionCount : "--"}
+          </p>
+        </div>
+        <div className="wolf-card stat-card stat-card-amber p-4 md:p-5">
+          <p className="text-[11px] text-gray-500 uppercase tracking-wider font-medium">LP Bot Equity</p>
+          <p className="text-2xl font-bold text-[var(--wolf-amber)] mt-2 tracking-tight">
+            {lpStatus ? fmtUsd(lpStatus.equity) : "--"}
           </p>
         </div>
         <div className="wolf-card stat-card stat-card-blue p-4 md:p-5">

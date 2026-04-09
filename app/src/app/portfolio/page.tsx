@@ -1,6 +1,8 @@
 "use client";
 
 import { useExchange } from "@/lib/exchange";
+import { useWalletContext } from "@/lib/wallet/context";
+import { WalletSelector } from "@/components/WalletSelector";
 import {
   usePortfolio,
   usePortfolioHistory,
@@ -19,10 +21,11 @@ import {
 
 export default function PortfolioPage() {
   const { config } = useExchange();
-  const { data: portfolio } = usePortfolio();
-  const { data: history } = usePortfolioHistory(200);
+  const { perpWallet } = useWalletContext();
+  const { data: portfolio } = usePortfolio(perpWallet);
+  const { data: history } = usePortfolioHistory(perpWallet, 200);
   const closeMutation = useClosePosition();
-  const { data: trades } = useTradeHistory(20);
+  const { data: trades } = useTradeHistory(perpWallet, 20);
 
   const isActive = portfolio?.status === "active";
   const positions = portfolio?.positions ?? [];
@@ -48,11 +51,14 @@ export default function PortfolioPage() {
 
   return (
     <div className="space-y-5 md:space-y-7">
-      <div className="page-header">
-        <h1 className="page-title">Portfolio</h1>
-        <p className="page-subtitle">
-          Paper trading performance on {config.name}
-        </p>
+      <div className="page-header flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h1 className="page-title">Portfolio</h1>
+          <p className="page-subtitle">
+            Paper trading performance on {config.name}
+          </p>
+        </div>
+        <WalletSelector type="perp" />
       </div>
 
       {/* Stats */}

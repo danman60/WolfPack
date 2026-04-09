@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Web3Providers } from "@/lib/wagmi";
 import { ExchangeProvider } from "@/lib/exchange";
+import { WalletProvider } from "@/lib/wallet/context";
 import { Nav } from "@/components/Nav";
 import { Toaster } from "sonner";
 import "./globals.css";
@@ -20,20 +21,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Web3Providers>
           <ExchangeProvider>
-            <Nav />
-            <main className="max-w-7xl mx-auto px-4 py-5 md:px-5 md:py-8">{children}</main>
-            <Toaster
-              theme="dark"
-              position="bottom-right"
-              toastOptions={{
-                style: {
-                  background: "var(--surface)",
-                  border: "1px solid var(--border)",
-                  color: "#e5e7eb",
-                  fontSize: "13px",
-                },
-              }}
-            />
+            <WalletProvider>
+              <Nav />
+              <main className="max-w-7xl mx-auto px-4 py-5 md:px-5 md:py-8">{children}</main>
+              <Toaster
+                theme="dark"
+                position="bottom-right"
+                toastOptions={{
+                  style: {
+                    background: "var(--surface)",
+                    border: "1px solid var(--border)",
+                    color: "#e5e7eb",
+                    fontSize: "13px",
+                  },
+                }}
+              />
+            </WalletProvider>
           </ExchangeProvider>
         </Web3Providers>
       </body>

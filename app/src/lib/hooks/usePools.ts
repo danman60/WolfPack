@@ -169,11 +169,11 @@ interface LPStatus {
   position_details: LPPositionDetail[];
 }
 
-export function useLPStatus() {
+export function useLPStatus(wallet: string = "paper_lp") {
   return useQuery<LPStatus | null>({
-    queryKey: ["lp-status"],
+    queryKey: ["lp-status", wallet],
     queryFn: async () => {
-      const res = await fetch("/intel/lp/status");
+      const res = await fetch(`/intel/lp/status?wallet=${wallet}`);
       if (!res.ok) return null;
       return res.json() as Promise<LPStatus>;
     },
