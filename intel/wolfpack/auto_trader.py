@@ -110,22 +110,24 @@ YOLO_PROFILES = _build_yolo_profiles()
 class AutoTrader:
     """Autonomous trading bot with a separate paper trading engine."""
 
-    def __init__(self) -> None:
+    def __init__(self, wallet_id: str | None = None, engine_mode: str = "paper") -> None:
         from wolfpack.paper_trading import PaperTradingEngine
         from wolfpack.performance_tracker import PerformanceTracker
 
         self.enabled = settings.auto_trade_enabled
         self.conviction_threshold = settings.auto_trade_conviction_threshold
+        self.wallet_id = wallet_id
 
-        # Select engine based on strategy mode
-        import wolfpack.api as api_mod
-        mode = getattr(api_mod, "_strategy_mode", "paper")
-        if mode == "live":
+        # Select engine based on explicit mode param (wave 3: no more _strategy_mode import)
+        if engine_mode == "live":
             from wolfpack.live_trading import LiveTradingEngine
-            self.engine = LiveTradingEngine()
+            self.engine = LiveTradingEngine(wallet_id=wallet_id)
             logger.info("[auto-trader] LIVE MODE — using real Hyperliquid execution")
         else:
-            self.engine = PaperTradingEngine(starting_equity=settings.auto_trade_equity)
+            self.engine = PaperTradingEngine(
+                starting_equity=settings.auto_trade_equity,
+                wallet_id=wallet_id,
+            )
 
         self._restored = False
         self._last_trade_at: datetime | None = None
@@ -147,13 +149,31 @@ class AutoTrader:
             from wolfpack.paper_trading import PaperPosition
 
             db = get_db()
-            result = (
-                db.table("wp_auto_portfolio_snapshots")
-                .select("*")
-                .order("created_at", desc=True)
-                .limit(1)
-                .execute()
-            )
+            # Wave 3: prefer wp_portfolio_snapshots filtered by wallet_id
+            result = None
+            if self.wallet_id:
+                try:
+                    result = (
+                        db.table("wp_portfolio_snapshots")
+                        .select("*")
+                        .eq("wallet_id", self.wallet_id)
+                        .order("created_at", desc=True)
+                        .limit(1)
+                        .execute()
+                    )
+                except Exception as e:
+                    logger.warning(f"[auto-trader] wp_portfolio_snapshots read failed, falling back: {e}")
+                    result = None
+
+            # Fallback: legacy wp_auto_portfolio_snapshots (transition period)
+            if not result or not result.data:
+                result = (
+                    db.table("wp_auto_portfolio_snapshots")
+                    .select("*")
+                    .order("created_at", desc=True)
+                    .limit(1)
+                    .execute()
+                )
             if result.data:
                 snap = result.data[0]
                 p = self.engine.portfolio
@@ -404,6 +424,8 @@ class AutoTrader:
                 size_pct=min(size_pct, profile["max_size_pct"]),
                 recommendation_id=f"auto-{rec.get('id', 'unknown')}",
                 max_positions_per_symbol=profile.get("max_positions_per_symbol", 1),
+                regime_at_entry=self._current_regime,
+                conviction_at_entry=veto_result.final_conviction,
             )
 
             if pos:
@@ -497,7 +519,11 @@ class AutoTrader:
             if action == "close":
                 current_price = (latest_prices or {}).get(pa_symbol, pos.current_price)
                 self.engine.update_prices({pa_symbol: current_price})
-                pnl = self.engine.close_position(pa_symbol)
+                pnl = self.engine.close_position(
+                    pa_symbol,
+                    exit_reason="brief_close",
+                    regime_at_exit=self._current_regime,
+                )
                 executed.append({"action": "close", "symbol": pa_symbol, "realized_pnl": pnl})
 
                 try:
@@ -583,17 +609,27 @@ class AutoTrader:
                 "size_pct": trade["size_pct"],
                 "conviction": trade["conviction"],
                 "status": "open",
+                "wallet_id": self.wallet_id,
             }
             # Include strategy if present
             if trade.get("strategy"):
                 row["strategy"] = trade["strategy"]
-            db.table("wp_auto_trades").insert(row).execute()
+            try:
+                db.table("wp_auto_trades").insert(row).execute()
+            except Exception as e:
+                error_msg = str(e).lower()
+                if "column" in error_msg and "wallet_id" in error_msg:
+                    row.pop("wallet_id", None)
+                    db.table("wp_auto_trades").insert(row).execute()
+                else:
+                    raise
         except Exception as e:
             logger.error(f"[auto-trader] Failed to store trade: {e}")
 
     def _store_snapshot(self) -> None:
         """Store auto-trader portfolio snapshot to Supabase.
 
+        Wave 3: writes to wp_portfolio_snapshots with wallet_id + enrichment.
         Resilient to missing DB columns — retries without problematic fields.
         """
         try:
@@ -606,16 +642,28 @@ class AutoTrader:
                 "unrealized_pnl": round(p.unrealized_pnl, 2),
                 "realized_pnl": round(p.realized_pnl, 2),
                 "positions": [pos.model_dump(mode="json") for pos in p.positions],
+                "wallet_id": self.wallet_id,
+                "open_position_count": len(p.positions),
+                "total_exposure_usd": round(
+                    sum(abs(getattr(pos, "size_usd", 0) or 0) for pos in p.positions), 2
+                ),
+                "regime_state": self._current_regime,
             }
             try:
-                db.table("wp_auto_portfolio_snapshots").insert(snapshot).execute()
+                db.table("wp_portfolio_snapshots").insert(snapshot).execute()
             except Exception as e:
                 error_msg = str(e).lower()
                 if "column" in error_msg and "schema" in error_msg:
                     # Missing column — retry without newer fields
-                    for key in ["friction_costs"]:
+                    for key in [
+                        "friction_costs",
+                        "wallet_id",
+                        "open_position_count",
+                        "total_exposure_usd",
+                        "regime_state",
+                    ]:
                         snapshot.pop(key, None)
-                    db.table("wp_auto_portfolio_snapshots").insert(snapshot).execute()
+                    db.table("wp_portfolio_snapshots").insert(snapshot).execute()
                 else:
                     raise
         except Exception as e:
@@ -722,7 +770,11 @@ class AutoTrader:
                 if direction == "close":
                     for pos in list(self.engine.portfolio.positions):
                         if pos.symbol == symbol and pos.recommendation_id.startswith(f"strat-{strategy_name}-"):
-                            pnl = self.engine.close_position(symbol)
+                            pnl = self.engine.close_position(
+                                symbol,
+                                exit_reason="strategy_close",
+                                regime_at_exit=self._current_regime,
+                            )
                             executed.append({
                                 "symbol": symbol,
                                 "direction": "close",
@@ -764,6 +816,8 @@ class AutoTrader:
                     size_pct=size_pct,
                     recommendation_id=rec_id,
                     max_positions_per_symbol=profile.get("max_positions_per_symbol", 1),
+                    regime_at_entry=self._current_regime,
+                    conviction_at_entry=signal.get("conviction", 75),
                 )
 
                 if pos:

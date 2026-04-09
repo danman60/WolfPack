@@ -35,6 +35,13 @@ class LivePosition:
     tp_order_id: int | None = None  # exchange order ID for TP
     trailing_stop_pct: float | None = None
     trailing_stop_peak: float | None = None  # match PaperPosition field name
+    # Wave 3 enrichment fields — defaults keep existing callers working
+    mfe: float = 0.0
+    mae: float = 0.0
+    accumulated_funding: float = 0.0
+    regime_at_entry: str | None = None
+    conviction_at_entry: int | None = None
+    entry_slippage_bps: float | None = None
 
 
 @dataclass
@@ -59,7 +66,13 @@ class LiveTradingEngine:
     Async HyperliquidTrader calls are bridged via _run_async().
     """
 
-    def __init__(self, starting_equity: float = 1000.0, commission_bps: float = 5.0, persist_trades: bool = True):
+    def __init__(
+        self,
+        starting_equity: float = 1000.0,
+        commission_bps: float = 5.0,
+        persist_trades: bool = True,
+        wallet_id: str | None = None,
+    ):
         from wolfpack.exchanges.hyperliquid_trading import HyperliquidTrader
 
         if not settings.hyperliquid_private_key:
@@ -68,6 +81,7 @@ class LiveTradingEngine:
         self._trader = HyperliquidTrader(settings.hyperliquid_private_key)
         self.commission_bps = commission_bps
         self.persist_trades = persist_trades
+        self.wallet_id = wallet_id  # Wave 3: canonical wallet binding
         self.portfolio = LivePortfolio(
             starting_equity=starting_equity,
             equity=starting_equity,
@@ -138,6 +152,8 @@ class LiveTradingEngine:
         size_pct: float,
         recommendation_id: str,
         max_positions_per_symbol: int = 3,
+        regime_at_entry: str | None = None,
+        conviction_at_entry: int | None = None,
     ) -> Optional[LivePosition]:
         """Open a real position on Hyperliquid.
 
@@ -208,6 +224,7 @@ class LiveTradingEngine:
         self.portfolio.free_collateral -= fee
 
         # Create position tracking
+        # Market-order slippage pad = 0.1% = 10 bps (from order_price calc above)
         pos = LivePosition(
             symbol=symbol,
             direction=direction,
@@ -217,6 +234,9 @@ class LiveTradingEngine:
             size_units=size_units,
             unrealized_pnl=0.0,
             recommendation_id=recommendation_id,
+            regime_at_entry=regime_at_entry,
+            conviction_at_entry=conviction_at_entry,
+            entry_slippage_bps=10.0,
         )
 
         self.portfolio.positions.append(pos)
@@ -228,7 +248,12 @@ class LiveTradingEngine:
 
         return pos
 
-    def close_position(self, symbol: str) -> float:
+    def close_position(
+        self,
+        symbol: str,
+        exit_reason: str = "manual",
+        regime_at_exit: str | None = None,
+    ) -> float:
         """Close a real position via reduce-only market order. Returns realized P&L."""
         pos = None
         idx = -1
@@ -244,7 +269,8 @@ class LiveTradingEngine:
 
         is_buy = pos.direction == "short"  # opposite direction to close
 
-        # Wide slippage for market close (0.5%)
+        # Wide slippage for market close (0.5% = 50 bps)
+        exit_slippage_bps = 50.0
         if is_buy:
             close_price = round(pos.current_price * 1.005, 2)
         else:
@@ -285,8 +311,22 @@ class LiveTradingEngine:
         if realized > 0:
             self.portfolio.winning_trades += 1
 
-        # Store closed trade
-        self._store_closed_trade(pos, realized)
+        # Compute hold duration for enrichment
+        closed_at = datetime.now(timezone.utc)
+        try:
+            hold_duration_seconds = int((closed_at - pos.opened_at).total_seconds())
+        except Exception:
+            hold_duration_seconds = None
+
+        # Store closed trade with Wave 3 enrichment
+        self._store_closed_trade(
+            pos,
+            realized,
+            exit_reason=exit_reason,
+            regime_at_exit=regime_at_exit,
+            hold_duration_seconds=hold_duration_seconds,
+            exit_slippage_bps=exit_slippage_bps,
+        )
 
         # Recalculate
         self.portfolio.unrealized_pnl = sum(p.unrealized_pnl for p in self.portfolio.positions)
@@ -612,7 +652,7 @@ class LiveTradingEngine:
         try:
             from wolfpack.db import get_db
             db = get_db()
-            db.table("wp_auto_trades").insert({
+            row = {
                 "symbol": pos.symbol,
                 "direction": pos.direction,
                 "entry_price": pos.entry_price,
@@ -621,11 +661,29 @@ class LiveTradingEngine:
                 "take_profit": pos.take_profit,
                 "recommendation_id": pos.recommendation_id,
                 "source": "live",
-            }).execute()
+                "wallet_id": self.wallet_id,
+            }
+            try:
+                db.table("wp_auto_trades").insert(row).execute()
+            except Exception as e:
+                error_msg = str(e).lower()
+                if "column" in error_msg and "wallet_id" in error_msg:
+                    row.pop("wallet_id", None)
+                    db.table("wp_auto_trades").insert(row).execute()
+                else:
+                    raise
         except Exception as e:
             logger.warning(f"[live-engine] Failed to store open trade: {e}")
 
-    def _store_closed_trade(self, pos: LivePosition, pnl: float) -> None:
+    def _store_closed_trade(
+        self,
+        pos: LivePosition,
+        pnl: float,
+        exit_reason: str | None = None,
+        regime_at_exit: str | None = None,
+        hold_duration_seconds: int | None = None,
+        exit_slippage_bps: float | None = None,
+    ) -> None:
         """Store a closed live trade to wp_trade_history."""
         if not self.persist_trades:
             return
@@ -642,7 +700,7 @@ class LiveTradingEngine:
                 if m:
                     strategy = m.group(1)
 
-            db.table("wp_trade_history").upsert({
+            row: dict[str, Any] = {
                 "symbol": pos.symbol,
                 "direction": pos.direction,
                 "entry_price": pos.entry_price,
@@ -653,7 +711,22 @@ class LiveTradingEngine:
                 "source": "live",
                 "opened_at": pos.opened_at.isoformat(),
                 "strategy": strategy,
-            }, on_conflict="recommendation_id").execute()
+                # Wave 3 enrichment
+                "wallet_id": self.wallet_id,
+                "exit_reason": exit_reason,
+                "hold_duration_seconds": hold_duration_seconds,
+                "entry_slippage_bps": pos.entry_slippage_bps,
+                "exit_slippage_bps": exit_slippage_bps,
+                "funding_cost_usd": round(pos.accumulated_funding, 4),
+                "regime_at_entry": pos.regime_at_entry,
+                "regime_at_exit": regime_at_exit,
+                "conviction_at_entry": pos.conviction_at_entry,
+                "max_favorable_excursion": round(pos.mfe, 4),
+                "max_adverse_excursion": round(pos.mae, 4),
+            }
+            db.table("wp_trade_history").upsert(
+                row, on_conflict="recommendation_id"
+            ).execute()
         except Exception as e:
             logger.warning(f"[live-engine] Failed to store closed trade: {e}")
 

@@ -64,7 +64,8 @@ class CircuitBreaker:
     COOLDOWN_SECONDS = _soft.cooldown_seconds           # 1800.0
     MAX_DATA_AGE_S = _soft.max_data_age_s               # 120.0
 
-    def __init__(self) -> None:
+    def __init__(self, wallet_id: str | None = None) -> None:
+        self.wallet_id = wallet_id  # Wave 4: per-wallet independent state
         self._state: CBState = "ACTIVE"
         self._reason: str = ""
         self._cooldown_start: float = 0.0

@@ -319,15 +319,21 @@ def save_cb_state(
     triggers: list[str],
     max_exposure_pct: float,
     peak_equity: float | None = None,
+    wallet_id: str | None = None,
 ) -> dict:
-    """Upsert circuit breaker state — single row, updated each cycle."""
+    """Upsert circuit breaker state — one row per wallet (or singleton for back-compat)."""
     db = get_db()
+    # Use wallet_id as the singleton key when provided so each wallet has
+    # independent circuit breaker state. Fall back to legacy "current" key
+    # when no wallet_id is passed (pre-wave-4 callers).
+    singleton_key = wallet_id if wallet_id else "current"
     row = {
-        "singleton_key": "current",
+        "singleton_key": singleton_key,
         "state": state,
         "triggers": triggers,
         "max_exposure_pct": max_exposure_pct,
         "peak_equity": peak_equity,
+        "wallet_id": wallet_id,
     }
     result = db.table("wp_circuit_breaker_state").upsert(
         row, on_conflict="singleton_key"
@@ -335,12 +341,18 @@ def save_cb_state(
     return result.data[0] if result.data else row
 
 
-def load_cb_state() -> dict | None:
-    """Load the most recent circuit breaker state from DB."""
+def load_cb_state(wallet_id: str | None = None) -> dict | None:
+    """Load the most recent circuit breaker state from DB.
+
+    When wallet_id is provided, filters to that wallet's row. Otherwise returns
+    the most recent row regardless of wallet (back-compat).
+    """
     db = get_db()
+    query = db.table("wp_circuit_breaker_state").select("*")
+    if wallet_id:
+        query = query.eq("wallet_id", wallet_id)
     result = (
-        db.table("wp_circuit_breaker_state")
-        .select("*")
+        query
         .order("created_at", desc=True)
         .limit(1)
         .execute()

@@ -194,8 +194,9 @@ class LiveLPEngine:
     works without changes.
     """
 
-    def __init__(self, persist: bool = True):
+    def __init__(self, persist: bool = True, wallet_id: str | None = None):
         self.persist = persist
+        self.wallet_id = wallet_id  # Wave 4: canonical wallet binding
         rpc_url = settings.lp_rpc_url or _CHAIN_RPC.get(settings.lp_chain, _CHAIN_RPC["arbitrum"])
         self.w3 = Web3(Web3.HTTPProvider(rpc_url))
 
@@ -643,6 +644,7 @@ class LiveLPEngine:
             db = get_db()
             db.table("wp_lp_events").insert({
                 "event_type": "closed",
+                "wallet_id": self.wallet_id,
                 "details": {
                     "position_id": pos.position_id,
                     "pool": pos.pool_address,
@@ -695,6 +697,7 @@ class LiveLPEngine:
             from wolfpack.db import get_db
             db = get_db()
             snapshot = self.take_snapshot()
+            snapshot["wallet_id"] = self.wallet_id  # Wave 4: wallet binding
             result = db.table("wp_lp_snapshots").insert(snapshot).execute()
             return result.data[0] if result.data else snapshot
         except Exception as e:
@@ -712,9 +715,11 @@ class LiveLPEngine:
         try:
             from wolfpack.db import get_db
             db = get_db()
+            query = db.table("wp_lp_snapshots").select("*")
+            if self.wallet_id:
+                query = query.eq("wallet_id", self.wallet_id)
             result = (
-                db.table("wp_lp_snapshots")
-                .select("*")
+                query
                 .order("created_at", desc=True)
                 .limit(1)
                 .execute()

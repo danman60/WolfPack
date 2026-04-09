@@ -21,7 +21,7 @@ MAX_POSITIONS = settings.lp_max_positions
 class LPAutoTrader:
     """Autonomous LP position manager with paper trading engine."""
 
-    def __init__(self) -> None:
+    def __init__(self, wallet_id: str | None = None) -> None:
         from wolfpack.lp_paper_engine import PaperLPEngine
         from wolfpack.modules.lp_monitor import LPPositionMonitor
         from wolfpack.modules.lp_range_calculator import LPRangeCalculator
@@ -29,12 +29,16 @@ class LPAutoTrader:
         from wolfpack.modules.lp_rebalance import LPRebalanceEngine
         from wolfpack.modules.lp_pool_scanner import LPPoolScanner
 
+        self.wallet_id = wallet_id  # Wave 4: canonical wallet binding
         self._enabled = settings.lp_auto_enabled
         if settings.lp_paper_mode:
-            self.engine = PaperLPEngine(starting_equity=settings.lp_starting_equity)
+            self.engine = PaperLPEngine(
+                starting_equity=settings.lp_starting_equity,
+                wallet_id=wallet_id,
+            )
         else:
             from wolfpack.lp_live_engine import LiveLPEngine
-            self.engine = LiveLPEngine()
+            self.engine = LiveLPEngine(wallet_id=wallet_id)
         self.monitor = LPPositionMonitor()
         self.range_calc = LPRangeCalculator()
         self.fee_manager = LPFeeManager()
@@ -434,6 +438,7 @@ class LPAutoTrader:
             db = get_db()
             db.table("wp_lp_events").insert({
                 "event_type": "rotation_exit",
+                "wallet_id": self.wallet_id,
                 "details": {
                     "position_id": position.position_id,
                     "pool": position.pool_address,
@@ -455,6 +460,7 @@ class LPAutoTrader:
             db = get_db()
             db.table("wp_lp_events").insert({
                 "event_type": "rebalance",
+                "wallet_id": self.wallet_id,
                 "details": {
                     "position_id": action["position_id"],
                     "pool": action["pool_address"],
