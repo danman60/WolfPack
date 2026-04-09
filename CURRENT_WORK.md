@@ -1,6 +1,82 @@
 # Current Work - WolfPack
 
-## Last Session Summary (2026-04-07 → 2026-04-08)
+## Session Summary (2026-04-09) — Veto Latching Fix + Zero-Trade Watchdog
+
+User reported "1h/4h/12h on the site are all the same" on the mobile Profit Report. Investigation confirmed: the periods were all showing $0 because **trading had been silent for 39 hours** despite a healthy service. Root cause was a veto latching loop, fixed this session. Also installed a persistent zero-trade watchdog since this was the 5th no-trade outage.
+
+### Veto latching bug (commit `6abea8e`)
+
+**File:** `intel/wolfpack/veto.py:213` — `_record_rejection()`
+
+`VetoEngine` is a module-level singleton (`api.py:1037-1043`) — `_recent_rejections` dict persists across cycles. The -20 recent-rejection penalty (line 190) was dropping conviction below floor, triggering another rejection at line 197, which **refreshed the cooldown timer** instead of preserving it. All 7 watchlist symbols latched out forever.
+
+Log evidence before fix:
+```
+[veto] Rejected LINK long: ['LINK rejected within last 2.0h: -20 conviction',
+                            'adjusted conviction 35 < 55 after penalties']
+```
+
+Fix: guard against refreshing the timer when already in cooldown. 2h window now absolute from first rejection.
+
+**Verified post-deploy:** DOGE long at conviction 55 now PASSES the veto. Pending regime counter reset from stuck 176/3 to fresh 4/3. Veto log pattern shifted from latching to legitimate `'direction is wait'`.
+
+### Zero-trade watchdog (new)
+
+**Script:** `/home/danman60/projects/sysadmin/zero_trade_watchdog.sh`
+**Cron:** `*/15 0-17 * * *` (every 15 min during UTC trading hours)
+**Alerting:** Telegram (same bot/chat as `health_ping_wolfpack.sh`)
+
+Escalation:
+| Silent for | Severity | Cadence |
+|---|---|---|
+| ≥3h | warn | once per 4h |
+| ≥6h | alert | every 2h |
+| ≥12h | critical | every 1h |
+| ≥2h no new recs | warn | once per 4h |
+
+Runs on SpyBalloon (independent of droplet). Queries Supabase REST directly via `SUPABASE_SERVICE_ROLE_KEY` in `~/.env.keys`. If droplet dies, watchdog still fires. State file: `/tmp/wolfpack-zero-trade-state`. Log: `/tmp/wolfpack-zero-trade.log`.
+
+Smoke-tested: critical alert fires correctly, cooldown suppresses repeats, state persists, recovery message triggers on clear.
+
+### NEW blocker discovered (not yet fixed)
+
+**Position sizing multiplier chain is producing sub-$500 positions.** After veto fix, DOGE long passed veto but got `[auto-trader] DOGE long skipped: $218 < $500 minimum`.
+
+Root cause chain in `intel/wolfpack/auto_trader.py:372-378`:
+- `size_multiplier = 0.25` if Brief-only (no mechanical strategy alignment) — line 372
+- `perf_mult = self._perf_tracker.get_size_multiplier(symbol, direction)` — further scales down based on historical performance per (symbol, direction)
+- `estimated_usd = equity × (size_pct × size_multiplier × perf_mult / 100)` → $218 for DOGE
+
+The system REQUIRES Brief+mechanical alignment for full-size trades. When The Quant's DeepSeek truncates (happening ~50% of the time) and fallback chain is exhausted (OpenRouter 402, Anthropic 400), mechanical signals may not fire reliably, leaving Brief solo at 0.25x size.
+
+**Mitigation options (not chosen yet):**
+1. Top up OpenRouter or Anthropic credits so The Quant has working fallback
+2. Lower the min_position_usd floor (e.g., $200) to let Brief-only trades through
+3. Raise the Brief-only multiplier from 0.25 → 0.5
+4. Fix DeepSeek truncation more aggressively (smaller max_tokens, simpler schemas)
+
+### Backlog items (discovered, not addressed)
+
+1. **Duplicate trade inserts:** 3 DOGE shorts at 23:13:01 UTC ±90ms, same prices, different pnl values (+$674, -$28, -$28). The close path fires multiple writes. Dedup RPC `get_deduplicated_pnl` masks from stats but raw data is wrong. Trace close_position path.
+2. **`max_exposure_pct` schema mislabel:** `api.py:1861` persists `cb_output.total_exposure_pct` (current actual) into a column literally named `max_exposure_pct` (which should be the limit). Misleading. Rename column or use dedicated `current_exposure_pct` column.
+3. **Regime pending counter** was stuck at `RANGING(176/3)` pre-restart — counter climbs but never commits. Likely per-symbol state; worth confirming the threshold logic.
+4. **Per-direction rejection cooldown:** a LONG rejection currently blocks SHORT opportunities on same symbol. Split key into `(symbol, direction)`.
+5. **Consider shorter cooldown:** 2h may still be too conservative with the fix. Tunable via `risk_controls.py` profile.
+6. **`wp_agent_outputs` stale `created_at`:** row shows Apr 3 but upserts happen every cycle. Upsert preserves original `created_at` on conflict. Add `updated_at` column for freshness monitoring.
+
+### Profitability context (pre-outage, Apr 5-8)
+
+5-day net: **+$2,850** — edge is real:
+- Shorts: 67% WR, 8.7:1 R:R, $3,016 profit
+- Longs: 46% WR, 2.4:1 R:R, $475 profit
+- Winners: mean_reversion short BTC (9/9), LINK short (+$740), DOGE/ARB shorts (+$1,288)
+- Losers: mean_reversion long SOL/AVAX/LINK (all net negative)
+
+**Once Brief+mechanical alignment resumes, the edge should restart automatically.** The watchdog will catch it within 3h if it doesn't.
+
+---
+
+## Previous Session (2026-04-07 → 2026-04-08)
 Massive debugging + improvement session. Fixed LP rebalance churn ($9K paper loss), false panic regime detection blocking all trading, DeepSeek JSON truncation killing recommendation pipeline, and added multiple strategy filters (VWAP, displacement, liquidity sweep, pump guard). Also evaluated Kronos prediction model (42% accuracy, rejected). 30+ commits in 2 days.
 
 ## What Changed (key commits this session)
