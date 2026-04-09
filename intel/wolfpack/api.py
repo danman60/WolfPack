@@ -780,14 +780,14 @@ async def reject_recommendation(rec_id: str, _auth: None = Depends(require_auth)
 async def portfolio_status(exchange: str = "hyperliquid", wallet: str = "paper_perp"):
     """Return current portfolio state with live prices for a given wallet.
 
-    Backward compat: when wallet == "paper_perp", uses the legacy paper engine
-    (manual trading flow). For other wallets, uses that wallet's AutoTrader
-    engine.
+    All wallets (including paper_perp) now route through the AutoTrader engine
+    so /portfolio reflects what the auto-trader is actually holding. The
+    legacy _get_paper_engine() singleton is kept for non-trading flows (manual
+    approval, backtest seeding) but is NOT used here — it diverged from the
+    live trader state as soon as wave 5 opened wallet-keyed trader instances,
+    causing the mobile Profit Report to show stale data.
     """
-    if wallet == "paper_perp":
-        engine = _get_paper_engine()
-    else:
-        engine = _get_perp_trader(wallet).engine
+    engine = _get_perp_trader(wallet).engine
     portfolio = engine.portfolio
 
     # Fetch live prices for open positions

@@ -107,6 +107,32 @@ def _build_yolo_profiles() -> dict:
 YOLO_PROFILES = _build_yolo_profiles()
 
 
+def _compute_default_stop_loss(symbol: str, direction: str, entry_price: float) -> float:
+    """Compute a mechanical stop_loss price based on per-symbol bps distance.
+
+    Called when Brief (or a strategy signal) doesn't include an explicit
+    stop_loss. Each position gets defined risk so one bad move can't blow
+    up the portfolio. Longer-tail alts get a wider SL than majors.
+
+    bps distances are configured in config.py:
+      default_stop_loss_bps_btc (default 200 = 2.0%)
+      default_stop_loss_bps_eth (default 250 = 2.5%)
+      default_stop_loss_bps_alt (default 350 = 3.5%)
+    """
+    sym = (symbol or "").upper()
+    if sym == "BTC":
+        bps = settings.default_stop_loss_bps_btc
+    elif sym == "ETH":
+        bps = settings.default_stop_loss_bps_eth
+    else:
+        bps = settings.default_stop_loss_bps_alt
+    frac = bps / 10000.0
+    if direction == "long":
+        return round(entry_price * (1 - frac), 6)
+    else:  # short
+        return round(entry_price * (1 + frac), 6)
+
+
 class AutoTrader:
     """Autonomous trading bot with a separate paper trading engine."""
 
@@ -188,6 +214,22 @@ class AutoTrader:
                 p.realized_pnl = snap.get("realized_pnl", 0.0)
                 p.unrealized_pnl = snap.get("unrealized_pnl", 0.0)
                 for pos_data in snap.get("positions", []):
+                    restored_sl = pos_data.get("stop_loss")
+                    if restored_sl is None:
+                        # Backfill a mechanical SL on restored positions that
+                        # don't have one (e.g., old positions opened before
+                        # auto-SL landed). Same per-symbol bps distances as
+                        # new opens.
+                        restored_sl = _compute_default_stop_loss(
+                            symbol=pos_data["symbol"],
+                            direction=pos_data["direction"],
+                            entry_price=pos_data["entry_price"],
+                        )
+                        logger.info(
+                            f"[auto-trader] Backfilled stop_loss on restored "
+                            f"{pos_data['symbol']} {pos_data['direction']} "
+                            f"@ ${restored_sl:.4f}"
+                        )
                     p.positions.append(PaperPosition(
                         symbol=pos_data["symbol"],
                         direction=pos_data["direction"],
@@ -197,7 +239,7 @@ class AutoTrader:
                         unrealized_pnl=pos_data.get("unrealized_pnl", 0.0),
                         recommendation_id=pos_data.get("recommendation_id", "auto-restored"),
                         opened_at=pos_data.get("opened_at", "2026-01-01T00:00:00+00:00"),
-                        stop_loss=pos_data.get("stop_loss"),
+                        stop_loss=restored_sl,
                         take_profit=pos_data.get("take_profit"),
                         trailing_stop_pct=pos_data.get("trailing_stop_pct"),
                         trailing_stop_peak=pos_data.get("trailing_stop_peak"),
@@ -432,6 +474,19 @@ class AutoTrader:
                 self._last_trade_at = datetime.now(timezone.utc)
                 if rec.get("stop_loss"):
                     pos.stop_loss = rec["stop_loss"]
+                else:
+                    # Auto stop-loss fallback: Brief often omits stop_loss.
+                    # Set a mechanical SL at per-symbol bps distance from
+                    # entry so every position has defined risk.
+                    pos.stop_loss = _compute_default_stop_loss(
+                        symbol=symbol,
+                        direction=direction,
+                        entry_price=pos.entry_price,
+                    )
+                    logger.info(
+                        f"[auto-trader] {symbol} {direction} auto stop_loss "
+                        f"@ ${pos.stop_loss:.4f} (Brief omitted SL)"
+                    )
                 if rec.get("take_profit"):
                     pos.take_profit = rec["take_profit"]
 
@@ -826,6 +881,17 @@ class AutoTrader:
                     # Set stop_loss/take_profit from strategy signal
                     if signal.get("stop_loss"):
                         pos.stop_loss = signal["stop_loss"]
+                    else:
+                        # Auto SL fallback — same mechanical SL as Brief path
+                        pos.stop_loss = _compute_default_stop_loss(
+                            symbol=symbol,
+                            direction=direction,
+                            entry_price=pos.entry_price,
+                        )
+                        logger.info(
+                            f"[auto-trader] Strategy {strategy_name} {symbol} {direction} "
+                            f"auto stop_loss @ ${pos.stop_loss:.4f}"
+                        )
                     if signal.get("take_profit"):
                         pos.take_profit = signal["take_profit"]
 
@@ -833,8 +899,8 @@ class AutoTrader:
                     if hasattr(self.engine, 'place_exchange_stops'):
                         self.engine.place_exchange_stops(symbol)
 
-                    # Default trailing stop of 3% if no stop_loss set
-                    if pos.stop_loss is None:
+                    # Trailing stop in addition to hard SL (belt-and-suspenders)
+                    if pos.stop_loss is not None:
                         self.engine.enable_trailing_stop(symbol, 3.0)
 
                     trade = {

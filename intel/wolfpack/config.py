@@ -66,6 +66,13 @@ class Settings(BaseSettings):
     min_position_usd: float = 200.0
     max_position_usd: float = 7000.0
 
+    # Auto stop-loss distance in basis points (bps) per symbol. Applied when
+    # Brief doesn't include an explicit stop_loss in the recommendation.
+    # 100 bps = 1%. Tighter on BTC/ETH (less volatile), wider on alts.
+    default_stop_loss_bps_btc: int = 200   # 2.0%
+    default_stop_loss_bps_eth: int = 250   # 2.5%
+    default_stop_loss_bps_alt: int = 350   # 3.5% (LINK, SOL, ARB, AVAX, DOGE, etc.)
+
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 
 
