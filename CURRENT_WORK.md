@@ -17,6 +17,22 @@ From Facebook reel transcript at `docs/transcripts/20260409_194801_facebook-reel
 
 **Next step when you want to pick this up:** backtest `value_zone_breakout` against Apr 5–8 profitable window (67% WR shorts). If it adds >5% win rate or R:R on the same trades, add to strategies folder and wire into `auto_trader.process_strategy_signals`.
 
+## Strategy Idea Backlog — "HTF Sweep + 1m BOS" Entry Confirmation (2026-04-09)
+
+From Facebook reel transcript at `docs/transcripts/20260409_201632_tradingwithmustafah-power-of-strategy-consistency.txt`. Classic ICT / Smart Money Concepts pattern.
+
+**Setup:** (1) identify HTF liquidity (prior high/low), (2) wait for price to sweep it, (3) drop to 1m and wait for a break of structure (BOS), (4) enter on the 1m BOS in the direction opposite the sweep, (5) stop-loss just past the swept level.
+
+**Two concrete additions to existing stack:**
+
+1. **1m BOS confirmation gate** for the existing `liquidity_sweep_filter` on `mean_reversion`. Current filter adds +15 conviction when a sweep is confirmed. Add: require a 1-minute market structure break (swing point taken out) in the desired direction AFTER the sweep, before allowing entry. Would be a new boolean param `require_bos_confirmation`. Reduces false-positive sweeps (liquidity grab without follow-through).
+
+2. **Auto stop-loss placement at the swept level.** Current open positions have `stop_loss: null`. Add: on entry after a sweep, automatically set `stop_loss = swept_level ± buffer_pct`. Gives defined risk without relying on LLM-chosen SL. Buffer should be tunable per symbol (tighter for BTC, looser for alts).
+
+**Why it's worth considering:** composable with existing filters (VWAP, displacement, value zone, liquidity sweep), and both pieces are backtestable in isolation. The BOS gate alone should show clear win-rate lift if the sweep filter has too many false positives. The auto-SL piece is independent and removes tail risk from the current "no stop_loss" positions.
+
+**Next step:** backtest mean_reversion with/without BOS gate on Apr 5-8 window. Parallel backtest of fixed-SL vs trailing vs no-SL to see which performs best on the winners (BTC/LINK/DOGE/ARB shorts).
+
 ---
 
 ## Session Summary (2026-04-09) — Veto Latching Fix + Zero-Trade Watchdog
