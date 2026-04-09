@@ -635,9 +635,16 @@ class AutoTrader:
                     except Exception:
                         pass
 
-            # Update DB status to auto_executed
+            # Update DB status to auto_executed.
+            # Unique constraint on (symbol, action, status) means only one
+            # auto_executed row per (symbol, action) can exist. Delete any
+            # prior auto_executed row before transitioning this one, so we
+            # don't spam the logs with duplicate-key warnings every cycle.
             if action_id:
                 try:
+                    db.table("wp_position_actions").delete().eq(
+                        "symbol", pa_symbol
+                    ).eq("action", action).eq("status", "auto_executed").execute()
                     db.table("wp_position_actions").update({
                         "status": "auto_executed",
                         "acted_at": datetime.now(timezone.utc).isoformat(),
@@ -685,6 +692,10 @@ class AutoTrader:
         """Store auto-trader portfolio snapshot to Supabase.
 
         Wave 3: writes to wp_portfolio_snapshots with wallet_id + enrichment.
+        Includes exchange_id (NOT NULL column) — previously omitted, which
+        caused every wave-5 snapshot write to fail silently and trades to
+        be lost on restart.
+
         Resilient to missing DB columns — retries without problematic fields.
         """
         try:
@@ -692,6 +703,7 @@ class AutoTrader:
             db = get_db()
             p = self.engine.portfolio
             snapshot = {
+                "exchange_id": "hyperliquid",  # NOT NULL column; default target
                 "equity": round(p.equity, 2),
                 "free_collateral": round(p.free_collateral, 2),
                 "unrealized_pnl": round(p.unrealized_pnl, 2),
