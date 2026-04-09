@@ -70,6 +70,50 @@ Key changes in `intel/wolfpack/agents/base.py::_call_llm_structured`:
 
 Verified post-deploy: service restarted (PID 3956180 at 16:55:24 UTC), DeepSeek responding cleanly, zero calls to `openrouter.ai` or `api.anthropic.com` across new cycles.
 
+### 4-Wallet Architecture — all 6 waves COMPLETE and DEPLOYED
+
+Last night's overnight pipeline had waves 2-6 failing at dispatch (orchestrator tmux launch errors); only wave 1's migration file was produced but never applied. Waves 2-6 were executed inline this session via subagents.
+
+**Commits pushed:**
+- `56180da` feat(wave2): WalletRegistry + PaperTradingEngine wallet awareness
+- `394e9eb` feat(wave4): LP engines + CircuitBreaker + DrawdownMonitor per-wallet *(also contains wave 3 — auto_trader.py + live_trading.py — due to a staging race in parallel subagents; the commit message says "wave 3 untouched" but that's inaccurate. Code is correct.)*
+- `aab15a7` feat(wave5): api.py wallet-keyed singletons + /wallets endpoints
+- `9a71dda` feat(wave6): frontend wallet selector + wallet-aware hooks
+
+**Wave 1 migration applied to Supabase** (now — wasn't applied during overnight run). Backfilled: 158 trade history rows, 2939 portfolio snapshots, 64 LP snapshots.
+
+**4 wallets live with UUIDs:**
+| Name | Mode | Type | Status | UUID |
+|---|---|---|---|---|
+| paper_perp | paper | perp | active | `7dab8a77-5a33-491d-b844-e3d4bde11680` |
+| prod_perp | production | perp | paused | `bdab999e-0885-4377-b6ca-3ddfbd968fda` |
+| paper_lp | paper | lp | active | `4f08cfdc-4bf6-45ae-abd8-c12e3057d0fa` |
+| prod_lp | production | lp | paused | `19d0a679-ef38-4d7e-951c-fc8cbf2cab5c` |
+
+**Verified post-deploy** (droplet PID 3977486 at 18:43 UTC):
+- Service startup reads `wp_wallets` and restores `paper_perp` via `wallet_id=eq.7dab8a77...` filter ($10,057.5, 2 positions)
+- Service startup restores `paper_lp` via `wallet_id=eq.4f08cfdc...` filter ($15,250.05, 7 positions)
+- `GET /wallets` returns all 4 with correct status
+- `GET /wallets/paper_perp` returns single wallet
+- `GET /strategy/mode` returns `{mode: "paper", wallets: {paper_perp: active, prod_perp: paused}, checklist: [...]}`
+- `GET /portfolio?wallet=paper_perp` returns enriched position data (mfe/mae/accumulated_funding fields visible)
+- `GET /auto-trader/status?wallet=paper_perp` → enabled, 2 positions, $10,057.5
+- `GET /lp/status?wallet=paper_lp` → $15,250 equity, 7 positions
+- Intelligence cycle running under new code, per-wallet iteration for trading execution, intelligence gathering still runs ONCE per symbol (no duplicate LLM calls)
+- No errors/exceptions/tracebacks in post-restart journalctl
+- Frontend `npm run build` passed with zero errors
+
+**Architecture cleanup priority from earlier — RESOLVED.** The duplicate-wallet mess is consolidated:
+- ~~wp_auto_portfolio_snapshots~~ → `wp_portfolio_snapshots` with `wallet_id` (legacy table still read as fallback for transition)
+- Each wallet has independent: circuit breaker state, drawdown highwater, auto-trader singleton, LP trader singleton
+- Frontend `<WalletSelector>` in portfolio/auto-bot/pools pages with Paper/Production toggle
+
+**Known limitations (backlog, non-blocking):**
+1. The `394e9eb` commit is misnamed (claims wave 4 only; contains waves 3+4). Code is correct, history is cosmetic.
+2. `_safety_checklist` in api.py still references `_strategy_mode` via `getattr` as a legacy no-op path.
+3. The wave 1 migration file on disk at `supabase/migrations/20260408_four_wallet_consolidation.sql` has more ambitious schema (unique constraints, CHECK constraints) than what I applied. The applied version is additive-only (ADD COLUMN IF NOT EXISTS, CREATE TABLE IF NOT EXISTS on ad-hoc tables not recreated) to preserve existing data. If you ever want the strict schema, the file diff vs what's applied needs separate reconciliation.
+4. Production wallets (prod_perp, prod_lp) are seeded as `paused`. Live cutover requires resume + cutover checklist.
+
 ### Backlog items (discovered, not addressed)
 
 1. **Duplicate trade inserts:** 3 DOGE shorts at 23:13:01 UTC ±90ms, same prices, different pnl values (+$674, -$28, -$28). The close path fires multiple writes. Dedup RPC `get_deduplicated_pnl` masks from stats but raw data is wrong. Trace close_position path.
