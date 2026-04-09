@@ -48,8 +48,21 @@ class DrawdownMonitor:
 
         peak = self._peak_cache.get(cache_key, current_equity)
 
+        # Sanity check: if current is drastically below peak (>50% apparent drawdown),
+        # the peak is almost certainly stale or from a different equity source (e.g., the
+        # wallet-snapshot vs paper-engine mismatch bug). Reset peak to current instead of
+        # letting a phantom drawdown trip the circuit breaker.
+        if peak > 0 and current_equity > 0 and current_equity < peak * 0.5:
+            logger.warning(
+                f"[drawdown] Sanity reset: peak ${peak:.2f} vs current ${current_equity:.2f} "
+                f"({((peak - current_equity) / peak * 100):.1f}% apparent drawdown exceeds 50%) — "
+                f"resetting peak to current"
+            )
+            peak = current_equity
+            self._peak_cache[cache_key] = peak
+            self._save_to_db(exchange_id, peak, current_equity, 0.0, wallet_id=wallet_id)
         # If current > peak: update peak in DB and cache
-        if current_equity > peak:
+        elif current_equity > peak:
             peak = current_equity
             self._peak_cache[cache_key] = peak
             self._save_to_db(exchange_id, peak, current_equity, 0.0, wallet_id=wallet_id)
