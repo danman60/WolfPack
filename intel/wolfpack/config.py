@@ -56,12 +56,14 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     api_secret_key: str = ""           # Bearer token for protected endpoints
 
-    # Trading hours (UTC) — only open new positions during this window
+    # Trading hours (UTC) — 24/7 trading (crypto is always on). Old window was 0-18.
     trading_hours_start: int = 0
-    trading_hours_end: int = 18
+    trading_hours_end: int = 24
 
-    # Position size sweet spot (USD)
-    min_position_usd: float = 500.0
+    # Position size sweet spot (USD). Min lowered from $500 → $200 so Brief-only
+    # recs (0.25× multiplier) can still execute when mechanical strategies
+    # haven't aligned yet.
+    min_position_usd: float = 200.0
     max_position_usd: float = 7000.0
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
