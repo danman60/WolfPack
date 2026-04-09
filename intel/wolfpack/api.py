@@ -428,26 +428,36 @@ async def module_status():
 
 
 # ── Strategy Mode ──
-
-_strategy_mode: str = "paper"  # "paper" or "live"
+# Wave 5: _strategy_mode global removed — wallet status in wp_wallets is the source of truth.
 
 
 @app.get("/strategy/mode")
 async def get_strategy_mode():
-    """Return current strategy mode and safety checklist."""
+    """Return wallet-based mode info (backward compat) + safety checklist."""
+    from wolfpack.wallet_registry import get_registry
+    reg = get_registry()
+    paper = reg.get_wallet("paper_perp")
+    prod = reg.get_wallet("prod_perp")
+    mode = "live" if (prod and prod.status == "active") else "paper"
     checklist = _safety_checklist()
     return {
-        "mode": _strategy_mode,
+        "mode": mode,
         "can_go_live": all(c["passed"] for c in checklist),
         "checklist": checklist,
+        "wallets": {
+            "paper_perp": paper.status if paper else "unknown",
+            "prod_perp": prod.status if prod else "unknown",
+        },
     }
 
 
 @app.post("/strategy/mode")
 async def set_strategy_mode(mode: str, _auth: None = Depends(require_auth)):
-    """Switch strategy mode. Requires all safety checks to go live."""
-    global _strategy_mode, _auto_trader
+    """Switch strategy mode by activating/pausing the prod_perp wallet.
 
+    Backward-compat wrapper: accepts the legacy {mode: "paper"|"live"} API but
+    implements it as wallet pause/resume on wp_wallets.
+    """
     if mode not in ("paper", "live"):
         return {"status": "error", "message": "Mode must be 'paper' or 'live'"}
 
@@ -461,16 +471,31 @@ async def set_strategy_mode(mode: str, _auth: None = Depends(require_auth)):
                 "failures": failures,
             }
 
-    _strategy_mode = mode
-    _auto_trader = None  # Force recreation with new engine for the new mode
+    try:
+        from wolfpack.db import get_db
+        from wolfpack.wallet_registry import get_registry
+        db = get_db()
+        if mode == "live":
+            db.table("wp_wallets").update({"status": "active"}).eq("name", "prod_perp").execute()
+            db.table("wp_wallets").update({"status": "paused"}).eq("name", "paper_perp").execute()
+        else:
+            db.table("wp_wallets").update({"status": "paused"}).eq("name", "prod_perp").execute()
+            db.table("wp_wallets").update({"status": "active"}).eq("name", "paper_perp").execute()
+        # Force registry reload and drop cached traders so next access re-reads
+        get_registry().refresh()
+        _auto_traders.pop("paper_perp", None)
+        _auto_traders.pop("prod_perp", None)
+    except Exception as e:
+        logger.error(f"[strategy/mode] Failed to flip wallets: {e}")
+        return {"status": "error", "message": str(e)}
+
     logger.info(f"Strategy mode changed to: {mode}")
-    return {"status": "ok", "mode": _strategy_mode}
+    return {"status": "ok", "mode": mode}
 
 
 @app.post("/emergency-kill")
 async def emergency_kill(_auth: None = Depends(require_auth)):
     """Emergency: close all positions, cancel all orders, halt trading."""
-    global _strategy_mode, _auto_trader
     results: dict[str, Any] = {"perp": [], "orders_cancelled": 0}
 
     try:
@@ -483,8 +508,12 @@ async def emergency_kill(_auth: None = Depends(require_auth)):
         except Exception:
             pass
 
-        # 2. If live mode, close all real positions and cancel orders
-        if _strategy_mode == "live":
+        # 2. If any production wallet is active, close all real positions and cancel orders
+        from wolfpack.wallet_registry import get_registry
+        reg = get_registry()
+        prod_perp = reg.get_wallet("prod_perp")
+        live_active = bool(prod_perp and prod_perp.status == "active")
+        if live_active:
             try:
                 from wolfpack.exchanges.hyperliquid_trading import HyperliquidTrader
                 hl = HyperliquidTrader(settings.hyperliquid_private_key)
@@ -522,13 +551,22 @@ async def emergency_kill(_auth: None = Depends(require_auth)):
             except Exception as e:
                 logger.error(f"[emergency-kill] Error closing live positions: {e}")
 
-        # 3. Disable auto-trader
-        trader = _get_auto_trader()
-        trader.enabled = False
+        # 3. Disable cached auto-traders (all wallets)
+        for t in list(_auto_traders.values()):
+            try:
+                t.enabled = False
+            except Exception:
+                pass
 
-        # 4. Switch to paper mode and recreate auto-trader
-        _strategy_mode = "paper"
-        _auto_trader = None
+        # 4. Pause all production wallets in wp_wallets and clear cached traders
+        try:
+            from wolfpack.db import get_db
+            get_db().table("wp_wallets").update({"status": "paused"}).eq("wallet_mode", "production").execute()
+            get_registry().refresh()
+        except Exception as e:
+            logger.warning(f"[emergency-kill] Failed to pause production wallets: {e}")
+        _auto_traders.clear()
+        _lp_traders.clear()
 
         # 5. Send Telegram alert
         try:
@@ -739,9 +777,17 @@ async def reject_recommendation(rec_id: str, _auth: None = Depends(require_auth)
 
 
 @app.get("/portfolio")
-async def portfolio_status(exchange: str = "hyperliquid"):
-    """Return current paper trading portfolio state with live prices."""
-    engine = _get_paper_engine()
+async def portfolio_status(exchange: str = "hyperliquid", wallet: str = "paper_perp"):
+    """Return current portfolio state with live prices for a given wallet.
+
+    Backward compat: when wallet == "paper_perp", uses the legacy paper engine
+    (manual trading flow). For other wallets, uses that wallet's AutoTrader
+    engine.
+    """
+    if wallet == "paper_perp":
+        engine = _get_paper_engine()
+    else:
+        engine = _get_perp_trader(wallet).engine
     portfolio = engine.portfolio
 
     # Fetch live prices for open positions
@@ -779,19 +825,18 @@ async def portfolio_status(exchange: str = "hyperliquid"):
 
 
 @app.get("/portfolio/history")
-async def portfolio_history(limit: int = 100):
-    """Return portfolio snapshot history for equity curve."""
+async def portfolio_history(limit: int = 100, wallet: str = "paper_perp"):
+    """Return portfolio snapshot history filtered by wallet_id."""
     try:
         from wolfpack.db import get_db
+        from wolfpack.wallet_registry import get_registry
 
         db = get_db()
-        result = (
-            db.table("wp_portfolio_snapshots")
-            .select("*")
-            .order("created_at", desc=True)
-            .limit(limit)
-            .execute()
-        )
+        w = get_registry().get_wallet(wallet)
+        query = db.table("wp_portfolio_snapshots").select("*")
+        if w and w.id:
+            query = query.eq("wallet_id", str(w.id))
+        result = query.order("created_at", desc=True).limit(limit).execute()
         snapshots = result.data or []
         snapshots.reverse()  # Chronological order
         return {"snapshots": snapshots}
@@ -801,18 +846,17 @@ async def portfolio_history(limit: int = 100):
 
 
 @app.get("/portfolio/trades")
-async def portfolio_trades(limit: int = 50):
-    """Return closed trade history."""
+async def portfolio_trades(limit: int = 50, wallet: str = "paper_perp"):
+    """Return closed trade history filtered by wallet_id."""
     try:
         from wolfpack.db import get_db
+        from wolfpack.wallet_registry import get_registry
         db = get_db()
-        result = (
-            db.table("wp_trade_history")
-            .select("*")
-            .order("closed_at", desc=True)
-            .limit(limit)
-            .execute()
-        )
+        w = get_registry().get_wallet(wallet)
+        query = db.table("wp_trade_history").select("*")
+        if w and w.id:
+            query = query.eq("wallet_id", str(w.id))
+        result = query.order("closed_at", desc=True).limit(limit).execute()
         return {"trades": result.data or []}
     except Exception as e:
         logger.error(f"[portfolio] Failed to fetch trade history: {e}")
@@ -1043,57 +1087,166 @@ def _get_veto() -> Any:
     return _veto_instance
 
 
-# ── Auto-Trader Singleton ──
-_auto_trader: Any = None
+# ── Auto-Trader / LP-Trader — wallet-keyed dicts (Wave 5) ──
+# Each wallet name ("paper_perp", "prod_perp", "paper_lp", "prod_lp") maps to
+# its own trader instance. Legacy helpers preserved below for backward compat.
+_auto_traders: dict[str, Any] = {}   # wallet_name -> AutoTrader
+_lp_traders: dict[str, Any] = {}     # wallet_name -> LPAutoTrader
+_paper_engines: dict[str, Any] = {}  # wallet_name -> PaperTradingEngine (manual portfolio page)
+
+
+def _get_perp_trader(wallet_name: str = "paper_perp") -> Any:
+    """Get or create the AutoTrader for a specific perp wallet."""
+    if wallet_name not in _auto_traders:
+        from wolfpack.auto_trader import AutoTrader
+        from wolfpack.wallet_registry import get_registry
+        reg = get_registry()
+        wallet = reg.get_wallet(wallet_name)
+        if not wallet:
+            raise HTTPException(status_code=404, detail=f"Wallet '{wallet_name}' not found")
+        mode = "live" if wallet.wallet_mode == "production" else "paper"
+        wid = str(wallet.id) if wallet.id else None
+        trader = AutoTrader(wallet_id=wid, engine_mode=mode)
+        try:
+            trader.restore_from_snapshot()
+        except Exception as e:
+            logger.warning(f"[wave5] restore_from_snapshot failed for {wallet_name}: {e}")
+        _auto_traders[wallet_name] = trader
+    return _auto_traders[wallet_name]
 
 
 def _get_auto_trader() -> Any:
-    """Get or create the AutoTrader singleton."""
-    global _auto_trader
-    if _auto_trader is None:
-        from wolfpack.auto_trader import AutoTrader
-        _auto_trader = AutoTrader()
-    return _auto_trader
+    """Legacy accessor — returns the paper_perp trader.
+
+    Kept for backward compat with the many call sites in api.py. New code
+    should call `_get_perp_trader(wallet_name)` with an explicit wallet.
+    """
+    return _get_perp_trader("paper_perp")
 
 
-# ── LP AutoTrader Singleton ──
-_lp_trader: Any = None
+def _get_lp_trader(wallet_name: str = "paper_lp") -> Any:
+    """Get or create the LPAutoTrader for a specific LP wallet.
 
-
-def _get_lp_trader() -> Any:
-    """Get or create the LPAutoTrader singleton."""
-    global _lp_trader
-    if _lp_trader is None:
+    Backward compat: zero-arg call returns the paper_lp trader.
+    """
+    if wallet_name not in _lp_traders:
         from wolfpack.lp_auto_trader import LPAutoTrader
-        _lp_trader = LPAutoTrader()
-    return _lp_trader
+        from wolfpack.wallet_registry import get_registry
+        reg = get_registry()
+        wallet = reg.get_wallet(wallet_name)
+        if not wallet:
+            raise HTTPException(status_code=404, detail=f"LP wallet '{wallet_name}' not found")
+        wid = str(wallet.id) if wallet.id else None
+        lp = LPAutoTrader(wallet_id=wid)
+        try:
+            lp.restore_from_snapshot()
+        except Exception as e:
+            logger.warning(f"[wave5] LP restore_from_snapshot failed for {wallet_name}: {e}")
+        _lp_traders[wallet_name] = lp
+    return _lp_traders[wallet_name]
+
+
+# ── Wallet Management Endpoints (Wave 5) ──
+
+
+@app.get("/wallets")
+async def list_wallets():
+    """List all 4 canonical wallets with status and equity."""
+    from wolfpack.wallet_registry import get_registry
+    reg = get_registry()
+    wallets = []
+    for name in ["paper_perp", "prod_perp", "paper_lp", "prod_lp"]:
+        w = reg.get_wallet(name)
+        if w:
+            wallets.append({
+                "id": str(w.id) if w.id else None,
+                "name": w.name,
+                "mode": w.wallet_mode,
+                "type": w.wallet_type,
+                "starting_equity": float(w.starting_equity),
+                "current_equity": float(w.current_equity),
+                "status": w.status,
+                "config": w.config,
+            })
+    return {"wallets": wallets}
+
+
+@app.get("/wallets/{name}")
+async def get_wallet_endpoint(name: str):
+    """Return a single wallet by canonical name."""
+    from wolfpack.wallet_registry import get_registry
+    w = get_registry().get_wallet(name)
+    if not w:
+        raise HTTPException(status_code=404, detail=f"Wallet '{name}' not found")
+    return {
+        "id": str(w.id) if w.id else None,
+        "name": w.name,
+        "mode": w.wallet_mode,
+        "type": w.wallet_type,
+        "starting_equity": float(w.starting_equity),
+        "current_equity": float(w.current_equity),
+        "status": w.status,
+        "config": w.config,
+    }
+
+
+@app.post("/wallets/{name}/pause")
+async def pause_wallet(name: str, _auth: None = Depends(require_auth)):
+    """Pause a wallet (status -> paused) and drop any cached trader."""
+    try:
+        from wolfpack.db import get_db
+        from wolfpack.wallet_registry import get_registry
+        get_db().table("wp_wallets").update({"status": "paused"}).eq("name", name).execute()
+        get_registry().refresh()
+    except Exception as e:
+        logger.error(f"[wallets] pause failed for {name}: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+    # Clear cached trader so next access re-reads
+    _auto_traders.pop(name, None)
+    _lp_traders.pop(name, None)
+    return {"status": "ok", "wallet": name, "new_status": "paused"}
+
+
+@app.post("/wallets/{name}/resume")
+async def resume_wallet(name: str, _auth: None = Depends(require_auth)):
+    """Resume a wallet (status -> active)."""
+    try:
+        from wolfpack.db import get_db
+        from wolfpack.wallet_registry import get_registry
+        get_db().table("wp_wallets").update({"status": "active"}).eq("name", name).execute()
+        get_registry().refresh()
+    except Exception as e:
+        logger.error(f"[wallets] resume failed for {name}: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+    return {"status": "ok", "wallet": name, "new_status": "active"}
 
 
 @app.get("/auto-trader/status")
-async def auto_trader_status():
-    """Return auto-trader status."""
-    trader = _get_auto_trader()
+async def auto_trader_status(wallet: str = "paper_perp"):
+    """Return auto-trader status for a given wallet (default: paper_perp)."""
+    trader = _get_perp_trader(wallet)
     return trader.get_status()
 
 
 @app.post("/auto-trader/toggle")
-async def auto_trader_toggle(_auth: None = Depends(require_auth)):
-    """Toggle auto-trader on/off."""
-    trader = _get_auto_trader()
+async def auto_trader_toggle(wallet: str = "paper_perp", _auth: None = Depends(require_auth)):
+    """Toggle auto-trader on/off for a given wallet."""
+    trader = _get_perp_trader(wallet)
     trader.enabled = not trader.enabled
     state = "enabled" if trader.enabled else "disabled"
-    logger.info(f"[auto-trader] Toggled to {state}")
-    return {"status": "ok", "enabled": trader.enabled}
+    logger.info(f"[auto-trader] {wallet} toggled to {state}")
+    return {"status": "ok", "wallet": wallet, "enabled": trader.enabled}
 
 
 @app.post("/auto-trader/config")
 async def auto_trader_config(
     equity: float | None = Body(None),
     conviction_threshold: int | None = Body(None),
+    wallet: str = "paper_perp",
     _auth: None = Depends(require_auth),
 ):
-    """Update auto-trader configuration at runtime."""
-    trader = _get_auto_trader()
+    """Update auto-trader configuration at runtime for a given wallet."""
+    trader = _get_perp_trader(wallet)
     trader.restore_from_snapshot()
     if equity is not None and equity > 0:
         trader.engine.portfolio.starting_equity = equity
@@ -1102,42 +1255,42 @@ async def auto_trader_config(
             trader.engine.portfolio.equity = equity
             trader.engine.portfolio.free_collateral = equity
         trader._store_snapshot()
-        logger.info(f"[auto-trader] Updated equity to ${equity}")
+        logger.info(f"[auto-trader] {wallet} updated equity to ${equity}")
     if conviction_threshold is not None and 50 <= conviction_threshold <= 100:
         trader.conviction_threshold = conviction_threshold
-        logger.info(f"[auto-trader] Updated conviction threshold to {conviction_threshold}")
+        logger.info(f"[auto-trader] {wallet} updated conviction threshold to {conviction_threshold}")
     return trader.get_status()
 
 
 @app.post("/auto-trader/yolo-level")
 async def auto_trader_yolo_level(
     level: int = Body(..., embed=True),
+    wallet: str = "paper_perp",
     _auth: None = Depends(require_auth),
 ):
-    """Set the YOLO meter level (1-5)."""
+    """Set the YOLO meter level (1-5) for a given wallet."""
     if level < 1 or level > 5:
         raise HTTPException(status_code=400, detail="YOLO level must be 1-5")
-    trader = _get_auto_trader()
+    trader = _get_perp_trader(wallet)
     trader.yolo_level = level
     trader._apply_yolo_profile()
     from wolfpack.auto_trader import YOLO_PROFILES
-    logger.info(f"[auto-trader] YOLO level set to {level} ({YOLO_PROFILES[level]['label']})")
+    logger.info(f"[auto-trader] {wallet} YOLO level set to {level} ({YOLO_PROFILES[level]['label']})")
     return trader.get_status()
 
 
 @app.get("/auto-trader/trades")
-async def auto_trader_trades(limit: int = 50):
-    """Return recent auto-trades."""
+async def auto_trader_trades(limit: int = 50, wallet: str = "paper_perp"):
+    """Return recent auto-trades filtered by wallet_id."""
     try:
         from wolfpack.db import get_db
+        from wolfpack.wallet_registry import get_registry
         db = get_db()
-        result = (
-            db.table("wp_auto_trades")
-            .select("*")
-            .order("opened_at", desc=True)
-            .limit(limit)
-            .execute()
-        )
+        w = get_registry().get_wallet(wallet)
+        query = db.table("wp_auto_trades").select("*")
+        if w and w.id:
+            query = query.eq("wallet_id", str(w.id))
+        result = query.order("opened_at", desc=True).limit(limit).execute()
         return {"trades": result.data or []}
     except Exception as e:
         logger.error(f"[auto-trader] Failed to fetch trades: {e}")
@@ -2138,40 +2291,51 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                 except Exception:
                     pass
 
-                # ── Step 5b: Run mechanical strategies BEFORE Brief recs (sets _last_strategy_signals for Brief sizing) ──
+                # ── Step 5b: Run mechanical strategies for every active perp wallet ──
+                # Intelligence runs ONCE above. Only trading execution runs per-wallet.
+                from wolfpack.wallet_registry import get_registry as _get_reg_s5b
+                _active_perp_wallets = _get_reg_s5b().get_active_wallets("perp")
+                # Pre-fetch 5m candles once (shared across wallets)
+                _candles_5m_shared: list = []
                 try:
-                    auto_trader = _get_auto_trader()
-                    if auto_trader.enabled:
+                    _candles_5m_shared = await adapter.get_candles(symbol, interval="5m", limit=100)
+                except Exception as e:
+                    logger.warning(f"[cycle] Failed to fetch 5m candles for strategies: {e}")
+
+                for _wallet in _active_perp_wallets:
+                    try:
+                        _trader = _get_perp_trader(_wallet.name)
+                        if not _trader.enabled:
+                            continue
                         # 1h strategies use existing candles
-                        strat_executed = auto_trader.process_strategy_signals(
+                        strat_executed = _trader.process_strategy_signals(
                             candles_1h, symbol,
                             regime_output=regime_output, vol_output=vol_output,
                             timeframe="1h",
                         )
                         if strat_executed:
-                            logger.info(f"[cycle] Strategy signals executed {len(strat_executed)} trades")
-    
-                        # 5m candles for ORB session strategy
-                        try:
-                            candles_5m = await adapter.get_candles(symbol, interval="5m", limit=100)
-                            if candles_5m:
-                                strat_5m = auto_trader.process_strategy_signals(
-                                    candles_5m, symbol,
+                            logger.info(f"[cycle] {_wallet.name} strategy signals executed {len(strat_executed)} trades")
+
+                        # 5m ORB session strategy
+                        if _candles_5m_shared:
+                            try:
+                                strat_5m = _trader.process_strategy_signals(
+                                    _candles_5m_shared, symbol,
                                     regime_output=regime_output, vol_output=vol_output,
                                     timeframe="5m",
                                 )
                                 if strat_5m:
-                                    logger.info(f"[cycle] 5m strategy signals executed {len(strat_5m)} trades")
-                        except Exception as e:
-                            logger.warning(f"[cycle] Failed to fetch 5m candles for strategies: {e}")
-    
+                                    logger.info(f"[cycle] {_wallet.name} 5m strategy signals executed {len(strat_5m)} trades")
+                            except Exception as e:
+                                logger.warning(f"[cycle] {_wallet.name} 5m strategy error: {e}")
+
                         # HTF trailing stop update on 4h bars
                         try:
-                            auto_trader.update_htf_trailing(candles_4h, symbol)
+                            _trader.update_htf_trailing(candles_4h, symbol)
                         except Exception as e:
-                            logger.warning(f"[cycle] HTF trailing stop error: {e}")
-                except Exception as e:
-                    logger.warning(f"[cycle] Strategy signals error: {e}")
+                            logger.warning(f"[cycle] {_wallet.name} HTF trailing stop error: {e}")
+                    except Exception as e:
+                        logger.warning(f"[cycle] {_wallet.name} strategy signals error: {e}")
 
                 # ── Regime transition management ──
                 try:
@@ -2205,20 +2369,21 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                 except Exception as e:
                     logger.warning(f"[cycle] Regime transition error: {e}")
 
-                # ── Step 5b2: Auto-trader processes stored recs (Brief as conviction multiplier) ──
-                try:
-                    auto_trader = _get_auto_trader()
-                    if auto_trader.enabled and stored_recs:
-                        auto_executed = await auto_trader.process_recommendations(
-                            stored_recs,
-                            cb_output=cb_output,
-                            vol_output=vol_output,
-                            latest_prices={symbol: latest_price} if latest_price else None,
-                        )
-                        if auto_executed:
-                            logger.info(f"[cycle] Auto-trader executed {len(auto_executed)} trades")
-                except Exception as e:
-                    logger.warning(f"[cycle] Auto-trader error: {e}")
+                # ── Step 5b2: Each active perp wallet processes stored recs ──
+                for _wallet in _active_perp_wallets:
+                    try:
+                        _trader = _get_perp_trader(_wallet.name)
+                        if _trader.enabled and stored_recs:
+                            auto_executed = await _trader.process_recommendations(
+                                stored_recs,
+                                cb_output=cb_output,
+                                vol_output=vol_output,
+                                latest_prices={symbol: latest_price} if latest_price else None,
+                            )
+                            if auto_executed:
+                                logger.info(f"[cycle] {_wallet.name} executed {len(auto_executed)} trades")
+                    except Exception as e:
+                        logger.warning(f"[cycle] {_wallet.name} auto-trader error: {e}")
     
                 # ── Step 5c: Process position actions from Brief ──
                 try:
@@ -2281,44 +2446,51 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                 except Exception as e:
                     logger.warning(f"[cycle] Drawdown position tracking error: {e}")
     
-                # ── Step 6b: Update auto-trader prices + check stops ──
-                try:
-                    auto_trader = _get_auto_trader()
-                    if auto_trader.enabled and latest_price and auto_trader.engine.portfolio.positions:
-                        auto_trader.engine.update_prices({symbol: latest_price})
-                        triggered = auto_trader.engine.check_stops({symbol: latest_price})
-                        if triggered:
-                            for sym, reason in triggered:
-                                logger.info(f"[auto-trader] {reason} triggered for {sym}")
-                                try:
-                                    from wolfpack.notification_digest import get_digest
-                                    digest = get_digest()
-                                    digest.add({
-                                        "type": "stop_triggered",
-                                        "symbol": sym,
-                                        "details": f"{reason.upper()} hit for {sym} @ ${latest_price:,.2f}",
-                                    })
-                                except Exception:
-                                    pass
-                        auto_trader._store_snapshot()
-                except Exception as e:
-                    logger.warning(f"[cycle] Auto-trader price update error: {e}")
-
-                # ── Step 6b2: Position reconciliation + stop verification (live mode only) ──
-                if _strategy_mode == "live":
+                # ── Step 6b: Update prices + check stops for every active perp wallet ──
+                for _wallet in _active_perp_wallets:
                     try:
-                        trader = _get_auto_trader()
-                        if hasattr(trader.engine, 'reconcile'):
-                            drift = await trader.engine.reconcile()
-                            if drift.get("has_drift"):
-                                logger.warning(f"[cycle] Position drift: {drift}")
-                        # Also verify stop orders
-                        if hasattr(trader.engine, 'verify_stops'):
-                            stop_issues = trader.engine.verify_stops()
-                            if stop_issues:
-                                logger.warning(f"[cycle] Stop order issues: {stop_issues}")
+                        _trader = _get_perp_trader(_wallet.name)
+                        if _trader.enabled and latest_price and _trader.engine.portfolio.positions:
+                            _trader.engine.update_prices({symbol: latest_price})
+                            triggered = _trader.engine.check_stops({symbol: latest_price})
+                            if triggered:
+                                for sym, reason in triggered:
+                                    logger.info(f"[auto-trader] {_wallet.name} {reason} triggered for {sym}")
+                                    try:
+                                        from wolfpack.notification_digest import get_digest
+                                        digest = get_digest()
+                                        digest.add({
+                                            "type": "stop_triggered",
+                                            "symbol": sym,
+                                            "details": f"{_wallet.name}: {reason.upper()} hit for {sym} @ ${latest_price:,.2f}",
+                                        })
+                                    except Exception:
+                                        pass
+                            _trader._store_snapshot()
                     except Exception as e:
-                        logger.warning(f"[cycle] Position reconciliation error: {e}")
+                        logger.warning(f"[cycle] {_wallet.name} price update error: {e}")
+
+                # ── Step 6b2: Position reconciliation + stop verification (live wallets only) ──
+                try:
+                    from wolfpack.wallet_registry import get_registry as _get_reg
+                    _reg = _get_reg()
+                    for _live_wallet in _reg.get_active_wallets("perp"):
+                        if _live_wallet.wallet_mode != "production":
+                            continue
+                        try:
+                            live_trader = _get_perp_trader(_live_wallet.name)
+                            if hasattr(live_trader.engine, 'reconcile'):
+                                drift = await live_trader.engine.reconcile()
+                                if drift.get("has_drift"):
+                                    logger.warning(f"[cycle] {_live_wallet.name} position drift: {drift}")
+                            if hasattr(live_trader.engine, 'verify_stops'):
+                                stop_issues = live_trader.engine.verify_stops()
+                                if stop_issues:
+                                    logger.warning(f"[cycle] {_live_wallet.name} stop order issues: {stop_issues}")
+                        except Exception as e:
+                            logger.warning(f"[cycle] Position reconciliation error for {_live_wallet.name}: {e}")
+                except Exception as e:
+                    logger.warning(f"[cycle] Position reconciliation loop error: {e}")
 
                 # ── Step 6c: LP position monitoring ──
                 try:
@@ -3013,24 +3185,28 @@ async def get_pool_positions(owner: str, first: int = 50):
 
 
 @app.get("/lp/status")
-async def lp_status():
-    """Get LP automation status."""
-    lp = _get_lp_trader()
+async def lp_status(wallet: str = "paper_lp"):
+    """Get LP automation status for a given wallet."""
+    lp = _get_lp_trader(wallet)
     return lp.get_status()
 
 
 @app.post("/lp/toggle")
-async def lp_toggle(enabled: bool = Body(..., embed=True), _auth: None = Depends(require_auth)):
-    """Enable/disable LP automation."""
-    lp = _get_lp_trader()
+async def lp_toggle(
+    enabled: bool = Body(..., embed=True),
+    wallet: str = "paper_lp",
+    _auth: None = Depends(require_auth),
+):
+    """Enable/disable LP automation for a given wallet."""
+    lp = _get_lp_trader(wallet)
     lp._enabled = enabled
-    return {"enabled": lp._enabled}
+    return {"wallet": wallet, "enabled": lp._enabled}
 
 
 @app.get("/lp/positions")
-async def lp_positions():
-    """Get all LP positions from paper engine."""
-    lp = _get_lp_trader()
+async def lp_positions(wallet: str = "paper_lp"):
+    """Get all LP positions for a given wallet."""
+    lp = _get_lp_trader(wallet)
     return {
         "positions": [
             {
@@ -3119,8 +3295,14 @@ async def _daily_reconciliation():
     if _last_daily_recon and (now - _last_daily_recon).total_seconds() < 86400:
         return  # Already ran today
 
-    if _strategy_mode != "live":
-        return  # Only matters in live mode
+    # Only matters in live mode — check if prod_perp wallet is active
+    try:
+        from wolfpack.wallet_registry import get_registry
+        prod = get_registry().get_wallet("prod_perp")
+        if not prod or prod.status != "active":
+            return
+    except Exception:
+        return
 
     _last_daily_recon = now
 
