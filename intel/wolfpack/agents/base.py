@@ -92,6 +92,61 @@ class Agent(ABC):
         except Exception as e:
             logger.debug(f"Token tracking failed for {self.agent_key}: {e}")
 
+    @staticmethod
+    def _extract_llm_envelope(response) -> dict:
+        """Extract (completion_reason, tokens_used, provider) from an LLM response.
+
+        Phase 1.5: every LLM call in the structured path should propagate
+        these fields into the returned dict so they land in
+        wp_agent_outputs.raw_data. Tolerates both OpenAI-compatible and
+        Anthropic response shapes.
+        """
+        envelope: dict = {}
+        try:
+            # OpenAI-compatible: response.choices[0].finish_reason
+            choices = getattr(response, "choices", None)
+            if choices:
+                first = choices[0]
+                fr = getattr(first, "finish_reason", None)
+                if fr:
+                    envelope["completion_reason"] = fr
+            # Anthropic: response.stop_reason
+            stop_reason = getattr(response, "stop_reason", None)
+            if stop_reason and "completion_reason" not in envelope:
+                envelope["completion_reason"] = stop_reason
+
+            usage = getattr(response, "usage", None)
+            if usage is not None:
+                total = getattr(usage, "total_tokens", None)
+                if total is None:
+                    # Anthropic: input_tokens + output_tokens
+                    in_tok = getattr(usage, "input_tokens", None) or 0
+                    out_tok = getattr(usage, "output_tokens", None) or 0
+                    if in_tok or out_tok:
+                        total = (in_tok or 0) + (out_tok or 0)
+                if total is None:
+                    # OpenAI: prompt_tokens + completion_tokens
+                    pt = getattr(usage, "prompt_tokens", None) or 0
+                    ct = getattr(usage, "completion_tokens", None) or 0
+                    if pt or ct:
+                        total = (pt or 0) + (ct or 0)
+                if total is not None:
+                    envelope["tokens_used"] = int(total)
+        except Exception:
+            pass
+        return envelope
+
+    @staticmethod
+    def _attach_envelope(result: dict, envelope: dict) -> dict:
+        """Merge the LLM envelope into the parsed result dict (non-destructive)."""
+        if not isinstance(result, dict) or not envelope:
+            return result
+        if "completion_reason" in envelope and "completion_reason" not in result:
+            result["completion_reason"] = envelope["completion_reason"]
+        if "tokens_used" in envelope and "tokens_used" not in result:
+            result["tokens_used"] = envelope["tokens_used"]
+        return result
+
     @property
     @abstractmethod
     def name(self) -> str:
@@ -290,14 +345,17 @@ class Agent(ABC):
                 tool_choice={"type": "tool", "name": tool_name},
             )
             self._record_tokens("claude-sonnet-4-20250514", response)
+            envelope = self._extract_llm_envelope(response)
             for block in response.content:
                 if block.type == "tool_use":
-                    return block.input  # type: ignore[return-value]
+                    return self._attach_envelope(dict(block.input), envelope)  # type: ignore[arg-type]
             # Fallback: text block
             for block in response.content:
                 if block.type == "text":
-                    return self._parse_llm_json(block.text)
-            return {"summary": "No structured output returned", "conviction": 0}
+                    return self._attach_envelope(self._parse_llm_json(block.text), envelope)
+            return self._attach_envelope(
+                {"summary": "No structured output returned", "conviction": 0}, envelope
+            )
         except Exception as e:
             logger.error(f"{self.name} Anthropic structured error: {e}")
             try:
@@ -350,8 +408,9 @@ class Agent(ABC):
                 response_format={"type": "json_object"},
             )
             self._record_tokens(model, response)
+            envelope = self._extract_llm_envelope(response)
             text = response.choices[0].message.content or "{}"
-            return self._parse_llm_json(text)
+            return self._attach_envelope(self._parse_llm_json(text), envelope)
         except Exception as e:
             logger.error(f"{self.name} DeepSeek structured error: {e}")
             try:
@@ -379,8 +438,9 @@ class Agent(ABC):
                 max_tokens=2048,
             )
             self._record_tokens(reasoner_model, response)
+            envelope = self._extract_llm_envelope(response)
             text = response.choices[0].message.content or "{}"
-            return self._parse_llm_json(text)
+            return self._attach_envelope(self._parse_llm_json(text), envelope)
         except Exception as e:
             logger.error(f"{self.name} DeepSeek-Reasoner error: {e}")
             raise
@@ -404,8 +464,9 @@ class Agent(ABC):
                 response_format={"type": "json_object"},
             )
             self._record_tokens(f"{provider_name}/{model}", response)
+            envelope = self._extract_llm_envelope(response)
             text = response.choices[0].message.content or "{}"
-            return self._parse_llm_json(text)
+            return self._attach_envelope(self._parse_llm_json(text), envelope)
         except Exception as e:
             logger.error(f"{self.name} {provider_name} structured error: {e}")
             raise
@@ -438,8 +499,9 @@ class Agent(ABC):
                 response_format={"type": "json_object"},
             )
             self._record_tokens("openrouter/deepseek-chat", response)
+            envelope = self._extract_llm_envelope(response)
             text = response.choices[0].message.content or "{}"
-            return self._parse_llm_json(text)
+            return self._attach_envelope(self._parse_llm_json(text), envelope)
         except Exception as e:
             logger.error(f"{self.name} OpenRouter structured error: {e}")
             raise

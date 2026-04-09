@@ -26,7 +26,11 @@ _telegram_bot: Any = None
 _startup_time: datetime = datetime.now(timezone.utc)
 _last_successful_cycle: datetime | None = None
 _cycle_failure_count: int = 0
-CYCLE_ALERT_THRESHOLD: int = 6  # Alert after 6 consecutive failures (30 min at 5-min intervals)
+CYCLE_ALERT_THRESHOLD: int = 3  # Alert after 3 consecutive failures (15 min at 5-min intervals)
+
+# Phase 1.7: regime drift tracker — in-memory {symbol: {"regime": str, "since": datetime}}.
+# Populated during the cycle; consumed by /health/deep.
+_regime_drift_state: dict[str, dict[str, Any]] = {}
 
 
 @asynccontextmanager
@@ -324,6 +328,22 @@ async def deep_health_check():
         "minutes_ago": round((now - brief_last).total_seconds() / 60, 1) if brief_last else None,
     }
 
+    # Phase 1.7: Regime drift — how long each symbol has been stuck in its
+    # current regime. Computed from the in-memory _regime_drift_state dict
+    # populated by the cycle (no DB query per health call).
+    regime_drift: list[dict[str, Any]] = []
+    for sym, info in _regime_drift_state.items():
+        since = info.get("since")
+        if isinstance(since, datetime):
+            age_seconds = int((now - since).total_seconds())
+        else:
+            age_seconds = None
+        regime_drift.append({
+            "symbol": sym,
+            "current_regime": info.get("regime"),
+            "regime_age_seconds": age_seconds,
+        })
+
     all_ok = (
         checks["data_freshness"]["ok"]
         and all(checks["api_keys"].values())
@@ -332,7 +352,7 @@ async def deep_health_check():
     )
     status = "healthy" if all_ok else "degraded"
 
-    return {"status": status, "checks": checks}
+    return {"status": status, "checks": checks, "regime_drift": regime_drift}
 
 
 @app.get("/api/token-usage")
@@ -1079,11 +1099,17 @@ _veto_instance: Any = None
 
 
 def _get_veto() -> Any:
-    """Get or create the BriefVeto singleton."""
+    """Get or create the BriefVeto singleton.
+
+    Phase 1.6: resolve soft/hard limits from RISK_PRESETS["balanced"] rather
+    than module-level SoftLimits()/HardLimits() defaults. Both currently
+    resolve to identical values (verified before landing this change), so
+    this is safe. Unblocks future per-wallet profile experiments.
+    """
     global _veto_instance
     if _veto_instance is None:
         from wolfpack.veto import BriefVeto
-        _veto_instance = BriefVeto()
+        _veto_instance = BriefVeto(profile="balanced")
     return _veto_instance
 
 
@@ -1784,11 +1810,21 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
     4. Run Brief agent (consumes the other 3 agents' outputs)
     5. Extract trade recommendations from Brief and store to Supabase
     """
+    # Phase 1.1: CycleMetricsRecorder — writes one wp_cycle_metrics row on
+    # exit, regardless of whether the cycle completes or errors. Hook points
+    # below are defensive: if they no-op, the row still lands with defaults.
+    # Uses manual __aenter__/__aexit__ so we don't have to re-indent the
+    # entire cycle body under another `async with` block.
+    from wolfpack.cycle_metrics import CycleMetricsRecorder
+    cycle_rec = CycleMetricsRecorder()
+    await cycle_rec.__aenter__()
+    cycle_rec.record_symbols_processed(1)
+    _cycle_rec_exited = False
     async with _cycle_lock:
         try:
             # Ensure token tracker is initialized before any LLM calls
             _get_token_tracker()
-    
+
             from wolfpack.agents.base import Agent
             Agent._current_symbol = symbol
     
@@ -1862,6 +1898,26 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
             _latest_regime = regime_output
             store_module_output("regime_detection", exchange, regime_output.model_dump(), symbol)
             _module_last_runs["regime_detection"] = now_utc
+
+            # Phase 1.1/1.7: Track regime per symbol for telemetry + /health/deep
+            # drift detection. Use "macro_regime" if present, else first attr.
+            try:
+                current_regime = getattr(regime_output, "macro_regime", None) or getattr(
+                    regime_output, "regime", None
+                )
+                if current_regime is not None:
+                    current_regime = str(current_regime)
+                cycle_rec.set_regime(symbol, current_regime)
+                prior = _regime_drift_state.get(symbol)
+                if prior is None or prior.get("regime") != current_regime:
+                    _regime_drift_state[symbol] = {
+                        "regime": current_regime,
+                        "since": now_utc,
+                    }
+                    if prior is not None:
+                        cycle_rec.mark_regime_changed(symbol)
+            except Exception:
+                pass
     
             # Momentum Buckets (noise-reduced trend detection)
             momentum_buckets = MomentumBuckets()
@@ -2004,6 +2060,15 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
             )
             store_module_output("circuit_breakers", exchange, cb_output.model_dump(), symbol)
             _module_last_runs["circuit_breakers"] = now_utc
+
+            # Phase 1.1: snapshot CB state into cycle_metrics.
+            try:
+                cycle_rec.set_cb_state(
+                    state=cb_output.state,
+                    allow_new_entry=getattr(cb_output, "allow_new_entry", None),
+                )
+            except Exception:
+                pass
     
             # Persist CB state to DB (survives restarts)
             try:
@@ -2199,7 +2264,14 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                 # Veto layer — filter and adjust recs before storing
                 veto = _get_veto()
                 stored_recs: list[dict] = []
-    
+
+                # Phase 1.1: telemetry — recs_produced = total from Brief.
+                try:
+                    for _ in recs:
+                        cycle_rec.record_rec("produced")
+                except Exception:
+                    pass
+
                 for rec in recs:
                     # Extract quant signals for EMA/VWAP extension check
                     quant_sigs = None
@@ -2209,16 +2281,28 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                             quant_sigs = qo.signals
                         elif isinstance(qo, dict):
                             quant_sigs = qo.get("signals")
-    
+
                     veto_result = veto.evaluate(
                         rec,
                         cb_output=cb_output.model_dump(),
                         vol_output=vol_output.model_dump() if vol_output else None,
                         quant_signals=quant_sigs,
+                        cycle_id=cycle_rec.cycle_id,
                     )
                     if veto_result.action == "reject":
                         logger.info(f"[veto] Rejected {rec.get('symbol', symbol)} {rec.get('direction')}: {veto_result.reasons}")
+                        try:
+                            cycle_rec.record_rec("rejected")
+                        except Exception:
+                            pass
                         continue
+                    try:
+                        if veto_result.action == "adjust":
+                            cycle_rec.record_rec("adjusted")
+                        else:
+                            cycle_rec.record_rec("passed")
+                    except Exception:
+                        pass
     
                     conviction = veto_result.final_conviction
                     try:
@@ -2315,6 +2399,13 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                         )
                         if strat_executed:
                             logger.info(f"[cycle] {_wallet.name} strategy signals executed {len(strat_executed)} trades")
+                            try:
+                                for _t in strat_executed:
+                                    _sname = _t.get("strategy", "unknown") if isinstance(_t, dict) else "unknown"
+                                    cycle_rec.record_strategy_activation(f"1h:{_sname}")
+                                cycle_rec.record_position_opened(len(strat_executed))
+                            except Exception:
+                                pass
 
                         # 5m ORB session strategy
                         if _candles_5m_shared:
@@ -2326,6 +2417,13 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                                 )
                                 if strat_5m:
                                     logger.info(f"[cycle] {_wallet.name} 5m strategy signals executed {len(strat_5m)} trades")
+                                    try:
+                                        for _t in strat_5m:
+                                            _sname = _t.get("strategy", "unknown") if isinstance(_t, dict) else "unknown"
+                                            cycle_rec.record_strategy_activation(f"5m:{_sname}")
+                                        cycle_rec.record_position_opened(len(strat_5m))
+                                    except Exception:
+                                        pass
                             except Exception as e:
                                 logger.warning(f"[cycle] {_wallet.name} 5m strategy error: {e}")
 
@@ -2379,9 +2477,14 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                                 cb_output=cb_output,
                                 vol_output=vol_output,
                                 latest_prices={symbol: latest_price} if latest_price else None,
+                                cycle_recorder=cycle_rec,
                             )
                             if auto_executed:
                                 logger.info(f"[cycle] {_wallet.name} executed {len(auto_executed)} trades")
+                                try:
+                                    cycle_rec.record_position_opened(len(auto_executed))
+                                except Exception:
+                                    pass
                     except Exception as e:
                         logger.warning(f"[cycle] {_wallet.name} auto-trader error: {e}")
     
@@ -2599,6 +2702,12 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
             _running.discard("snoop")
             _running.discard("sage")
             _running.discard("brief")
+    # End `async with _cycle_lock:` — now flush cycle metrics row.
+    if not _cycle_rec_exited:
+        try:
+            await cycle_rec.__aexit__(None, None, None)
+        except Exception as _e:
+            logger.warning(f"[cycle_metrics] flush failed: {_e}")
 
 
 # ── Circuit Breaker Endpoints ──

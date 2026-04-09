@@ -304,10 +304,15 @@ class AutoTrader:
         cb_output: Any = None,
         vol_output: Any = None,
         latest_prices: dict[str, float] | None = None,
+        cycle_recorder: Any = None,
     ) -> list[dict]:
         """Process recommendations from the intelligence cycle.
 
         Returns list of auto-executed trade dicts.
+
+        Phase 1.3: if `cycle_recorder` (a CycleMetricsRecorder) is supplied,
+        sizing-block events are reported via record_sizing_block() so they
+        land in wp_cycle_metrics.sizing_blocked_reasons.
         """
         if not self.enabled:
             return []
@@ -352,7 +357,12 @@ class AutoTrader:
             # Veto check
             cb_dict = cb_output.model_dump() if hasattr(cb_output, "model_dump") else cb_output
             vol_dict = vol_output.model_dump() if hasattr(vol_output, "model_dump") else vol_output
-            veto_result = veto.evaluate(rec, cb_output=cb_dict, vol_output=vol_dict)
+            veto_result = veto.evaluate(
+                rec,
+                cb_output=cb_dict,
+                vol_output=vol_dict,
+                cycle_id=getattr(cycle_recorder, "cycle_id", None) if cycle_recorder is not None else None,
+            )
             if veto_result.action == "reject":
                 logger.info(f"[auto-trader] Veto rejected {symbol}: {veto_result.reasons}")
                 continue
@@ -440,6 +450,19 @@ class AutoTrader:
             size_pct = size_pct * perf_mult
 
             if size_pct <= 0:
+                if cycle_recorder is not None:
+                    try:
+                        cycle_recorder.record_sizing_block(
+                            symbol=symbol,
+                            direction=direction,
+                            attempted_usd=0.0,
+                            floor_usd=float(settings.min_position_usd),
+                            reason="size_pct<=0 after perf_mult",
+                            size_multiplier=size_multiplier,
+                            perf_mult=perf_mult,
+                        )
+                    except Exception:
+                        pass
                 continue
 
             # Trade spacing cooldown (5 minutes between trades)
@@ -453,6 +476,19 @@ class AutoTrader:
             estimated_usd = self.engine.portfolio.equity * (size_pct / 100)
             if estimated_usd < settings.min_position_usd:
                 logger.info(f"[auto-trader] {symbol} {direction} skipped: ${estimated_usd:.0f} < ${settings.min_position_usd:.0f} minimum")
+                if cycle_recorder is not None:
+                    try:
+                        cycle_recorder.record_sizing_block(
+                            symbol=symbol,
+                            direction=direction,
+                            attempted_usd=float(estimated_usd),
+                            floor_usd=float(settings.min_position_usd),
+                            reason="below_min_position_usd",
+                            size_multiplier=size_multiplier,
+                            perf_mult=perf_mult,
+                        )
+                    except Exception:
+                        pass
                 continue
             if estimated_usd > settings.max_position_usd:
                 size_pct = (settings.max_position_usd / self.engine.portfolio.equity) * 100
