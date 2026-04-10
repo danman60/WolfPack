@@ -85,6 +85,19 @@ STRATEGY_TIMEFRAMES = {
 _CONVICTION_THRESHOLDS = {1: 85, 2: 75, 3: 65, 4: 55, 5: 45}
 _LABELS = {1: "Cautious", 2: "Balanced", 3: "Aggressive", 4: "YOLO", 5: "Full Send"}
 
+# Per-level sizing overrides — controls the entire sizing chain aggressiveness
+# brief_only_mult: multiplier when only Brief recommends (no mechanical strategy alignment)
+# min_perf_mult: floor for PerformanceTracker size multiplier (prevents TOXIC from zeroing out)
+# min_position_usd: minimum position size to open (below this, trade is skipped)
+# trade_spacing_s: minimum seconds between consecutive trades
+_YOLO_SIZING = {
+    1: {"brief_only_mult": 0.10, "min_perf_mult": 0.15, "min_position_usd": 500, "trade_spacing_s": 600},
+    2: {"brief_only_mult": 0.25, "min_perf_mult": 0.15, "min_position_usd": 200, "trade_spacing_s": 300},
+    3: {"brief_only_mult": 0.40, "min_perf_mult": 0.30, "min_position_usd": 150, "trade_spacing_s": 180},
+    4: {"brief_only_mult": 0.60, "min_perf_mult": 0.50, "min_position_usd": 100, "trade_spacing_s": 120},
+    5: {"brief_only_mult": 0.80, "min_perf_mult": 0.70, "min_position_usd": 50,  "trade_spacing_s": 60},
+}
+
 def _build_yolo_profiles() -> dict:
     """Build YOLO_PROFILES dict from RISK_PRESETS for backward compatibility."""
     profiles = {}
@@ -440,16 +453,19 @@ class AutoTrader:
             )
 
             # Apply conviction multiplier based on mechanical confirmation
+            # Brief-only multiplier scales with YOLO level
+            yolo_sizing = _YOLO_SIZING.get(self.yolo_level, _YOLO_SIZING[2])
             if has_mechanical:
                 size_multiplier = 1.0  # Full size -- Brief + mechanical agree
                 logger.info(f"[auto-trader] Brief+mechanical aligned for {symbol} {direction}")
             else:
-                size_multiplier = 0.25  # Quarter size -- Brief only
+                size_multiplier = yolo_sizing["brief_only_mult"]
 
             size_pct = min(size_pct * size_multiplier, profile["max_size_pct"])
 
-            # Apply performance-based size multiplier
+            # Apply performance-based size multiplier (floored by YOLO level)
             perf_mult = self._perf_tracker.get_size_multiplier(symbol, direction)
+            perf_mult = max(perf_mult, yolo_sizing["min_perf_mult"])
             size_pct = size_pct * perf_mult
 
             if size_pct <= 0:
@@ -468,17 +484,19 @@ class AutoTrader:
                         pass
                 continue
 
-            # Trade spacing cooldown (5 minutes between trades)
+            # Trade spacing cooldown (scales with YOLO level)
+            spacing_s = yolo_sizing["trade_spacing_s"]
             if self._last_trade_at:
                 elapsed = (datetime.now(timezone.utc) - self._last_trade_at).total_seconds()
-                if elapsed < 300:
-                    logger.info(f"[auto-trader] Trade spacing: {300 - elapsed:.0f}s remaining")
+                if elapsed < spacing_s:
+                    logger.info(f"[auto-trader] Trade spacing: {spacing_s - elapsed:.0f}s remaining")
                     continue
 
-            # Enforce $3K-$5K position size sweet spot
+            # Enforce minimum position size (scales with YOLO level)
+            min_pos_usd = yolo_sizing["min_position_usd"]
             estimated_usd = self.engine.portfolio.equity * (size_pct / 100)
-            if estimated_usd < settings.min_position_usd:
-                logger.info(f"[auto-trader] {symbol} {direction} skipped: ${estimated_usd:.0f} < ${settings.min_position_usd:.0f} minimum")
+            if estimated_usd < min_pos_usd:
+                logger.info(f"[auto-trader] {symbol} {direction} skipped: ${estimated_usd:.0f} < ${min_pos_usd:.0f} minimum (YOLO {self.yolo_level})")
                 if cycle_recorder is not None:
                     try:
                         cycle_recorder.record_sizing_block(
@@ -1033,5 +1051,6 @@ class AutoTrader:
             "positions": [pos.model_dump(mode="json") for pos in p.positions],
             "yolo_level": self.yolo_level,
             "yolo_profile": YOLO_PROFILES.get(self.yolo_level, YOLO_PROFILES[2]),
+            "yolo_sizing": _YOLO_SIZING.get(self.yolo_level, _YOLO_SIZING[2]),
             "type": "AutoBot",
         }
