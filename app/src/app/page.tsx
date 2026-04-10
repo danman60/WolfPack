@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useExchange } from "@/lib/exchange";
-import { useAgentOutputs, useAgentStatus, useRecommendations, usePortfolio, usePortfolioHistory, useWatchlist, useAutoTraderStatus, useProfit, useStrategyMode } from "@/lib/hooks/useIntelligence";
+import { useAgentOutputs, useAgentStatus, useRecommendations, usePortfolio, usePortfolioHistory, useWatchlist, useAutoTraderStatus, useProfit, useStrategyMode, useClosePosition } from "@/lib/hooks/useIntelligence";
 import { WolfHead } from "@/components/WolfHead";
 import { usePrice, use24hChange } from "@/lib/hooks/useMarketData";
 import { useLPStatus } from "@/lib/hooks/usePools";
@@ -410,7 +410,10 @@ export default function Dashboard() {
 
 function ProfitReport() {
   const [hours, setHours] = useState(24);
+  const [locking, setLocking] = useState(false);
   const { data: profit, isFetching } = useProfit(hours);
+  const { data: autoTraderData } = useAutoTraderStatus("paper_perp");
+  const closePosition = useClosePosition();
 
   const periods = [
     { label: "1H", value: 1 },
@@ -421,9 +424,35 @@ function ProfitReport() {
 
   if (!profit) return null;
 
+  const realizedPnl = profit.total_pnl ?? 0;
+  const unrealizedPnl = autoTraderData?.unrealized_pnl ?? 0;
+  const positions = (autoTraderData?.positions ?? []) as Array<Record<string, unknown>>;
+  const totalPnl = realizedPnl + unrealizedPnl;
+
+  // For the hero: include LP if available
   const hasCombined = profit.combined_pnl !== undefined;
-  const mainPnl = hasCombined ? profit.combined_pnl : (profit.total_pnl ?? 0);
+  const heroRealized = hasCombined ? profit.combined_pnl : realizedPnl;
+  const heroPnl = (heroRealized ?? 0) + unrealizedPnl;
   const lp = profit.lp;
+
+  // Profitable positions for lock-in
+  const profitablePositions = positions.filter((p) => ((p.unrealized_pnl as number) ?? 0) > 0);
+  const profitableUnrealized = profitablePositions.reduce((sum, p) => sum + ((p.unrealized_pnl as number) ?? 0), 0);
+
+  const handleLockIn = async () => {
+    if (locking || profitablePositions.length === 0) return;
+    setLocking(true);
+    try {
+      for (const pos of profitablePositions) {
+        await closePosition.mutateAsync({
+          symbol: pos.symbol as string,
+          exchange: "hyperliquid",
+        });
+      }
+    } finally {
+      setLocking(false);
+    }
+  };
 
   return (
     <div className={`wolf-card p-4 md:p-6 animate-in animate-in-1 transition-opacity duration-200 ${isFetching ? "opacity-70" : "opacity-100"}`}>
@@ -450,38 +479,104 @@ function ProfitReport() {
         </div>
       </div>
 
-      {/* Combined P&L Hero */}
-      <div className="text-center mb-5">
+      {/* Total P&L Hero (realized + unrealized) */}
+      <div className="text-center mb-3">
         <p className="text-[11px] text-gray-500 uppercase tracking-wider font-medium mb-1">
-          {hasCombined ? "Combined" : "Total"} P&L — Last {hours}h
+          Total P&L — Last {hours}h
         </p>
         <p className={`text-3xl md:text-4xl font-bold tracking-tight ${
-          mainPnl >= 0 ? "text-[var(--wolf-emerald)]" : "text-[var(--wolf-red)]"
+          heroPnl >= 0 ? "text-[var(--wolf-emerald)]" : "text-[var(--wolf-red)]"
         }`}>
-          {mainPnl >= 0 ? "+" : ""}${Math.abs(mainPnl).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          {heroPnl >= 0 ? "+" : ""}${Math.abs(heroPnl).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
         </p>
+      </div>
 
-        {/* Benchmark / Alpha */}
-        {profit.benchmark && (
-          <div className="mt-3 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-[12px]">
-            <span className="text-gray-500">
-              BTC {profit.benchmark.btc_change_pct >= 0 ? "+" : ""}{profit.benchmark.btc_change_pct.toFixed(1)}%
-            </span>
-            <span className="text-gray-600 hidden sm:inline">|</span>
-            <span className="text-gray-400">
-              Buy & Hold: <span className={`font-mono ${profit.benchmark.buy_hold_return >= 0 ? "text-gray-300" : "text-[var(--wolf-red)]"}`}>
-                {profit.benchmark.buy_hold_return >= 0 ? "+" : ""}${profit.benchmark.buy_hold_return.toFixed(2)}
-              </span>
-            </span>
-            <span className="text-gray-600 hidden sm:inline">|</span>
-            <span className={`font-semibold ${
-              profit.benchmark.alpha >= 0 ? "text-[var(--wolf-cyan)]" : "text-[var(--wolf-red)]"
-            }`}>
-              Alpha: {profit.benchmark.alpha >= 0 ? "+" : ""}${profit.benchmark.alpha.toFixed(2)}
-            </span>
-          </div>
+      {/* Realized / Unrealized Breakdown */}
+      <div className="flex items-center justify-center gap-4 sm:gap-6 mb-3 text-[13px]">
+        <div className="text-center">
+          <p className="text-[11px] text-gray-500 uppercase tracking-wider mb-0.5">Realized</p>
+          <p className={`font-semibold font-mono ${realizedPnl >= 0 ? "text-[var(--wolf-emerald)]" : "text-[var(--wolf-red)]"}`}>
+            {realizedPnl >= 0 ? "+" : ""}${Math.abs(realizedPnl).toFixed(2)}
+          </p>
+        </div>
+        <div className="w-px h-6 bg-[var(--border)]" />
+        <div className="text-center">
+          <p className="text-[11px] text-gray-500 uppercase tracking-wider mb-0.5">Unrealized</p>
+          <p className={`font-semibold font-mono ${unrealizedPnl >= 0 ? "text-[var(--wolf-emerald)]" : "text-[var(--wolf-red)]"}`}>
+            {unrealizedPnl >= 0 ? "+" : ""}${Math.abs(unrealizedPnl).toFixed(2)}
+          </p>
+        </div>
+        {positions.length > 0 && (
+          <>
+            <div className="w-px h-6 bg-[var(--border)]" />
+            <div className="text-center">
+              <p className="text-[11px] text-gray-500 uppercase tracking-wider mb-0.5">Open</p>
+              <p className="font-semibold font-mono text-[var(--wolf-cyan)]">{positions.length}</p>
+            </div>
+          </>
         )}
       </div>
+
+      {/* Lock In Button */}
+      {profitableUnrealized > 0 && (
+        <div className="flex justify-center mb-4">
+          <button
+            onClick={handleLockIn}
+            disabled={locking}
+            className="px-4 py-2 rounded-lg text-[12px] font-bold bg-[var(--wolf-emerald)] text-white hover:brightness-110 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {locking ? "Closing..." : `Lock In +$${profitableUnrealized.toFixed(2)}`}
+          </button>
+        </div>
+      )}
+
+      {/* Open Positions Summary */}
+      {positions.length > 0 && (
+        <div className="mb-4 bg-[var(--surface)]/50 rounded-lg px-3 py-2">
+          {positions.map((pos, i) => {
+            const pnl = (pos.unrealized_pnl as number) ?? 0;
+            const symbol = (pos.symbol as string) ?? "???";
+            const direction = (pos.direction as string) ?? (pos.side as string) ?? "";
+            const sl = pos.stop_loss as number | undefined;
+            const tp = pos.take_profit as number | undefined;
+            return (
+              <div key={i} className="flex items-center justify-between text-[12px] py-0.5">
+                <span className="text-gray-300">
+                  <span className="font-medium text-white">{symbol}</span>{" "}
+                  <span className="text-gray-500">{direction}</span>
+                  {sl && tp ? (
+                    <span className="text-gray-600 ml-1">(SL ${sl.toFixed(2)} / TP ${tp.toFixed(2)})</span>
+                  ) : null}
+                </span>
+                <span className={`font-mono font-semibold ${pnl >= 0 ? "text-[var(--wolf-emerald)]" : "text-[var(--wolf-red)]"}`}>
+                  {pnl >= 0 ? "+" : ""}${pnl.toFixed(2)}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Benchmark / Alpha */}
+      {profit.benchmark && (
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-[12px] mb-5">
+          <span className="text-gray-500">
+            BTC {profit.benchmark.btc_change_pct >= 0 ? "+" : ""}{profit.benchmark.btc_change_pct.toFixed(1)}%
+          </span>
+          <span className="text-gray-600 hidden sm:inline">|</span>
+          <span className="text-gray-400">
+            Buy & Hold: <span className={`font-mono ${profit.benchmark.buy_hold_return >= 0 ? "text-gray-300" : "text-[var(--wolf-red)]"}`}>
+              {profit.benchmark.buy_hold_return >= 0 ? "+" : ""}${profit.benchmark.buy_hold_return.toFixed(2)}
+            </span>
+          </span>
+          <span className="text-gray-600 hidden sm:inline">|</span>
+          <span className={`font-semibold ${
+            profit.benchmark.alpha >= 0 ? "text-[var(--wolf-cyan)]" : "text-[var(--wolf-red)]"
+          }`}>
+            Alpha: {profit.benchmark.alpha >= 0 ? "+" : ""}${profit.benchmark.alpha.toFixed(2)}
+          </span>
+        </div>
+      )}
 
       {/* Perp + LP Side by Side */}
       <div className={`grid ${lp ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"} gap-4`}>
