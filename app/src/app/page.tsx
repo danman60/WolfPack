@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useExchange } from "@/lib/exchange";
-import { useAgentOutputs, useAgentStatus, useRecommendations, usePortfolio, usePortfolioHistory, useWatchlist, useAutoTraderStatus, useProfit, useStrategyMode, useClosePosition } from "@/lib/hooks/useIntelligence";
+import { useAgentOutputs, useAgentStatus, useRecommendations, usePortfolio, usePortfolioHistory, useWatchlist, useAutoTraderStatus, useProfit, useStrategyMode, useClosePosition, useSetYoloLevel } from "@/lib/hooks/useIntelligence";
 import { WolfHead } from "@/components/WolfHead";
 import { usePrice, use24hChange } from "@/lib/hooks/useMarketData";
 import { useLPStatus } from "@/lib/hooks/usePools";
@@ -55,6 +55,9 @@ export default function Dashboard() {
           </span>
         </div>
       )}
+
+      {/* YOLO Meter */}
+      <YoloMeter />
 
       {/* Profit Report */}
       <ProfitReport />
@@ -402,6 +405,96 @@ export default function Dashboard() {
               )
             )}
           </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+const YOLO_LABELS: Record<number, string> = {
+  0: "Off",
+  1: "Cautious",
+  2: "Balanced",
+  3: "Aggressive",
+  4: "YOLO",
+  5: "Full Send",
+};
+
+const YOLO_COLORS: Record<number, string> = {
+  0: "#6b7280",
+  1: "#22c55e",
+  2: "#10b981",
+  3: "#eab308",
+  4: "#f97316",
+  5: "#ef4444",
+};
+
+function YoloMeter() {
+  const { data: autoTrader } = useAutoTraderStatus();
+  const setYolo = useSetYoloLevel();
+  const currentLevel = autoTrader?.enabled === false ? 0 : (autoTrader?.yolo_level ?? 4);
+  const profile = autoTrader?.yolo_profile;
+  const color = YOLO_COLORS[currentLevel] ?? "#6b7280";
+  const label = YOLO_LABELS[currentLevel] ?? "Unknown";
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const level = parseInt(e.target.value, 10);
+    setYolo.mutate(level);
+  };
+
+  return (
+    <div className="wolf-card p-4 animate-in animate-in-1">
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <div className="w-1 h-4 rounded-full" style={{ backgroundColor: color }} />
+          <h2 className="text-[15px] font-semibold text-white tracking-tight">YOLO Meter</h2>
+        </div>
+        <span
+          className="text-[13px] font-bold px-2 py-0.5 rounded"
+          style={{ color, backgroundColor: `${color}20` }}
+        >
+          {label}
+        </span>
+      </div>
+
+      {/* Slider */}
+      <div className="relative mb-3">
+        <input
+          type="range"
+          min={0}
+          max={5}
+          step={1}
+          value={currentLevel}
+          onChange={handleChange}
+          disabled={setYolo.isPending}
+          className="w-full h-2 rounded-full appearance-none cursor-pointer disabled:opacity-50"
+          style={{
+            background: `linear-gradient(to right, #6b7280 0%, #22c55e 20%, #10b981 40%, #eab308 60%, #f97316 80%, #ef4444 100%)`,
+            accentColor: color,
+          }}
+        />
+        <div className="flex justify-between mt-1.5 px-0.5">
+          {[0, 1, 2, 3, 4, 5].map((l) => (
+            <span
+              key={l}
+              className={`text-[9px] font-medium ${
+                l === currentLevel ? "text-white" : "text-gray-600"
+              }`}
+            >
+              {l}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Stats row */}
+      {profile && currentLevel > 0 && (
+        <div className="flex items-center justify-center gap-3 text-[11px] text-gray-500">
+          <span>Floor: <span className="text-gray-300 font-mono">{profile.conviction_threshold}</span></span>
+          <span className="text-gray-700">|</span>
+          <span>Max/day: <span className="text-gray-300 font-mono">{profile.max_trades_per_day}</span></span>
+          <span className="text-gray-700">|</span>
+          <span>Cooldown: <span className="text-gray-300 font-mono">{profile.cooldown_seconds < 60 ? `${profile.cooldown_seconds}s` : `${Math.round(profile.cooldown_seconds / 60)}m`}</span></span>
         </div>
       )}
     </div>

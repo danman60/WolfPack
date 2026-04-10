@@ -141,7 +141,9 @@ class PerformanceTracker:
             "UNDERPERFORMING": min(base_threshold + 15, 85),
             "TOXIC": 85,
         }
-        return thresholds.get(score.grade, base_threshold)
+        grade_threshold = thresholds.get(score.grade, base_threshold)
+        # Cap dynamic threshold at base_threshold so YOLO level always wins
+        return min(grade_threshold, base_threshold)
 
     def get_size_multiplier(self, symbol: str, direction: str) -> float:
         """Get sizing multiplier based on edge strength.

@@ -1306,6 +1306,28 @@ async def auto_trader_yolo_level(
     return trader.get_status()
 
 
+@app.post("/auto-trader/yolo")
+async def auto_trader_yolo(
+    level: int,
+    wallet: str = "paper_perp",
+    _auth: None = Depends(require_auth),
+):
+    """Set the YOLO meter level (0-5) for a given wallet. Level 0 disables auto-trading."""
+    if level < 0 or level > 5:
+        raise HTTPException(status_code=400, detail="YOLO level must be 0-5")
+    trader = _get_perp_trader(wallet)
+    if level == 0:
+        trader.enabled = False
+        logger.info(f"[auto-trader] {wallet} disabled via YOLO level 0")
+    else:
+        trader.enabled = True
+        trader.yolo_level = level
+        trader._apply_yolo_profile()
+        from wolfpack.auto_trader import YOLO_PROFILES
+        logger.info(f"[auto-trader] {wallet} YOLO level set to {level} ({YOLO_PROFILES[level]['label']})")
+    return trader.get_status()
+
+
 @app.get("/auto-trader/trades")
 async def auto_trader_trades(limit: int = 50, wallet: str = "paper_perp"):
     """Return recent auto-trades filtered by wallet_id."""

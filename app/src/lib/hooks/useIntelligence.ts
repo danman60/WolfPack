@@ -657,12 +657,8 @@ export function useSetYoloLevel(wallet: string = "paper_perp") {
   return useMutation({
     mutationFn: async (level: number) => {
       const res = await intelFetch(
-        `/intel/auto-trader/yolo-level?wallet=${wallet}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ level }),
-        }
+        `/intel/auto-trader/yolo?level=${level}&wallet=${wallet}`,
+        { method: "POST" }
       );
       if (!res.ok) throw new Error(`YOLO level update failed: ${res.status}`);
       return res.json();
