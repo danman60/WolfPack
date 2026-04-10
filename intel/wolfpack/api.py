@@ -884,9 +884,10 @@ async def portfolio_trades(limit: int = 50, wallet: str = "paper_perp"):
 
 
 @app.post("/portfolio/close/{symbol}")
-async def close_position(symbol: str, exchange: str = "hyperliquid", _auth: None = Depends(require_auth)):
-    """Close a paper trading position."""
-    engine = _get_paper_engine()
+async def close_position(symbol: str, exchange: str = "hyperliquid", wallet: str = "paper_perp", _auth: None = Depends(require_auth)):
+    """Close a paper trading position using the wallet-aware engine."""
+    trader = _get_perp_trader(wallet)
+    engine = trader.engine
     realized_pnl = engine.close_position(symbol.upper())
     # Clear position peak tracking on close
     try:
