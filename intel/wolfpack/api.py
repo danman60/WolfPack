@@ -1864,7 +1864,9 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
             from wolfpack.modules.momentum_buckets import MomentumBuckets
             from wolfpack.modules.regime import RegimeDetector
             from wolfpack.modules.social_sentiment import SocialSentimentAnalyzer
+            from wolfpack.modules.structural_levels import StructuralLevelsModule
             from wolfpack.modules.volatility import VolatilitySignal
+            from wolfpack.modules.volume_profile import VolumeProfileModule
             from wolfpack.modules.whale_tracker import WhaleTracker
     
             adapter = get_exchange(exchange)  # type: ignore[arg-type]
@@ -2008,7 +2010,29 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
             exec_output = exec_timing.analyze(hourly_volumes, current_hour)
             store_module_output("execution_timing", exchange, exec_output.model_dump(), symbol)
             _module_last_runs["execution_timing"] = now_utc
-    
+
+            # Structural levels (multi-timeframe S/R, sweep detection)
+            struct_output = None
+            try:
+                struct_module = StructuralLevelsModule()
+                struct_output = struct_module.analyze(candles_1h, symbol)
+                if struct_output:
+                    store_module_output("structural_levels", exchange, struct_output.model_dump(), symbol)
+                    _module_last_runs["structural_levels"] = now_utc
+            except Exception as e:
+                logger.warning(f"[cycle] Structural levels failed: {e}")
+
+            # Volume profile (OHLCV-approximated distribution)
+            vol_prof_output = None
+            try:
+                vol_prof_module = VolumeProfileModule()
+                vol_prof_output = vol_prof_module.analyze(candles_1h, symbol)
+                if vol_prof_output:
+                    store_module_output("volume_profile", exchange, vol_prof_output.model_dump(), symbol)
+                    _module_last_runs["volume_profile"] = now_utc
+            except Exception as e:
+                logger.warning(f"[cycle] Volume profile failed: {e}")
+
             # Monte Carlo stress test — runs on recent trade returns from paper portfolio
             monte_carlo_output = None
             try:
@@ -2130,6 +2154,8 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                 "open_interest_usd": open_interest_usd,
                 "social_sentiment": social_output.model_dump() if social_output else None,
                 "whale_tracker": whale_output.model_dump() if whale_output else None,
+                "structural_levels": struct_output.model_dump() if struct_output else None,
+                "volume_profile": vol_prof_output.model_dump() if vol_prof_output else None,
             }
     
             # Quant gets candles + correlation (for stat arb alerts)

@@ -5,6 +5,8 @@ Regime gating is handled by the router, NOT inside this strategy (keeps it backt
 Pure numpy implementation.
 """
 
+from datetime import datetime, timezone
+
 import numpy as np
 
 from wolfpack.exchanges.base import Candle
@@ -79,15 +81,18 @@ class MeanReversionStrategy(Strategy):
 
         distance = (current_close - mean) / atr
 
-        # Liquidity sweep filter: only enter if a recent candle wicked beyond
-        # the local high/low then reversed (stop hunt / exhaustion pattern).
-        # Conservative: check last 5 candles for a sweep wick.
+        # Liquidity sweep filter: check sweeps against structural levels
+        # (prior day/week H/L, swing points) for higher-conviction entries,
+        # falling back to local highs/lows.
         sweep_lookback = 5
         recent = window[-sweep_lookback:]
         highs = np.array([c.high for c in window[-mean_period:]], dtype=np.float64)
         lows = np.array([c.low for c in window[-mean_period:]], dtype=np.float64)
         local_high = np.max(highs[:-sweep_lookback]) if len(highs) > sweep_lookback else np.max(highs)
         local_low = np.min(lows[:-sweep_lookback]) if len(lows) > sweep_lookback else np.min(lows)
+
+        # Compute structural levels from candle history for enhanced sweep detection
+        struct_levels = self._compute_structural_levels(candles, current_idx)
 
         # Displacement: body % of total range on the entry candle.
         # Exhaustion candle (small body, big wicks closing toward mean) = higher conviction.
@@ -100,8 +105,14 @@ class MeanReversionStrategy(Strategy):
 
         # Long: price far below mean + recent wick below local low (sweep)
         if distance < -threshold_atr_mult:
-            swept_low = any(c.low < local_low and c.close > local_low for c in recent)
-            conviction = 70 if swept_low else 55
+            swept_local = any(c.low < local_low and c.close > local_low for c in recent)
+            swept_structural = self._check_structural_sweep_below(recent, struct_levels)
+            if swept_structural:
+                conviction = 75  # structural level sweep = +20 bonus
+            elif swept_local:
+                conviction = 70  # local sweep = +15 bonus
+            else:
+                conviction = 55
             # Displacement adjustment
             if displacement < 0.40 and closing_toward_mean_long:
                 conviction += 10  # exhaustion wick closing back up = reversal likely
@@ -119,8 +130,14 @@ class MeanReversionStrategy(Strategy):
 
         # Short: price far above mean + recent wick above local high (sweep)
         if distance > threshold_atr_mult:
-            swept_high = any(c.high > local_high and c.close < local_high for c in recent)
-            conviction = 70 if swept_high else 55
+            swept_local = any(c.high > local_high and c.close < local_high for c in recent)
+            swept_structural = self._check_structural_sweep_above(recent, struct_levels)
+            if swept_structural:
+                conviction = 75  # structural level sweep = +20 bonus
+            elif swept_local:
+                conviction = 70  # local sweep = +15 bonus
+            else:
+                conviction = 55
             # Displacement adjustment
             if displacement < 0.40 and closing_toward_mean_short:
                 conviction += 10  # exhaustion wick closing back down = reversal likely
@@ -137,6 +154,86 @@ class MeanReversionStrategy(Strategy):
             }
 
         return None
+
+    def _compute_structural_levels(
+        self, candles: list[Candle], current_idx: int
+    ) -> dict[str, list[float]]:
+        """Compute simplified structural levels from candle history.
+
+        Returns dict with 'highs' and 'lows' lists of structural price levels
+        (prior day H/L, prior week H/L, swing points).
+        """
+        end = current_idx + 1
+        lookback = min(200, end)
+        window = candles[end - lookback : end]
+
+        if len(window) < 30:
+            return {"highs": [], "lows": []}
+
+        struct_highs: list[float] = []
+        struct_lows: list[float] = []
+
+        # Group by UTC date for prior day H/L
+        by_date: dict[str, list[Candle]] = {}
+        for c in window:
+            ts = c.timestamp / 1000 if c.timestamp > 1e12 else c.timestamp
+            dt = datetime.fromtimestamp(ts, tz=timezone.utc)
+            key = dt.strftime("%Y-%m-%d")
+            by_date.setdefault(key, []).append(c)
+
+        sorted_dates = sorted(by_date.keys())
+        if len(sorted_dates) >= 2:
+            prev_day = by_date[sorted_dates[-2]]
+            struct_highs.append(max(c.high for c in prev_day))
+            struct_lows.append(min(c.low for c in prev_day))
+
+        # Group by ISO week for prior week H/L
+        by_week: dict[str, list[Candle]] = {}
+        for c in window:
+            ts = c.timestamp / 1000 if c.timestamp > 1e12 else c.timestamp
+            dt = datetime.fromtimestamp(ts, tz=timezone.utc)
+            key = f"{dt.isocalendar()[0]}-W{dt.isocalendar()[1]:02d}"
+            by_week.setdefault(key, []).append(c)
+
+        sorted_weeks = sorted(by_week.keys())
+        if len(sorted_weeks) >= 2:
+            prev_week = by_week[sorted_weeks[-2]]
+            struct_highs.append(max(c.high for c in prev_week))
+            struct_lows.append(min(c.low for c in prev_week))
+
+        # Swing points (3-bar confirmation) from last 100 bars
+        swing_lookback = min(100, len(window))
+        recent = window[-swing_lookback:]
+        n = 3
+        for i in range(n, len(recent) - n):
+            high = recent[i].high
+            if all(recent[i - j].high < high and recent[i + j].high < high for j in range(1, n + 1)):
+                struct_highs.append(high)
+            low = recent[i].low
+            if all(recent[i - j].low > low and recent[i + j].low > low for j in range(1, n + 1)):
+                struct_lows.append(low)
+
+        return {"highs": struct_highs, "lows": struct_lows}
+
+    @staticmethod
+    def _check_structural_sweep_below(
+        recent: list[Candle], struct_levels: dict[str, list[float]]
+    ) -> bool:
+        """Check if any recent candle swept below a structural low and closed back above."""
+        for level in struct_levels.get("lows", []):
+            if any(c.low < level and c.close > level for c in recent):
+                return True
+        return False
+
+    @staticmethod
+    def _check_structural_sweep_above(
+        recent: list[Candle], struct_levels: dict[str, list[float]]
+    ) -> bool:
+        """Check if any recent candle swept above a structural high and closed back below."""
+        for level in struct_levels.get("highs", []):
+            if any(c.high > level and c.close < level for c in recent):
+                return True
+        return False
 
     @staticmethod
     def _compute_atr(candles: list[Candle], period: int = 14) -> float:

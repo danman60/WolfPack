@@ -16,6 +16,8 @@ from wolfpack.modules.backtest import BacktestHarness
 from wolfpack.modules.social_sentiment import SocialSentimentAnalyzer
 from wolfpack.modules.whale_tracker import WhaleTracker
 from wolfpack.modules.momentum_buckets import MomentumBuckets
+from wolfpack.modules.structural_levels import StructuralLevelsModule
+from wolfpack.modules.volume_profile import VolumeProfileModule
 
 __all__ = [
     "RegimeDetector",
@@ -29,4 +31,6 @@ __all__ = [
     "SocialSentimentAnalyzer",
     "WhaleTracker",
     "MomentumBuckets",
+    "StructuralLevelsModule",
+    "VolumeProfileModule",
 ]
