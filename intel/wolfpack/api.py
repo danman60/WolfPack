@@ -635,9 +635,12 @@ def _safety_checklist() -> list[dict]:
 
 def _check_paper_profitable() -> bool:
     """Check if paper trading has positive returns."""
-    if _paper_engine is None:
+    try:
+        trader = _get_perp_trader("paper_perp")
+        p = trader.engine.portfolio
+        return p.realized_pnl > 0 or p.equity > p.starting_equity
+    except Exception:
         return False
-    return _paper_engine.portfolio.realized_pnl > 0 or _paper_engine.portfolio.equity > _paper_engine.portfolio.starting_equity
 
 
 @app.post("/recommendations/{rec_id}/approve")

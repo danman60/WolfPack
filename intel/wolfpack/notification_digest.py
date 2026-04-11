@@ -318,7 +318,7 @@ def _lp_delta(current: dict, past: dict) -> float:
 def _query_perp_equity(db) -> float:
     try:
         result = (
-            db.table("wp_auto_portfolio_snapshots")
+            db.table("wp_portfolio_snapshots")
             .select("equity")
             .order("created_at", desc=True)
             .limit(1)

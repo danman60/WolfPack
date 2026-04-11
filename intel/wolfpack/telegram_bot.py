@@ -196,9 +196,9 @@ class WolfPackBot:
 
     async def _cmd_status(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         try:
-            from wolfpack.api import _get_paper_engine, _get_circuit_breaker
+            from wolfpack.api import _get_perp_trader, _get_circuit_breaker
 
-            engine = _get_paper_engine()
+            engine = _get_perp_trader("paper_perp").engine
             portfolio = engine.portfolio
             cb = _get_circuit_breaker()
 
@@ -233,9 +233,9 @@ class WolfPackBot:
 
     async def _cmd_portfolio(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         try:
-            from wolfpack.api import _get_paper_engine
+            from wolfpack.api import _get_perp_trader
 
-            engine = _get_paper_engine()
+            engine = _get_perp_trader("paper_perp").engine
             portfolio = engine.portfolio
 
             if not portfolio.positions:

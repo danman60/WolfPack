@@ -282,7 +282,7 @@ class AutoTrader:
     def _is_pumping(self, symbol: str, latest_prices: dict[str, float]) -> bool:
         """Check if price moved up >2% recently by comparing to 1h-ago snapshot.
 
-        Uses the last stored price from wp_auto_portfolio_snapshots as baseline.
+        Uses the last stored price from wp_portfolio_snapshots as baseline.
         Conservative: only blocks shorts, never blocks longs.
         """
         try:
@@ -292,13 +292,10 @@ class AutoTrader:
             from wolfpack.db import get_db
             db = get_db()
             # Get price from ~1 hour ago via candle data or snapshot
-            result = (
-                db.table("wp_auto_portfolio_snapshots")
-                .select("positions")
-                .order("created_at", desc=True)
-                .limit(12)  # ~1 hour of 5-min snapshots
-                .execute()
-            )
+            query = db.table("wp_portfolio_snapshots").select("positions").order("created_at", desc=True).limit(12)
+            if self.wallet_id:
+                query = query.eq("wallet_id", self.wallet_id)
+            result = query.execute()
             if not result.data:
                 return False
             # Find the oldest snapshot's price for this symbol
