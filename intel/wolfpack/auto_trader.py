@@ -174,7 +174,7 @@ class AutoTrader:
 
         self._restored = False
         self._last_trade_at: datetime | None = None
-        self.yolo_level = 4  # Default to YOLO for paper trading
+        self.yolo_level = self._load_yolo_level()  # Restore from DB or default to 4
         self._last_strategy_signals: list[dict] = []
         self._current_regime: str = "unknown"
         self._latest_vwaps: dict[str, float] = {}  # symbol -> VWAP
@@ -264,6 +264,33 @@ class AutoTrader:
                 logger.info(f"[auto-trader] Restored from snapshot: equity=${p.equity}, {len(p.positions)} positions")
         except Exception as e:
             logger.warning(f"[auto-trader] Could not restore from snapshot: {e}")
+
+    def _load_yolo_level(self) -> int:
+        """Load persisted YOLO level from Supabase, default 4."""
+        try:
+            from wolfpack.db import get_db
+            db = get_db()
+            rows = db.table("wp_runtime_config").select("value").eq("key", "yolo_level").execute().data
+            if rows:
+                level = int(rows[0]["value"])
+                if 1 <= level <= 5:
+                    logger.info(f"[auto-trader] Restored YOLO level {level} from DB")
+                    return level
+        except Exception as e:
+            logger.warning(f"[auto-trader] Failed to load YOLO level from DB: {e}")
+        return 4
+
+    def _save_yolo_level(self) -> None:
+        """Persist current YOLO level to Supabase."""
+        try:
+            from wolfpack.db import get_db
+            db = get_db()
+            db.table("wp_runtime_config").upsert(
+                {"key": "yolo_level", "value": self.yolo_level, "updated_at": datetime.now(timezone.utc).isoformat()},
+                on_conflict="key",
+            ).execute()
+        except Exception as e:
+            logger.warning(f"[auto-trader] Failed to save YOLO level to DB: {e}")
 
     def _apply_yolo_profile(self) -> None:
         """Apply YOLO profile settings to all throttle layers."""

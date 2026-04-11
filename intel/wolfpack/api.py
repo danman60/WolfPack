@@ -1307,6 +1307,7 @@ async def auto_trader_yolo_level(
     trader = _get_perp_trader(wallet)
     trader.yolo_level = level
     trader._apply_yolo_profile()
+    trader._save_yolo_level()
     from wolfpack.auto_trader import YOLO_PROFILES
     logger.info(f"[auto-trader] {wallet} YOLO level set to {level} ({YOLO_PROFILES[level]['label']})")
     return trader.get_status()
@@ -1331,6 +1332,7 @@ async def auto_trader_yolo(
         trader._apply_yolo_profile()
         from wolfpack.auto_trader import YOLO_PROFILES
         logger.info(f"[auto-trader] {wallet} YOLO level set to {level} ({YOLO_PROFILES[level]['label']})")
+    trader._save_yolo_level()
     return trader.get_status()
 
 
