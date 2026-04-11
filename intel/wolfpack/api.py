@@ -677,8 +677,8 @@ async def approve_recommendation(rec_id: str, exchange: str = "hyperliquid", _au
                 "liquidity_health": _latest_liquidity.liquidity_health,
             }
 
-        # Execute as paper trade
-        engine = _get_paper_engine()
+        # Execute as paper trade (wallet-aware engine)
+        engine = _get_perp_trader("paper_perp").engine
 
         # Resolve entry price — use rec value, fall back to live price
         entry_price = rec.get("entry_price")
@@ -909,7 +909,7 @@ async def paper_order(
     _auth: None = Depends(require_auth),
 ):
     """Place a manual paper trade — bypasses recommendation flow."""
-    engine = _get_paper_engine()
+    engine = _get_perp_trader("paper_perp").engine
 
     # Get current price
     try:
@@ -1634,7 +1634,7 @@ async def approve_position_action(action_id: str, exchange: str = "hyperliquid",
         pa = result.data[0]
         action = pa["action"]
         pa_symbol = pa["symbol"]
-        engine = _get_paper_engine()
+        engine = _get_perp_trader("paper_perp").engine
         pos = next((p for p in engine.portfolio.positions if p.symbol == pa_symbol), None)
 
         if not pos:
@@ -2561,8 +2561,8 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                 except Exception as e:
                     logger.warning(f"[training] Failed to append training data: {e}")
     
-                # ── Step 6: Update paper trading portfolio ──
-                engine = _get_paper_engine()
+                # ── Step 6: Update paper trading portfolio (wallet-aware) ──
+                engine = _get_perp_trader("paper_perp").engine
                 if latest_price and engine.portfolio.positions:
                     engine.update_prices({symbol: latest_price})
                     try:
@@ -2686,7 +2686,7 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                     # Attach current portfolio snapshot for the unified report
                     try:
                         perp_snap = None
-                        perp_engine = _get_paper_engine()
+                        perp_engine = _get_perp_trader("paper_perp").engine
                         if perp_engine.portfolio.positions:
                             perp_snap = {
                                 "positions": [
@@ -2768,8 +2768,7 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
 async def circuit_breaker_status():
     """Return current circuit breaker state."""
     cb = _get_circuit_breaker()
-    engine = _get_paper_engine()
-    portfolio = engine.portfolio
+    portfolio = _get_perp_trader("paper_perp").engine.portfolio
 
     # Use drawdown monitor for auto-tracked peak/drawdown
     dd_monitor = _get_drawdown_monitor()
@@ -3420,9 +3419,8 @@ async def run_all_intelligence(
     watchlist = db_get_watchlist(exchange)
     watchlist_symbols = [w["symbol"] for w in watchlist]
 
-    # Also include symbols from open positions
-    engine = _get_paper_engine()
-    position_symbols = [p.symbol for p in engine.portfolio.positions]
+    # Also include symbols from open positions (wallet-aware)
+    position_symbols = [p.symbol for p in _get_perp_trader("paper_perp").engine.portfolio.positions]
 
     all_symbols = list(dict.fromkeys(watchlist_symbols + position_symbols))  # Deduplicate, preserve order
     if not all_symbols:
