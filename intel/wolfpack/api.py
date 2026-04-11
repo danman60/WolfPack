@@ -1977,8 +1977,9 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
     
             # Drawdown monitor — auto-track peak equity and compute drawdown
             dd_monitor = _get_drawdown_monitor()
-            engine_dd = _get_paper_engine()
-            dd_info = dd_monitor.update_peaks(exchange, engine_dd.portfolio.equity)
+            # Wave 5: use wallet-aware engine, not legacy singleton
+            dd_trader = _get_perp_trader("paper_perp")
+            dd_info = dd_monitor.update_peaks(exchange, dd_trader.engine.portfolio.equity)
             auto_drawdown_pct = dd_info["drawdown_pct"]
     
             # Volatility (fed with auto-computed drawdown from monitor)
@@ -2090,8 +2091,9 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
     
             # Circuit breaker (uses auto-tracked drawdown from drawdown monitor)
             cb = _get_circuit_breaker()
-            engine = _get_paper_engine()
-            portfolio = engine.portfolio
+            # Wave 5: use wallet-aware engine, not legacy singleton
+            cb_trader = _get_perp_trader("paper_perp")
+            portfolio = cb_trader.engine.portfolio
     
             # Use drawdown from monitor (auto-tracked peak, persisted across restarts)
             current_dd = auto_drawdown_pct
