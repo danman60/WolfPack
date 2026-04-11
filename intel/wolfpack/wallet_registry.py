@@ -84,6 +84,13 @@ class WalletConfig:
     current_equity: float
     status: str  # "active" | "paused" | "cutover_pending"
     config: dict[str, Any] = field(default_factory=dict)
+    # Phase B — multi-wallet evolution fields
+    display_name: str | None = None
+    description: str | None = None
+    version: int = 1
+    parent_wallet_id: str | None = None
+    generation: int = 0
+    fitness_score: float | None = None
 
     @classmethod
     def from_row(cls, row: dict[str, Any]) -> "WalletConfig":
@@ -99,6 +106,12 @@ class WalletConfig:
             current_equity=float(row.get("current_equity") or 0.0),
             status=row.get("status") or "active",
             config=cfg,
+            display_name=row.get("display_name"),
+            description=row.get("description"),
+            version=int(row.get("version") or 1),
+            parent_wallet_id=row.get("parent_wallet_id"),
+            generation=int(row.get("generation") or 0),
+            fitness_score=float(row["fitness_score"]) if row.get("fitness_score") is not None else None,
         )
 
 

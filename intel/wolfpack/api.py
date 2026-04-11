@@ -1139,7 +1139,7 @@ def _get_perp_trader(wallet_name: str = "paper_perp") -> Any:
             raise HTTPException(status_code=404, detail=f"Wallet '{wallet_name}' not found")
         mode = "live" if wallet.wallet_mode == "production" else "paper"
         wid = str(wallet.id) if wallet.id else None
-        trader = AutoTrader(wallet_id=wid, engine_mode=mode)
+        trader = AutoTrader(wallet_id=wid, engine_mode=mode, wallet_config=wallet.config)
         try:
             trader.restore_from_snapshot()
         except Exception as e:

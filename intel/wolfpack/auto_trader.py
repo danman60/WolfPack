@@ -152,7 +152,7 @@ def _compute_default_stop_loss(symbol: str, direction: str, entry_price: float) 
 class AutoTrader:
     """Autonomous trading bot with a separate paper trading engine."""
 
-    def __init__(self, wallet_id: str | None = None, engine_mode: str = "paper") -> None:
+    def __init__(self, wallet_id: str | None = None, engine_mode: str = "paper", wallet_config: dict | None = None) -> None:
         from wolfpack.paper_trading import PaperTradingEngine
         from wolfpack.performance_tracker import PerformanceTracker
 
@@ -160,6 +160,7 @@ class AutoTrader:
         # conviction_threshold is set exclusively by _apply_yolo_profile() — NOT from settings
         self.conviction_threshold = 75  # placeholder; overwritten by _apply_yolo_profile()
         self.wallet_id = wallet_id
+        self._wallet_config = wallet_config or {}
 
         # Select engine based on explicit mode param (wave 3: no more _strategy_mode import)
         if engine_mode == "live":
@@ -180,6 +181,7 @@ class AutoTrader:
         self._latest_vwaps: dict[str, float] = {}  # symbol -> VWAP
         self._perf_tracker = PerformanceTracker(rolling_window=50)
         self._apply_yolo_profile()
+        self._apply_wallet_config()  # Per-wallet overrides on top
 
     def restore_from_snapshot(self) -> None:
         """Restore auto-trader portfolio from latest Supabase snapshot."""
@@ -266,7 +268,14 @@ class AutoTrader:
             logger.warning(f"[auto-trader] Could not restore from snapshot: {e}")
 
     def _load_yolo_level(self) -> int:
-        """Load persisted YOLO level from Supabase, default 4."""
+        """Load persisted YOLO level — per-wallet config takes priority, then global."""
+        # Per-wallet config takes priority
+        if self._wallet_config and "yolo_level" in self._wallet_config:
+            level = int(self._wallet_config["yolo_level"])
+            if 1 <= level <= 5:
+                logger.info(f"[auto-trader] YOLO level {level} from wallet config")
+                return level
+        # Fall back to global wp_runtime_config (legacy)
         try:
             from wolfpack.db import get_db
             db = get_db()
@@ -281,7 +290,20 @@ class AutoTrader:
         return 4
 
     def _save_yolo_level(self) -> None:
-        """Persist current YOLO level to Supabase."""
+        """Persist current YOLO level to wallet config JSONB (if wallet_id) + legacy global."""
+        # Update in-memory wallet config
+        self._wallet_config["yolo_level"] = self.yolo_level
+        if self.wallet_id:
+            try:
+                from wolfpack.db import get_db
+                db = get_db()
+                db.table("wp_wallets").update(
+                    {"config": self._wallet_config, "updated_at": datetime.now(timezone.utc).isoformat()}
+                ).eq("id", self.wallet_id).execute()
+            except Exception as e:
+                logger.warning(f"[auto-trader] Failed to save YOLO to wallet config: {e}")
+                # Fall through to legacy save
+        # Legacy global save as fallback
         try:
             from wolfpack.db import get_db
             db = get_db()
@@ -297,6 +319,20 @@ class AutoTrader:
         profile = YOLO_PROFILES.get(self.yolo_level, YOLO_PROFILES[2])
         self.conviction_threshold = profile["conviction_threshold"]
         self._yolo_profile = profile
+
+    def _apply_wallet_config(self) -> None:
+        """Apply per-wallet config overrides on top of YOLO profile defaults."""
+        if not self._wallet_config:
+            return
+        cfg = self._wallet_config
+        # These override the YOLO profile values when set in wallet config
+        if "conviction_floor" in cfg:
+            self.conviction_threshold = int(cfg["conviction_floor"])
+        # Store sizing overrides for use in process_recommendations
+        self._wallet_sizing = {}
+        for key in ("brief_only_mult", "min_perf_mult", "min_position_usd", "trade_spacing_s"):
+            if key in cfg:
+                self._wallet_sizing[key] = cfg[key]
 
     def set_regime(self, macro_regime: str) -> None:
         """Store current macro regime for filtering decisions."""
@@ -495,7 +531,10 @@ class AutoTrader:
 
             # Apply conviction multiplier based on mechanical confirmation
             # Brief-only multiplier scales with YOLO level
-            yolo_sizing = _YOLO_SIZING.get(self.yolo_level, _YOLO_SIZING[2])
+            yolo_sizing = {**_YOLO_SIZING.get(self.yolo_level, _YOLO_SIZING[2])}
+            # Per-wallet sizing overrides
+            if hasattr(self, '_wallet_sizing'):
+                yolo_sizing.update(self._wallet_sizing)
             if has_mechanical:
                 size_multiplier = 1.0  # Full size -- Brief + mechanical agree
                 logger.info(f"[auto-trader] Brief+mechanical aligned for {symbol} {direction}")
@@ -953,7 +992,10 @@ class AutoTrader:
 
                 # Enforce $3K-$5K position size sweet spot
                 estimated_usd = self.engine.portfolio.equity * (size_pct / 100)
-                yolo_sizing = _YOLO_SIZING.get(self.yolo_level, _YOLO_SIZING[2])
+                yolo_sizing = {**_YOLO_SIZING.get(self.yolo_level, _YOLO_SIZING[2])}
+                # Per-wallet sizing overrides
+                if hasattr(self, '_wallet_sizing'):
+                    yolo_sizing.update(self._wallet_sizing)
                 min_pos_usd = yolo_sizing["min_position_usd"]
                 if estimated_usd < min_pos_usd:
                     logger.info(f"[auto-trader] Strategy {strategy_name} {symbol} {direction} skipped: ${estimated_usd:.0f} < ${min_pos_usd:.0f} minimum (YOLO {self.yolo_level})")

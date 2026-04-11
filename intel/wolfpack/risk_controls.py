@@ -315,3 +315,30 @@ def apply_soft(recommendation: dict, policy: RiskPolicy, market_state: dict) -> 
         ] + penalties
 
     return recommendation
+
+
+def build_policy_from_config(config: dict) -> RiskPolicy:
+    """Build a RiskPolicy from wallet config, using YOLO preset as base with overrides."""
+    yolo = config.get("yolo_level", 2)
+    base = get_preset(yolo)
+    # Apply per-wallet hard limit overrides
+    if "max_positions" in config:
+        base.hard.max_positions = int(config["max_positions"])
+    if "max_position_size_pct" in config:
+        base.hard.max_position_size_pct = float(config["max_position_size_pct"])
+    if "require_stop_loss" in config:
+        base.hard.require_stop_loss = bool(config["require_stop_loss"])
+    # Apply per-wallet soft limit overrides
+    if "conviction_floor" in config:
+        base.soft.conviction_floor = int(config["conviction_floor"])
+    if "max_trades_per_day" in config:
+        base.soft.max_trades_per_day = int(config["max_trades_per_day"])
+    if "base_pct" in config:
+        base.soft.base_pct = float(config["base_pct"])
+    if "penalty_multiplier" in config:
+        base.soft.penalty_multiplier = float(config["penalty_multiplier"])
+    if "rejection_cooldown_hours" in config:
+        base.soft.rejection_cooldown_hours = float(config["rejection_cooldown_hours"])
+    if "max_positions_per_symbol" in config:
+        base.soft.max_positions_per_symbol = int(config["max_positions_per_symbol"])
+    return base
