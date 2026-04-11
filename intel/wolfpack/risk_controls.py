@@ -136,7 +136,7 @@ RISK_PRESETS: Dict[str, RiskPolicy] = {
             base_pct=15.0,
             penalty_multiplier=0.25,
             rejection_cooldown_hours=0.25,
-            max_positions_per_symbol=3,
+            max_positions_per_symbol=2,
         ),
     ),
     "full_send": RiskPolicy(

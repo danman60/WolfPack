@@ -389,8 +389,12 @@ class AutoTrader:
             if direction == "wait":
                 continue
 
-            # Dynamic threshold based on performance
+            # Dynamic threshold based on performance — TOXIC combos blocked entirely
             dynamic_threshold = self._perf_tracker.get_threshold(symbol, direction, self.conviction_threshold)
+            if dynamic_threshold >= 999:
+                score = self._perf_tracker._scorecard.get(f"{symbol}_{direction}")
+                logger.info(f"[auto-trader] BLOCKED {symbol} {direction}: TOXIC grade ({score.trades}t, {score.win_rate:.0%} WR, ${score.net_pnl:+,.0f})")
+                continue
             if conviction < dynamic_threshold:
                 logger.info(f"[auto-trader] {symbol} {direction} conviction {conviction} < dynamic threshold {dynamic_threshold}, skipping")
                 continue

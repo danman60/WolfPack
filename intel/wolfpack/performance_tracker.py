@@ -123,10 +123,10 @@ class PerformanceTracker:
     def get_threshold(self, symbol: str, direction: str, base_threshold: int = 55) -> int:
         """Get dynamic conviction threshold for a symbol+direction.
 
-        STRONG: lower to 45 (take more)
-        MARGINAL: keep at base (55)
-        UNDERPERFORMING: raise to 70 (be selective)
-        TOXIC: raise to 85 (almost never trade)
+        STRONG: lower by 10 from base (take more)
+        MARGINAL: keep at base
+        UNDERPERFORMING: raise to base+15 (be selective)
+        TOXIC: raise to 999 (block entirely — data says it loses money)
         """
         self.refresh()
         key = f"{symbol}_{direction}"
@@ -138,12 +138,10 @@ class PerformanceTracker:
         thresholds = {
             "STRONG": max(base_threshold - 10, 35),
             "MARGINAL": base_threshold,
-            "UNDERPERFORMING": min(base_threshold + 15, 85),
-            "TOXIC": 85,
+            "UNDERPERFORMING": base_threshold + 15,
+            "TOXIC": 999,  # block — no conviction can reach this
         }
-        grade_threshold = thresholds.get(score.grade, base_threshold)
-        # Cap dynamic threshold at base_threshold so YOLO level always wins
-        return min(grade_threshold, base_threshold)
+        return thresholds.get(score.grade, base_threshold)
 
     def get_size_multiplier(self, symbol: str, direction: str) -> float:
         """Get sizing multiplier based on edge strength.
