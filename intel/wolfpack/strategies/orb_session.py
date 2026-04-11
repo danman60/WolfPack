@@ -12,6 +12,7 @@ With FVG filter enabled (default), requires:
 from datetime import datetime, timezone, timedelta
 
 from wolfpack.exchanges.base import Candle
+from wolfpack.price_utils import round_price
 from wolfpack.strategies.base import Strategy
 
 
@@ -269,8 +270,8 @@ class ORBSessionStrategy(Strategy):
                     "direction": "long",
                     "conviction": 75,
                     "entry_price": current.close,
-                    "stop_loss": round(current.close - stop_distance, 2),
-                    "take_profit": round(current.close + tp_distance, 2),
+                    "stop_loss": round_price(current.close - stop_distance),
+                    "take_profit": round_price(current.close + tp_distance),
                     "size_pct": size_pct,
                 }
             else:
@@ -279,8 +280,8 @@ class ORBSessionStrategy(Strategy):
                     "direction": "short",
                     "conviction": 70,
                     "entry_price": current.close,
-                    "stop_loss": round(current.close + stop_distance, 2),
-                    "take_profit": round(current.close - tp_distance, 2),
+                    "stop_loss": round_price(current.close + stop_distance),
+                    "take_profit": round_price(current.close - tp_distance),
                     "size_pct": size_pct,
                 }
         elif current.close < range_low:
@@ -291,8 +292,8 @@ class ORBSessionStrategy(Strategy):
                     "direction": "short",
                     "conviction": 75,
                     "entry_price": current.close,
-                    "stop_loss": round(current.close + stop_distance, 2),
-                    "take_profit": round(current.close - tp_distance, 2),
+                    "stop_loss": round_price(current.close + stop_distance),
+                    "take_profit": round_price(current.close - tp_distance),
                     "size_pct": size_pct,
                 }
             else:
@@ -301,8 +302,8 @@ class ORBSessionStrategy(Strategy):
                     "direction": "long",
                     "conviction": 70,
                     "entry_price": current.close,
-                    "stop_loss": round(current.close - stop_distance, 2),
-                    "take_profit": round(current.close + tp_distance, 2),
+                    "stop_loss": round_price(current.close - stop_distance),
+                    "take_profit": round_price(current.close + tp_distance),
                     "size_pct": size_pct,
                 }
 
@@ -332,9 +333,9 @@ class ORBSessionStrategy(Strategy):
             if self._fvg_direction == "long":
                 if current.close > self._retest_candle.high:
                     entry = current.close
-                    stop = round(self._retest_candle.low * 0.999, 2)
+                    stop = round_price(self._retest_candle.low * 0.999)
                     risk = entry - stop
-                    tp = round(entry + risk * target_rr, 2)
+                    tp = round_price(entry + risk * target_rr)
                     self._session_traded = True
                     return {
                         "symbol": "",
@@ -348,9 +349,9 @@ class ORBSessionStrategy(Strategy):
             else:  # short
                 if current.close < self._retest_candle.low:
                     entry = current.close
-                    stop = round(self._retest_candle.high * 1.001, 2)
+                    stop = round_price(self._retest_candle.high * 1.001)
                     risk = stop - entry
-                    tp = round(entry - risk * target_rr, 2)
+                    tp = round_price(entry - risk * target_rr)
                     self._session_traded = True
                     return {
                         "symbol": "",

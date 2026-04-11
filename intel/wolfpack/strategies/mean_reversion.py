@@ -10,6 +10,7 @@ from datetime import datetime, timezone
 import numpy as np
 
 from wolfpack.exchanges.base import Candle
+from wolfpack.price_utils import round_price
 from wolfpack.strategies.base import Strategy
 
 
@@ -123,8 +124,8 @@ class MeanReversionStrategy(Strategy):
                 "direction": "long",
                 "conviction": min(conviction, 90),
                 "entry_price": current_close,
-                "stop_loss": round(current_close - atr * stop_atr_mult, 2),
-                "take_profit": round(mean, 2),
+                "stop_loss": round_price(current_close - atr * stop_atr_mult),
+                "take_profit": round_price(mean),
                 "size_pct": size_pct,
             }
 
@@ -148,8 +149,8 @@ class MeanReversionStrategy(Strategy):
                 "direction": "short",
                 "conviction": min(conviction, 90),
                 "entry_price": current_close,
-                "stop_loss": round(current_close + atr * stop_atr_mult, 2),
-                "take_profit": round(mean, 2),
+                "stop_loss": round_price(current_close + atr * stop_atr_mult),
+                "take_profit": round_price(mean),
                 "size_pct": size_pct,
             }
 

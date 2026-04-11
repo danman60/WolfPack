@@ -14,6 +14,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from contextlib import asynccontextmanager
 
 from wolfpack.config import settings
+from wolfpack.price_utils import round_price
 
 # Configure root logger so all wolfpack.* loggers output to stderr (visible in journald)
 logging.basicConfig(level=logging.INFO, format="%(message)s")
@@ -729,7 +730,7 @@ async def approve_recommendation(rec_id: str, exchange: str = "hyperliquid", _au
         pos = engine.open_position(
             symbol=rec["symbol"],
             direction=rec["direction"],
-            current_price=round(entry_price, 2),
+            current_price=round_price(entry_price),
             size_pct=size_pct,
             recommendation_id=rec_id,
         )
@@ -2504,14 +2505,15 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                     # Get current regime from the routing done inside process_strategy_signals
                     regime_state = get_regime_state(symbol)
                     current_macro = regime_state["current_macro"]
-                    actions = tm.check_transition(symbol, current_macro, engine.portfolio.positions)
+                    _rt_engine = _get_perp_trader(_primary_perp).engine
+                    actions = tm.check_transition(symbol, current_macro, _rt_engine.portfolio.positions)
                     if actions.regime_shifted:
                         logger.info(f"[cycle] Regime transition {actions.old_regime} -> {actions.new_regime}")
                         for rid in actions.close_positions:
                             # Find and close the position
-                            for pos in list(engine.portfolio.positions):
+                            for pos in list(_rt_engine.portfolio.positions):
                                 if pos.recommendation_id == rid:
-                                    pnl = engine.close_position(pos.symbol)
+                                    pnl = _rt_engine.close_position(pos.symbol)
                                     logger.info(f"[cycle] Regime transition closed {pos.symbol} {pos.direction}: P&L ${pnl:,.2f}")
                         if actions.tighten_stop_factor < 1.0:
                             for pos in engine.portfolio.positions:
@@ -2584,18 +2586,19 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
     
                 # ── Step 6a: Track per-position peak P&L + check emergency exits ──
                 try:
-                    for pos in engine.portfolio.positions:
+                    _dd_engine = _get_perp_trader(_primary_perp).engine
+                    for pos in _dd_engine.portfolio.positions:
                         dd_monitor.update_position_peak(pos.symbol, pos.unrealized_pnl)
-    
+
                     pos_dicts = [
                         {"symbol": p.symbol, "unrealized_pnl": p.unrealized_pnl, "size_usd": p.size_usd}
-                        for p in engine.portfolio.positions
+                        for p in _dd_engine.portfolio.positions
                     ]
                     emergency_exits = dd_monitor.check_emergency_exits(pos_dicts)
                     for exit_signal in emergency_exits:
                         sym = exit_signal["symbol"]
                         logger.warning(f"[drawdown] Emergency close: {sym} — {exit_signal['reason']}")
-                        realized = engine.close_position(sym)
+                        realized = _dd_engine.close_position(sym)
                         dd_monitor.clear_position_peak(sym)
                         # Emergency closes ALWAYS send immediately — safety-critical
                         try:
@@ -2607,7 +2610,7 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                             )
                         except Exception as e:
                             logger.warning(f"[cycle] Emergency close notification failed: {e}")
-                        engine.store_snapshot(exchange)
+                        _dd_engine.store_snapshot(exchange)
                 except Exception as e:
                     logger.warning(f"[cycle] Drawdown position tracking error: {e}")
     

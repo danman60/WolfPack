@@ -12,6 +12,7 @@ from collections import defaultdict
 from datetime import datetime, timezone
 
 from wolfpack.exchanges.base import Candle
+from wolfpack.price_utils import round_price
 from wolfpack.models.backtest_models import (
     BacktestConfig,
     BacktestMetrics,
@@ -201,8 +202,8 @@ class BacktestEngine:
                 entry_time=entry["time"],
                 exit_time=candle.timestamp,
                 direction=direction,
-                entry_price=round(entry["price"], 2),
-                exit_price=round(exit_price, 2),
+                entry_price=round_price(entry["price"]),
+                exit_price=round_price(exit_price),
                 size_usd=round(size_usd, 2),
                 pnl_usd=round(pnl_usd, 2),
                 pnl_pct=round(pnl_pct * 100, 4),

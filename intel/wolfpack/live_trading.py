@@ -12,6 +12,7 @@ from datetime import datetime, timezone
 from typing import Any, Optional
 
 from wolfpack.config import settings
+from wolfpack.price_utils import round_price
 
 logger = logging.getLogger(__name__)
 
@@ -192,9 +193,9 @@ class LiveTradingEngine:
 
         # Apply slippage for market order (0.1%)
         if is_buy:
-            order_price = round(current_price * 1.001, 2)
+            order_price = round_price(current_price * 1.001)
         else:
-            order_price = round(current_price * 0.999, 2)
+            order_price = round_price(current_price * 0.999)
 
         # Place the order on exchange
         try:
@@ -272,9 +273,9 @@ class LiveTradingEngine:
         # Wide slippage for market close (0.5% = 50 bps)
         exit_slippage_bps = 50.0
         if is_buy:
-            close_price = round(pos.current_price * 1.005, 2)
+            close_price = round_price(pos.current_price * 1.005)
         else:
-            close_price = round(pos.current_price * 0.995, 2)
+            close_price = round_price(pos.current_price * 0.995)
 
         try:
             result = self._run_async(
@@ -545,7 +546,7 @@ class LiveTradingEngine:
                     symbol=pos.symbol,
                     is_buy=is_buy,
                     size=round(pos.size_units, 6),
-                    price=round(stop_price, 2),
+                    price=round_price(stop_price),
                     reduce_only=True,
                     order_type="limit",
                 )
@@ -567,7 +568,7 @@ class LiveTradingEngine:
                     symbol=pos.symbol,
                     is_buy=is_buy,
                     size=round(pos.size_units, 6),
-                    price=round(tp_price, 2),
+                    price=round_price(tp_price),
                     reduce_only=True,
                     order_type="limit",
                 )
@@ -635,13 +636,13 @@ class LiveTradingEngine:
                 pos.trailing_stop_peak = pos.current_price
             new_stop = pos.trailing_stop_peak * (1.0 - trail_frac)
             if pos.stop_loss is None or new_stop > pos.stop_loss:
-                pos.stop_loss = round(new_stop, 2)
+                pos.stop_loss = round_price(new_stop)
         else:
             if pos.trailing_stop_peak is None or pos.current_price < pos.trailing_stop_peak:
                 pos.trailing_stop_peak = pos.current_price
             new_stop = pos.trailing_stop_peak * (1.0 + trail_frac)
             if pos.stop_loss is None or new_stop < pos.stop_loss:
-                pos.stop_loss = round(new_stop, 2)
+                pos.stop_loss = round_price(new_stop)
 
     # --- DB persistence ---
 
