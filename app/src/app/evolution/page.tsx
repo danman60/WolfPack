@@ -1,13 +1,17 @@
 "use client";
 
+import { useState } from "react";
 import {
   useWalletsSummary,
   type WalletSummary,
 } from "@/lib/hooks/useIntelligence";
 import { WalletCard } from "@/components/WalletCard";
+import { CreateWalletDialog } from "@/components/CreateWalletDialog";
 
 export default function EvolutionPage() {
   const { data: wallets, isLoading } = useWalletsSummary();
+  const [createOpen, setCreateOpen] = useState(false);
+  const [cloneFrom, setCloneFrom] = useState<string | undefined>();
 
   const summaries = (wallets ?? []) as WalletSummary[];
   const activeWallets = summaries.filter((w) => w.status === "active");
@@ -22,12 +26,23 @@ export default function EvolutionPage() {
   return (
     <div className="space-y-5 md:space-y-7">
       {/* Header */}
-      <div className="page-header">
-        <h1 className="page-title">Wallet Evolution</h1>
-        <p className="page-subtitle">
-          Compare wallet configurations and track which strategies produce the
-          best returns
-        </p>
+      <div className="page-header flex items-start justify-between">
+        <div>
+          <h1 className="page-title">Wallet Evolution</h1>
+          <p className="page-subtitle">
+            Compare wallet configurations and track which strategies produce the
+            best returns
+          </p>
+        </div>
+        <button
+          onClick={() => {
+            setCloneFrom(undefined);
+            setCreateOpen(true);
+          }}
+          className="px-4 py-2 text-sm font-semibold bg-[var(--wolf-blue)] text-white rounded-lg hover:opacity-90 transition-opacity shrink-0"
+        >
+          + New Wallet
+        </button>
       </div>
 
       {/* Aggregate Stats */}
@@ -79,10 +94,25 @@ export default function EvolutionPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {summaries.map((w) => (
-            <WalletCard key={w.name} wallet={w} />
+            <WalletCard
+              key={w.name}
+              wallet={w}
+              onClone={(name) => {
+                setCloneFrom(name);
+                setCreateOpen(true);
+              }}
+            />
           ))}
         </div>
       )}
+
+      {/* Create Wallet Dialog */}
+      <CreateWalletDialog
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+        wallets={summaries}
+        cloneFrom={cloneFrom}
+      />
 
       {/* Comparison Table */}
       {summaries.length > 1 && (

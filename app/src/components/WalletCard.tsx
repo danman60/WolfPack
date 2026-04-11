@@ -1,8 +1,22 @@
 "use client";
 
-import type { WalletSummary } from "@/lib/hooks/useIntelligence";
+import { useState } from "react";
+import {
+  usePauseResumeWallet,
+  type WalletSummary,
+} from "@/lib/hooks/useIntelligence";
+import { WalletConfigEditor } from "@/components/WalletConfigEditor";
+import { toast } from "sonner";
 
-export function WalletCard({ wallet }: { wallet: WalletSummary }) {
+interface WalletCardProps {
+  wallet: WalletSummary;
+  onClone?: (walletName: string) => void;
+}
+
+export function WalletCard({ wallet, onClone }: WalletCardProps) {
+  const [editOpen, setEditOpen] = useState(false);
+  const pauseResume = usePauseResumeWallet();
+
   const profitable = wallet.total_pnl > 0;
   const returnPct =
     wallet.starting_equity > 0
@@ -117,6 +131,54 @@ export function WalletCard({ wallet }: { wallet: WalletSummary }) {
           {wallet.description}
         </p>
       )}
+
+      {/* Action Buttons */}
+      <div className="flex items-center gap-2 mt-3 pt-3 border-t border-[var(--border)]">
+        <button
+          onClick={() => setEditOpen(true)}
+          className="px-3 py-1.5 text-[11px] font-semibold text-gray-300 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-colors"
+        >
+          Edit
+        </button>
+        <button
+          onClick={() => onClone?.(wallet.name)}
+          className="px-3 py-1.5 text-[11px] font-semibold text-gray-300 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-colors"
+        >
+          Clone
+        </button>
+        <button
+          onClick={async () => {
+            const action = wallet.status === "active" ? "pause" : "resume";
+            try {
+              await pauseResume.mutateAsync({ name: wallet.name, action });
+              toast.success(`Wallet ${action}d`);
+            } catch (err) {
+              toast.error(
+                `Failed to ${action}: ${err instanceof Error ? err.message : "Unknown error"}`
+              );
+            }
+          }}
+          disabled={pauseResume.isPending}
+          className={`px-3 py-1.5 text-[11px] font-semibold rounded-lg border transition-colors disabled:opacity-50 ${
+            wallet.status === "active"
+              ? "text-[var(--wolf-amber)] border-[var(--wolf-amber)]/30 hover:bg-[var(--wolf-amber)]/10"
+              : "text-[var(--wolf-emerald)] border-[var(--wolf-emerald)]/30 hover:bg-[var(--wolf-emerald)]/10"
+          }`}
+        >
+          {pauseResume.isPending
+            ? "..."
+            : wallet.status === "active"
+              ? "Pause"
+              : "Resume"}
+        </button>
+      </div>
+
+      {/* Config Editor Modal */}
+      <WalletConfigEditor
+        open={editOpen}
+        onClose={() => setEditOpen(false)}
+        wallet={wallet}
+      />
     </div>
   );
 }

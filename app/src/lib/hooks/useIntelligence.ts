@@ -747,6 +747,115 @@ export function useWalletsSummary() {
   });
 }
 
+// ── Wallet Management Mutations ──
+
+export function useCreateWallet() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (payload: {
+      name: string;
+      display_name: string;
+      description?: string;
+      starting_equity?: number;
+      config?: Record<string, unknown>;
+      clone_from?: string;
+    }) => {
+      const res = await intelFetch("/intel/wallets", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error(await res.text());
+      return res.json();
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["wallets-summary"] });
+      qc.invalidateQueries({ queryKey: ["wallets"] });
+    },
+  });
+}
+
+export function useUpdateWalletConfig() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      name,
+      config,
+    }: {
+      name: string;
+      config: Record<string, unknown>;
+    }) => {
+      const res = await intelFetch(`/intel/wallets/${name}/config`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(config),
+      });
+      if (!res.ok) throw new Error(await res.text());
+      return res.json();
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["wallets-summary"] });
+      qc.invalidateQueries({ queryKey: ["wallets"] });
+    },
+  });
+}
+
+export function useCloneWallet() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      name,
+      new_name,
+      new_display_name,
+      config_mutations,
+    }: {
+      name: string;
+      new_name: string;
+      new_display_name: string;
+      config_mutations?: Record<string, unknown>;
+    }) => {
+      const res = await intelFetch(`/intel/wallets/${name}/clone`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          new_name,
+          new_display_name,
+          config_mutations: config_mutations || {},
+        }),
+      });
+      if (!res.ok) throw new Error(await res.text());
+      return res.json();
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["wallets-summary"] });
+      qc.invalidateQueries({ queryKey: ["wallets"] });
+    },
+  });
+}
+
+export function usePauseResumeWallet() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      name,
+      action,
+    }: {
+      name: string;
+      action: "pause" | "resume";
+    }) => {
+      const res = await intelFetch(`/intel/wallets/${name}/${action}`, {
+        method: "POST",
+      });
+      if (!res.ok) throw new Error(await res.text());
+      return res.json();
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["wallets-summary"] });
+      qc.invalidateQueries({ queryKey: ["wallets"] });
+    },
+  });
+}
+
 // Fetch time-series metrics for a specific wallet
 export function useWalletMetrics(wallet: string, hours: number = 24) {
   return useQuery({
