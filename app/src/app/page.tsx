@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useExchange } from "@/lib/exchange";
-import { useAgentOutputs, useAgentStatus, useRecommendations, usePortfolio, usePortfolioHistory, useWatchlist, useAutoTraderStatus, useProfit, useStrategyMode, useClosePosition, useSetYoloLevel } from "@/lib/hooks/useIntelligence";
+import { useAgentOutputs, useAgentStatus, useRecommendations, usePortfolio, usePortfolioHistory, useWatchlist, useAutoTraderStatus, useProfit, useStrategyMode, useClosePosition, useSetYoloLevel, useWalletsSummary } from "@/lib/hooks/useIntelligence";
+import { useWalletContext } from "@/lib/wallet/context";
 import { WolfHead } from "@/components/WolfHead";
 import { usePrice, use24hChange } from "@/lib/hooks/useMarketData";
 import { useLPStatus } from "@/lib/hooks/usePools";
@@ -11,18 +12,21 @@ import { Term } from "@/components/Term";
 import { AreaChart, Area, ResponsiveContainer } from "recharts";
 
 export default function Dashboard() {
+  const { perpWallet } = useWalletContext();
   const { config } = useExchange();
   const { data: agentOutputs } = useAgentOutputs();
   const { data: agentStatus } = useAgentStatus();
   const { data: recommendations } = useRecommendations("pending");
-  const { data: portfolio } = usePortfolio();
+  const { data: portfolio } = usePortfolio(perpWallet);
   const { data: btcPrice } = usePrice("BTC");
   const { data: ethPrice } = usePrice("ETH");
   const { data: watchlist } = useWatchlist();
-  const { data: autoTrader } = useAutoTraderStatus();
+  const { data: autoTrader } = useAutoTraderStatus(perpWallet);
   const { data: lpStatus } = useLPStatus();
   const { data: strategyMode } = useStrategyMode();
-  const { data: history } = usePortfolioHistory("paper_perp", 200);
+  const { data: history } = usePortfolioHistory(perpWallet, 200);
+  const { data: walletSummaries } = useWalletsSummary();
+  const perpWallets = (walletSummaries ?? []).filter((w: any) => w.status === "active");
 
   const agents = agentStatus?.agents ?? [];
   const isActive = portfolio?.status === "active";
@@ -93,6 +97,62 @@ export default function Dashboard() {
                 />
               </AreaChart>
             </ResponsiveContainer>
+          </div>
+        </div>
+      )}
+
+      {/* Evolution Wallets */}
+      {perpWallets.length > 0 && (
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-1 h-4 rounded-full bg-[var(--wolf-purple)]" />
+              <h2 className="text-[15px] font-semibold text-white tracking-tight">Evolution Wallets</h2>
+            </div>
+            <Link href="/evolution" className="text-[11px] text-[var(--wolf-purple)] hover:text-white transition-colors">
+              View All →
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {perpWallets.map((w: any) => {
+              const returnPct = w.starting_equity > 0
+                ? (((w.equity || w.starting_equity) - w.starting_equity) / w.starting_equity * 100)
+                : 0;
+              const profitable = (w.total_pnl || 0) > 0;
+              return (
+                <Link key={w.name} href="/evolution" className="block">
+                  <div className={`wolf-card p-4 hover:border-white/20 transition-colors ${profitable ? "border-emerald-500/20" : "border-red-500/20"}`}>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[13px] font-semibold text-white">{w.display_name || w.name}</span>
+                        {w.version && (
+                          <span className="text-[9px] px-1.5 py-0.5 rounded bg-white/5 text-gray-500 font-mono">v{w.version}</span>
+                        )}
+                      </div>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--wolf-purple)]/15 text-[var(--wolf-purple)] font-semibold">
+                        YOLO {w.yolo_level || w.config?.yolo_level || "?"}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 text-center">
+                      <div>
+                        <p className="text-[10px] text-gray-500 uppercase">Equity</p>
+                        <p className="text-[14px] font-bold text-white">${(w.equity || w.starting_equity || 0).toLocaleString(undefined, {maximumFractionDigits: 0})}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-gray-500 uppercase">P&L</p>
+                        <p className={`text-[14px] font-bold ${profitable ? "text-emerald-400" : "text-red-400"}`}>
+                          {(w.total_pnl || 0) >= 0 ? "+" : ""}${(w.total_pnl || 0).toFixed(0)}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-gray-500 uppercase">Trades</p>
+                        <p className="text-[14px] font-bold text-white">{w.trade_count || 0}</p>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       )}
@@ -279,9 +339,9 @@ export default function Dashboard() {
               : (
                 <>
                   <AgentRow name="The Quant" status={agentOutputs?.quant ? "active" : "idle"} lastRun={agentOutputs?.quant ? new Date(agentOutputs.quant.created_at).toLocaleTimeString() : "--"} />
-                  <AgentRow name="The Snoop" status="idle" lastRun="--" />
-                  <AgentRow name="The Sage" status="idle" lastRun="--" />
-                  <AgentRow name="The Brief" status="idle" lastRun="--" />
+                  <AgentRow name="The Snoop" status={agentOutputs?.snoop ? "active" : "idle"} lastRun={agentOutputs?.snoop ? new Date(agentOutputs.snoop.created_at).toLocaleTimeString() : "--"} />
+                  <AgentRow name="The Sage" status={agentOutputs?.sage ? "active" : "idle"} lastRun={agentOutputs?.sage ? new Date(agentOutputs.sage.created_at).toLocaleTimeString() : "--"} />
+                  <AgentRow name="The Brief" status={agentOutputs?.brief ? "active" : "idle"} lastRun={agentOutputs?.brief ? new Date(agentOutputs.brief.created_at).toLocaleTimeString() : "--"} />
                 </>
               )}
           </div>
@@ -502,10 +562,11 @@ function YoloMeter() {
 }
 
 function ProfitReport() {
+  const { perpWallet } = useWalletContext();
   const [hours, setHours] = useState(24);
   const [locking, setLocking] = useState(false);
   const { data: profit, isFetching } = useProfit(hours);
-  const { data: autoTraderData } = useAutoTraderStatus("paper_perp");
+  const { data: autoTraderData } = useAutoTraderStatus(perpWallet);
   const closePosition = useClosePosition();
 
   const periods = [

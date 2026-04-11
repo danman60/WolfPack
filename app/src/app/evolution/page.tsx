@@ -115,6 +115,11 @@ export default function EvolutionPage() {
       />
 
       {/* Comparison Table */}
+      {summaries.length === 1 && (
+        <div className="wolf-card p-6 text-center text-gray-500 text-sm">
+          Create a second wallet to enable side-by-side comparison
+        </div>
+      )}
       {summaries.length > 1 && (
         <div className="wolf-card p-4 md:p-6">
           <div className="flex items-center gap-2 mb-5">

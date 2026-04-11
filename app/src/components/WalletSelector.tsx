@@ -37,34 +37,10 @@ export function WalletSelector({ type }: { type: "perp" | "lp" }) {
         : `$${n.toFixed(0)}`
       : "--";
 
-  // Fallback: if no wallets loaded yet, show static paper/prod toggle
   if (filtered.length === 0) {
-    const paperName = type === "perp" ? "paper_perp" : "paper_lp";
-    const prodName = type === "perp" ? "prod_perp" : "prod_lp";
-    const isPaper = current === paperName;
-
     return (
-      <div className="inline-flex items-center gap-1 rounded-lg border border-[var(--border)] bg-[var(--surface)] p-1">
-        <button
-          onClick={() => setCurrent(paperName)}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-semibold transition-colors ${
-            isPaper
-              ? "bg-[var(--wolf-blue)]/25 text-[var(--wolf-blue)]"
-              : "text-gray-400 hover:text-white"
-          }`}
-        >
-          <span className="uppercase tracking-wider">Paper</span>
-        </button>
-        <button
-          onClick={() => setCurrent(prodName)}
-          className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-semibold transition-colors ${
-            !isPaper
-              ? "bg-[var(--wolf-emerald)]/25 text-[var(--wolf-emerald)]"
-              : "text-gray-400 hover:text-white"
-          }`}
-        >
-          <span className="uppercase tracking-wider">Production</span>
-        </button>
+      <div className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--surface)] p-1 px-3">
+        <span className="text-xs text-gray-500">Loading wallets...</span>
       </div>
     );
   }
