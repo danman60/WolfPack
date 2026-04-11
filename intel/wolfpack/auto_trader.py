@@ -157,7 +157,8 @@ class AutoTrader:
         from wolfpack.performance_tracker import PerformanceTracker
 
         self.enabled = settings.auto_trade_enabled
-        self.conviction_threshold = settings.auto_trade_conviction_threshold
+        # conviction_threshold is set exclusively by _apply_yolo_profile() — NOT from settings
+        self.conviction_threshold = 75  # placeholder; overwritten by _apply_yolo_profile()
         self.wallet_id = wallet_id
 
         # Select engine based on explicit mode param (wave 3: no more _strategy_mode import)
@@ -472,7 +473,7 @@ class AutoTrader:
                             symbol=symbol,
                             direction=direction,
                             attempted_usd=0.0,
-                            floor_usd=float(settings.min_position_usd),
+                            floor_usd=float(yolo_sizing["min_position_usd"]),
                             reason="size_pct<=0 after perf_mult",
                             size_multiplier=size_multiplier,
                             perf_mult=perf_mult,
@@ -500,7 +501,7 @@ class AutoTrader:
                             symbol=symbol,
                             direction=direction,
                             attempted_usd=float(estimated_usd),
-                            floor_usd=float(settings.min_position_usd),
+                            floor_usd=float(yolo_sizing["min_position_usd"]),
                             reason="below_min_position_usd",
                             size_multiplier=size_multiplier,
                             perf_mult=perf_mult,
@@ -712,35 +713,13 @@ class AutoTrader:
         return executed
 
     def _store_trade(self, trade: dict, rec_id: str | None = None) -> None:
-        """Store an auto-trade to Supabase."""
-        try:
-            from wolfpack.db import get_db
-            db = get_db()
-            row = {
-                "recommendation_id": rec_id,
-                "symbol": trade["symbol"],
-                "direction": trade["direction"],
-                "entry_price": trade["entry_price"],
-                "size_usd": trade["size_usd"],
-                "size_pct": trade["size_pct"],
-                "conviction": trade["conviction"],
-                "status": "open",
-                "wallet_id": self.wallet_id,
-            }
-            # Include strategy if present
-            if trade.get("strategy"):
-                row["strategy"] = trade["strategy"]
-            try:
-                db.table("wp_auto_trades").insert(row).execute()
-            except Exception as e:
-                error_msg = str(e).lower()
-                if "column" in error_msg and "wallet_id" in error_msg:
-                    row.pop("wallet_id", None)
-                    db.table("wp_auto_trades").insert(row).execute()
-                else:
-                    raise
-        except Exception as e:
-            logger.error(f"[auto-trader] Failed to store trade: {e}")
+        """Store an auto-trade to Supabase.
+
+        NOTE: wp_auto_trades writes removed (legacy table, nothing reads it).
+        Trades are persisted via paper_trading._store_closed_trade -> wp_trade_history.
+        """
+        # Intentionally no-op — kept as hook for future auditing if needed.
+        pass
 
     def _store_snapshot(self) -> None:
         """Store auto-trader portfolio snapshot to Supabase.
@@ -923,8 +902,10 @@ class AutoTrader:
 
                 # Enforce $3K-$5K position size sweet spot
                 estimated_usd = self.engine.portfolio.equity * (size_pct / 100)
-                if estimated_usd < settings.min_position_usd:
-                    logger.info(f"[auto-trader] Strategy {strategy_name} {symbol} {direction} skipped: ${estimated_usd:.0f} < ${settings.min_position_usd:.0f} minimum")
+                yolo_sizing = _YOLO_SIZING.get(self.yolo_level, _YOLO_SIZING[2])
+                min_pos_usd = yolo_sizing["min_position_usd"]
+                if estimated_usd < min_pos_usd:
+                    logger.info(f"[auto-trader] Strategy {strategy_name} {symbol} {direction} skipped: ${estimated_usd:.0f} < ${min_pos_usd:.0f} minimum (YOLO {self.yolo_level})")
                     continue
                 if estimated_usd > settings.max_position_usd:
                     size_pct = (settings.max_position_usd / self.engine.portfolio.equity) * 100

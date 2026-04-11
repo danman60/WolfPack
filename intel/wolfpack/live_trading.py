@@ -646,34 +646,13 @@ class LiveTradingEngine:
     # --- DB persistence ---
 
     def _store_open_trade(self, pos: LivePosition) -> None:
-        """Store an opened live trade to wp_auto_trades."""
-        if not self.persist_trades:
-            return
-        try:
-            from wolfpack.db import get_db
-            db = get_db()
-            row = {
-                "symbol": pos.symbol,
-                "direction": pos.direction,
-                "entry_price": pos.entry_price,
-                "size_usd": pos.size_usd,
-                "stop_loss": pos.stop_loss,
-                "take_profit": pos.take_profit,
-                "recommendation_id": pos.recommendation_id,
-                "source": "live",
-                "wallet_id": self.wallet_id,
-            }
-            try:
-                db.table("wp_auto_trades").insert(row).execute()
-            except Exception as e:
-                error_msg = str(e).lower()
-                if "column" in error_msg and "wallet_id" in error_msg:
-                    row.pop("wallet_id", None)
-                    db.table("wp_auto_trades").insert(row).execute()
-                else:
-                    raise
-        except Exception as e:
-            logger.warning(f"[live-engine] Failed to store open trade: {e}")
+        """Store an opened live trade.
+
+        NOTE: wp_auto_trades writes removed (legacy table, nothing reads it).
+        Trades are persisted via _store_closed_trade -> wp_trade_history.
+        """
+        # Intentionally no-op — kept as hook for future auditing if needed.
+        pass
 
     def _store_closed_trade(
         self,

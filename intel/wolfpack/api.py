@@ -223,10 +223,10 @@ def _get_token_tracker() -> Any:
         Agent.set_token_tracker(_token_tracker)
     return _token_tracker
 
-# Latest module outputs (updated each intelligence cycle)
-_latest_liquidity: Any = None
-_latest_regime: Any = None
-_latest_volatility: Any = None
+# Latest module outputs (updated each intelligence cycle, keyed by symbol)
+_latest_liquidity: dict[str, Any] = {}
+_latest_regime: dict[str, Any] = {}
+_latest_volatility: dict[str, Any] = {}
 
 
 def _get_circuit_breaker() -> Any:
@@ -672,12 +672,13 @@ async def approve_recommendation(rec_id: str, exchange: str = "hyperliquid", _au
                 "message": f"Circuit breaker is {cb.state} — new entries not allowed",
             }
 
-        # Check liquidity gate
-        if _latest_liquidity and not _latest_liquidity.trade_allowed:
+        # Check liquidity gate (per-symbol dict)
+        _liq = _latest_liquidity.get(rec["symbol"])
+        if _liq and not _liq.trade_allowed:
             return {
                 "status": "blocked",
-                "message": f"Liquidity gate: {_latest_liquidity.reason}",
-                "liquidity_health": _latest_liquidity.liquidity_health,
+                "message": f"Liquidity gate: {_liq.reason}",
+                "liquidity_health": _liq.liquidity_health,
             }
 
         # Execute as paper trade (wallet-aware engine)
@@ -699,7 +700,7 @@ async def approve_recommendation(rec_id: str, exchange: str = "hyperliquid", _au
             return {"status": "error", "message": "No entry price available — run intel first or set entry_price"}
 
         # Apply slippage
-        slippage_bps = _latest_liquidity.estimated_slippage_bps if _latest_liquidity else 5.0
+        slippage_bps = _liq.estimated_slippage_bps if _liq else 5.0
         slippage_pct = slippage_bps / 10_000
         if rec["direction"] == "long":
             entry_price *= (1 + slippage_pct)
@@ -711,9 +712,9 @@ async def approve_recommendation(rec_id: str, exchange: str = "hyperliquid", _au
         sizer = SizingEngine(base_pct=rec.get("size_pct") or 10.0)
         sizing = sizer.compute(
             conviction=rec.get("conviction", 50),
-            vol_output=_latest_volatility,
-            regime_output=_latest_regime,
-            liquidity_output=_latest_liquidity,
+            vol_output=_latest_volatility.get(rec["symbol"]),
+            regime_output=_latest_regime.get(rec["symbol"]),
+            liquidity_output=_liq,
         )
         size_pct = sizing.final_size_pct
         logger.info(f"[sizing] {rec['symbol']}: {sizing.rationale}")
@@ -745,9 +746,10 @@ async def approve_recommendation(rec_id: str, exchange: str = "hyperliquid", _au
 
             # Enable trailing stop — use Brief's recommendation or default based on vol regime
             trailing_pct = rec.get("trailing_stop_pct")
-            if not trailing_pct and _latest_volatility:
+            _vol = _latest_volatility.get(rec["symbol"])
+            if not trailing_pct and _vol:
                 # Auto-assign trailing stop based on volatility regime
-                vol_regime = _latest_volatility.vol_regime if hasattr(_latest_volatility, 'vol_regime') else "normal"
+                vol_regime = _vol.vol_regime if hasattr(_vol, 'vol_regime') else "normal"
                 if vol_regime in ("elevated", "high"):
                     trailing_pct = 4.0
                 elif vol_regime == "extreme":
@@ -1923,7 +1925,7 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                 {"1h": candles_1h, "4h": candles_4h, "1d": candles_1d},
                 asset=symbol,
             )
-            _latest_regime = regime_output
+            _latest_regime[symbol] = regime_output
             store_module_output("regime_detection", exchange, regime_output.model_dump(), symbol)
             _module_last_runs["regime_detection"] = now_utc
 
@@ -1957,7 +1959,7 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
             global _latest_liquidity
             liquidity_intel = LiquidityIntel()
             liquidity_output = liquidity_intel.analyze(orderbook)
-            _latest_liquidity = liquidity_output
+            _latest_liquidity[symbol] = liquidity_output
             store_module_output("liquidity_intel", exchange, liquidity_output.model_dump(), symbol)
             _module_last_runs["liquidity_intel"] = now_utc
     
@@ -1980,8 +1982,11 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
     
             # Drawdown monitor — auto-track peak equity and compute drawdown
             dd_monitor = _get_drawdown_monitor()
-            # Wave 5: use wallet-aware engine, not legacy singleton
-            dd_trader = _get_perp_trader("paper_perp")
+            # Use primary active perp wallet (ready for live cutover)
+            from wolfpack.wallet_registry import get_registry as _get_reg_dd
+            _primary_perp_wallets = _get_reg_dd().get_active_wallets("perp")
+            _primary_perp = _primary_perp_wallets[0].name if _primary_perp_wallets else "paper_perp"
+            dd_trader = _get_perp_trader(_primary_perp)
             dd_info = dd_monitor.update_peaks(exchange, dd_trader.engine.portfolio.equity)
             auto_drawdown_pct = dd_info["drawdown_pct"]
     
@@ -1990,7 +1995,7 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
             closes = [c.close for c in candles_1h]
             vol_signal = VolatilitySignal()
             vol_output = vol_signal.analyze(asset=symbol, closes=closes, current_drawdown_pct=auto_drawdown_pct)
-            _latest_volatility = vol_output
+            _latest_volatility[symbol] = vol_output
             store_module_output("volatility", exchange, vol_output.model_dump(), symbol)
             _module_last_runs["volatility"] = now_utc
     
@@ -2094,8 +2099,8 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
     
             # Circuit breaker (uses auto-tracked drawdown from drawdown monitor)
             cb = _get_circuit_breaker()
-            # Wave 5: use wallet-aware engine, not legacy singleton
-            cb_trader = _get_perp_trader("paper_perp")
+            # Use primary active perp wallet (ready for live cutover)
+            cb_trader = _get_perp_trader(_primary_perp)
             portfolio = cb_trader.engine.portfolio
     
             # Use drawdown from monitor (auto-tracked peak, persisted across restarts)
@@ -2542,11 +2547,12 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                     except Exception as e:
                         logger.warning(f"[cycle] {_wallet.name} auto-trader error: {e}")
     
-                # ── Step 5c: Process position actions from Brief ──
+                # ── Step 5c: Process position actions from Brief (all active wallets) ──
                 try:
                     pos_actions = brief_out.raw_data.get("position_actions", []) if brief_out.raw_data else []
-                    _pa_engine = _get_perp_trader("paper_perp").engine
-                    await _process_position_actions(pos_actions, exchange, symbol, latest_price, _pa_engine)
+                    for _wallet in _active_perp_wallets:
+                        _pa_engine = _get_perp_trader(_wallet.name).engine
+                        await _process_position_actions(pos_actions, exchange, symbol, latest_price, _pa_engine)
                 except Exception as e:
                     logger.warning(f"[cycle] Position action processing error: {e}")
     
@@ -2566,14 +2572,15 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                     logger.warning(f"[training] Failed to append training data: {e}")
     
                 # ── Step 6: Update paper trading portfolio (wallet-aware) ──
-                engine = _get_perp_trader("paper_perp").engine
-                if latest_price and engine.portfolio.positions:
-                    engine.update_prices({symbol: latest_price})
-                    try:
-                        engine.store_snapshot(exchange)
-                        logger.info(f"[cycle] Paper portfolio snapshot stored (equity: ${engine.portfolio.equity:.2f})")
-                    except Exception as e:
-                        logger.warning(f"[cycle] Failed to store paper portfolio snapshot: {e}")
+                for _wallet in _active_perp_wallets:
+                    _s6_engine = _get_perp_trader(_wallet.name).engine
+                    if latest_price and _s6_engine.portfolio.positions:
+                        _s6_engine.update_prices({symbol: latest_price})
+                        try:
+                            _s6_engine.store_snapshot(exchange)
+                            logger.info(f"[cycle] {_wallet.name} portfolio snapshot stored (equity: ${_s6_engine.portfolio.equity:.2f})")
+                        except Exception as e:
+                            logger.warning(f"[cycle] Failed to store {_wallet.name} portfolio snapshot: {e}")
     
                 # ── Step 6a: Track per-position peak P&L + check emergency exits ──
                 try:
@@ -2598,8 +2605,8 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                                 f"{exit_signal['reason']}\n"
                                 f"Realized P&L: <code>${realized:,.2f}</code>"
                             )
-                        except Exception:
-                            pass
+                        except Exception as e:
+                            logger.warning(f"[cycle] Emergency close notification failed: {e}")
                         engine.store_snapshot(exchange)
                 except Exception as e:
                     logger.warning(f"[cycle] Drawdown position tracking error: {e}")
@@ -2622,8 +2629,8 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                                             "symbol": sym,
                                             "details": f"{_wallet.name}: {reason.upper()} hit for {sym} @ ${latest_price:,.2f}",
                                         })
-                                    except Exception:
-                                        pass
+                                    except Exception as e:
+                                        logger.warning(f"[cycle] Stop-trigger notification failed: {e}")
                             _trader._store_snapshot()
                     except Exception as e:
                         logger.warning(f"[cycle] {_wallet.name} price update error: {e}")
@@ -2671,8 +2678,8 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                                             "message": alert.get("message", ""),
                                             "details": alert.get("message", ""),
                                         })
-                                except Exception:
-                                    pass
+                                except Exception as e:
+                                    logger.warning(f"[cycle] LP alert notification failed: {e}")
                 except Exception as e:
                     logger.warning(f"[cycle] LP auto-trader error: {e}")
     
@@ -2690,7 +2697,7 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                     # Attach current portfolio snapshot for the unified report
                     try:
                         perp_snap = None
-                        perp_engine = _get_perp_trader("paper_perp").engine
+                        perp_engine = _get_perp_trader(_primary_perp).engine
                         if perp_engine.portfolio.positions:
                             perp_snap = {
                                 "positions": [
@@ -2713,11 +2720,11 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                                 "equity": lp_tr.engine.portfolio.equity,
                             }
                         digest.set_portfolio_snapshot(perp=perp_snap, lp=lp_snap)
-                    except Exception:
-                        pass
+                    except Exception as e:
+                        logger.warning(f"[cycle] Digest portfolio snapshot failed: {e}")
                     await digest.maybe_flush()
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.warning(f"[cycle] Digest flush failed: {e}")
     
                 logger.info(f"[cycle] Full intelligence cycle complete for {symbol} on {exchange}")
     

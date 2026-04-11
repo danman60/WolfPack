@@ -33,7 +33,7 @@ class Settings(BaseSettings):
     # Auto-trader
     auto_trade_enabled: bool = False
     auto_trade_equity: float = 5000.0
-    auto_trade_conviction_threshold: int = 75
+    auto_trade_conviction_threshold: int = 75  # UNUSED — YOLO profile controls conviction threshold
 
     # LP Auto-Trader
     lp_auto_enabled: bool = False
