@@ -226,10 +226,26 @@ export function usePortfolio(wallet: string = "paper_perp") {
         // VPS unreachable — fall through to snapshot
       }
 
-      // Fallback: load latest snapshot from Supabase
-      const { data, error } = await supabase
+      // Fallback: load latest snapshot from Supabase (filtered by wallet)
+      // Resolve wallet name → wallet_id first
+      let walletId: string | null = null;
+      try {
+        const { data: walletRow } = await supabase
+          .from("wp_wallets")
+          .select("id")
+          .eq("name", wallet)
+          .limit(1);
+        const row = walletRow?.[0] as Record<string, unknown> | undefined;
+        if (row?.id) walletId = String(row.id);
+      } catch { /* proceed without filter */ }
+
+      let query = supabase
         .from("wp_portfolio_snapshots")
-        .select("*")
+        .select("*");
+      if (walletId) {
+        query = query.eq("wallet_id", walletId);
+      }
+      const { data, error } = await query
         .order("created_at", { ascending: false })
         .limit(1);
 

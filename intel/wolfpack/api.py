@@ -2545,7 +2545,8 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                 # ── Step 5c: Process position actions from Brief ──
                 try:
                     pos_actions = brief_out.raw_data.get("position_actions", []) if brief_out.raw_data else []
-                    await _process_position_actions(pos_actions, exchange, symbol, latest_price, engine)
+                    _pa_engine = _get_perp_trader("paper_perp").engine
+                    await _process_position_actions(pos_actions, exchange, symbol, latest_price, _pa_engine)
                 except Exception as e:
                     logger.warning(f"[cycle] Position action processing error: {e}")
     
