@@ -424,13 +424,24 @@ class AutoTrader:
                 conviction = max(conviction - 10, 0)
                 logger.info(f"[auto-trader] {symbol} long penalized -10 conviction in RANGING (now {conviction})")
 
-            # VWAP filter: only long when price is above VWAP
+            # VWAP filter: penalize longs below VWAP (severity scales inversely with YOLO)
             if direction == "long":
                 vwap = self._latest_vwaps.get(symbol, 0)
                 current_price = (latest_prices or {}).get(symbol, 0)
                 if vwap > 0 and current_price > 0 and current_price < vwap:
-                    logger.info(f"[auto-trader] {symbol} long blocked: price ${current_price:,.2f} below VWAP ${vwap:,.2f}")
-                    continue
+                    if self.yolo_level <= 2:
+                        # Conservative: hard block
+                        logger.info(f"[auto-trader] {symbol} long blocked: price ${current_price:,.2f} below VWAP ${vwap:,.2f}")
+                        continue
+                    elif self.yolo_level == 3:
+                        # Active: soft penalty -15 conviction
+                        conviction = max(conviction - 15, 0)
+                        logger.info(f"[auto-trader] {symbol} long penalized -15 (below VWAP), conviction now {conviction}")
+                    elif self.yolo_level == 4:
+                        # YOLO: soft penalty -5 conviction
+                        conviction = max(conviction - 5, 0)
+                        logger.info(f"[auto-trader] {symbol} long penalized -5 (below VWAP), conviction now {conviction}")
+                    # Level 5: no VWAP filter at all
 
             # Trading hours restriction — only open new positions during allowed UTC hours
             current_utc_hour = datetime.now(timezone.utc).hour
@@ -441,8 +452,9 @@ class AutoTrader:
             # Pump guard — cap short exposure to prevent cascade losses on sudden pumps
             if direction == "short":
                 open_shorts = sum(1 for p in self.engine.portfolio.positions if p.direction == "short")
-                if open_shorts >= 3:
-                    logger.info(f"[auto-trader] {symbol} short blocked: {open_shorts} shorts open (max 3)")
+                max_shorts = {1: 2, 2: 3, 3: 4, 4: 5, 5: 7}.get(self.yolo_level, 3)
+                if open_shorts >= max_shorts:
+                    logger.info(f"[auto-trader] {symbol} short blocked: {open_shorts} shorts open (max {max_shorts} at YOLO {self.yolo_level})")
                     continue
                 # Don't open new shorts if any watched symbol pumped >2% in last hour
                 if latest_prices and self._is_pumping(symbol, latest_prices):
@@ -883,13 +895,21 @@ class AutoTrader:
                     signal["conviction"] = max(signal.get("conviction", 60) - 10, 0)
                     logger.info(f"[auto-trader] {symbol} mech long penalized in RANGING")
 
-                # VWAP filter on mechanical longs
+                # VWAP filter on mechanical longs (scales with YOLO level)
                 if direction == "long":
                     vwap = self._latest_vwaps.get(symbol, 0)
                     current_price = (latest_prices or {}).get(symbol, 0)
                     if vwap > 0 and current_price > 0 and current_price < vwap:
-                        logger.info(f"[auto-trader] {symbol} mech long blocked: below VWAP")
-                        continue
+                        if self.yolo_level <= 2:
+                            logger.info(f"[auto-trader] {symbol} mech long blocked: below VWAP")
+                            continue
+                        elif self.yolo_level == 3:
+                            signal["conviction"] = max(signal.get("conviction", 60) - 15, 0)
+                            logger.info(f"[auto-trader] {symbol} mech long penalized -15 (below VWAP)")
+                        elif self.yolo_level == 4:
+                            signal["conviction"] = max(signal.get("conviction", 60) - 5, 0)
+                            logger.info(f"[auto-trader] {symbol} mech long penalized -5 (below VWAP)")
+                        # Level 5: no VWAP filter
 
                 rec_id = f"strat-{strategy_name}-{symbol}-{timestamp}"
 

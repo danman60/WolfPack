@@ -125,6 +125,7 @@ RISK_PRESETS: Dict[str, RiskPolicy] = {
     "yolo": RiskPolicy(
         name="yolo",
         hard=HardLimits(
+            max_positions=8,
             max_position_size_pct=25.0,
             require_stop_loss=False,
         ),
@@ -141,6 +142,7 @@ RISK_PRESETS: Dict[str, RiskPolicy] = {
     "full_send": RiskPolicy(
         name="full_send",
         hard=HardLimits(
+            max_positions=12,
             max_position_size_pct=25.0,
             require_stop_loss=False,
         ),
