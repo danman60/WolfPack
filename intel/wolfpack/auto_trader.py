@@ -95,7 +95,7 @@ _YOLO_SIZING = {
     2: {"brief_only_mult": 0.25, "min_perf_mult": 0.15, "min_position_usd": 200, "trade_spacing_s": 300},
     3: {"brief_only_mult": 0.40, "min_perf_mult": 0.30, "min_position_usd": 150, "trade_spacing_s": 180},
     4: {"brief_only_mult": 0.60, "min_perf_mult": 0.50, "min_position_usd": 100, "trade_spacing_s": 120},
-    5: {"brief_only_mult": 0.80, "min_perf_mult": 0.70, "min_position_usd": 50,  "trade_spacing_s": 60},
+    5: {"brief_only_mult": 1.00, "min_perf_mult": 0.85, "min_position_usd": 50,  "trade_spacing_s": 30},
 }
 
 def _build_yolo_profiles() -> dict:

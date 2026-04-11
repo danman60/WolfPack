@@ -148,12 +148,12 @@ RISK_PRESETS: Dict[str, RiskPolicy] = {
         ),
         soft=SoftLimits(
             conviction_floor=25,
-            max_trades_per_day=20,
+            max_trades_per_day=40,
             cooldown_seconds=0.0,
-            base_pct=20.0,
+            base_pct=25.0,
             penalty_multiplier=0.0,
             rejection_cooldown_hours=0.0,
-            max_positions_per_symbol=4,
+            max_positions_per_symbol=3,
         ),
     ),
 }

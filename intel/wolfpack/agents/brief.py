@@ -282,10 +282,23 @@ Example 3 — Position management (adjust_stop on profitable long):
         yolo_level = market_data.get("yolo_level", 2)
         yolo_override = ""
         if yolo_level >= 4:
-            yolo_override = f"""
+            if yolo_level >= 5:
+                yolo_override = f"""
+
+AGGRESSIVENESS OVERRIDE (YOLO level {yolo_level}/5 — FULL SEND):
+The trader demands maximum trade flow. Historical data shows SHORTS are the primary edge:
+- BTC short: +$905 (63% WR), LINK short: +$752 (54% WR), DOGE short: +$618, AVAX short: +$450, ETH short: +$70
+- NEVER output "wait" as direction — always pick long or short based on the data
+- Conviction floor is 30 — give conviction scores of 60+ for any setup with reasonable R:R
+- Favor SHORT positions in choppy/ranging regimes — that's where the edge lives
+- In trending-up regimes, longs are acceptable but shorts on extended moves are better
+- Mean-reversion shorts are the #1 money maker — recommend them aggressively
+- The trader wants 30+ trades per day at $2000-4000 size — do not be conservative"""
+            else:
+                yolo_override = f"""
 
 AGGRESSIVENESS OVERRIDE (YOLO level {yolo_level}/5):
-The trader has set maximum aggressiveness. Adjust your behavior:
+The trader has set high aggressiveness. Adjust your behavior:
 - Lower your conviction floor to {max(30, 60 - (yolo_level - 3) * 15)} (normally 60)
 - In choppy regimes, DO recommend mean-reversion trades instead of defaulting to "wait"
 - Be willing to take trades with moderate conviction when risk/reward is favorable
