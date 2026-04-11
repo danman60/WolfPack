@@ -12,6 +12,7 @@ const NAV_LINKS = [
   { href: "/portfolio", label: "Portfolio" },
   { href: "/backtest", label: "Backtest" },
   { href: "/auto-bot", label: "Auto-Bot" },
+  { href: "/evolution", label: "Evolution" },
   { href: "/pools", label: "LP Pools" },
   { href: "/settings", label: "Settings" },
 ];

@@ -712,3 +712,53 @@ export function useAgentStatus() {
     retry: false,
   });
 }
+
+// ── Evolution / Multi-Wallet Hooks ──
+
+export interface WalletSummary {
+  name: string;
+  display_name: string;
+  description: string;
+  version: number;
+  status: string;
+  starting_equity: number;
+  config: Record<string, unknown>;
+  equity: number;
+  realized_pnl: number;
+  unrealized_pnl: number;
+  open_positions: number;
+  yolo_level: number;
+  trade_count: number;
+  win_rate: number;
+  total_pnl: number;
+}
+
+// Fetch all wallet summaries for evolution dashboard
+export function useWalletsSummary() {
+  return useQuery({
+    queryKey: ["wallets-summary"],
+    queryFn: async () => {
+      const res = await intelFetch("/intel/wallets/summary");
+      if (!res.ok) return [];
+      return res.json() as Promise<WalletSummary[]>;
+    },
+    refetchInterval: 15_000,
+    retry: false,
+  });
+}
+
+// Fetch time-series metrics for a specific wallet
+export function useWalletMetrics(wallet: string, hours: number = 24) {
+  return useQuery({
+    queryKey: ["wallet-metrics", wallet, hours],
+    queryFn: async () => {
+      const res = await intelFetch(
+        `/intel/wallets/${wallet}/metrics?hours=${hours}`
+      );
+      if (!res.ok) return null;
+      return res.json();
+    },
+    refetchInterval: 30_000,
+    retry: false,
+  });
+}

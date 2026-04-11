@@ -353,3 +353,31 @@ Saved to `docs/transcripts/20260408_071538_313-reactions--43-shares------jackson
 ### New Transcription: 7.3K views · 837 reactions | Remove ALL of your INDICATORS and shop chasing for good. Less is more - I used THESE 2 indicators to quit my job 6 years ago. #howtotrade #momentum #tradingeducation #daytrading #stockstowatch | Momentum.
 **Source:** https://www.facebook.com/share/v/1BQJjVxAJ4/
 Saved to `docs/transcripts/20260408_192735_73k-views--837-reactions--remove-all-of-your-indicators-and-shop-chasing-for-goo.txt`. Whisper base model, auto-transcribed.
+
+## From transcribe — 2026-04-09 19:48
+### New Transcription: Facebook Reel 883553434413015
+**Source:** https://www.facebook.com/share/v/18GETDzfYR/
+Saved to `docs/transcripts/20260409_194801_facebook-reel-883553434413015.txt`. Whisper base model, auto-transcribed.
+Note: yt-dlp Facebook extractor is broken — mp4 captured via Playwright fallback.
+
+## From transcribe — 2026-04-09 20:16
+### New Transcription: Tradingwithmustafah — Power of strategy consistency
+**Source:** https://www.facebook.com/share/r/1Di8zx8RjM/
+Saved to `docs/transcripts/20260409_201632_tradingwithmustafah-power-of-strategy-consistency.txt`. Whisper base model, auto-transcribed.
+Note: yt-dlp Facebook extractor broken; mp4 captured via Playwright fallback.
+
+## From transcribe — 2026-04-09 20:18
+### New Transcription: Max Anthony — ORB (Opening Range Breakout) content creators
+**Source:** https://www.facebook.com/share/v/1CqY5bS5Eh/
+Saved to `docs/transcripts/20260409_201841_max-anthony-orb-opening-range-breakout-content-creators.txt`. Whisper base model, auto-transcribed.
+Note: yt-dlp Facebook extractor broken; mp4 captured via Playwright fallback.
+
+## From transcribe — 2026-04-09 20:21
+### New Transcription: Tradingwithmustafah — 3 step strategy
+**Source:** https://www.facebook.com/share/r/18JCs6ZGHv/
+Saved to `docs/transcripts/20260409_202133_tradingwithmustafah-3-step-strategy.txt`.
+
+## From WolfPack-2 — 2026-04-10 14:23
+### New Transcription: 15K views · 267 reactions | How To Learn Orderflow Trading. 4 Simple Steps. | Aleks Rosme
+**Source:** https://www.facebook.com/share/r/1YXj1yEHBp/
+Saved to `docs/transcripts/20260410_142257_15k-views--267-reactions--how-to-learn-orderflow-trading-4-simple-steps--aleks-r.txt`. Whisper base model, auto-transcribed.

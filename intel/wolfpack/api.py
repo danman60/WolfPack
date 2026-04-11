@@ -1204,6 +1204,138 @@ async def list_wallets():
     return {"wallets": wallets}
 
 
+@app.get("/wallets/summary")
+async def wallets_summary():
+    """Return all active perp wallets with key metrics for evolution dashboard."""
+    from wolfpack.wallet_registry import get_registry
+
+    reg = get_registry()
+    wallets = reg.get_active_wallets("perp")
+
+    results = []
+    for w in wallets:
+        # Get trader status if cached
+        trader_data = {}
+        if w.name in _auto_traders:
+            trader = _auto_traders[w.name]
+            try:
+                status = trader.get_status()
+                trader_data = {
+                    "equity": status.get("equity", w.starting_equity),
+                    "realized_pnl": status.get("realized_pnl", 0),
+                    "unrealized_pnl": status.get("unrealized_pnl", 0),
+                    "open_positions": status.get("open_positions", 0),
+                    "yolo_level": status.get("yolo_level"),
+                }
+            except Exception:
+                pass
+
+        # Get trade stats from DB
+        trade_stats = {"trade_count": 0, "win_rate": 0}
+        try:
+            from wolfpack.db import get_db
+            db = get_db()
+            if w.id:
+                trades = db.table("wp_trade_history").select("pnl_usd").eq("wallet_id", w.id).not_.is_("closed_at", "null").execute()
+                if trades.data:
+                    total = len(trades.data)
+                    wins = sum(1 for t in trades.data if float(t["pnl_usd"]) > 0)
+                    trade_stats = {
+                        "trade_count": total,
+                        "win_rate": round(wins / total * 100, 1) if total > 0 else 0,
+                        "total_pnl": round(sum(float(t["pnl_usd"]) for t in trades.data), 2),
+                    }
+        except Exception:
+            pass
+
+        results.append({
+            "name": w.name,
+            "display_name": w.display_name,
+            "description": w.description,
+            "version": w.version,
+            "status": w.status,
+            "starting_equity": w.starting_equity,
+            "config": w.config,
+            "generation": w.generation,
+            "parent_wallet_id": w.parent_wallet_id,
+            **trader_data,
+            **trade_stats,
+        })
+
+    return results
+
+
+@app.get("/wallets/{name}/metrics")
+async def wallet_metrics(name: str, hours: int = 24):
+    """Compute performance metrics for a wallet over a time window."""
+    from wolfpack.db import get_db
+    from wolfpack.wallet_registry import get_registry
+
+    db = get_db()
+    reg = get_registry()
+
+    wallet = reg.get_wallet(name)
+    if not wallet:
+        raise HTTPException(404, f"Wallet '{name}' not found")
+    if not wallet.id:
+        raise HTTPException(400, f"Wallet '{name}' has no ID")
+
+    cutoff = (datetime.now(timezone.utc) - timedelta(hours=hours)).isoformat()
+
+    # Closed trades in window
+    trades_result = db.table("wp_trade_history").select(
+        "pnl_usd, size_usd, opened_at, closed_at"
+    ).eq("wallet_id", wallet.id).not_.is_("closed_at", "null").gte("closed_at", cutoff).execute()
+
+    trades = trades_result.data or []
+    total = len(trades)
+    pnls = [float(t["pnl_usd"]) for t in trades]
+    wins = [p for p in pnls if p > 0]
+    losses = [p for p in pnls if p < 0]
+
+    # Equity snapshots for Sharpe + max drawdown
+    snapshots = db.table("wp_portfolio_snapshots").select(
+        "equity, created_at"
+    ).eq("wallet_id", wallet.id).gte("created_at", cutoff).order("created_at").execute()
+
+    equities = [float(s["equity"]) for s in (snapshots.data or [])]
+
+    # Max drawdown from equity curve
+    max_dd = 0
+    peak = equities[0] if equities else 0
+    for eq in equities:
+        if eq > peak:
+            peak = eq
+        dd = (peak - eq) / peak * 100 if peak > 0 else 0
+        if dd > max_dd:
+            max_dd = dd
+
+    # Sharpe from trade P&Ls
+    sharpe = None
+    if total >= 5:
+        import math
+        mean_pnl = sum(pnls) / total
+        variance = sum((p - mean_pnl) ** 2 for p in pnls) / total
+        std = math.sqrt(variance) if variance > 0 else 0
+        if std > 0:
+            sharpe = round((mean_pnl / std) * math.sqrt(252 * 6), 2)  # annualized
+
+    return {
+        "wallet": name,
+        "display_name": wallet.display_name,
+        "hours": hours,
+        "trade_count": total,
+        "win_rate": round(len(wins) / total * 100, 1) if total > 0 else 0,
+        "net_pnl": round(sum(pnls), 2),
+        "avg_win": round(sum(wins) / len(wins), 2) if wins else 0,
+        "avg_loss": round(sum(losses) / len(losses), 2) if losses else 0,
+        "sharpe": sharpe,
+        "max_drawdown_pct": round(max_dd, 2),
+        "equity_points": len(equities),
+        "current_equity": equities[-1] if equities else wallet.starting_equity,
+    }
+
+
 @app.get("/wallets/{name}")
 async def get_wallet_endpoint(name: str):
     """Return a single wallet by canonical name."""
@@ -1252,6 +1384,138 @@ async def resume_wallet(name: str, _auth: None = Depends(require_auth)):
         logger.error(f"[wallets] resume failed for {name}: {e}")
         raise HTTPException(status_code=500, detail=str(e))
     return {"status": "ok", "wallet": name, "new_status": "active"}
+
+
+@app.post("/wallets")
+async def create_wallet(
+    name: str = Body(...),
+    display_name: str = Body(...),
+    description: str = Body(""),
+    starting_equity: float = Body(10000.0),
+    config: dict = Body(default={}),
+    clone_from: str | None = Body(None),
+    _auth: None = Depends(require_auth),
+):
+    """Create a new evolution wallet. Optionally clone config from an existing wallet."""
+    from wolfpack.db import get_db
+    from wolfpack.wallet_registry import get_registry
+    import uuid
+
+    db = get_db()
+    reg = get_registry()
+
+    # Validate name uniqueness
+    existing = reg.get_wallet(name)
+    if existing:
+        raise HTTPException(400, f"Wallet '{name}' already exists")
+
+    # Clone config from source if specified
+    parent_id = None
+    if clone_from:
+        source = reg.get_wallet(clone_from)
+        if not source:
+            raise HTTPException(404, f"Source wallet '{clone_from}' not found")
+        config = {**source.config, **config}  # source config + overrides
+        parent_id = source.id
+
+    wallet_id = str(uuid.uuid4())
+    row = {
+        "id": wallet_id,
+        "name": name,
+        "wallet_mode": "paper",
+        "wallet_type": "perp",
+        "starting_equity": starting_equity,
+        "current_equity": starting_equity,
+        "status": "active",
+        "display_name": display_name,
+        "description": description,
+        "version": 1,
+        "config": config,
+        "parent_wallet_id": parent_id,
+        "generation": 0,
+    }
+    db.table("wp_wallets").insert(row).execute()
+    reg.refresh()
+    return row
+
+
+@app.post("/wallets/{name}/clone")
+async def clone_wallet(
+    name: str,
+    new_name: str = Body(...),
+    new_display_name: str = Body(...),
+    config_mutations: dict = Body(default={}),
+    _auth: None = Depends(require_auth),
+):
+    """Clone a wallet with optional config mutations (for PBT)."""
+    from wolfpack.db import get_db
+    from wolfpack.wallet_registry import get_registry
+    import uuid
+
+    db = get_db()
+    reg = get_registry()
+
+    source = reg.get_wallet(name)
+    if not source:
+        raise HTTPException(404, f"Wallet '{name}' not found")
+    if reg.get_wallet(new_name):
+        raise HTTPException(400, f"Wallet '{new_name}' already exists")
+
+    new_config = {**source.config, **config_mutations}
+    wallet_id = str(uuid.uuid4())
+    row = {
+        "id": wallet_id,
+        "name": new_name,
+        "wallet_mode": "paper",
+        "wallet_type": "perp",
+        "starting_equity": source.starting_equity,
+        "current_equity": source.starting_equity,
+        "status": "active",
+        "display_name": new_display_name,
+        "description": f"Cloned from {source.display_name or name} with mutations: {list(config_mutations.keys())}",
+        "version": source.version + 1,
+        "config": new_config,
+        "parent_wallet_id": source.id,
+        "generation": (source.generation or 0) + 1,
+    }
+    db.table("wp_wallets").insert(row).execute()
+    reg.refresh()
+    return row
+
+
+@app.patch("/wallets/{name}/config")
+async def update_wallet_config(
+    name: str,
+    config_patch: dict = Body(...),
+    _auth: None = Depends(require_auth),
+):
+    """Merge config_patch into wallet's config JSONB. Bumps version. Evicts cached trader."""
+    from wolfpack.db import get_db
+    from wolfpack.wallet_registry import get_registry
+
+    db = get_db()
+    reg = get_registry()
+
+    wallet = reg.get_wallet(name)
+    if not wallet:
+        raise HTTPException(404, f"Wallet '{name}' not found")
+
+    new_config = {**wallet.config, **config_patch}
+    new_version = (wallet.version or 1) + 1
+
+    db.table("wp_wallets").update({
+        "config": new_config,
+        "version": new_version,
+        "updated_at": datetime.now(timezone.utc).isoformat(),
+    }).eq("name", name).execute()
+
+    # Evict cached trader so next cycle picks up new config
+    _auto_traders.pop(name, None)
+    _paper_engines.pop(name, None)
+    reg.refresh()
+
+    logger.info(f"[wallets] Updated {name} config (v{new_version}): {list(config_patch.keys())}")
+    return {"name": name, "version": new_version, "config": new_config}
 
 
 @app.get("/auto-trader/status")
