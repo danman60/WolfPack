@@ -52,7 +52,7 @@ class PerformanceTracker:
     # Minimum sample sizes per tier
     MIN_TRIPLE = 5
     MIN_PAIR = 10
-    MIN_DIR_REGIME = 10
+    MIN_DIR_REGIME = 9
 
     def __init__(self, rolling_window: int = 50):
         self.rolling_window = rolling_window
