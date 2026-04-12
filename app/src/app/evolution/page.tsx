@@ -1,12 +1,47 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
+  usePortfolioHistory,
   useWalletsSummary,
   type WalletSummary,
 } from "@/lib/hooks/useIntelligence";
 import { WalletCard } from "@/components/WalletCard";
 import { CreateWalletDialog } from "@/components/CreateWalletDialog";
+import {
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+
+type Snapshot = { created_at: string; equity: number };
+
+type HistoryPayload = { snapshots?: Snapshot[] } | null | undefined;
+
+function normalizeSeries(
+  history: HistoryPayload,
+  startingEquity: number,
+  resetAt: string | null
+): Array<{ t: number; pct: number; equity: number }> {
+  const snaps = history?.snapshots ?? [];
+  if (!snaps.length || startingEquity <= 0) return [];
+  const cutoff = resetAt ? Date.parse(resetAt) : 0;
+  const filtered = snaps
+    .map((s) => ({ t: Date.parse(s.created_at), equity: Number(s.equity) }))
+    .filter((p) => Number.isFinite(p.t) && Number.isFinite(p.equity))
+    .filter((p) => (cutoff ? p.t >= cutoff : true))
+    .sort((a, b) => a.t - b.t);
+  return filtered.map((p) => ({
+    t: p.t,
+    equity: p.equity,
+    pct: ((p.equity - startingEquity) / startingEquity) * 100,
+  }));
+}
 
 export default function EvolutionPage() {
   const { data: wallets, isLoading } = useWalletsSummary();
@@ -15,6 +50,9 @@ export default function EvolutionPage() {
 
   const summaries = (wallets ?? []) as WalletSummary[];
   const activeWallets = summaries.filter((w) => w.status === "active");
+  // Up to two wallets drive the normalized equity chart. Any additional wallets
+  // can be added later — we only need v1/v2 for the current live test.
+  const chartWallets = summaries.slice(0, 2);
   const totalEquity = summaries.reduce((s, w) => s + w.equity, 0);
   const totalPnl = summaries.reduce((s, w) => s + w.total_pnl, 0);
   const bestWallet = summaries.length
@@ -78,6 +116,11 @@ export default function EvolutionPage() {
           }
         />
       </div>
+
+      {/* Normalized Equity Chart */}
+      {chartWallets.length > 0 && (
+        <NormalizedEquityChart wallets={chartWallets} />
+      )}
 
       {/* Wallet Grid */}
       {isLoading ? (
@@ -198,6 +241,184 @@ export default function EvolutionPage() {
               </tbody>
             </table>
           </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+const CHART_COLORS = [
+  "#10b981", // emerald — v1 Full Send
+  "#f59e0b", // amber — v2 Conservative
+] as const;
+
+function NormalizedEquityChart({ wallets }: { wallets: WalletSummary[] }) {
+  // Two stable hook slots — always called in the same order. Extra wallets are
+  // clipped; if only one wallet exists we still query a placeholder name.
+  const w0 = wallets[0];
+  const w1 = wallets[1];
+  const history0 = usePortfolioHistory(w0?.name ?? "paper_perp", 500);
+  const history1 = usePortfolioHistory(w1?.name ?? "paper_perp", 500);
+
+  const series = useMemo(() => {
+    const out: Array<{
+      wallet: WalletSummary;
+      color: string;
+      points: Array<{ t: number; pct: number; equity: number }>;
+    }> = [];
+    if (w0) {
+      const resetAt =
+        (w0.config?.reset_at as string | undefined) ?? null;
+      out.push({
+        wallet: w0,
+        color: CHART_COLORS[0],
+        points: normalizeSeries(
+          history0.data as HistoryPayload,
+          w0.starting_equity,
+          resetAt
+        ),
+      });
+    }
+    if (w1) {
+      const resetAt =
+        (w1.config?.reset_at as string | undefined) ?? null;
+      out.push({
+        wallet: w1,
+        color: CHART_COLORS[1],
+        points: normalizeSeries(
+          history1.data as HistoryPayload,
+          w1.starting_equity,
+          resetAt
+        ),
+      });
+    }
+    return out;
+  }, [w0, w1, history0.data, history1.data]);
+
+  // Merge into one data array keyed by timestamp, with per-wallet pct columns.
+  const chartData = useMemo(() => {
+    const byTime = new Map<number, Record<string, number>>();
+    series.forEach((s) => {
+      s.points.forEach((p) => {
+        const row = byTime.get(p.t) ?? { t: p.t };
+        row[`pct_${s.wallet.name}`] = p.pct;
+        row[`eq_${s.wallet.name}`] = p.equity;
+        byTime.set(p.t, row);
+      });
+    });
+    return Array.from(byTime.values()).sort(
+      (a, b) => (a.t as number) - (b.t as number)
+    );
+  }, [series]);
+
+  const enoughData = series.every((s) => s.points.length >= 2);
+
+  return (
+    <div className="wolf-card p-4 md:p-6">
+      <div className="flex items-center gap-2 mb-4">
+        <div className="w-1 h-4 rounded-full bg-[var(--wolf-emerald)]" />
+        <h2 className="section-title">Normalized Equity (% Return Since Reset)</h2>
+      </div>
+      {!enoughData ? (
+        <div className="h-56 flex items-center justify-center text-gray-500 text-sm">
+          Waiting for cycle data…
+        </div>
+      ) : (
+        <div style={{ height: 260 }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart
+              data={chartData}
+              margin={{ top: 10, right: 16, left: 0, bottom: 0 }}
+            >
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="rgba(255,255,255,0.05)"
+              />
+              <XAxis
+                dataKey="t"
+                type="number"
+                domain={["dataMin", "dataMax"]}
+                scale="time"
+                tickFormatter={(v: number) =>
+                  new Date(v).toLocaleTimeString(undefined, {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })
+                }
+                stroke="rgba(255,255,255,0.35)"
+                fontSize={11}
+              />
+              <YAxis
+                tickFormatter={(v: number) => `${v.toFixed(1)}%`}
+                stroke="rgba(255,255,255,0.35)"
+                fontSize={11}
+                width={56}
+              />
+              <Tooltip
+                contentStyle={{
+                  background: "rgba(15,15,20,0.95)",
+                  border: "1px solid rgba(255,255,255,0.12)",
+                  borderRadius: 8,
+                  fontSize: 12,
+                }}
+                labelFormatter={(label) => {
+                  const v = typeof label === "number" ? label : Number(label);
+                  if (!Number.isFinite(v)) return "";
+                  return new Date(v).toLocaleString(undefined, {
+                    month: "short",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  });
+                }}
+                formatter={(val, name) => {
+                  const nameStr = typeof name === "string" ? name : String(name);
+                  if (!nameStr.startsWith("pct_")) return [val, nameStr];
+                  const walletName = nameStr.slice(4);
+                  const walletLabel =
+                    series.find((s) => s.wallet.name === walletName)?.wallet
+                      .display_name ?? walletName;
+                  const row = chartData.find(
+                    (r) => r[`pct_${walletName}`] === val
+                  );
+                  const equity = row?.[`eq_${walletName}`];
+                  const pctStr =
+                    typeof val === "number" ? `${val.toFixed(2)}%` : String(val);
+                  const eqStr =
+                    typeof equity === "number"
+                      ? ` ($${equity.toLocaleString(undefined, {
+                          maximumFractionDigits: 0,
+                        })})`
+                      : "";
+                  return [`${pctStr}${eqStr}`, walletLabel];
+                }}
+              />
+              <Legend
+                formatter={(value: string) => {
+                  if (typeof value !== "string" || !value.startsWith("pct_"))
+                    return value;
+                  const walletName = value.slice(4);
+                  return (
+                    series.find((s) => s.wallet.name === walletName)?.wallet
+                      .display_name ?? walletName
+                  );
+                }}
+                wrapperStyle={{ fontSize: 11, color: "rgba(255,255,255,0.7)" }}
+              />
+              {series.map((s) => (
+                <Line
+                  key={s.wallet.name}
+                  type="monotone"
+                  dataKey={`pct_${s.wallet.name}`}
+                  stroke={s.color}
+                  strokeWidth={2}
+                  dot={false}
+                  isAnimationActive={false}
+                  connectNulls
+                />
+              ))}
+            </LineChart>
+          </ResponsiveContainer>
         </div>
       )}
     </div>
