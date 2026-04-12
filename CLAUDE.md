@@ -30,6 +30,15 @@
 - Intel service: cd intel && uvicorn wolfpack.api:app --reload
 - DB migrations: supabase/migrations/
 
+## Multi-Wallet Evolution Protocol (MANDATORY)
+This is a multi-wallet evolution system. Active wallets: `paper_perp` (v1 Full Send, YOLO 5), `paper_perp_v2` (v2 Conservative, YOLO 2), `paper_perp_v3` (v3 Human Heuristics — planned), `prod_perp` (live, paused until cutover). Each wallet runs the same market data through different configs to A/B-test strategies.
+
+**Before modifying any trading-logic file** (`auto_trader.py`, `performance_tracker.py`, sizing, conviction, risk filters, regime logic): MUST confirm with the user which wallet(s) the change applies to. Use per-wallet feature flags in `wallet.config` to gate behavior changes. NEVER change trading logic globally in a way that affects all wallets unless explicitly authorized.
+
+**On session start:** Query `wp_wallets` (via Supabase MCP or `GET /wallets/summary`) to surface active wallet list + their configs. Don't assume "paper_perp" is the only wallet.
+
+**Naming convention for experiment wallets:** `paper_perp_v{N}` where N = generation. Each child wallet must set `parent_wallet_id`, `generation`, `display_name`, and `description` (1-paragraph thesis) on creation.
+
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
