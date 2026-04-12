@@ -1618,6 +1618,69 @@ async def auto_trader_trades(limit: int = 50, wallet: str = "paper_perp"):
         return {"trades": []}
 
 
+# ── Performance Tracker Observability ──
+
+
+@app.get("/perf-tracker/scorecard")
+async def perf_tracker_scorecard():
+    """Return three-tier PerformanceTracker grades for debugging.
+
+    Tiers:
+      - triple: (symbol, direction, regime) — most specific
+      - pair:   (symbol, direction)         — backward-compat
+      - dir_regime: (direction, regime)     — regime-wide pattern
+    """
+    try:
+        auto_trader = _get_auto_trader()
+        pt = auto_trader._perf_tracker
+        pt.refresh()
+
+        def _score_dict(score) -> dict:
+            return {
+                "trades": score.trades,
+                "wins": score.wins,
+                "wr": round(score.win_rate * 100, 1),
+                "net_pnl": round(score.net_pnl, 2),
+                "avg_win": round(score.avg_win, 2),
+                "avg_loss": round(score.avg_loss, 2),
+                "rr_ratio": round(score.rr_ratio, 2),
+                "edge": round(score.edge, 2),
+                "grade": score.grade,
+            }
+
+        triple = [
+            {"symbol": k[0], "direction": k[1], "regime": k[2], **_score_dict(v)}
+            for k, v in pt._scorecard_triple.items()
+        ]
+        pair = [
+            {"symbol": k[0], "direction": k[1], **_score_dict(v)}
+            for k, v in pt._scorecard_pair.items()
+        ]
+        dir_regime = [
+            {"direction": k[0], "regime": k[1], **_score_dict(v)}
+            for k, v in pt._scorecard_dir_regime.items()
+        ]
+
+        # Sort each tier by net_pnl desc
+        triple.sort(key=lambda x: x["net_pnl"], reverse=True)
+        pair.sort(key=lambda x: x["net_pnl"], reverse=True)
+        dir_regime.sort(key=lambda x: x["net_pnl"], reverse=True)
+
+        return {
+            "thresholds": {
+                "min_triple": pt.MIN_TRIPLE,
+                "min_pair": pt.MIN_PAIR,
+                "min_dir_regime": pt.MIN_DIR_REGIME,
+            },
+            "triple": triple,
+            "pair": pair,
+            "dir_regime": dir_regime,
+        }
+    except Exception as e:
+        logger.error(f"[perf-tracker] Failed to fetch scorecard: {e}")
+        return {"error": str(e), "triple": [], "pair": [], "dir_regime": []}
+
+
 # ── Notification Digest Endpoints ──
 
 
