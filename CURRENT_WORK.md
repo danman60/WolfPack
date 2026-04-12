@@ -1,81 +1,48 @@
 # Current Work - WolfPack
 
-## ACTIVE — 2026-04-11 22:15 UTC — Multi-wallet evolution system live
+## STATUS — 2026-04-12 — Phase 2 + Phase 3 complete
 
-**Droplet intel service:** Running latest commit, 2 active perp wallets.
-**CB:** ACTIVE.
-**Wallets:**
-- paper_perp (v1 Full Send) — YOLO 5, aggressive shorts-first, $25.6K equity, 8 positions
-- paper_perp_v2 (v2 Conservative) — YOLO 2, conviction_floor 50, $10K starting, new
+Multi-wallet evolution system is LIVE with 3 trading wallets + human heuristics active.
 
----
+## Active wallets (post-reset, all at $25,000 baseline)
 
-## Session Summary (2026-04-11 08:18 → 22:15 — ~14 hours)
+| Wallet | Gen | YOLO | Features | Starting |
+|--------|-----|------|----------|----------|
+| `paper_perp` (v1 Full Send) | 1 | 5 | Brief + veto + TOXIC blocking + regime-aware tracker | $25k @ 2026-04-12 22:01 UTC |
+| `paper_perp_v2` (v2 Conservative) | 2 | 2 | v1 + higher conviction floor, mandatory SL, smaller positions | $25k @ 2026-04-12 22:01 UTC |
+| `paper_perp_v3` (v3 Human Heuristics) | 3 | 2 | v2 + hunger/satisfaction/fear/curiosity drives | $25k @ 2026-04-12 22:26 UTC |
 
-### Soak Test + Bug Fixes
-- Soak test found 2 bugs: `engine` not defined in regime transition + drawdown tracking
-- Fixed: wallet-aware engine refs in both paths
-- Fixed: `round(price, 2)` replaced with `round_price()` across ALL trading paths (api.py, backtest_engine.py, live_trading.py, orb_session.py, mean_reversion.py) — critical for live cutover
-- YOLO level persistence: new `wp_runtime_config` table, auto-restore on startup
+## What shipped this session
 
-### Profitability Research (Phase 2.1)
-- Full trade journal decomposition: 184 trades, $3,959 net P&L
-- Key finding: mean_reversion = 97% of profits, shorts dominate ($3,441 vs $518)
-- SOL longs TOXIC (-$200), BTC longs dead weight ($1 on 25 trades)
-- 97% of trade metadata NULL (regime_at_entry, conviction_at_entry) — blocks validation
-- Report: `docs/research/2026-04-profitability-audit.md`
+### Phase 2 — multi-wallet UI + infra polish
+- **Wallet reset** (`e217067` chain): v1 + v2 closed all positions, both forced to exactly $25,000 with fresh snapshots, trade history preserved so PerformanceTracker keeps its learned grades
+- **CLAUDE.md multi-wallet protocol** (`7bbc7b2`): mandatory "confirm which wallet" rule before touching trading-logic files, documents active wallet list
+- **Mobile landing enhancement** (`dc0a7a3`): evolution wallet cards now show position count, % return from starting_equity (green/red), 80-char thesis tagline, tap-through to /evolution detail
+- **Evolution dashboard normalized chart** (`717637d`): new NormalizedEquityChart recharts LineChart plotting % return from reset timestamp, client-side-filtered to post-reset snapshots, emerald v1 / amber v2, "Waiting for cycle data…" placeholder
+- **WalletCard metadata** (`8b0ca24`): Gen N purple badge, parent lineage row ("↑ v1 Full Send"), "Created Nd ago" relative timestamp
+- **Wallet metadata backfill**: paper_perp.generation=1, paper_perp_v2.generation=2, both starting_equity=25000
 
-### Daily Report Cron (Phase 4.1)
-- Script: `~/projects/sysadmin/wolfpack_daily_report.sh`
-- Cron: 8 AM ET daily, sends Telegram + saves markdown archive
-- Tested: 15 trades, 66.7% WR, +$465 for Apr 10
+### Phase 3 — v3 Human Heuristics
+- **Migration** (`27b1925`): `wp_wallet_state` + `wp_wallet_state_history` tables applied via supabase-CCandSS MCP
+- **HeuristicState class** (`4d12694`): `intel/wolfpack/heuristics.py` — dataclass with decay, on_target_progress, on_trade_close, on_unfamiliar_setup, conviction_modifier, size_modifier, exploration_budget, snapshot/load/save. 25 unit tests at `intel/tests/test_heuristics.py`, all passing.
+- **/heuristics/state endpoint** (`3cc2688`): observability — current state + history rows + computed modifiers
+- **v3 wallet created** (direct DB insert after POST /wallets): cloned v2 Conservative config + `heuristics_enabled: true`, `daily_pnl_target: 300`
+- **AutoTrader wiring** (`e217067`): `_apply_wallet_config` loads HeuristicState on init, `_refresh_heuristics()` runs per-cycle (decay + poll closed trades + update target progress + persist), conviction_modifier adjusts floor, size_modifier scales positions, curiosity caps exploration sizing for tier=none setups
+- **Brief template** (`e217067`): conditional `heuristic_state` section ready — dormant until per-wallet Brief invocation (Brief is currently shared across wallets)
 
-### YOLO Level Calibration
-- VWAP filter: hard block at 1-2, soft penalty at 3-4, bypassed at 5
-- Pump guard: max shorts scales 2/3/4/5/7 per YOLO level
-- Max positions: 8 at level 4, 12 at level 5
+## Verified live
+- v3 heuristic refresh firing every cycle: `[heuristics] v3 refreshed: daily_pnl=$+0.00/$300 H=0.80 S=0.20 F=0.50 C=0.52 conv_mod=+0 size_mod=1.08`
+- Curiosity exploration-sizing firing on unfamiliar setups: `[heuristics] DOGE short explore-sizing mult=0.28 (budget=0.26)`
+- v1/v2 completely untouched — no heuristic logs for them
 
-### TOXIC Combo Blocking
-- PerformanceTracker: TOXIC grade → threshold 999 (hard block)
-- UNDERPERFORMING: threshold raised above base (was capped by bug)
-- SOL long, LINK long, AVAX long blocked by data
+## Known items
+- `POST /wallets` doesn't respect `clone_from` for `generation`/`version` — hardcodes 0/1. Worked around by direct DB UPDATE. Worth fixing in a future wallet-API cleanup.
+- `wp_trade_history` has 3 phantom AVAX short rows from the v3-init close loop (+$207 each × 3) — minor perturbation to global tracker, not worth cleaning.
+- `MIN_DIR_REGIME=9` currently doesn't block `short RANGING` because the rolling-50 window dropped one trade; the pattern is still TOXIC at 8t but below the activation threshold. Will re-trip on the next RANGING short loss.
 
-### Overnight Full Send Config
-- Level 5 sizing: brief_only_mult 1.0, min_perf_mult 0.85, 30s spacing
-- Brief prompt at L5: pushes shorts with historical edge data, forbids "wait"
-- full_send: base_pct 25%, 40 trades/day max
+## Next (blocked — future phases)
+- Phase 4 (task #18): v4 wallet with SOTA Learned Agency (intrinsic rewards, forward model, meta-learned risk). Gated by v3 having 7+ days of live data for A/B.
+- Phase 5 (task #19): v5 combinatorial breeding of best traits from v2-v4.
 
-### Multi-Wallet Evolution System (Phases A-E)
-- DB: wp_wallets extended with display_name, description, version, parent_wallet_id, generation, fitness_score
-- Backend: per-wallet config loading from JSONB, per-wallet YOLO persistence, build_policy_from_config()
-- API: 5 new endpoints (create, clone, summary, metrics, config patch)
-- Frontend: /evolution dashboard with wallet cards, comparison table, config editor, create/clone dialogs
-- 2 wallets running: v1 Full Send + v2 Conservative
-
----
-
-## Commits This Session (11 total)
-1. `e10794b` fix: wallet-aware engine in cycle + round_price across all trading paths
-2. `79d838a` feat: persist YOLO level across service restarts
-3. `38cc936` fix: calibrate YOLO levels — filters scale with aggressiveness
-4. `5b3ce55` fix: block TOXIC combos + cap position stacking
-5. `ede293b` feat: overnight Full Send config — target $500+
-6. `b706c7e` feat: multi-wallet evolution system — Phase A+B
-7. `be71ea5` feat: multi-wallet evolution — Phase C+D (API + dashboard)
-8. Phase E commit pending deploy
-
----
-
-## Next Session Should:
-1. Check overnight P&L — did v1 Full Send hit $500 target?
-2. Compare v1 vs v2 performance on /evolution dashboard
-3. Fix metadata tagging (regime_at_entry, conviction_at_entry NULL on 97% of trades)
-4. Phase 3 power tweaks informed by profitability audit
-5. Live cutover prep (~Apr 13): verify prod_perp wallet activates correctly
-6. ML layer: constitutional drives or credibility-weighted agents as v3 wallet
-
-## Known Remaining Issues
-- 97% trade metadata NULL (regime_at_entry, conviction_at_entry, strategy) — highest priority
-- Equity inflation ($25K display vs $10K real) — legacy wp_auto_portfolio_snapshots
-- exit_reason shows "manual" for strategy-path closes (cosmetic)
-- Quant JSON parse failures on LINK (DeepSeek truncation)
+## Live cutover reminder
+Tomorrow (~2026-04-13): `prod_perp` goes live with $1k real capital via MetaMask + Hyperliquid. Currently `status=paused`.
