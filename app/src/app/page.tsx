@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useExchange } from "@/lib/exchange";
-import { useAgentOutputs, useAgentStatus, useRecommendations, usePortfolio, usePortfolioHistory, useWatchlist, useAutoTraderStatus, useProfit, useStrategyMode, useClosePosition, useSetYoloLevel, useWalletsSummary } from "@/lib/hooks/useIntelligence";
+import { useAgentOutputs, useAgentStatus, useRecommendations, usePortfolio, usePortfolioHistory, useWatchlist, useAutoTraderStatus, useProfit, useStrategyMode, useClosePosition, useSetYoloLevel, useWalletsSummary, type WalletSummary } from "@/lib/hooks/useIntelligence";
 import { useWalletContext } from "@/lib/wallet/context";
 import { WolfHead } from "@/components/WolfHead";
 import { usePrice, use24hChange } from "@/lib/hooks/useMarketData";
@@ -26,7 +26,9 @@ export default function Dashboard() {
   const { data: strategyMode } = useStrategyMode();
   const { data: history } = usePortfolioHistory(perpWallet, 200);
   const { data: walletSummaries } = useWalletsSummary();
-  const perpWallets = (walletSummaries ?? []).filter((w: any) => w.status === "active");
+  const perpWallets: WalletSummary[] = ((walletSummaries ?? []) as WalletSummary[]).filter(
+    (w) => w.status === "active"
+  );
 
   const agents = agentStatus?.agents ?? [];
   const isActive = portfolio?.status === "active";
@@ -114,39 +116,80 @@ export default function Dashboard() {
             </Link>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {perpWallets.map((w: any) => {
-              const returnPct = w.starting_equity > 0
-                ? (((w.equity || w.starting_equity) - w.starting_equity) / w.starting_equity * 100)
-                : 0;
+            {perpWallets.map((w) => {
+              const equity = w.equity || w.starting_equity || 0;
+              const returnPct =
+                w.starting_equity > 0
+                  ? ((equity - w.starting_equity) / w.starting_equity) * 100
+                  : 0;
+              const returnPositive = returnPct >= 0;
               const profitable = (w.total_pnl || 0) > 0;
+              const yoloCfg = (w.config?.yolo_level as number | undefined) ?? undefined;
+              const tagline = w.description
+                ? w.description.length > 80
+                  ? `${w.description.slice(0, 77)}...`
+                  : w.description
+                : null;
               return (
-                <Link key={w.name} href="/evolution" className="block">
-                  <div className={`wolf-card p-4 hover:border-white/20 transition-colors ${profitable ? "border-emerald-500/20" : "border-red-500/20"}`}>
+                <Link
+                  key={w.name}
+                  href={`/evolution?wallet=${encodeURIComponent(w.name)}`}
+                  className="block"
+                >
+                  <div
+                    className={`wolf-card p-4 hover:border-white/20 transition-colors ${
+                      profitable ? "border-emerald-500/20" : "border-red-500/20"
+                    }`}
+                  >
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
-                        <span className="text-[13px] font-semibold text-white">{w.display_name || w.name}</span>
+                        <span className="text-[13px] font-semibold text-white">
+                          {w.display_name || w.name}
+                        </span>
                         {w.version && (
-                          <span className="text-[9px] px-1.5 py-0.5 rounded bg-white/5 text-gray-500 font-mono">v{w.version}</span>
+                          <span className="text-[9px] px-1.5 py-0.5 rounded bg-white/5 text-gray-500 font-mono">
+                            v{w.version}
+                          </span>
                         )}
                       </div>
                       <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--wolf-purple)]/15 text-[var(--wolf-purple)] font-semibold">
-                        YOLO {w.yolo_level || w.config?.yolo_level || "?"}
+                        YOLO {w.yolo_level ?? yoloCfg ?? "?"}
                       </span>
                     </div>
-                    <div className="grid grid-cols-3 gap-2 text-center">
+                    {tagline && (
+                      <p className="text-[10px] text-gray-500 mb-3 line-clamp-1">
+                        {tagline}
+                      </p>
+                    )}
+                    <div className="grid grid-cols-4 gap-2 text-center">
                       <div>
-                        <p className="text-[10px] text-gray-500 uppercase">Equity</p>
-                        <p className="text-[14px] font-bold text-white">${(w.equity || w.starting_equity || 0).toLocaleString(undefined, {maximumFractionDigits: 0})}</p>
-                      </div>
-                      <div>
-                        <p className="text-[10px] text-gray-500 uppercase">P&L</p>
-                        <p className={`text-[14px] font-bold ${profitable ? "text-emerald-400" : "text-red-400"}`}>
-                          {(w.total_pnl || 0) >= 0 ? "+" : ""}${(w.total_pnl || 0).toFixed(0)}
+                        <p className="text-[9px] text-gray-500 uppercase">Equity</p>
+                        <p className="text-[13px] font-bold text-white">
+                          ${equity.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                         </p>
                       </div>
                       <div>
-                        <p className="text-[10px] text-gray-500 uppercase">Trades</p>
-                        <p className="text-[14px] font-bold text-white">{w.trade_count || 0}</p>
+                        <p className="text-[9px] text-gray-500 uppercase">Return</p>
+                        <p
+                          className={`text-[13px] font-bold ${
+                            returnPositive ? "text-emerald-400" : "text-red-400"
+                          }`}
+                        >
+                          {returnPositive ? "+" : ""}
+                          {returnPct.toFixed(2)}%
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-[9px] text-gray-500 uppercase">Pos</p>
+                        <p className="text-[13px] font-bold text-white">
+                          {w.open_positions ?? 0}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-[9px] text-gray-500 uppercase">Trades</p>
+                        <p className="text-[13px] font-bold text-white">
+                          {w.trade_count || 0}
+                        </p>
                       </div>
                     </div>
                   </div>

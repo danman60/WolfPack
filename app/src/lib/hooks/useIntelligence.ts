@@ -731,6 +731,56 @@ export interface WalletSummary {
   trade_count: number;
   win_rate: number;
   total_pnl: number;
+  // Phase 2 evolution metadata
+  generation?: number;
+  parent_wallet_id?: string | null;
+}
+
+// Supplementary wallet metadata pulled directly from Supabase wp_wallets
+export interface WalletMeta {
+  id: string;
+  name: string;
+  created_at: string | null;
+  parent_wallet_id: string | null;
+  generation: number;
+}
+
+// Fetch wallet metadata (created_at, parent/generation) directly from Supabase,
+// since /wallets/summary doesn't expose created_at.
+export function useWalletMeta() {
+  return useQuery({
+    queryKey: ["wallet-meta"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("wp_wallets")
+        .select("id, name, created_at, parent_wallet_id, generation");
+      if (error) throw error;
+      const rows = (data ?? []) as unknown as Array<{
+        id: string;
+        name: string;
+        created_at: string | null;
+        parent_wallet_id: string | null;
+        generation: number | null;
+      }>;
+      const byId: Record<string, WalletMeta> = {};
+      const byName: Record<string, WalletMeta> = {};
+      for (const r of rows) {
+        const meta: WalletMeta = {
+          id: r.id,
+          name: r.name,
+          created_at: r.created_at,
+          parent_wallet_id: r.parent_wallet_id,
+          generation: r.generation ?? 0,
+        };
+        byId[r.id] = meta;
+        byName[r.name] = meta;
+      }
+      return { byId, byName };
+    },
+    refetchInterval: 5 * 60_000,
+    retry: false,
+    staleTime: 60_000,
+  });
 }
 
 // Fetch all wallet summaries for evolution dashboard
