@@ -40,16 +40,63 @@ class SymbolScore:
 
 
 class PerformanceTracker:
-    """Tracks rolling performance and provides adaptive thresholds."""
+    """Tracks rolling performance and provides adaptive thresholds.
+
+    Three-tier hierarchical grading with sample-size-aware fallback:
+      1. (symbol, direction, regime) — most specific, needs ≥ MIN_TRIPLE trades
+      2. (symbol, direction) — current behavior, needs ≥ MIN_PAIR trades
+      3. (direction, regime) — regime-wide pattern, needs ≥ MIN_DIR_REGIME trades
+      4. base_threshold — no signal
+    """
+
+    # Minimum sample sizes per tier
+    MIN_TRIPLE = 5
+    MIN_PAIR = 10
+    MIN_DIR_REGIME = 10
 
     def __init__(self, rolling_window: int = 50):
         self.rolling_window = rolling_window
+        self._scorecard_triple: dict[tuple[str, str, str], SymbolScore] = {}
+        self._scorecard_pair: dict[tuple[str, str], SymbolScore] = {}
+        self._scorecard_dir_regime: dict[tuple[str, str], SymbolScore] = {}
+        # Backward-compat alias: string-keyed (e.g. "BTC_long") view of the pair tier
         self._scorecard: dict[str, SymbolScore] = {}
         self._last_refresh: datetime | None = None
         self._refresh_interval_seconds = 300  # refresh every 5 min max
         self._strategy_cache: dict[str, StrategyScore] = {}
         self._strategy_cache_time: datetime | None = None
         self._strategy_cache_ttl = 300  # 5 min
+
+    @staticmethod
+    def _compute_score(symbol: str, direction: str, pnls: list[float]) -> SymbolScore:
+        """Grade a list of P&Ls into a SymbolScore."""
+        wins = [p for p in pnls if p > 0]
+        losses = [p for p in pnls if p < 0]
+
+        trades = len(pnls)
+        win_count = len(wins)
+        wr = win_count / trades if trades > 0 else 0
+        avg_win = sum(wins) / len(wins) if wins else 0
+        avg_loss = sum(losses) / len(losses) if losses else 0
+        rr = avg_win / abs(avg_loss) if avg_loss != 0 else 0
+        net = sum(pnls)
+        edge = (wr * avg_win) - ((1 - wr) * abs(avg_loss))
+
+        if net > 0 and rr >= 2.5:
+            grade = "STRONG"
+        elif net > 0:
+            grade = "MARGINAL"
+        elif net < 0 and rr >= 1.0:
+            grade = "UNDERPERFORMING"
+        else:
+            grade = "TOXIC"
+
+        return SymbolScore(
+            symbol=symbol, direction=direction,
+            trades=trades, wins=win_count, win_rate=wr,
+            net_pnl=net, avg_win=avg_win, avg_loss=avg_loss,
+            rr_ratio=rr, edge=edge, grade=grade,
+        )
 
     def refresh(self) -> dict[str, SymbolScore]:
         """Refresh scorecard from DB. Rate-limited to avoid excessive queries."""
@@ -61,67 +108,95 @@ class PerformanceTracker:
             from wolfpack.db import get_db
             db = get_db()
 
-            # Get recent closed trades
+            # Get recent closed trades with regime tag
             result = db.table("wp_trade_history").select(
-                "symbol, direction, pnl_usd"
+                "symbol, direction, pnl_usd, regime_at_entry"
             ).order("closed_at", desc=True).limit(self.rolling_window * 10).execute()
 
             if not result.data:
                 return self._scorecard
 
-            # Group by symbol+direction
-            groups: dict[str, list[float]] = {}
+            # Build three grouping dicts
+            triples: dict[tuple[str, str, str], list[float]] = {}
+            pairs: dict[tuple[str, str], list[float]] = {}
+            dir_regimes: dict[tuple[str, str], list[float]] = {}
+
             for row in result.data:
-                key = f"{row['symbol']}_{row['direction']}"
-                if key not in groups:
-                    groups[key] = []
-                if len(groups[key]) < self.rolling_window:
-                    groups[key].append(float(row['pnl_usd']))
+                symbol = row["symbol"]
+                direction = row["direction"]
+                pnl = float(row["pnl_usd"])
+                regime = row.get("regime_at_entry")
 
-            # Compute scores
-            self._scorecard = {}
-            for key, pnls in groups.items():
-                symbol, direction = key.rsplit("_", 1)
-                wins = [p for p in pnls if p > 0]
-                losses = [p for p in pnls if p < 0]
+                pk = (symbol, direction)
+                if len(pairs.setdefault(pk, [])) < self.rolling_window:
+                    pairs[pk].append(pnl)
 
-                trades = len(pnls)
-                win_count = len(wins)
-                wr = win_count / trades if trades > 0 else 0
-                avg_win = sum(wins) / len(wins) if wins else 0
-                avg_loss = sum(losses) / len(losses) if losses else 0
-                rr = avg_win / abs(avg_loss) if avg_loss != 0 else 0
-                net = sum(pnls)
-                edge = (wr * avg_win) - ((1 - wr) * abs(avg_loss))
+                if regime and regime not in ("unknown", ""):
+                    tk = (symbol, direction, regime)
+                    if len(triples.setdefault(tk, [])) < self.rolling_window:
+                        triples[tk].append(pnl)
+                    drk = (direction, regime)
+                    if len(dir_regimes.setdefault(drk, [])) < self.rolling_window:
+                        dir_regimes[drk].append(pnl)
 
-                # Grade
-                if net > 0 and rr >= 2.5:
-                    grade = "STRONG"
-                elif net > 0:
-                    grade = "MARGINAL"
-                elif net < 0 and rr >= 1.0:
-                    grade = "UNDERPERFORMING"
-                else:
-                    grade = "TOXIC"
-
-                score = SymbolScore(
-                    symbol=symbol, direction=direction,
-                    trades=trades, wins=win_count, win_rate=wr,
-                    net_pnl=net, avg_win=avg_win, avg_loss=avg_loss,
-                    rr_ratio=rr, edge=edge, grade=grade,
-                )
-                self._scorecard[key] = score
+            # Compute scores for each tier
+            self._scorecard_pair = {
+                pk: self._compute_score(pk[0], pk[1], pnls)
+                for pk, pnls in pairs.items()
+            }
+            self._scorecard_triple = {
+                tk: self._compute_score(tk[0], tk[1], pnls)
+                for tk, pnls in triples.items()
+            }
+            self._scorecard_dir_regime = {
+                drk: self._compute_score("*", drk[0], pnls)
+                for drk, pnls in dir_regimes.items()
+            }
+            # Backward-compat string-keyed alias
+            self._scorecard = {
+                f"{pk[0]}_{pk[1]}": score for pk, score in self._scorecard_pair.items()
+            }
 
             self._last_refresh = now
-            logger.info(f"[perf-tracker] Refreshed scorecard: {len(self._scorecard)} combos")
+            logger.info(
+                f"[perf-tracker] Refreshed: {len(self._scorecard_triple)} triples, "
+                f"{len(self._scorecard_pair)} pairs, "
+                f"{len(self._scorecard_dir_regime)} dir_regimes"
+            )
 
         except Exception as e:
             logger.warning(f"[perf-tracker] Failed to refresh: {e}")
 
         return self._scorecard
 
-    def get_threshold(self, symbol: str, direction: str, base_threshold: int = 55) -> int:
-        """Get dynamic conviction threshold for a symbol+direction.
+    def _lookup_grade(
+        self, symbol: str, direction: str, regime: str | None
+    ) -> tuple[SymbolScore | None, str]:
+        """Hierarchical lookup. Returns (score, tier) — tier ∈ {triple, pair, dir_regime, none}."""
+        if regime and regime not in ("unknown", ""):
+            score = self._scorecard_triple.get((symbol, direction, regime))
+            if score and score.trades >= self.MIN_TRIPLE:
+                return score, "triple"
+
+        score = self._scorecard_pair.get((symbol, direction))
+        if score and score.trades >= self.MIN_PAIR:
+            return score, "pair"
+
+        if regime and regime not in ("unknown", ""):
+            score = self._scorecard_dir_regime.get((direction, regime))
+            if score and score.trades >= self.MIN_DIR_REGIME:
+                return score, "dir_regime"
+
+        return None, "none"
+
+    def get_threshold(
+        self,
+        symbol: str,
+        direction: str,
+        base_threshold: int = 55,
+        regime: str | None = None,
+    ) -> int:
+        """Get dynamic conviction threshold for a symbol+direction (+ regime).
 
         STRONG: lower by 10 from base (take more)
         MARGINAL: keep at base
@@ -129,21 +204,21 @@ class PerformanceTracker:
         TOXIC: raise to 999 (block entirely — data says it loses money)
         """
         self.refresh()
-        key = f"{symbol}_{direction}"
-        score = self._scorecard.get(key)
-
-        if score is None or score.trades < 10:
-            return base_threshold  # not enough data
+        score, _tier = self._lookup_grade(symbol, direction, regime)
+        if score is None:
+            return base_threshold
 
         thresholds = {
             "STRONG": max(base_threshold - 10, 35),
             "MARGINAL": base_threshold,
             "UNDERPERFORMING": base_threshold + 15,
-            "TOXIC": 999,  # block — no conviction can reach this
+            "TOXIC": 999,
         }
         return thresholds.get(score.grade, base_threshold)
 
-    def get_size_multiplier(self, symbol: str, direction: str) -> float:
+    def get_size_multiplier(
+        self, symbol: str, direction: str, regime: str | None = None
+    ) -> float:
         """Get sizing multiplier based on edge strength.
 
         STRONG: 1.0 (full size)
@@ -152,10 +227,8 @@ class PerformanceTracker:
         TOXIC: 0.15
         """
         self.refresh()
-        key = f"{symbol}_{direction}"
-        score = self._scorecard.get(key)
-
-        if score is None or score.trades < 10:
+        score, _tier = self._lookup_grade(symbol, direction, regime)
+        if score is None:
             return 0.7  # conservative default
 
         multipliers = {
