@@ -1717,6 +1717,74 @@ async def perf_tracker_scorecard():
         return {"error": str(e), "triple": [], "pair": [], "dir_regime": []}
 
 
+# ── Phase 3: Heuristic State Observability ──
+
+
+@app.get("/heuristics/state")
+async def heuristics_state(wallet: str = "paper_perp_v3", history_limit: int = 50):
+    """Return current HeuristicState + recent history for a wallet.
+
+    Read-only observability — no auth required. Resolves the wallet name
+    against wp_wallets, loads (or initializes) its wp_wallet_state row,
+    and fetches up to ``history_limit`` recent history entries.
+    """
+    try:
+        from wolfpack.db import get_db
+        from wolfpack.heuristics import HeuristicState
+        from wolfpack.wallet_registry import get_registry
+
+        reg = get_registry()
+        wallet_obj = reg.get_wallet(wallet)
+        if not wallet_obj:
+            raise HTTPException(404, f"Wallet '{wallet}' not found")
+
+        db = get_db()
+        state = HeuristicState.load(wallet_obj.id, db)
+
+        current = {
+            "hunger": round(state.hunger, 4),
+            "satisfaction": round(state.satisfaction, 4),
+            "fear": round(state.fear, 4),
+            "curiosity": round(state.curiosity, 4),
+            "loss_streak": state.loss_streak,
+            "win_streak": state.win_streak,
+            "daily_pnl_target": state.daily_pnl_target,
+            "last_updated": (
+                state.last_updated.isoformat()
+                if state.last_updated
+                else None
+            ),
+            "conviction_modifier": state.conviction_modifier(),
+            "size_modifier": round(state.size_modifier(), 4),
+            "exploration_budget": round(state.exploration_budget(), 4),
+        }
+
+        history_res = (
+            db.table("wp_wallet_state_history")
+            .select("*")
+            .eq("wallet_id", wallet_obj.id)
+            .order("created_at", desc=True)
+            .limit(max(1, min(500, int(history_limit))))
+            .execute()
+        )
+        history = history_res.data or []
+
+        return {
+            "wallet": wallet,
+            "wallet_id": wallet_obj.id,
+            "heuristics_enabled": bool(
+                (wallet_obj.config or {}).get("heuristics_enabled", False)
+            ),
+            "current": current,
+            "history": history,
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"[heuristics] Failed to fetch state: {e}")
+        return {"error": str(e), "wallet": wallet, "current": None, "history": []}
+
+
 # ── Notification Digest Endpoints ──
 
 
