@@ -426,10 +426,18 @@ class AutoTrader:
                 continue
 
             # Dynamic threshold based on performance — TOXIC combos blocked entirely
-            dynamic_threshold = self._perf_tracker.get_threshold(symbol, direction, self.conviction_threshold)
+            dynamic_threshold = self._perf_tracker.get_threshold(
+                symbol, direction, self.conviction_threshold, regime=self._current_regime
+            )
             if dynamic_threshold >= 999:
-                score = self._perf_tracker._scorecard.get(f"{symbol}_{direction}")
-                logger.info(f"[auto-trader] BLOCKED {symbol} {direction}: TOXIC grade ({score.trades}t, {score.win_rate:.0%} WR, ${score.net_pnl:+,.0f})")
+                score, tier = self._perf_tracker._lookup_grade(symbol, direction, self._current_regime)
+                if score is not None:
+                    logger.info(
+                        f"[auto-trader] BLOCKED {symbol} {direction} in {self._current_regime}: "
+                        f"TOXIC ({tier}, {score.trades}t, {score.win_rate:.0%} WR, ${score.net_pnl:+,.0f})"
+                    )
+                else:
+                    logger.info(f"[auto-trader] BLOCKED {symbol} {direction}: TOXIC grade")
                 continue
             if conviction < dynamic_threshold:
                 logger.info(f"[auto-trader] {symbol} {direction} conviction {conviction} < dynamic threshold {dynamic_threshold}, skipping")
@@ -457,12 +465,6 @@ class AutoTrader:
                 if cb_state == "SUSPENDED" and self.yolo_level < 4:
                     logger.info(f"[auto-trader] CB suspended and YOLO level {self.yolo_level} < 4, skipping {symbol}")
                     continue
-
-            # Penalize mean_reversion longs in RANGING regime
-            strategy = rec.get("strategy", "")
-            if self._current_regime == "RANGING" and direction == "long" and strategy == "mean_reversion":
-                conviction = max(conviction - 10, 0)
-                logger.info(f"[auto-trader] {symbol} long penalized -10 conviction in RANGING (now {conviction})")
 
             # VWAP filter: penalize longs below VWAP (severity scales inversely with YOLO)
             if direction == "long":
@@ -544,7 +546,9 @@ class AutoTrader:
             size_pct = min(size_pct * size_multiplier, profile["max_size_pct"])
 
             # Apply performance-based size multiplier (floored by YOLO level)
-            perf_mult = self._perf_tracker.get_size_multiplier(symbol, direction)
+            perf_mult = self._perf_tracker.get_size_multiplier(
+                symbol, direction, regime=self._current_regime
+            )
             perf_mult = max(perf_mult, yolo_sizing["min_perf_mult"])
             size_pct = size_pct * perf_mult
 
