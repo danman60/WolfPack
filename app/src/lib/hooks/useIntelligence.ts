@@ -740,6 +740,7 @@ export interface WalletSummary {
 export interface WalletMeta {
   id: string;
   name: string;
+  display_name: string | null;
   created_at: string | null;
   parent_wallet_id: string | null;
   generation: number;
@@ -753,11 +754,14 @@ export function useWalletMeta() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("wp_wallets")
-        .select("id, name, created_at, parent_wallet_id, generation");
+        .select(
+          "id, name, display_name, created_at, parent_wallet_id, generation"
+        );
       if (error) throw error;
       const rows = (data ?? []) as unknown as Array<{
         id: string;
         name: string;
+        display_name: string | null;
         created_at: string | null;
         parent_wallet_id: string | null;
         generation: number | null;
@@ -768,6 +772,7 @@ export function useWalletMeta() {
         const meta: WalletMeta = {
           id: r.id,
           name: r.name,
+          display_name: r.display_name,
           created_at: r.created_at,
           parent_wallet_id: r.parent_wallet_id,
           generation: r.generation ?? 0,

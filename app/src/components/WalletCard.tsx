@@ -3,6 +3,7 @@
 import { useState } from "react";
 import {
   usePauseResumeWallet,
+  useWalletMeta,
   type WalletSummary,
 } from "@/lib/hooks/useIntelligence";
 import { WalletConfigEditor } from "@/components/WalletConfigEditor";
@@ -13,9 +14,25 @@ interface WalletCardProps {
   onClone?: (walletName: string) => void;
 }
 
+function formatRelative(iso: string | null | undefined): string | null {
+  if (!iso) return null;
+  const t = Date.parse(iso);
+  if (!Number.isFinite(t)) return null;
+  const diffMs = Date.now() - t;
+  const sec = Math.max(0, Math.floor(diffMs / 1000));
+  const min = Math.floor(sec / 60);
+  const hr = Math.floor(min / 60);
+  const day = Math.floor(hr / 24);
+  if (day >= 1) return `${day}d ago`;
+  if (hr >= 1) return `${hr}h ago`;
+  if (min >= 1) return `${min}m ago`;
+  return "just now";
+}
+
 export function WalletCard({ wallet, onClone }: WalletCardProps) {
   const [editOpen, setEditOpen] = useState(false);
   const pauseResume = usePauseResumeWallet();
+  const { data: meta } = useWalletMeta();
 
   const profitable = wallet.total_pnl > 0;
   const returnPct =
@@ -23,6 +40,14 @@ export function WalletCard({ wallet, onClone }: WalletCardProps) {
       ? ((wallet.equity - wallet.starting_equity) / wallet.starting_equity) *
         100
       : 0;
+
+  // Generation prefers the backend summary field; fall back to Supabase meta.
+  const ownMeta = meta?.byName[wallet.name];
+  const generation =
+    (wallet.generation ?? ownMeta?.generation) ?? 0;
+  const parentId = wallet.parent_wallet_id ?? ownMeta?.parent_wallet_id ?? null;
+  const parentMeta = parentId ? meta?.byId[parentId] : undefined;
+  const createdRel = formatRelative(ownMeta?.created_at);
 
   const borderColor = profitable
     ? "border-[var(--wolf-emerald)]/40"
@@ -52,6 +77,15 @@ export function WalletCard({ wallet, onClone }: WalletCardProps) {
           <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-[var(--surface)] text-gray-400 border border-[var(--border)]">
             v{wallet.version}
           </span>
+          {/* Generation badge */}
+          {generation > 0 && (
+            <span
+              className="px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold bg-[var(--wolf-purple)]/15 text-[var(--wolf-purple)] border border-[var(--wolf-purple)]/25"
+              title={`Generation ${generation}`}
+            >
+              Gen {generation}
+            </span>
+          )}
         </div>
         {/* YOLO badge */}
         <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[var(--wolf-amber)]/15 text-[var(--wolf-amber)]">
@@ -130,6 +164,22 @@ export function WalletCard({ wallet, onClone }: WalletCardProps) {
         <p className="text-[11px] text-gray-500 mt-2 line-clamp-2">
           {wallet.description}
         </p>
+      )}
+
+      {/* Lineage / creation metadata */}
+      {(parentMeta || createdRel) && (
+        <div className="flex items-center gap-3 mt-2 text-[10px] text-gray-500">
+          {parentMeta && (
+            <span
+              className="inline-flex items-center gap-1"
+              title={`Parent: ${parentMeta.name}`}
+            >
+              <span className="text-gray-400">↑</span>
+              {parentMeta.display_name ?? parentMeta.name}
+            </span>
+          )}
+          {createdRel && <span>Created {createdRel}</span>}
+        </div>
       )}
 
       {/* Action Buttons */}
