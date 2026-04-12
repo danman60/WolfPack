@@ -1602,17 +1602,53 @@ async def auto_trader_yolo(
 
 @app.get("/auto-trader/trades")
 async def auto_trader_trades(limit: int = 50, wallet: str = "paper_perp"):
-    """Return recent auto-trades filtered by wallet_id."""
+    """Return recent auto-trades filtered by wallet_id.
+
+    Reads wp_trade_history (closed trades — the live source of truth) plus
+    currently-open positions from the in-memory engine portfolio, so callers
+    (alert digests, dashboards) always see the most recent activity.
+    """
     try:
         from wolfpack.db import get_db
         from wolfpack.wallet_registry import get_registry
         db = get_db()
         w = get_registry().get_wallet(wallet)
-        query = db.table("wp_auto_trades").select("*")
+
+        query = db.table("wp_trade_history").select("*")
         if w and w.id:
             query = query.eq("wallet_id", str(w.id))
         result = query.order("opened_at", desc=True).limit(limit).execute()
-        return {"trades": result.data or []}
+
+        trades = []
+        for row in (result.data or []):
+            row["status"] = "closed"
+            trades.append(row)
+
+        # Also include currently-open positions from the in-memory engine
+        try:
+            trader = _get_perp_trader(wallet)
+            engine = trader.engine
+            if engine is not None:
+                for pos in engine.portfolio.positions:
+                    trades.insert(0, {
+                        "symbol": pos.symbol,
+                        "direction": pos.direction,
+                        "entry_price": getattr(pos, "entry_price", None),
+                        "exit_price": None,
+                        "size_usd": getattr(pos, "size_usd", None),
+                        "conviction": getattr(pos, "conviction_at_entry", None),
+                        "pnl_usd": None,
+                        "status": "open",
+                        "exit_reason": None,
+                        "opened_at": getattr(pos, "opened_at", None).isoformat() if getattr(pos, "opened_at", None) else None,
+                        "closed_at": None,
+                        "wallet_id": str(w.id) if w and w.id else None,
+                        "strategy": getattr(pos, "strategy", None),
+                    })
+        except Exception as e:
+            logger.debug(f"[auto-trader] Could not enrich with open positions: {e}")
+
+        return {"trades": trades[:limit]}
     except Exception as e:
         logger.error(f"[auto-trader] Failed to fetch trades: {e}")
         return {"trades": []}
