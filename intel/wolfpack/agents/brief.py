@@ -309,9 +309,21 @@ The trader has set high aggressiveness. Adjust your behavior:
         if context.get("performance_summary"):
             perf_section = f"\n\n## Recent Performance\n{context['performance_summary']}\nUse this to calibrate conviction -- favor symbol/direction combos that are performing well.\n"
 
+        # Phase 3: v3 heuristic drives — only populated when Brief runs in a wallet-specific
+        # context that has heuristics_enabled. Shared-Brief callers leave this empty so v1/v2
+        # decisions are untainted.
+        heuristic_section = ""
+        if context.get("heuristic_state"):
+            heuristic_section = (
+                f"\n\n## Emotional State (v3 wallet)\n{context['heuristic_state']}\n"
+                "Let this shape urgency and risk tolerance — high hunger means actively find "
+                "trades, high fear means be selective, high curiosity means explore unfamiliar "
+                "setups at small size, high satisfaction means protect existing gains.\n"
+            )
+
         prompt = f"""Synthesize the following intelligence for {symbol} on {exchange} into trade recommendations and position management actions:
 
-{json.dumps(context, indent=2, default=str)}{yolo_override}{perf_section}"""
+{json.dumps(context, indent=2, default=str)}{yolo_override}{perf_section}{heuristic_section}"""
 
         parsed = await self._call_llm_structured(prompt, BRIEF_SCHEMA)
 

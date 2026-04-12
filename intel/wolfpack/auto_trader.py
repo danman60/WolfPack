@@ -6,7 +6,7 @@ Stores trades to wp_auto_trades and snapshots to wp_auto_portfolio_snapshots.
 """
 
 import logging
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
 from wolfpack.config import settings
@@ -180,6 +180,10 @@ class AutoTrader:
         self._current_regime: str = "unknown"
         self._latest_vwaps: dict[str, float] = {}  # symbol -> VWAP
         self._perf_tracker = PerformanceTracker(rolling_window=50)
+        # Phase 3: human heuristics (v3 wallets only, gated by config.heuristics_enabled)
+        self._heuristic_state: Any = None  # HeuristicState | None — lazy import
+        self._heuristics_enabled: bool = False
+        self._heuristics_last_close_check: datetime | None = None
         self._apply_yolo_profile()
         self._apply_wallet_config()  # Per-wallet overrides on top
 
@@ -334,6 +338,94 @@ class AutoTrader:
             if key in cfg:
                 self._wallet_sizing[key] = cfg[key]
 
+        # Phase 3: human heuristics — load state if wallet has it enabled
+        if cfg.get("heuristics_enabled") and self.wallet_id:
+            try:
+                from wolfpack.heuristics import HeuristicState
+                from wolfpack.db import get_db
+                self._heuristic_state = HeuristicState.load(self.wallet_id, get_db())
+                self._heuristic_state.daily_pnl_target = float(cfg.get("daily_pnl_target", 300.0))
+                self._heuristics_enabled = True
+                logger.info(
+                    f"[heuristics] v3 enabled for {self.wallet_id[:8]}: "
+                    f"target=${self._heuristic_state.daily_pnl_target:.0f}, "
+                    f"hunger={self._heuristic_state.hunger:.2f} fear={self._heuristic_state.fear:.2f}"
+                )
+            except Exception as e:
+                logger.warning(f"[heuristics] init failed: {e}")
+                self._heuristic_state = None
+                self._heuristics_enabled = False
+
+    def _refresh_heuristics(self) -> float:
+        """Refresh v3 heuristic state: decay, poll closed trades, update target progress.
+
+        Returns today's realized P&L (0.0 on error) so callers can reuse it.
+        """
+        if not self._heuristics_enabled or self._heuristic_state is None:
+            return 0.0
+        state = self._heuristic_state
+        try:
+            from wolfpack.db import get_db
+            db = get_db()
+        except Exception:
+            return 0.0
+
+        # 1. Decay drives toward baseline each cycle
+        state.decay(cycles=1)
+
+        # 2. Poll new closed trades since last check and apply per-trade events
+        since = self._heuristics_last_close_check or (datetime.now(timezone.utc) - timedelta(hours=1))
+        try:
+            r = (
+                db.table("wp_trade_history")
+                .select("pnl_usd,hold_duration_seconds,closed_at")
+                .eq("wallet_id", self.wallet_id)
+                .gt("closed_at", since.isoformat())
+                .execute()
+            )
+            for row in r.data or []:
+                pnl = float(row.get("pnl_usd") or 0)
+                hold_s = row.get("hold_duration_seconds") or 0
+                state.on_trade_close(pnl, hold_s / 3600.0)
+        except Exception as e:
+            logger.warning(f"[heuristics] trade close poll failed: {e}")
+        self._heuristics_last_close_check = datetime.now(timezone.utc)
+
+        # 3. Compute today's daily realized P&L and update target progress
+        daily_pnl = 0.0
+        try:
+            today_start = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+            r = (
+                db.table("wp_trade_history")
+                .select("pnl_usd")
+                .eq("wallet_id", self.wallet_id)
+                .gte("closed_at", today_start.isoformat())
+                .execute()
+            )
+            daily_pnl = sum(float(row.get("pnl_usd") or 0) for row in (r.data or []))
+            if state.daily_pnl_target > 0:
+                state.on_target_progress(daily_pnl, state.daily_pnl_target)
+        except Exception as e:
+            logger.warning(f"[heuristics] daily pnl fetch failed: {e}")
+
+        # 4. Persist state + history
+        try:
+            state.save(
+                db,
+                event="cycle_refresh",
+                daily_pnl=daily_pnl,
+                equity=self.engine.portfolio.equity,
+            )
+        except Exception as e:
+            logger.warning(f"[heuristics] save failed: {e}")
+
+        logger.info(
+            f"[heuristics] v3 refreshed: daily_pnl=${daily_pnl:+.2f}/${state.daily_pnl_target:.0f} "
+            f"H={state.hunger:.2f} S={state.satisfaction:.2f} F={state.fear:.2f} C={state.curiosity:.2f} "
+            f"conv_mod={state.conviction_modifier():+d} size_mod={state.size_modifier():.2f}"
+        )
+        return daily_pnl
+
     def set_regime(self, macro_regime: str) -> None:
         """Store current macro regime for filtering decisions."""
         self._current_regime = macro_regime
@@ -396,6 +488,13 @@ class AutoTrader:
 
         self.restore_from_snapshot()
 
+        # Phase 3: refresh v3 heuristic drives once per cycle (no-op on v1/v2)
+        if self._heuristics_enabled:
+            try:
+                self._refresh_heuristics()
+            except Exception as e:
+                logger.warning(f"[heuristics] refresh failed: {e}")
+
         from wolfpack.veto import BriefVeto
         profile = YOLO_PROFILES.get(self.yolo_level, YOLO_PROFILES[2])
         veto = BriefVeto(
@@ -429,6 +528,21 @@ class AutoTrader:
             dynamic_threshold = self._perf_tracker.get_threshold(
                 symbol, direction, self.conviction_threshold, regime=self._current_regime
             )
+
+            # Phase 3: v3 heuristic drives — adjust floor + detect unfamiliar setups
+            if self._heuristics_enabled and self._heuristic_state is not None:
+                _score, _tier = self._perf_tracker._lookup_grade(symbol, direction, self._current_regime)
+                if _tier == "none":
+                    self._heuristic_state.on_unfamiliar_setup("none")
+                # hunger lowers floor, fear/satisfaction raise it
+                base_dt = dynamic_threshold
+                dynamic_threshold = max(30, dynamic_threshold + self._heuristic_state.conviction_modifier())
+                if base_dt != dynamic_threshold:
+                    logger.info(
+                        f"[heuristics] {symbol} {direction} floor {base_dt} -> {dynamic_threshold} "
+                        f"({self._heuristic_state.conviction_modifier():+d})"
+                    )
+
             if dynamic_threshold >= 999:
                 score, tier = self._perf_tracker._lookup_grade(symbol, direction, self._current_regime)
                 if score is not None:
@@ -550,6 +664,21 @@ class AutoTrader:
                 symbol, direction, regime=self._current_regime
             )
             perf_mult = max(perf_mult, yolo_sizing["min_perf_mult"])
+
+            # Phase 3: v3 heuristics size modulation — hunger scales up, fear scales down
+            if self._heuristics_enabled and self._heuristic_state is not None:
+                hmod = self._heuristic_state.size_modifier()
+                # Extra shrink on unfamiliar setups (curiosity funds small exploration)
+                _score2, _tier2 = self._perf_tracker._lookup_grade(symbol, direction, self._current_regime)
+                if _tier2 == "none":
+                    explore = 0.2 + 0.3 * self._heuristic_state.exploration_budget()
+                    hmod = min(hmod, explore)
+                    logger.info(
+                        f"[heuristics] {symbol} {direction} explore-sizing mult={hmod:.2f} "
+                        f"(budget={self._heuristic_state.exploration_budget():.2f})"
+                    )
+                perf_mult *= hmod
+
             size_pct = size_pct * perf_mult
 
             if size_pct <= 0:
