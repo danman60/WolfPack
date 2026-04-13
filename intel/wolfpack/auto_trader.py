@@ -1065,13 +1065,47 @@ class AutoTrader:
         self.restore_from_snapshot()
 
         from wolfpack.strategies import STRATEGIES
-        from wolfpack.strategies.regime_router import route_strategies
+        from wolfpack.strategies.regime_router import route_strategies, _ALLOWED_BY_REGIME
 
         routing = route_strategies(regime_output, vol_output, symbol=symbol)
         allowed = routing.get("allowed")
         debounce = routing.get("debounce", "")
         specific_regime = routing.get("specific_regime", routing.get("macro_regime", "unknown"))
         macro_family = routing.get("macro_regime", "unknown")
+
+        # ── Auto-adapt: drift override ──
+        # When the regime classifier says RANGING but the actual price action shows
+        # a clear directional slope over the last 6 bars, override the classification
+        # to the matching TRENDING regime. This unlocks ema_crossover / turtle_donchian
+        # / trend_pullback which are the strategies that actually profit in drifts.
+        # Threshold: 0.5% over 6 hours = clearly directional, not noise.
+        # Only applies to 1h timeframe (5m is too noisy for this check).
+        if (
+            timeframe == "1h"
+            and specific_regime in ("RANGING_LOW_VOL", "RANGING_HIGH_VOL")
+            and candles
+            and len(candles) >= 7
+        ):
+            try:
+                _prior = float(candles[-7].close)
+                _curr = float(candles[-1].close)
+                if _prior > 0:
+                    _drift_pct = ((_curr - _prior) / _prior) * 100
+                    if abs(_drift_pct) >= 0.5:
+                        _override = "TRENDING_UP" if _drift_pct > 0 else "TRENDING_DOWN"
+                        _new_allowed = _ALLOWED_BY_REGIME.get(_override)
+                        if _new_allowed is not None:
+                            logger.info(
+                                f"[auto-adapt] {symbol} drift override: "
+                                f"{specific_regime} -> {_override} "
+                                f"({_drift_pct:+.2f}% over 6 bars)"
+                            )
+                            specific_regime = _override
+                            macro_family = "TRENDING"
+                            allowed = list(_new_allowed)
+            except Exception as _e:
+                logger.warning(f"[auto-adapt] {symbol} drift check failed: {_e}")
+
         # Sync _current_regime so per-wallet traders get the live regime.
         # api.py only calls set_regime() on the primary trader, so v2/v3 were stuck
         # at "unknown" — breaking regime_at_entry tags and PerformanceTracker grading.
