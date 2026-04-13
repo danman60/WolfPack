@@ -63,17 +63,22 @@ class MeanReversionStrategy(Strategy):
     # key by those. Legacy family names (RANGING, TRENDING) fall through to
     # sensible defaults for back-compat with tests and pinned calls.
     REGIME_PRESETS = {
+        # Empirical tuning: live probe across 7 symbols on 2026-04-13
+        # showed max |distance| = 0.99 ATR in the current flat-chop regime.
+        # 0.75 fires on normal micro-oscillations; 0.4 stop keeps risk small
+        # to match the tight band. 5% size × high frequency = low-vol scalp
+        # posture. The intent: be profitable even when nothing is extended.
         "RANGING_LOW_VOL": {
-            "mean_period": 15,
-            "threshold_atr_mult": 1.2,
-            "stop_atr_mult": 0.6,
-            "size_pct": 8.0,
+            "mean_period": 10,
+            "threshold_atr_mult": 0.75,
+            "stop_atr_mult": 0.4,
+            "size_pct": 5.0,
         },
         "RANGING_HIGH_VOL": {
             "mean_period": 20,
-            "threshold_atr_mult": 2.0,
-            "stop_atr_mult": 1.0,
-            "size_pct": 10.0,
+            "threshold_atr_mult": 1.5,
+            "stop_atr_mult": 0.8,
+            "size_pct": 8.0,
         },
         "RANGING": {  # back-compat family-level default
             "mean_period": 15,

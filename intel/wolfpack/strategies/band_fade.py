@@ -21,19 +21,25 @@ Pure numpy implementation.
 """
 
 _RANGING_REGIMES = frozenset({"RANGING", "RANGING_LOW_VOL", "RANGING_HIGH_VOL"})
+# Empirical tuning: live probe 2026-04-13 showed RSI range 43-53 and all
+# 7 symbols sitting inside the 2σ Bollinger Band. LOW_VOL presets drop to
+# 1.0σ + RSI 42/58 so the strategy can fire in extreme mid-range equilibrium.
+# HIGH_VOL stays tighter because wider chop = more noise = need more conviction.
 _REGIME_PRESETS = {
     "RANGING_LOW_VOL": {
+        "bb_period": 15,
+        "bb_stdev": 1.0,
+        "rsi_oversold": 42.0,
+        "rsi_overbought": 58.0,
+        "stop_atr_mult": 0.4,
+        "size_pct": 6.0,
+    },
+    "RANGING_HIGH_VOL": {
+        "bb_period": 20,
         "bb_stdev": 2.0,
         "rsi_oversold": 35.0,
         "rsi_overbought": 65.0,
-        "stop_atr_mult": 0.6,
-        "size_pct": 10.0,
-    },
-    "RANGING_HIGH_VOL": {
-        "bb_stdev": 2.5,
-        "rsi_oversold": 30.0,
-        "rsi_overbought": 70.0,
-        "stop_atr_mult": 0.9,
+        "stop_atr_mult": 0.8,
         "size_pct": 8.0,
     },
 }
@@ -118,7 +124,7 @@ class BandFadeStrategy(Strategy):
             _REGIME_PRESETS["RANGING_LOW_VOL"],
         )
 
-        bb_period = int(params.get("bb_period", 20))
+        bb_period = int(params.get("bb_period", preset.get("bb_period", 20)))
         bb_stdev = float(params.get("bb_stdev", preset["bb_stdev"]))
         rsi_period = int(params.get("rsi_period", 14))
         rsi_oversold = float(params.get("rsi_oversold", preset["rsi_oversold"]))
