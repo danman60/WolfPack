@@ -1172,11 +1172,18 @@ class AutoTrader:
                     logger.info(f"[auto-trader] Strategy {strategy_name} {symbol} {direction} blocked: UTC hour {current_utc_hour} outside trading hours")
                     continue
 
-                # Trade spacing cooldown (5 minutes between trades)
+                # Trade spacing cooldown — uses per-wallet config if present.
+                # Default 120s so strategies can cycle faster in low-vol scalp
+                # posture. v1 YOLO 5 uses 30s, v2/v3 use 120s (reset earlier
+                # from 300s).
+                _spacing = int(self._wallet_config.get("trade_spacing_s", 120)) if self._wallet_config else 120
                 if self._last_trade_at:
                     elapsed = (datetime.now(timezone.utc) - self._last_trade_at).total_seconds()
-                    if elapsed < 300:
-                        logger.info(f"[auto-trader] Trade spacing: {300 - elapsed:.0f}s remaining, skipping {strategy_name}")
+                    if elapsed < _spacing:
+                        logger.info(
+                            f"[auto-trader] Strategy {strategy_name} trade spacing: "
+                            f"{_spacing - elapsed:.0f}s remaining (limit {_spacing}s), skipping"
+                        )
                         continue
 
                 # Size based on strategy allocation

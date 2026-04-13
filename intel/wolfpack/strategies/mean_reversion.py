@@ -75,10 +75,14 @@ class MeanReversionStrategy(Strategy):
             "size_pct": 5.0,
         },
         "RANGING_HIGH_VOL": {
-            "mean_period": 20,
-            "threshold_atr_mult": 1.5,
-            "stop_atr_mult": 0.8,
-            "size_pct": 8.0,
+            # Validator feedback (2026-04-13): HIGH_VOL classifications have
+            # been scoring low because realized excursion rarely exceeds 1 ATR.
+            # Tightened to 1.0 ATR / 0.5 stop so we still fire when the
+            # detector is noisy. Size slightly larger than LOW_VOL.
+            "mean_period": 15,
+            "threshold_atr_mult": 1.0,
+            "stop_atr_mult": 0.5,
+            "size_pct": 7.0,
         },
         "RANGING": {  # back-compat family-level default
             "mean_period": 15,

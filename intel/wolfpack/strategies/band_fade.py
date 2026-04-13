@@ -35,12 +35,15 @@ _REGIME_PRESETS = {
         "size_pct": 6.0,
     },
     "RANGING_HIGH_VOL": {
-        "bb_period": 20,
-        "bb_stdev": 2.0,
-        "rsi_oversold": 35.0,
-        "rsi_overbought": 65.0,
-        "stop_atr_mult": 0.8,
-        "size_pct": 8.0,
+        # Validator (2026-04-13): HIGH_VOL scoring ~0.3 because realized
+        # excursion rarely exceeds 1 ATR in this flat tape. Tightened to
+        # match observed behavior rather than the detector's label.
+        "bb_period": 18,
+        "bb_stdev": 1.3,
+        "rsi_oversold": 40.0,
+        "rsi_overbought": 60.0,
+        "stop_atr_mult": 0.5,
+        "size_pct": 7.0,
     },
 }
 
