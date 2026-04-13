@@ -115,11 +115,16 @@ def _classify_macro(regime: str, agreement: float, vol_regime: str) -> tuple[str
 
 # Allowed strategy list per specific sub-regime. Strategies receive the
 # specific sub-regime in their evaluate() call so they can tune params.
+#
+# 2026-04-13: added slow_drift_follow + range_breakout as RANGING probes.
+# Neither has historical validation — PerformanceTracker grades them and
+# scales allocation. Current RANGING strategies (mean_reversion / band_fade)
+# have been unreliable in slow-drift chop and need alternatives.
 _ALLOWED_BY_REGIME: dict[str, list[str]] = {
     "TRENDING_UP":      ["ema_crossover", "turtle_donchian", "trend_pullback", "orb_session"],
     "TRENDING_DOWN":    ["ema_crossover", "turtle_donchian", "trend_pullback", "orb_session"],
-    "RANGING_LOW_VOL":  ["mean_reversion", "band_fade"],
-    "RANGING_HIGH_VOL": ["mean_reversion", "band_fade"],
+    "RANGING_LOW_VOL":  ["mean_reversion", "band_fade", "slow_drift_follow", "range_breakout"],
+    "RANGING_HIGH_VOL": ["mean_reversion", "band_fade", "slow_drift_follow", "range_breakout"],
     "VOLATILE":         [],  # safety: no new entries
     "TRANSITION":       [],  # wait for confirmation, tighten stops instead
 }

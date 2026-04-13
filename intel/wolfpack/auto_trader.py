@@ -22,9 +22,12 @@ STRATEGY_ALLOCATIONS = {
     "trend_pullback": 0.15,   # mid-trend continuation, highest freq in TRENDING
     "orb_session": 0.05,
     # Ranging strategies
-    "mean_reversion": 0.20,
-    "band_fade": 0.20,
+    "mean_reversion": 0.15,
+    "band_fade": 0.15,
     "measured_move": 0.05,
+    # Ranging-regime exploration probes (2026-04-13)
+    "slow_drift_follow": 0.05,
+    "range_breakout": 0.05,
     # Brief-driven: remaining ~15%
 }
 
@@ -80,6 +83,8 @@ STRATEGY_TIMEFRAMES = {
     "mean_reversion": "1h",
     "band_fade": "1h",
     "trend_pullback": "1h",
+    "slow_drift_follow": "1h",
+    "range_breakout": "1h",
     "orb_session": "5m",
     "measured_move": "5m",
 }
@@ -1151,6 +1156,14 @@ class AutoTrader:
             # Regime-based strategy filter
             if allowed is not None and strategy_name not in allowed:
                 continue
+
+            # Per-wallet kill switch: lets a wallet disable individual strategies
+            # without touching code. Used when empirical evidence shows a strategy
+            # has lost its edge (e.g., mean_reversion after the Apr 11 regime shift).
+            if self._wallet_config is not None:
+                _disabled = self._wallet_config.get("disabled_strategies") or []
+                if strategy_name in _disabled:
+                    continue
 
             # Check timeframe compatibility
             expected_tf = STRATEGY_TIMEFRAMES.get(strategy_name, "1h")
