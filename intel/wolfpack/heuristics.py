@@ -112,16 +112,31 @@ class HeuristicState:
     def conviction_modifier(self) -> int:
         """±int delta to add to the base conviction floor.
 
+        Drives are measured as deviation from the 0.5 baseline so neutral
+        state always returns 0 (previous version had them cancel but not
+        symmetrically — hunger at max was being canceled by baseline fear).
         hunger lowers floor (take more), fear raises floor (be picky),
         satisfaction slightly raises floor (protect gains).
-        Clamped to [-12, +20].
+        Clamped to [-15, +20].
         """
-        raw = -10 * self.hunger + 15 * self.fear + 5 * self.satisfaction
-        return int(max(-12, min(20, round(raw))))
+        raw = (
+            -15 * (self.hunger - 0.5)
+            + 10 * (self.fear - 0.5)
+            + 5 * (self.satisfaction - 0.5)
+        )
+        return int(max(-15, min(20, round(raw))))
 
     def size_modifier(self) -> float:
-        """Position size multiplier in [0.3, 1.35]."""
-        raw = 1.0 + 0.25 * self.hunger - 0.4 * self.fear + 0.15 * self.curiosity
+        """Position size multiplier in [0.3, 1.35].
+
+        Centered on 1.0 at all-baseline state so neutral drives = no change.
+        """
+        raw = (
+            1.0
+            + 0.30 * (self.hunger - 0.5)
+            - 0.35 * (self.fear - 0.5)
+            + 0.15 * (self.curiosity - 0.5)
+        )
         return max(0.3, min(1.35, raw))
 
     def exploration_budget(self) -> float:

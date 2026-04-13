@@ -227,27 +227,28 @@ def test_on_unfamiliar_setup_ignores_known_tier():
 
 def test_conviction_modifier_baseline():
     s = _state()
-    # -10*0.5 + 15*0.5 + 5*0.5 = -5 + 7.5 + 2.5 = 5
-    assert s.conviction_modifier() == 5
+    # All drives at 0.5 baseline => 0 deviation => 0 modifier
+    assert s.conviction_modifier() == 0
 
 
 def test_conviction_modifier_hungry_reduces():
     s = _state(hunger=1.0, fear=0.0, satisfaction=0.0)
-    # -10*1 = -10
-    assert s.conviction_modifier() == -10
+    # -15*(1-0.5) + 10*(0-0.5) + 5*(0-0.5) = -7.5 - 5 - 2.5 = -15
+    assert s.conviction_modifier() == -15
 
 
 def test_conviction_modifier_fearful_raises():
     s = _state(hunger=0.0, fear=1.0, satisfaction=0.0)
-    # 15*1 = 15
-    assert s.conviction_modifier() == 15
+    # -15*(0-0.5) + 10*(1-0.5) + 5*(0-0.5) = 7.5 + 5 - 2.5 = 10
+    assert s.conviction_modifier() == 10
 
 
 def test_conviction_modifier_bounds():
+    # Bounds clamp to [-15, +20]
     s = _state(hunger=1.0, fear=0.0, satisfaction=0.0)
-    assert s.conviction_modifier() >= -12
+    assert s.conviction_modifier() >= -15
     s2 = _state(hunger=0.0, fear=1.0, satisfaction=1.0)
-    # 15 + 5 = 20, at the upper bound
+    # 7.5 + 5 + 2.5 = 15, well within the +20 upper bound
     assert s2.conviction_modifier() <= 20
 
 
