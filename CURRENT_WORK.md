@@ -1,8 +1,10 @@
 # Current Work - WolfPack
 
-## STATUS — 2026-04-12 — Phase 2 + Phase 3 complete
+## STATUS — 2026-04-13 — Regime-adaptive strategy framework complete
 
-Multi-wallet evolution system is LIVE with 3 trading wallets + human heuristics active.
+Every mechanical strategy is now regime-adaptive. 6-regime taxonomy live with TRANSITION handling. All 3 wallets share the same regime-aware strategy layer — flavors (v1/v2/v3) live in risk profile / YOLO / heuristic drives, not in regime logic.
+
+**Core directive from the user:** the autobot must be profitable in ANY market regime, not just trending weeks. Every strategy auto-tunes to the current regime and auto-switches when transitions are detected.
 
 ## Active wallets (post-reset, all at $25,000 baseline)
 
@@ -12,7 +14,67 @@ Multi-wallet evolution system is LIVE with 3 trading wallets + human heuristics 
 | `paper_perp_v2` (v2 Conservative) | 2 | 2 | v1 + higher conviction floor, mandatory SL, smaller positions | $25k @ 2026-04-12 22:01 UTC |
 | `paper_perp_v3` (v3 Human Heuristics) | 3 | 2 | v2 + hunger/satisfaction/fear/curiosity drives | $25k @ 2026-04-12 22:26 UTC |
 
-## What shipped this session
+## What shipped this session (2026-04-13 morning)
+
+### Regime-Adaptive Strategy Framework — 6 regimes, every strategy tuned
+
+**Motivation:** v1 peaked at $4,720 in 7 days (Apr 6–Apr 12) during TRENDING-dominant conditions, then flattened to near-zero when the regime shifted to RANGING chop. Root cause: `mean_reversion`'s default 3.0 ATR threshold was mathematically inert in normal chop (it was tuned for extreme capitulation fades), and trending strategies like ema_crossover / turtle_donchian kept whipsawing on false crosses inside the range. No strategy actually traded the chop.
+
+**Canonical regime taxonomy:**
+| Specific | Family | Detection trigger | Strategies allowed |
+|---|---|---|---|
+| `TRENDING_UP` | TRENDING | regime=trending_up + agreement≥0.75 | ema_crossover(long), turtle_donchian(long), orb_session |
+| `TRENDING_DOWN` | TRENDING | regime=trending_down + agreement≥0.75 | ema_crossover(short), turtle_donchian(short), orb_session |
+| `RANGING_LOW_VOL` | RANGING | choppy + vol∈{low,normal} | mean_reversion, band_fade (tight params) |
+| `RANGING_HIGH_VOL` | RANGING | choppy + vol=elevated | mean_reversion, band_fade (wider params) |
+| `VOLATILE` | VOLATILE | panic OR vol=extreme | none — tighten stops to 1.5% |
+| `TRANSITION` | TRANSITION | pending≠current AND debounce<3 | none — tighten stops to 2.0%, wait |
+
+**New strategy:** `band_fade` (`intel/wolfpack/strategies/band_fade.py`) — pure RANGING play. Fires on Bollinger Band touches confirmed by RSI(14) overbought/oversold. Targets the middle band (SMA) for TP with tight stops beyond the outer band. HIGH_VOL/LOW_VOL sub-regime presets for band stdev + RSI thresholds.
+
+**Regime adaptation per strategy:**
+- `mean_reversion` — `REGIME_PRESETS` dict maps sub-regimes to `{mean_period, threshold_atr_mult, stop_atr_mult, size_pct}`. RANGING_LOW_VOL uses 1.2 ATR threshold (was 3.0 globally — killer bug). RANGING_HIGH_VOL uses 2.0. TRENDING keeps 3.0 for contrarian fades.
+- `band_fade` — `_REGIME_PRESETS` dict: RANGING_LOW_VOL uses 2.0σ BB + RSI 35/65 / 0.6 ATR stop; RANGING_HIGH_VOL uses 2.5σ + RSI 30/70 / 0.9 ATR stop. Disabled everywhere else.
+- `ema_crossover` — directional gate: TRENDING_UP allows longs only, TRENDING_DOWN allows shorts only. Disabled in RANGING/VOLATILE/TRANSITION. Conviction bumped to 75 when cross aligns with trend.
+- `turtle_donchian` — same gating. Close signals still fire regardless of regime (structural exit for existing positions stays regime-agnostic).
+- `orb_session, measured_move, regime_momentum, vol_breakout` — untouched in this pass (future work).
+
+**TRANSITION handling** (new in `auto_trader.process_strategy_signals`): distinct from VOLATILE. When router detects pending regime changing mid-debounce, tightens any trailing stop wider than 2.0% by factor 0.7 (floor 2.0%) and blocks new entries until debounce confirms. Existing positions are preserved — it's a "wait and see" posture.
+
+**Router emits both family and specific:**
+```python
+{
+  "allowed": [...],
+  "macro_regime": "RANGING",            # parent family (back-compat)
+  "specific_regime": "RANGING_LOW_VOL", # sub-type for granular tuning
+  "transition": False,
+  "reason": "...",
+  "debounce": "pending=RANGING_LOW_VOL(3/3)"
+}
+```
+
+**Commits (2026-04-13):**
+1. `db6ec79` `feat(strategies): mean_reversion regime-adaptive parameters`
+2. `7e17617` `feat(strategies): band_fade — Bollinger+RSI range fader, wired into router`
+3. `f6d8248` `feat(regimes): 6-regime taxonomy + regime-adaptive strategies + TRANSITION state`
+4. `74027cd` `feat(api): /regime/state observability + regime taxonomy doc`
+5. `44becd6` `fix(api): update get_regime_state callers to new field names`
+
+**Also shipped** (earlier 2026-04-13 morning): heuristic math bug fix (`5997acd`) — drive contributions now centered on baseline so v3's hunger actually dominates. Live verification: `[heuristics] DOGE short floor 50 -> 44 (-6)` is firing as designed.
+
+**Live verification post-deploy:**
+- `[auto-trader] Regime routing: RANGING_LOW_VOL (family=RANGING) -- regime=choppy, agreement=0.50, vol=normal` ✓
+- `[auto-trader] Regime routing: TRENDING_DOWN (family=TRENDING) -- regime=trending_down, agreement=1.00` ✓ (DOGE hit this)
+- `[auto-trader] Regime routing: RANGING_HIGH_VOL (family=RANGING) -- regime=choppy, agreement=0.50, vol=elevated` ✓
+- Heuristic conv_mod = -6 and size_mod = 1.12 both applying to live trades
+- `GET /regime/state?symbol=BTC` returns current + pending + transition flag
+- **Known:** only 3 cycles observed since restart — too early to measure strategy signal frequency. Let it run 1+ hour for mean_reversion / band_fade fire rate.
+
+**Taxonomy doc:** `docs/regime-strategy-map.md` — single source of truth for which strategies fire in which regimes and their regime-specific params. Read this before adding a new strategy.
+
+---
+
+## What shipped yesterday (2026-04-12)
 
 ### Phase 2 — multi-wallet UI + infra polish
 - **Wallet reset** (`e217067` chain): v1 + v2 closed all positions, both forced to exactly $25,000 with fresh snapshots, trade history preserved so PerformanceTracker keeps its learned grades
