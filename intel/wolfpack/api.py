@@ -1654,6 +1654,25 @@ async def auto_trader_trades(limit: int = 50, wallet: str = "paper_perp"):
         return {"trades": []}
 
 
+# ── Regime Observability ──
+
+
+@app.get("/regime/state")
+async def regime_state(symbol: str = "BTC"):
+    """Current regime state for a symbol — specific + family, pending, transition flag.
+
+    Returns the output of the regime router's debounce state machine so
+    callers can see what the system currently thinks the market is doing
+    and whether a transition is in progress.
+    """
+    try:
+        from wolfpack.strategies.regime_router import get_regime_state
+        return {"symbol": symbol, **get_regime_state(symbol)}
+    except Exception as e:
+        logger.error(f"[regime] state fetch failed: {e}")
+        return {"symbol": symbol, "error": str(e)}
+
+
 # ── Performance Tracker Observability ──
 
 
