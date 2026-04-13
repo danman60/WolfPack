@@ -33,6 +33,12 @@ _REGIME_PRESETS = {
         "rsi_overbought": 58.0,
         "stop_atr_mult": 0.4,
         "size_pct": 6.0,
+        # Historical data (2026-04-13 audit): 0 wins in 3 longs, -$37 net.
+        # The lower-band fade in LOW_VOL keeps getting stopped out because
+        # chop grinds through the band instead of reverting. Shorts untested
+        # but symmetric reasoning suggests also skipping until data arrives.
+        "allow_long": False,
+        "allow_short": False,
     },
     "RANGING_HIGH_VOL": {
         # Validator (2026-04-13): HIGH_VOL scoring ~0.3 because realized
@@ -44,6 +50,8 @@ _REGIME_PRESETS = {
         "rsi_overbought": 60.0,
         "stop_atr_mult": 0.5,
         "size_pct": 7.0,
+        "allow_long": True,
+        "allow_short": True,
     },
 }
 
@@ -134,6 +142,12 @@ class BandFadeStrategy(Strategy):
         rsi_overbought = float(params.get("rsi_overbought", preset["rsi_overbought"]))
         stop_atr_mult = float(params.get("stop_atr_mult", preset["stop_atr_mult"]))
         size_pct = float(params.get("size_pct", preset["size_pct"]))
+        allow_long = bool(preset.get("allow_long", True))
+        allow_short = bool(preset.get("allow_short", True))
+        # Hard kill: if the regime preset explicitly forbids both directions,
+        # fail fast. This is how RANGING_LOW_VOL is disabled until data supports it.
+        if not allow_long and not allow_short:
+            return None
 
         needed = max(bb_period, rsi_period) + 2
         if current_idx < needed:
@@ -168,7 +182,7 @@ class BandFadeStrategy(Strategy):
 
         # Long: price closed below lower band (this bar or last) AND RSI oversold
         touched_lower = current_close <= lower or prev_close <= lower
-        if touched_lower and rsi <= rsi_oversold:
+        if allow_long and touched_lower and rsi <= rsi_oversold:
             # Stop sits one ATR fraction below the lower band
             stop = round_price(min(lower, current_close) - atr * stop_atr_mult)
             conviction = 65
@@ -190,7 +204,7 @@ class BandFadeStrategy(Strategy):
 
         # Short: price closed above upper band AND RSI overbought
         touched_upper = current_close >= upper or prev_close >= upper
-        if touched_upper and rsi >= rsi_overbought:
+        if allow_short and touched_upper and rsi >= rsi_overbought:
             stop = round_price(max(upper, current_close) + atr * stop_atr_mult)
             conviction = 65
             if rsi > 75:

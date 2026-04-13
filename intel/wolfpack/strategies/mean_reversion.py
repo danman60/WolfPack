@@ -58,55 +58,67 @@ class MeanReversionStrategy(Strategy):
     }
 
     # Regime-adaptive parameter presets — each tunes threshold / stops / SMA / sizing
-    # for the specific sub-regime the router is emitting. The router uses
-    # sub-regimes (RANGING_LOW_VOL, RANGING_HIGH_VOL, TRENDING_UP/DOWN) so we
-    # key by those. Legacy family names (RANGING, TRENDING) fall through to
-    # sensible defaults for back-compat with tests and pinned calls.
+    # for the specific sub-regime the router is emitting.
+    #
+    # Historical edge audit (2026-04-13, v1 since Apr 6):
+    #   mean_reversion SHORT: 28 trades, 71.4% WR, +$3,372, 8:1 avg win:loss
+    #   mean_reversion LONG:   6 trades, 16.7% WR, +$372   (tail-luck only)
+    #   mean_reversion SHORT, post-tune RANGING: 4 trades, 0% WR, -$59
+    # Conclusion: shorts are the edge, longs are noise, and the 0.75 ATR
+    # tuning (from commit 379df99) fires on micro-wiggles that get stopped out
+    # in chop. Reverting to wider thresholds and gating to SHORT-only.
     REGIME_PRESETS = {
-        # Empirical tuning: live probe across 7 symbols on 2026-04-13
-        # showed max |distance| = 0.99 ATR in the current flat-chop regime.
-        # 0.75 fires on normal micro-oscillations; 0.4 stop keeps risk small
-        # to match the tight band. 5% size × high frequency = low-vol scalp
-        # posture. The intent: be profitable even when nothing is extended.
         "RANGING_LOW_VOL": {
-            "mean_period": 10,
-            "threshold_atr_mult": 0.75,
-            "stop_atr_mult": 0.4,
-            "size_pct": 5.0,
+            "mean_period": 15,
+            "threshold_atr_mult": 1.3,     # was 0.75 — too tight, fires on noise
+            "stop_atr_mult": 0.7,          # was 0.4 — widened to match threshold
+            "size_pct": 6.0,
+            "allow_long": False,           # longs in chop = statistical loser
+            "allow_short": True,
         },
         "RANGING_HIGH_VOL": {
-            # Validator feedback (2026-04-13): HIGH_VOL classifications have
-            # been scoring low because realized excursion rarely exceeds 1 ATR.
-            # Tightened to 1.0 ATR / 0.5 stop so we still fire when the
-            # detector is noisy. Size slightly larger than LOW_VOL.
             "mean_period": 15,
-            "threshold_atr_mult": 1.0,
-            "stop_atr_mult": 0.5,
+            "threshold_atr_mult": 1.5,     # was 1.0 — same logic
+            "stop_atr_mult": 0.8,          # was 0.5
             "size_pct": 7.0,
+            "allow_long": False,
+            "allow_short": True,
         },
         "RANGING": {  # back-compat family-level default
             "mean_period": 15,
             "threshold_atr_mult": 1.5,
-            "stop_atr_mult": 0.7,
+            "stop_atr_mult": 0.8,
             "size_pct": 8.0,
+            "allow_long": False,
+            "allow_short": True,
         },
         "TRENDING_UP": {
+            # Contrarian mean reversion in an uptrend = short rips.
+            # Longs are aligned with trend but 6-trade sample was mostly luck.
             "mean_period": 20,
             "threshold_atr_mult": 3.0,
             "stop_atr_mult": 1.0,
             "size_pct": 12.0,
+            "allow_long": False,
+            "allow_short": True,
         },
         "TRENDING_DOWN": {
+            # This was the historical goldmine — mean_reversion shorts during
+            # Apr 6-10 downtrend drove most of the $3,372 edge. Keep as-is.
             "mean_period": 20,
             "threshold_atr_mult": 3.0,
             "stop_atr_mult": 1.0,
             "size_pct": 12.0,
+            "allow_long": False,
+            "allow_short": True,
         },
         "TRENDING": {  # back-compat
             "mean_period": 20,
             "threshold_atr_mult": 3.0,
             "stop_atr_mult": 1.0,
             "size_pct": 12.0,
+            "allow_long": False,
+            "allow_short": True,
         },
     }
 
@@ -141,6 +153,10 @@ class MeanReversionStrategy(Strategy):
         )
         stop_atr_mult = params.get("stop_atr_mult", preset.get("stop_atr_mult", 1.0))
         size_pct = params.get("size_pct", preset.get("size_pct", 12.0))
+        allow_long = bool(preset.get("allow_long", True))
+        allow_short = bool(preset.get("allow_short", True))
+        if not allow_long and not allow_short:
+            return None
 
         needed = max(mean_period, 15) + 1  # 14 for ATR + 1
         if current_idx < needed:
@@ -187,7 +203,7 @@ class MeanReversionStrategy(Strategy):
         closing_toward_mean_short = entry_candle.close < entry_candle.open  # red candle when above mean
 
         # Long: price far below mean + recent wick below local low (sweep)
-        if distance < -threshold_atr_mult:
+        if allow_long and distance < -threshold_atr_mult:
             swept_local = any(c.low < local_low and c.close > local_low for c in recent)
             swept_structural = self._check_structural_sweep_below(recent, struct_levels)
             if swept_structural:
@@ -212,7 +228,7 @@ class MeanReversionStrategy(Strategy):
             }
 
         # Short: price far above mean + recent wick above local high (sweep)
-        if distance > threshold_atr_mult:
+        if allow_short and distance > threshold_atr_mult:
             swept_local = any(c.high > local_high and c.close < local_high for c in recent)
             swept_structural = self._check_structural_sweep_above(recent, struct_levels)
             if swept_structural:
