@@ -1020,6 +1020,10 @@ class AutoTrader:
         debounce = routing.get("debounce", "")
         specific_regime = routing.get("specific_regime", routing.get("macro_regime", "unknown"))
         macro_family = routing.get("macro_regime", "unknown")
+        # Sync _current_regime so per-wallet traders get the live regime.
+        # api.py only calls set_regime() on the primary trader, so v2/v3 were stuck
+        # at "unknown" — breaking regime_at_entry tags and PerformanceTracker grading.
+        self._current_regime = specific_regime
         logger.info(
             f"[auto-trader] Regime routing: {specific_regime} "
             f"(family={macro_family}) -- {routing['reason']} [{debounce}]"
