@@ -21,9 +21,10 @@ STRATEGY_ALLOCATIONS = {
     "turtle_donchian": 0.10,
     "orb_session": 0.10,
     # Ranging strategies
-    "mean_reversion": 0.30,
-    "measured_move": 0.10,
-    # Brief-driven: remaining ~25%
+    "mean_reversion": 0.20,
+    "band_fade": 0.20,
+    "measured_move": 0.05,
+    # Brief-driven: remaining ~20%
 }
 
 # Dynamic allocation cache (module-level, shared across AutoTrader instances)
@@ -76,6 +77,7 @@ STRATEGY_TIMEFRAMES = {
     "ema_crossover": "1h",
     "turtle_donchian": "1h",
     "mean_reversion": "1h",
+    "band_fade": "1h",
     "orb_session": "5m",
     "measured_move": "5m",
 }
@@ -1058,7 +1060,12 @@ class AutoTrader:
                 if current_idx < strategy.warmup_bars:
                     continue
 
-                signal = strategy.evaluate(candles, current_idx)
+                # Pass macro_regime so strategies can auto-adapt their params
+                # (mean_reversion: tighter threshold in RANGING; band_fade: only
+                # fires in RANGING; future strategies can gate similarly).
+                signal = strategy.evaluate(
+                    candles, current_idx, macro_regime=routing["macro_regime"]
+                )
                 if signal is None:
                     continue
 

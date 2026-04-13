@@ -49,10 +49,14 @@ def _classify_macro(regime: str, agreement: float, vol_regime: str) -> tuple[str
         )
 
     # RANGING: choppy, low_vol_grind, or poor TF agreement
+    # Note: measured_move is a session-open breakout strategy, not a range fader.
+    # It's been removed from the RANGING list — its 5m session-window nature is
+    # incompatible with mean-reversion chop. band_fade replaces it as the second
+    # true range strategy alongside mean_reversion.
     return (
         "RANGING",
         f"regime={regime}, agreement={agreement:.2f}",
-        ["mean_reversion", "measured_move"],
+        ["mean_reversion", "band_fade"],
     )
 
 
@@ -128,7 +132,7 @@ def route_strategies(regime_output, vol_output=None, symbol: str = "BTC") -> dic
         }
     elif state.current_macro == "RANGING":
         return {
-            "allowed": ["mean_reversion", "measured_move"],
+            "allowed": ["mean_reversion", "band_fade"],
             "macro_regime": "RANGING",
             "reason": state.last_reason,
             "debounce": f"pending={state.pending_macro}({state.pending_count}/{DEBOUNCE_TICKS})",

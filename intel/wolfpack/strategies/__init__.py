@@ -1,5 +1,6 @@
 """Strategy registry for the backtesting system."""
 
+from wolfpack.strategies.band_fade import BandFadeStrategy
 from wolfpack.strategies.base import Strategy
 from wolfpack.strategies.ema_crossover import EMACrossoverStrategy
 from wolfpack.strategies.mean_reversion import MeanReversionStrategy
@@ -17,6 +18,7 @@ STRATEGIES: dict[str, type[Strategy]] = {
     "turtle_donchian": TurtleDonchianStrategy,
     "measured_move": MeasuredMoveStrategy,
     "mean_reversion": MeanReversionStrategy,
+    "band_fade": BandFadeStrategy,
 }
 
 __all__ = ["STRATEGIES", "Strategy"]
