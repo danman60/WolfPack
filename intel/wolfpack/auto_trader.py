@@ -1016,17 +1016,40 @@ class AutoTrader:
         routing = route_strategies(regime_output, vol_output, symbol=symbol)
         allowed = routing.get("allowed")
         debounce = routing.get("debounce", "")
-        logger.info(f"[auto-trader] Regime routing: {routing['macro_regime']} -- {routing['reason']} [{debounce}]")
+        specific_regime = routing.get("specific_regime", routing.get("macro_regime", "unknown"))
+        macro_family = routing.get("macro_regime", "unknown")
+        logger.info(
+            f"[auto-trader] Regime routing: {specific_regime} "
+            f"(family={macro_family}) -- {routing['reason']} [{debounce}]"
+        )
 
         # VOLATILE: tighten trailing stops, no new entries
-        if routing["macro_regime"] == "VOLATILE":
+        if macro_family == "VOLATILE":
             for pos in self.engine.portfolio.positions:
                 if pos.trailing_stop_pct and pos.trailing_stop_pct > 1.5:
                     pos.trailing_stop_pct = max(1.5, pos.trailing_stop_pct * 0.5)
             self._store_snapshot()
             return []
 
-        # Check regime transition cooldown
+        # TRANSITION: regime is changing but debounce not confirmed.
+        # Tighten trailing stops on existing positions and block new entries
+        # until the new regime stabilizes. Distinct from VOLATILE — this is a
+        # "wait and see" posture, not a panic posture.
+        if routing.get("transition"):
+            tightened = 0
+            for pos in self.engine.portfolio.positions:
+                if pos.trailing_stop_pct and pos.trailing_stop_pct > 2.0:
+                    pos.trailing_stop_pct = max(2.0, pos.trailing_stop_pct * 0.7)
+                    tightened += 1
+            if tightened:
+                logger.info(
+                    f"[auto-trader] {symbol} TRANSITION: tightened {tightened} trailing stops "
+                    f"(pending={routing.get('debounce','')})"
+                )
+            self._store_snapshot()
+            return []
+
+        # Check regime transition cooldown (separate legacy cooldown mechanism)
         from wolfpack.modules.regime_transition import get_transition_manager
         tm = get_transition_manager()
         if tm.is_in_cooldown(symbol):
@@ -1060,11 +1083,15 @@ class AutoTrader:
                 if current_idx < strategy.warmup_bars:
                     continue
 
-                # Pass macro_regime so strategies can auto-adapt their params
-                # (mean_reversion: tighter threshold in RANGING; band_fade: only
-                # fires in RANGING; future strategies can gate similarly).
+                # Pass the specific sub-regime so strategies can auto-adapt:
+                # - mean_reversion: RANGING_LOW_VOL → tight thresholds, RANGING_HIGH_VOL → wider
+                # - band_fade: only fires in RANGING_* variants
+                # - ema_crossover / turtle_donchian: directional gating on TRENDING_UP vs TRENDING_DOWN
+                # Strategies that want the parent family can call regime_family(specific_regime).
                 signal = strategy.evaluate(
-                    candles, current_idx, macro_regime=routing["macro_regime"]
+                    candles,
+                    current_idx,
+                    macro_regime=specific_regime,
                 )
                 if signal is None:
                     continue
@@ -1072,11 +1099,6 @@ class AutoTrader:
                 direction = signal.get("direction", "wait")
                 if direction == "wait":
                     continue
-
-                # Penalize mean_reversion longs in RANGING regime (conviction -10)
-                if routing["macro_regime"] == "RANGING" and direction == "long" and strategy_name == "mean_reversion":
-                    signal["conviction"] = max(signal.get("conviction", 60) - 10, 0)
-                    logger.info(f"[auto-trader] {symbol} mech long penalized in RANGING")
 
                 # VWAP filter on mechanical longs (scales with YOLO level)
                 if direction == "long":

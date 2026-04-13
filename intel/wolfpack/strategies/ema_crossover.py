@@ -1,6 +1,15 @@
-"""EMA Crossover Strategy — classic fast/slow EMA crossover.
+"""EMA Crossover Strategy — classic fast/slow EMA crossover, regime-gated.
 
-Goes long when fast EMA crosses above slow EMA, short when below.
+Goes long on golden crosses (fast > slow) and short on death crosses (fast < slow).
+Regime gating (read from macro_regime kwarg):
+
+  TRENDING_UP     → longs only (golden crosses aligned with the trend)
+  TRENDING_DOWN   → shorts only (death crosses aligned with the trend)
+  RANGING_*       → disabled (too many whipsaw crosses in chop)
+  VOLATILE        → disabled
+  TRANSITION      → disabled (wait for confirmation)
+  None            → both directions (backward compat)
+
 Pure numpy implementation — no external TA libs.
 """
 
@@ -8,6 +17,15 @@ import numpy as np
 
 from wolfpack.exchanges.base import Candle
 from wolfpack.strategies.base import Strategy
+
+# Regimes that allow long crosses to fire
+_LONG_OK = frozenset({"TRENDING_UP", "TRENDING", None})
+# Regimes that allow short crosses to fire
+_SHORT_OK = frozenset({"TRENDING_DOWN", "TRENDING", None})
+# Regimes that disable this strategy entirely
+_DISABLED = frozenset(
+    {"RANGING", "RANGING_LOW_VOL", "RANGING_HIGH_VOL", "VOLATILE", "TRANSITION"}
+)
 
 
 def _ema(values: np.ndarray, period: int) -> np.ndarray:
@@ -54,6 +72,12 @@ class EMACrossoverStrategy(Strategy):
     def evaluate(
         self, candles: list[Candle], current_idx: int, **params
     ) -> dict | None:
+        macro_regime = params.get("macro_regime")
+
+        # Disabled regimes: chop (too many whipsaws), volatile, transition
+        if macro_regime in _DISABLED:
+            return None
+
         fast_period = params.get("fast_period", 20)
         slow_period = params.get("slow_period", 50)
         size_pct = params.get("size_pct", 15.0)
@@ -76,22 +100,26 @@ class EMACrossoverStrategy(Strategy):
         candle = candles[current_idx]
 
         if fast_above_now and not fast_above_prev:
-            # Golden cross — go long
+            # Golden cross — only fire if regime allows longs
+            if macro_regime not in _LONG_OK:
+                return None
             return {
                 "symbol": "",
                 "direction": "long",
-                "conviction": 70,
+                "conviction": 75 if macro_regime == "TRENDING_UP" else 70,
                 "entry_price": candle.close,
                 "stop_loss": None,
                 "take_profit": None,
                 "size_pct": size_pct,
             }
         elif not fast_above_now and fast_above_prev:
-            # Death cross — go short
+            # Death cross — only fire if regime allows shorts
+            if macro_regime not in _SHORT_OK:
+                return None
             return {
                 "symbol": "",
                 "direction": "short",
-                "conviction": 70,
+                "conviction": 75 if macro_regime == "TRENDING_DOWN" else 70,
                 "entry_price": candle.close,
                 "stop_loss": None,
                 "take_profit": None,

@@ -58,15 +58,42 @@ class MeanReversionStrategy(Strategy):
     }
 
     # Regime-adaptive parameter presets — each tunes threshold / stops / SMA / sizing
-    # for the market conditions the regime represents.
+    # for the specific sub-regime the router is emitting. The router uses
+    # sub-regimes (RANGING_LOW_VOL, RANGING_HIGH_VOL, TRENDING_UP/DOWN) so we
+    # key by those. Legacy family names (RANGING, TRENDING) fall through to
+    # sensible defaults for back-compat with tests and pinned calls.
     REGIME_PRESETS = {
-        "RANGING": {
+        "RANGING_LOW_VOL": {
+            "mean_period": 15,
+            "threshold_atr_mult": 1.2,
+            "stop_atr_mult": 0.6,
+            "size_pct": 8.0,
+        },
+        "RANGING_HIGH_VOL": {
+            "mean_period": 20,
+            "threshold_atr_mult": 2.0,
+            "stop_atr_mult": 1.0,
+            "size_pct": 10.0,
+        },
+        "RANGING": {  # back-compat family-level default
             "mean_period": 15,
             "threshold_atr_mult": 1.5,
             "stop_atr_mult": 0.7,
             "size_pct": 8.0,
         },
-        "TRENDING": {
+        "TRENDING_UP": {
+            "mean_period": 20,
+            "threshold_atr_mult": 3.0,
+            "stop_atr_mult": 1.0,
+            "size_pct": 12.0,
+        },
+        "TRENDING_DOWN": {
+            "mean_period": 20,
+            "threshold_atr_mult": 3.0,
+            "stop_atr_mult": 1.0,
+            "size_pct": 12.0,
+        },
+        "TRENDING": {  # back-compat
             "mean_period": 20,
             "threshold_atr_mult": 3.0,
             "stop_atr_mult": 1.0,
@@ -80,12 +107,12 @@ class MeanReversionStrategy(Strategy):
 
     @classmethod
     def _preset_for(cls, regime: str | None) -> dict:
-        """Return parameter preset for the given macro regime.
+        """Return parameter preset for the given specific regime or family.
 
-        None / unknown falls back to TRENDING defaults (backward compat).
-        VOLATILE returns an empty dict — caller should early-return None.
+        None / unknown falls back to TRENDING defaults (back-compat).
+        VOLATILE / TRANSITION return an empty dict — caller should early-return None.
         """
-        if regime == "VOLATILE":
+        if regime in ("VOLATILE", "TRANSITION"):
             return {}
         return cls.REGIME_PRESETS.get(regime or "TRENDING", cls.REGIME_PRESETS["TRENDING"])
 
@@ -94,8 +121,8 @@ class MeanReversionStrategy(Strategy):
     ) -> dict | None:
         macro_regime = params.get("macro_regime")
 
-        # VOLATILE: mean-reversion is dangerous, don't fade panic moves
-        if macro_regime == "VOLATILE":
+        # VOLATILE / TRANSITION: mean-reversion is dangerous mid-shift
+        if macro_regime in ("VOLATILE", "TRANSITION"):
             return None
 
         preset = self._preset_for(macro_regime)

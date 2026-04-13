@@ -1,12 +1,16 @@
 """Band Fade Strategy -- fade Bollinger Band touches in RANGING regimes.
 
 Pure RANGING play. Fires when:
-  - Price closes outside the Bollinger Band (20 SMA ± 2 stdev)
-  - RSI(14) is in oversold (< 35) or overbought (> 65) territory
+  - Price closes outside the Bollinger Band (20 SMA ± N stdev)
+  - RSI(14) is in oversold/overbought territory
   - Prior bar confirms the touch (not mid-trend continuation)
 
 Targets the 20 SMA (middle band) for TP, with a tight stop beyond the outer band.
-Only active when macro_regime == "RANGING". Other regimes return None.
+
+Regime gating: only fires in RANGING_LOW_VOL or RANGING_HIGH_VOL. Other
+sub-regimes return None. The band-stdev and RSI thresholds also auto-tune
+per sub-regime — HIGH_VOL uses 2.5 stdev + stricter RSI, LOW_VOL uses 2.0
+stdev + standard RSI.
 
 This is the strategy that was missing from the range book. mean_reversion at its
 default 3.0 ATR threshold fires on extreme reversals; band_fade fires on normal
@@ -15,6 +19,24 @@ markets.
 
 Pure numpy implementation.
 """
+
+_RANGING_REGIMES = frozenset({"RANGING", "RANGING_LOW_VOL", "RANGING_HIGH_VOL"})
+_REGIME_PRESETS = {
+    "RANGING_LOW_VOL": {
+        "bb_stdev": 2.0,
+        "rsi_oversold": 35.0,
+        "rsi_overbought": 65.0,
+        "stop_atr_mult": 0.6,
+        "size_pct": 10.0,
+    },
+    "RANGING_HIGH_VOL": {
+        "bb_stdev": 2.5,
+        "rsi_oversold": 30.0,
+        "rsi_overbought": 70.0,
+        "stop_atr_mult": 0.9,
+        "size_pct": 8.0,
+    },
+}
 
 import numpy as np
 
@@ -86,17 +108,23 @@ class BandFadeStrategy(Strategy):
         self, candles: list[Candle], current_idx: int, **params
     ) -> dict | None:
         macro_regime = params.get("macro_regime")
-        # Pure RANGING play — don't fire in trends or volatile panic
-        if macro_regime not in (None, "RANGING"):
+        # Pure RANGING play — don't fire in trends, volatile panic, or transitions
+        if macro_regime is not None and macro_regime not in _RANGING_REGIMES:
             return None
 
+        # Pick sub-regime preset (HIGH_VOL vs LOW_VOL). Fallback: LOW_VOL defaults.
+        preset = _REGIME_PRESETS.get(
+            macro_regime or "RANGING_LOW_VOL",
+            _REGIME_PRESETS["RANGING_LOW_VOL"],
+        )
+
         bb_period = int(params.get("bb_period", 20))
-        bb_stdev = float(params.get("bb_stdev", 2.0))
+        bb_stdev = float(params.get("bb_stdev", preset["bb_stdev"]))
         rsi_period = int(params.get("rsi_period", 14))
-        rsi_oversold = float(params.get("rsi_oversold", 35.0))
-        rsi_overbought = float(params.get("rsi_overbought", 65.0))
-        stop_atr_mult = float(params.get("stop_atr_mult", 0.6))
-        size_pct = float(params.get("size_pct", 10.0))
+        rsi_oversold = float(params.get("rsi_oversold", preset["rsi_oversold"]))
+        rsi_overbought = float(params.get("rsi_overbought", preset["rsi_overbought"]))
+        stop_atr_mult = float(params.get("stop_atr_mult", preset["stop_atr_mult"]))
+        size_pct = float(params.get("size_pct", preset["size_pct"]))
 
         needed = max(bb_period, rsi_period) + 2
         if current_idx < needed:

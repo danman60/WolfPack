@@ -1,7 +1,18 @@
-"""Turtle/Donchian Breakout Strategy -- classic channel breakout with SMA trend filter.
+"""Turtle/Donchian Breakout Strategy -- channel breakout with SMA trend filter.
 
 Goes long on 20-period highest-high breakout above SMA(55), short on lowest-low
-breakout below SMA(55). Uses ATR-based stops and structural exits (opposite channel break).
+breakout below SMA(55). Uses ATR-based stops and structural exits (opposite
+channel break).
+
+Regime gating (read from macro_regime kwarg):
+
+  TRENDING_UP     → longs only (channel breakouts aligned with the trend)
+  TRENDING_DOWN   → shorts only
+  RANGING_*       → disabled (range highs/lows become traps, not breakouts)
+  VOLATILE        → disabled
+  TRANSITION      → disabled
+  None            → both directions (backward compat)
+
 Pure numpy implementation.
 """
 
@@ -10,6 +21,13 @@ import numpy as np
 from wolfpack.exchanges.base import Candle
 from wolfpack.price_utils import round_price
 from wolfpack.strategies.base import Strategy
+
+# Same gating buckets as ema_crossover (trend-follower)
+_LONG_OK = frozenset({"TRENDING_UP", "TRENDING", None})
+_SHORT_OK = frozenset({"TRENDING_DOWN", "TRENDING", None})
+_DISABLED = frozenset(
+    {"RANGING", "RANGING_LOW_VOL", "RANGING_HIGH_VOL", "VOLATILE", "TRANSITION"}
+)
 
 
 class TurtleDonchianStrategy(Strategy):
@@ -60,6 +78,7 @@ class TurtleDonchianStrategy(Strategy):
     def evaluate(
         self, candles: list[Candle], current_idx: int, **params
     ) -> dict | None:
+        macro_regime = params.get("macro_regime")
         breakout_period = params.get("breakout_period", 20)
         atr_period = params.get("atr_period", 20)
         atr_stop_mult = params.get("atr_stop_mult", 2.0)
@@ -112,13 +131,23 @@ class TurtleDonchianStrategy(Strategy):
             # Could be either a close-short or an entry-long -- check for breakout
             pass
 
+        # Regime gate: Turtle breakouts whipsaw hard in chop; only fire in
+        # confirmed trending regimes (or None for back-compat). Close signals
+        # above are still allowed to let existing positions exit regardless.
+        if macro_regime in _DISABLED:
+            return None
+
         # Long breakout: close > previous highest high AND above SMA
-        if current_close > highest_high and current_close > sma:
+        if (
+            current_close > highest_high
+            and current_close > sma
+            and macro_regime in _LONG_OK
+        ):
             stop_loss = round_price(current_close - atr * atr_stop_mult)
             return {
                 "symbol": "",
                 "direction": "long",
-                "conviction": 65,
+                "conviction": 70 if macro_regime == "TRENDING_UP" else 65,
                 "entry_price": current_close,
                 "stop_loss": stop_loss,
                 "take_profit": None,  # structural exit, no fixed TP
@@ -126,12 +155,16 @@ class TurtleDonchianStrategy(Strategy):
             }
 
         # Short breakout: close < previous lowest low AND below SMA
-        if current_close < lowest_low and current_close < sma:
+        if (
+            current_close < lowest_low
+            and current_close < sma
+            and macro_regime in _SHORT_OK
+        ):
             stop_loss = round_price(current_close + atr * atr_stop_mult)
             return {
                 "symbol": "",
                 "direction": "short",
-                "conviction": 65,
+                "conviction": 70 if macro_regime == "TRENDING_DOWN" else 65,
                 "entry_price": current_close,
                 "stop_loss": stop_loss,
                 "take_profit": None,
