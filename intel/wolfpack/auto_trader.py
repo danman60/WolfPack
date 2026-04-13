@@ -845,6 +845,53 @@ class AutoTrader:
             if not pos:
                 continue
 
+            # Protect mechanical strategy positions from premature Brief closes.
+            # When a wallet opts into `protect_mechanical_positions`, Brief cannot
+            # close a position whose recommendation_id starts with "strat-" unless
+            # an emergency condition is met: held > 30 min, loss > 1.5%, or regime
+            # shifted from entry. This lets band_fade / mean_reversion / trend_pullback
+            # run to their own SL/TP instead of being flattened on first red tick.
+            if (
+                action == "close"
+                and self._wallet_config is not None
+                and self._wallet_config.get("protect_mechanical_positions", False)
+                and getattr(pos, "recommendation_id", None)
+                and str(pos.recommendation_id).startswith("strat-")
+            ):
+                try:
+                    hold_s = (datetime.now(timezone.utc) - pos.opened_at).total_seconds()
+                except Exception:
+                    hold_s = 0.0
+                loss_pct = 0.0
+                if getattr(pos, "size_usd", 0) and pos.unrealized_pnl is not None and pos.unrealized_pnl < 0:
+                    loss_pct = -(pos.unrealized_pnl / pos.size_usd) * 100
+                regime_shifted = (
+                    getattr(pos, "regime_at_entry", None)
+                    and pos.regime_at_entry not in (None, "unknown")
+                    and self._current_regime not in (None, "unknown")
+                    and pos.regime_at_entry != self._current_regime
+                )
+                if hold_s < 1800 and loss_pct < 1.5 and not regime_shifted:
+                    logger.info(
+                        f"[auto-trader] Brief close BLOCKED on strat position {pa_symbol}: "
+                        f"held {hold_s:.0f}s, loss {loss_pct:.2f}%, "
+                        f"regime {pos.regime_at_entry}->{self._current_regime} — "
+                        f"protect_mechanical_positions"
+                    )
+                    # Mark action as auto_executed so it doesn't re-queue each cycle
+                    if action_id:
+                        try:
+                            db.table("wp_position_actions").delete().eq(
+                                "symbol", pa_symbol
+                            ).eq("action", action).eq("status", "auto_executed").execute()
+                            db.table("wp_position_actions").update({
+                                "status": "auto_executed",
+                                "acted_at": datetime.now(timezone.utc).isoformat(),
+                            }).eq("id", action_id).execute()
+                        except Exception:
+                            pass
+                    continue
+
             if action == "close":
                 current_price = (latest_prices or {}).get(pa_symbol, pos.current_price)
                 self.engine.update_prices({pa_symbol: current_price})
