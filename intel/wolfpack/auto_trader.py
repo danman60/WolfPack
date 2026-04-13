@@ -1101,9 +1101,12 @@ class AutoTrader:
                     continue
 
                 # VWAP filter on mechanical longs (scales with YOLO level)
+                # Uses the latest candle close since process_strategy_signals doesn't
+                # receive latest_prices (pre-existing NameError bug — was swallowing
+                # every mechanical long signal).
                 if direction == "long":
                     vwap = self._latest_vwaps.get(symbol, 0)
-                    current_price = (latest_prices or {}).get(symbol, 0)
+                    current_price = float(candles[current_idx].close) if candles else 0
                     if vwap > 0 and current_price > 0 and current_price < vwap:
                         if self.yolo_level <= 2:
                             logger.info(f"[auto-trader] {symbol} mech long blocked: below VWAP")
