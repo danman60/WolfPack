@@ -1,7 +1,16 @@
-"""Mean Reversion Strategy -- fade extreme moves from the mean.
+"""Mean Reversion Strategy -- fade moves from the mean, regime-adaptive.
 
-Enters when price deviates beyond N ATR units from SMA, targets a return to the mean.
-Regime gating is handled by the router, NOT inside this strategy (keeps it backtest-friendly).
+Enters when price deviates N ATR units from SMA, targets a return to the mean.
+The entry threshold and tuning auto-switch based on macro_regime:
+
+  - RANGING  : threshold 1.5 ATR, tight stops, responsive SMA — range fades
+  - TRENDING : threshold 3.0 ATR, wider stops — only fade extreme extensions
+  - VOLATILE : disabled (return None)
+  - None     : backward-compat TRENDING defaults
+
+Regime gating is still in the router (RANGING list), but the router tells the
+strategy *which* regime it's running in so parameters auto-adapt.
+
 Pure numpy implementation.
 """
 
@@ -48,17 +57,54 @@ class MeanReversionStrategy(Strategy):
         },
     }
 
+    # Regime-adaptive parameter presets — each tunes threshold / stops / SMA / sizing
+    # for the market conditions the regime represents.
+    REGIME_PRESETS = {
+        "RANGING": {
+            "mean_period": 15,
+            "threshold_atr_mult": 1.5,
+            "stop_atr_mult": 0.7,
+            "size_pct": 8.0,
+        },
+        "TRENDING": {
+            "mean_period": 20,
+            "threshold_atr_mult": 3.0,
+            "stop_atr_mult": 1.0,
+            "size_pct": 12.0,
+        },
+    }
+
     @property
     def warmup_bars(self) -> int:
         return 30
 
+    @classmethod
+    def _preset_for(cls, regime: str | None) -> dict:
+        """Return parameter preset for the given macro regime.
+
+        None / unknown falls back to TRENDING defaults (backward compat).
+        VOLATILE returns an empty dict — caller should early-return None.
+        """
+        if regime == "VOLATILE":
+            return {}
+        return cls.REGIME_PRESETS.get(regime or "TRENDING", cls.REGIME_PRESETS["TRENDING"])
+
     def evaluate(
         self, candles: list[Candle], current_idx: int, **params
     ) -> dict | None:
-        mean_period = params.get("mean_period", 20)
-        threshold_atr_mult = params.get("threshold_atr_mult", 3.0)
-        stop_atr_mult = params.get("stop_atr_mult", 1.0)
-        size_pct = params.get("size_pct", 12.0)
+        macro_regime = params.get("macro_regime")
+
+        # VOLATILE: mean-reversion is dangerous, don't fade panic moves
+        if macro_regime == "VOLATILE":
+            return None
+
+        preset = self._preset_for(macro_regime)
+        mean_period = params.get("mean_period", preset.get("mean_period", 20))
+        threshold_atr_mult = params.get(
+            "threshold_atr_mult", preset.get("threshold_atr_mult", 3.0)
+        )
+        stop_atr_mult = params.get("stop_atr_mult", preset.get("stop_atr_mult", 1.0))
+        size_pct = params.get("size_pct", preset.get("size_pct", 12.0))
 
         needed = max(mean_period, 15) + 1  # 14 for ATR + 1
         if current_idx < needed:
