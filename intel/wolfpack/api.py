@@ -1663,11 +1663,17 @@ async def regime_state(symbol: str = "BTC"):
 
     Returns the output of the regime router's debounce state machine so
     callers can see what the system currently thinks the market is doing
-    and whether a transition is in progress.
+    and whether a transition is in progress. Includes classification
+    accuracy from the validator (EWMA over recent ~20 classifications).
     """
     try:
         from wolfpack.strategies.regime_router import get_regime_state
-        return {"symbol": symbol, **get_regime_state(symbol)}
+        from wolfpack.strategies.regime_validator import get_accuracy
+        return {
+            "symbol": symbol,
+            **get_regime_state(symbol),
+            "accuracy": get_accuracy(symbol),
+        }
     except Exception as e:
         logger.error(f"[regime] state fetch failed: {e}")
         return {"symbol": symbol, "error": str(e)}

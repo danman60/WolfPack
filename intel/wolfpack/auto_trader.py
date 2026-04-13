@@ -17,14 +17,15 @@ logger = logging.getLogger(__name__)
 # Static defaults — used as fallback when < 30 total strategy trades
 STRATEGY_ALLOCATIONS = {
     # Trending strategies
-    "ema_crossover": 0.15,
+    "ema_crossover": 0.10,
     "turtle_donchian": 0.10,
-    "orb_session": 0.10,
+    "trend_pullback": 0.15,   # mid-trend continuation, highest freq in TRENDING
+    "orb_session": 0.05,
     # Ranging strategies
     "mean_reversion": 0.20,
     "band_fade": 0.20,
     "measured_move": 0.05,
-    # Brief-driven: remaining ~20%
+    # Brief-driven: remaining ~15%
 }
 
 # Dynamic allocation cache (module-level, shared across AutoTrader instances)
@@ -78,6 +79,7 @@ STRATEGY_TIMEFRAMES = {
     "turtle_donchian": "1h",
     "mean_reversion": "1h",
     "band_fade": "1h",
+    "trend_pullback": "1h",
     "orb_session": "5m",
     "measured_move": "5m",
 }
@@ -1022,6 +1024,32 @@ class AutoTrader:
             f"[auto-trader] Regime routing: {specific_regime} "
             f"(family={macro_family}) -- {routing['reason']} [{debounce}]"
         )
+
+        # Regime validation feedback loop — tick existing pending validations
+        # every cycle, and record a new one whenever the specific regime
+        # actually changes for this symbol.
+        try:
+            from wolfpack.strategies import regime_validator as _rv
+            _cur_price = float(candles[-1].close) if candles else 0.0
+            _atr_for_val = 0.0
+            if len(candles) >= 15:
+                # Reuse the mean_reversion ATR helper on the last 15 bars
+                from wolfpack.strategies.mean_reversion import MeanReversionStrategy as _MR
+                _atr_for_val = _MR._compute_atr(candles[-15:], 14)
+            _rv.tick(symbol, _cur_price, _atr_for_val)
+            # Only record on a real regime shift — use a per-symbol cache
+            if not hasattr(self, "_regime_validator_seen"):
+                self._regime_validator_seen = {}
+            if self._regime_validator_seen.get(symbol) != specific_regime:
+                _rv.record_classification(
+                    symbol=symbol,
+                    regime=specific_regime,
+                    anchor_price=_cur_price,
+                    anchor_atr=_atr_for_val,
+                )
+                self._regime_validator_seen[symbol] = specific_regime
+        except Exception as _e:
+            logger.debug(f"[regime-validator] {symbol} tick/record failed: {_e}")
 
         # VOLATILE: tighten trailing stops, no new entries
         if macro_family == "VOLATILE":

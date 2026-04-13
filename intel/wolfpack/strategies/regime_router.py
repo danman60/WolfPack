@@ -116,8 +116,8 @@ def _classify_macro(regime: str, agreement: float, vol_regime: str) -> tuple[str
 # Allowed strategy list per specific sub-regime. Strategies receive the
 # specific sub-regime in their evaluate() call so they can tune params.
 _ALLOWED_BY_REGIME: dict[str, list[str]] = {
-    "TRENDING_UP":      ["ema_crossover", "turtle_donchian", "orb_session"],
-    "TRENDING_DOWN":    ["ema_crossover", "turtle_donchian", "orb_session"],
+    "TRENDING_UP":      ["ema_crossover", "turtle_donchian", "trend_pullback", "orb_session"],
+    "TRENDING_DOWN":    ["ema_crossover", "turtle_donchian", "trend_pullback", "orb_session"],
     "RANGING_LOW_VOL":  ["mean_reversion", "band_fade"],
     "RANGING_HIGH_VOL": ["mean_reversion", "band_fade"],
     "VOLATILE":         [],  # safety: no new entries
