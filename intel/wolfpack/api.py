@@ -2867,11 +2867,16 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
     
                 _last_runs["brief"] = datetime.now(timezone.utc)
     
-                # Set current regime on auto_trader for filtering
+                # Set current regime on auto_trader for filtering. Uses the
+                # specific sub-regime (e.g. RANGING_LOW_VOL) so downstream
+                # tagging and tracker learning get granular context.
                 try:
                     from wolfpack.strategies.regime_router import get_regime_state
                     regime_state_info = get_regime_state(symbol)
-                    auto_trader.set_regime(regime_state_info["current_macro"])
+                    auto_trader.set_regime(
+                        regime_state_info.get("current_specific")
+                        or regime_state_info.get("current_family", "unknown")
+                    )
                 except Exception:
                     pass
 
@@ -2954,9 +2959,11 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
                     tm = get_transition_manager()
                     # Tick cooldown
                     tm.tick(symbol)
-                    # Get current regime from the routing done inside process_strategy_signals
+                    # Get current regime from the routing done inside process_strategy_signals.
+                    # Feeds transition manager with the family-level name so its internal
+                    # equality checks (string compare) match the historic behavior.
                     regime_state = get_regime_state(symbol)
-                    current_macro = regime_state["current_macro"]
+                    current_macro = regime_state.get("current_family", "unknown")
                     _rt_engine = _get_perp_trader(_primary_perp).engine
                     actions = tm.check_transition(symbol, current_macro, _rt_engine.portfolio.positions)
                     if actions.regime_shifted:
