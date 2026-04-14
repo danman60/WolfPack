@@ -70,27 +70,37 @@ class MeanReversionStrategy(Strategy):
     REGIME_PRESETS = {
         "RANGING_LOW_VOL": {
             "mean_period": 15,
-            "threshold_atr_mult": 1.3,     # was 0.75 — too tight, fires on noise
-            "stop_atr_mult": 0.7,          # was 0.4 — widened to match threshold
+            "threshold_atr_mult": 1.3,
+            "stop_atr_mult": 0.7,
             "size_pct": 6.0,
-            "allow_long": False,           # longs in chop = statistical loser
-            "allow_short": True,
+            # Edge matrix audit (2026-04-14): 32 trades, 6.3% WR, -$511.
+            # ATR-percentile regime label wrongly tags slow drifts as
+            # RANGING_LOW_VOL; mean_reversion shorts into uptrends and
+            # gets stopped out 94% of the time. Disabled until Module A
+            # (formal trend_score classifier) replaces the label source.
+            "allow_long": False,
+            "allow_short": False,
         },
         "RANGING_HIGH_VOL": {
             "mean_period": 15,
-            "threshold_atr_mult": 1.5,     # was 1.0 — same logic
-            "stop_atr_mult": 0.8,          # was 0.5
+            "threshold_atr_mult": 1.5,
+            "stop_atr_mult": 0.8,
             "size_pct": 7.0,
+            # Edge matrix: 6 trades, 16.7% WR, -$60. Same root cause as
+            # LOW_VOL. Disabled pending formal regime classifier.
             "allow_long": False,
-            "allow_short": True,
+            "allow_short": False,
         },
         "RANGING": {  # back-compat family-level default
             "mean_period": 15,
             "threshold_atr_mult": 1.5,
             "stop_atr_mult": 0.8,
             "size_pct": 8.0,
+            # Edge matrix: 4 trades, 0% WR, -$59. Disabled for same
+            # reason as RANGING_LOW_VOL/HIGH_VOL. TRENDING_UP/DOWN
+            # presets remain enabled — those are the historical winners.
             "allow_long": False,
-            "allow_short": True,
+            "allow_short": False,
         },
         "TRENDING_UP": {
             # Contrarian mean reversion in an uptrend = short rips.

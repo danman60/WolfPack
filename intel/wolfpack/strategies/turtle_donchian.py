@@ -36,10 +36,15 @@ class TurtleDonchianStrategy(Strategy):
     parameters = {
         "breakout_period": {
             "type": "int",
-            "default": 20,
+            # Research agent 4 (2026-04-14) — institutional (AQR 110-year)
+            # + crypto (HTX) validation: Turtle System 2 (55-day) beats
+            # System 1 (20-day) on modern crypto. Edge matrix: our
+            # 20-day turtle_donchian long TRENDING_UP had 31.6% WR / -$62
+            # over 19 trades. 55-day has published 55-65% WR.
+            "default": 55,
             "min": 10,
-            "max": 30,
-            "desc": "Period for highest-high / lowest-low channel",
+            "max": 100,
+            "desc": "Period for highest-high / lowest-low channel (55 = Turtle System 2)",
         },
         "atr_period": {
             "type": "int",

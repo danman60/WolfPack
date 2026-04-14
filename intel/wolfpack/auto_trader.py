@@ -1106,6 +1106,69 @@ class AutoTrader:
             except Exception as _e:
                 logger.warning(f"[auto-adapt] {symbol} drift check failed: {_e}")
 
+        # ── Module A+B: formal regime classifier + asymmetric gating (v3-only) ──
+        # Opt-in per wallet via config.use_regime_v2=true. Runs the research-backed
+        # regime_v2 analyzer (half-life + Hurst + lag-1 autocorr ensemble + bipower
+        # variation for jump detection) and applies asymmetric gating:
+        #   trend_score > +0.35  → trend-follower allowed list only (block reverters)
+        #   trend_score < -0.20  → reverter allowed list only (block trend followers)
+        #   jump_fraction > 0.40 → block ALL new entries (JUMPY = no edge)
+        # Leaves v1 and v2 on the current config as experiment controls.
+        if (
+            timeframe == "1h"
+            and self._wallet_config is not None
+            and self._wallet_config.get("use_regime_v2", False)
+            and candles
+            and len(candles) >= 50
+        ):
+            try:
+                import numpy as _np
+                from wolfpack.modules.regime_v2 import analyze_regime as _analyze_regime
+
+                _window = min(200, len(candles))
+                _closes = _np.array([c.close for c in candles[-_window:]], dtype=_np.float64)
+                _highs  = _np.array([c.high  for c in candles[-_window:]], dtype=_np.float64)
+                _lows   = _np.array([c.low   for c in candles[-_window:]], dtype=_np.float64)
+                _ra = _analyze_regime(_closes, _highs, _lows)
+
+                _reverters = {"mean_reversion", "band_fade"}
+                _trend_followers = {
+                    "ema_crossover", "turtle_donchian", "trend_pullback",
+                    "orb_session", "slow_drift_follow", "range_breakout",
+                }
+
+                _original_allowed = list(allowed or [])
+
+                if _ra.is_jumpy:
+                    allowed = []
+                    logger.info(
+                        f"[regime_v2] {symbol} JUMPY (jump_frac={_ra.jump_fraction:.2f}) "
+                        f"— all entries blocked"
+                    )
+                elif _ra.trend_score > 0.35:
+                    # Strong trend — block reverters, keep trend-followers
+                    allowed = [s for s in _original_allowed if s not in _reverters]
+                    logger.info(
+                        f"[regime_v2] {symbol} TREND (score={_ra.trend_score:+.2f}, "
+                        f"hurst={_ra.hurst:.2f}, vol={_ra.vol_regime}) "
+                        f"— reverters blocked, allowed={allowed}"
+                    )
+                elif _ra.trend_score < -0.20:
+                    # Strong reversion — block trend-followers, keep reverters
+                    allowed = [s for s in _original_allowed if s not in _trend_followers]
+                    logger.info(
+                        f"[regime_v2] {symbol} REVERT (score={_ra.trend_score:+.2f}, "
+                        f"half_life={_ra.half_life:.1f}, vol={_ra.vol_regime}) "
+                        f"— trend-followers blocked, allowed={allowed}"
+                    )
+                else:
+                    logger.info(
+                        f"[regime_v2] {symbol} NEUTRAL (score={_ra.trend_score:+.2f}, "
+                        f"vol={_ra.vol_regime}) — no gating change"
+                    )
+            except Exception as _e:
+                logger.warning(f"[regime_v2] {symbol} analyze_regime failed: {_e}")
+
         # Sync _current_regime so per-wallet traders get the live regime.
         # api.py only calls set_regime() on the primary trader, so v2/v3 were stuck
         # at "unknown" — breaking regime_at_entry tags and PerformanceTracker grading.

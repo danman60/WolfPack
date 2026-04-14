@@ -117,12 +117,16 @@ def _classify_macro(regime: str, agreement: float, vol_regime: str) -> tuple[str
 # specific sub-regime in their evaluate() call so they can tune params.
 #
 # 2026-04-13: added slow_drift_follow + range_breakout as RANGING probes.
-# Neither has historical validation — PerformanceTracker grades them and
-# scales allocation. Current RANGING strategies (mean_reversion / band_fade)
-# have been unreliable in slow-drift chop and need alternatives.
+# 2026-04-14: restored mean_reversion to TRENDING_UP/DOWN allowed lists.
+# The Apr 6-10 +$3,372 edge came from mean_reversion short firing in
+# downtrends when NO regime gating existed. Current gating blocked the
+# entire edge from ever reproducing. Re-enabled with 3.0 ATR threshold
+# (only fires on extreme extensions — exactly the Apr 6-10 setup) and
+# allow_long=False + allow_short=True on TRENDING presets. Safe: zero
+# risk of noise fires in tight tape because of the 3.0 ATR wall.
 _ALLOWED_BY_REGIME: dict[str, list[str]] = {
-    "TRENDING_UP":      ["ema_crossover", "turtle_donchian", "trend_pullback", "orb_session"],
-    "TRENDING_DOWN":    ["ema_crossover", "turtle_donchian", "trend_pullback", "orb_session"],
+    "TRENDING_UP":      ["ema_crossover", "turtle_donchian", "trend_pullback", "orb_session", "mean_reversion"],
+    "TRENDING_DOWN":    ["ema_crossover", "turtle_donchian", "trend_pullback", "orb_session", "mean_reversion"],
     "RANGING_LOW_VOL":  ["mean_reversion", "band_fade", "slow_drift_follow", "range_breakout"],
     "RANGING_HIGH_VOL": ["mean_reversion", "band_fade", "slow_drift_follow", "range_breakout"],
     "VOLATILE":         [],  # safety: no new entries

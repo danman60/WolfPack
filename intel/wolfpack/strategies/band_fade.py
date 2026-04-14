@@ -41,17 +41,20 @@ _REGIME_PRESETS = {
         "allow_short": False,
     },
     "RANGING_HIGH_VOL": {
-        # Validator (2026-04-13): HIGH_VOL scoring ~0.3 because realized
-        # excursion rarely exceeds 1 ATR in this flat tape. Tightened to
-        # match observed behavior rather than the detector's label.
         "bb_period": 18,
         "bb_stdev": 1.3,
         "rsi_oversold": 40.0,
         "rsi_overbought": 60.0,
         "stop_atr_mult": 0.5,
         "size_pct": 7.0,
-        "allow_long": True,
-        "allow_short": True,
+        # Edge matrix audit (2026-04-14):
+        #   band_fade short RANGING_HIGH_VOL: 1 trade, 0% WR, -$51
+        #   band_fade short null: 6 trades, 0% WR, -$192
+        #   band_fade long RANGING_LOW_VOL: 3 trades, 33% WR, -$20
+        # Every labeled sample is negative. Fully dormant until Module A
+        # classifier unlocks a regime we have evidence for.
+        "allow_long": False,
+        "allow_short": False,
     },
 }
 
