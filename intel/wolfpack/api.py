@@ -165,6 +165,17 @@ _last_runs: dict[str, datetime | None] = {
 _running: set[str] = set()
 _cycle_lock = asyncio.Lock()
 
+# 2026-04-15 cost reduction: cache Sage + Snoop outputs per symbol. These
+# agents provide macro/sentiment context that changes slowly — running them
+# every 5-min cycle burns tokens without adding signal. TTL=30 min means
+# each symbol runs them at most twice per hour vs ~12x before. Cuts their
+# ~$24/9d combined spend by ~83% with no practical impact on Brief's output
+# (it still receives fresh Sage/Snoop data, just slightly older).
+_slow_agent_cache: dict[str, dict[str, Any]] = {
+    # key: f"{agent_name}:{symbol}", value: {"output": AgentOutput, "ts": datetime}
+}
+SLOW_AGENT_TTL_SECONDS = 1800  # 30 min
+
 # Track module last-run timestamps
 _module_last_runs: dict[str, datetime | None] = {
     "regime_detection": None,
@@ -2637,25 +2648,64 @@ async def _run_full_cycle(exchange: str, symbol: str) -> None:
             if correlation_output:
                 sage_data["correlation"] = correlation_output
     
+            # Build per-cycle agent list. Quant always runs (primary signal).
+            # Sage + Snoop are gated by _slow_agent_cache with 30-min TTL per
+            # symbol — they provide slow-moving context that doesn't need to
+            # refresh every 5-min cycle. Cache hit = reuse last output.
+            now_ts = datetime.now(timezone.utc)
+            agent_tasks = {}
+            snoop_out = None
+            sage_out = None
+
             quant = QuantAgent()
-            snoop = SnoopAgent()
-            sage = SageAgent()
-    
-            _running.update({"quant", "snoop", "sage"})
-    
-            quant_out, snoop_out, sage_out = await asyncio.gather(
-                _run_agent(quant, quant_data, exchange, store_agent_output),
-                _run_agent(snoop, market_data_base, exchange, store_agent_output),
-                _run_agent(sage, sage_data, exchange, store_agent_output),
-                return_exceptions=True,
-            )
-    
+            _running.add("quant")
+            agent_tasks["quant"] = _run_agent(quant, quant_data, exchange, store_agent_output)
+
+            _snoop_key = f"snoop:{symbol}"
+            _snoop_cached = _slow_agent_cache.get(_snoop_key)
+            if _snoop_cached and (now_ts - _snoop_cached["ts"]).total_seconds() < SLOW_AGENT_TTL_SECONDS:
+                snoop_out = _snoop_cached["output"]
+                logger.info(f"[cycle] snoop cached for {symbol} (age {int((now_ts - _snoop_cached['ts']).total_seconds())}s)")
+            else:
+                snoop = SnoopAgent()
+                _running.add("snoop")
+                agent_tasks["snoop"] = _run_agent(snoop, market_data_base, exchange, store_agent_output)
+
+            _sage_key = f"sage:{symbol}"
+            _sage_cached = _slow_agent_cache.get(_sage_key)
+            if _sage_cached and (now_ts - _sage_cached["ts"]).total_seconds() < SLOW_AGENT_TTL_SECONDS:
+                sage_out = _sage_cached["output"]
+                logger.info(f"[cycle] sage cached for {symbol} (age {int((now_ts - _sage_cached['ts']).total_seconds())}s)")
+            else:
+                sage = SageAgent()
+                _running.add("sage")
+                agent_tasks["sage"] = _run_agent(sage, sage_data, exchange, store_agent_output)
+
+            # Execute whichever agents were not cache-hit
+            if agent_tasks:
+                results = await asyncio.gather(*agent_tasks.values(), return_exceptions=True)
+                for name, result in zip(agent_tasks.keys(), results):
+                    if name == "quant":
+                        quant_out = result
+                    elif name == "snoop":
+                        snoop_out = result
+                        if not isinstance(result, Exception):
+                            _slow_agent_cache[_snoop_key] = {"output": result, "ts": now_ts}
+                    elif name == "sage":
+                        sage_out = result
+                        if not isinstance(result, Exception):
+                            _slow_agent_cache[_sage_key] = {"output": result, "ts": now_ts}
+            else:
+                quant_out = None  # should never happen — quant always runs
+
             _running.discard("quant")
             _running.discard("snoop")
             _running.discard("sage")
-            _last_runs["quant"] = datetime.now(timezone.utc)
-            _last_runs["snoop"] = datetime.now(timezone.utc)
-            _last_runs["sage"] = datetime.now(timezone.utc)
+            _last_runs["quant"] = now_ts
+            if "snoop" in agent_tasks:
+                _last_runs["snoop"] = now_ts
+            if "sage" in agent_tasks:
+                _last_runs["sage"] = now_ts
     
             # Log any agent failures but continue — track in failure tracker
             ft = _get_failure_tracker()

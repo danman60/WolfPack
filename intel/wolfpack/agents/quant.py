@@ -100,8 +100,12 @@ Example 2 — Choppy uncertain regime:
 
     @property
     def model_override(self) -> str | None:
-        _api_key, _base_url, _chat, reasoner = self._get_deepseek_client_config()
-        return reasoner
+        # 2026-04-15 cost reduction: Quant was using deepseek-reasoner ($2.19/M
+        # output), which accounted for ~52% of LLM spend ($33 of $67 over 9 days).
+        # Quant is structured synthesis (regime_score / conviction / key_levels),
+        # not chain-of-thought reasoning. deepseek-chat handles it at ~1/3 cost.
+        # Falls through to chat_model in base._call_llm_structured.
+        return None
 
     @property
     def system_prompt(self) -> str:
