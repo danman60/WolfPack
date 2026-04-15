@@ -181,15 +181,20 @@ class LPAutoTrader:
                 pools_checked += 1
 
                 # Use USD-based price ratio (decimal-safe, consistent across all pools).
-                # sqrtPriceX96 requires per-pool token decimals which we don't track;
-                # USD prices from GeckoTerminal are always correct.
+                # DO NOT fall back to sqrtPriceX96 with default decimals — that's the bug
+                # that wiped the LP wallet on 2026-04-15. When the USD feed glitches,
+                # sqrtPriceX96 with hardcoded 18/6 decimals produces ratios off by 10^10
+                # for pools containing WBTC(8)/USDT(6)/etc, which feed into _compute_il
+                # and output near-100% IL. Skip this pool for this tick instead.
                 price_ratio = self.monitor.compute_price_ratio_from_usd(
                     state.token0_price_usd, state.token1_price_usd
                 )
                 if price_ratio <= 0:
-                    # Last resort: try sqrtPriceX96 with default decimals
-                    price_ratio = self.monitor.compute_price_ratio(state.sqrt_price_x96)
-                if price_ratio <= 0:
+                    logger.info(
+                        f"[lp-auto] Skipping {pool_address[:10]} this tick — "
+                        f"USD price feed unavailable (token0=${state.token0_price_usd}, "
+                        f"token1=${state.token1_price_usd})"
+                    )
                     continue
 
                 # Auto-open: if no existing position and under MAX_POSITIONS

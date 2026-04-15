@@ -46,6 +46,26 @@ class PaperLPPortfolio:
     realized_pnl: float = 0.0     # fees - IL on closed positions
     positions: list[PaperLPPosition] = field(default_factory=list)
     closed_positions: int = 0
+    # Circuit breaker state (2026-04-15)
+    halted: bool = False
+    halt_reason: str = ""
+
+
+# ─── LP safety constants (2026-04-15 incident response) ───
+# Max IL per position as a fraction of liquidity. Real Uniswap V3 IL rarely
+# exceeds 30% over weeks of hold; anything higher = calculation error.
+MAX_IL_PCT_PER_POSITION = 30.0  # clamp in _compute_il
+# If current_price_ratio jumps by more than this factor in a single tick,
+# reject the update — real 5-min moves don't exceed 30%.
+MAX_PRICE_RATIO_STEP = 1.30
+# Per-position absolute IL dollar cap before we halt LP trading entirely.
+PER_POSITION_IL_HALT_USD = 500.0
+# Per-position liquidity cap as fraction of equity (position concentration).
+MAX_POSITION_PCT_OF_EQUITY = 0.15
+# Maximum total LP exposure as fraction of equity.
+MAX_TOTAL_EXPOSURE_PCT = 0.60
+# Maximum total session IL loss before halting LP trading.
+MAX_SESSION_IL_USD = 1000.0
 
 
 class PaperLPEngine:
@@ -78,15 +98,54 @@ class PaperLPEngine:
         current_price_ratio: float,
     ) -> Optional[PaperLPPosition]:
         """Open a new paper LP position."""
+        # Circuit breakers — check before any position logic (2026-04-15)
+        if self.portfolio.halted:
+            logger.warning(
+                f"[lp-engine] Cannot open {token0_symbol}/{token1_symbol}: "
+                f"portfolio halted — {self.portfolio.halt_reason}"
+            )
+            return None
+        if self.portfolio.total_il >= MAX_SESSION_IL_USD:
+            self.portfolio.halted = True
+            self.portfolio.halt_reason = (
+                f"Session IL limit: ${self.portfolio.total_il:.2f} "
+                f">= ${MAX_SESSION_IL_USD}"
+            )
+            logger.error(f"[lp-engine] HALTED — {self.portfolio.halt_reason}")
+            return None
+
+        # Reject bogus price ratios at open time. The entry_price_ratio must
+        # be a sensible positive number — otherwise every subsequent IL calc
+        # is garbage. This is the root-cause fallback from the 2026-04-15 crash.
+        if current_price_ratio is None or current_price_ratio <= 0:
+            logger.warning(
+                f"[lp-engine] Cannot open {token0_symbol}/{token1_symbol}: "
+                f"invalid current_price_ratio={current_price_ratio}"
+            )
+            return None
+
         # Check if already have position in this pool
         existing = [p for p in self.portfolio.positions if p.pool_address == pool_address and p.status == "active"]
         if existing:
             logger.warning(f"Already have LP position in pool {pool_address}")
             return None
 
-        size_usd = self.portfolio.equity * (min(size_pct, 30) / 100.0)
+        # Enforce position concentration cap (max 15% of equity per position)
+        capped_size_pct = min(size_pct, MAX_POSITION_PCT_OF_EQUITY * 100)
+        size_usd = self.portfolio.equity * (capped_size_pct / 100.0)
         if size_usd > self.portfolio.free_collateral:
             logger.warning(f"Insufficient collateral for LP: need ${size_usd:.2f}, have ${self.portfolio.free_collateral:.2f}")
+            return None
+
+        # Enforce total LP exposure cap (max 60% of equity across all positions)
+        current_exposure = sum(p.liquidity_usd for p in self.portfolio.positions if p.status != "closed")
+        max_total_exposure = self.portfolio.equity * MAX_TOTAL_EXPOSURE_PCT
+        if current_exposure + size_usd > max_total_exposure:
+            logger.info(
+                f"[lp-engine] {token0_symbol}/{token1_symbol} skipped: "
+                f"would breach total-exposure cap "
+                f"(${current_exposure + size_usd:.0f} > ${max_total_exposure:.0f})"
+            )
             return None
 
         # Check if current tick is within range
@@ -124,9 +183,31 @@ class PaperLPEngine:
         pool_tvl: float,
     ) -> None:
         """Update position state: tick, fees, IL. Called every tick."""
+        # Safety: never accept a non-positive or obviously wrong price ratio.
+        if current_price_ratio is None or current_price_ratio <= 0:
+            logger.warning(
+                f"[lp-engine] Rejecting update for {pool_address[:10]}: "
+                f"invalid current_price_ratio={current_price_ratio}"
+            )
+            return
+
         for pos in self.portfolio.positions:
             if pos.pool_address != pool_address or pos.status != "active":
                 continue
+
+            # Sanity: reject wild per-tick price ratio jumps. Real 5-min crypto
+            # moves don't exceed 30%. If the feed says otherwise, the price
+            # came from a broken fallback (sqrtPriceX96 with wrong decimals)
+            # or a corrupted upstream feed. Keep the last good value.
+            if pos.current_price_ratio > 0:
+                ratio_change = current_price_ratio / pos.current_price_ratio
+                if ratio_change > MAX_PRICE_RATIO_STEP or ratio_change < (1.0 / MAX_PRICE_RATIO_STEP):
+                    logger.warning(
+                        f"[lp-engine] Rejecting wild price move on {pool_address[:10]}: "
+                        f"{pos.current_price_ratio:.8g} -> {current_price_ratio:.8g} "
+                        f"({ratio_change:.2f}x) — keeping last good value"
+                    )
+                    continue
 
             pos.current_tick = current_tick
             pos.current_price_ratio = current_price_ratio
@@ -151,23 +232,49 @@ class PaperLPEngine:
                 if pos.out_of_range_ticks >= 3:
                     pos.status = "out_of_range"
 
-            # Compute IL
+            # Compute IL — clamp prevents runaway losses from feed glitches
             pos.il_pct = self._compute_il(pos.entry_price_ratio, current_price_ratio)
             pos.il_usd = pos.liquidity_usd * abs(pos.il_pct) / 100
+
+            # Per-position IL circuit breaker. If a single position's IL
+            # exceeds PER_POSITION_IL_HALT_USD ($500), halt LP trading —
+            # this shouldn't happen with the clamp, but belt and suspenders.
+            if pos.il_usd >= PER_POSITION_IL_HALT_USD and not self.portfolio.halted:
+                self.portfolio.halted = True
+                self.portfolio.halt_reason = (
+                    f"Per-position IL circuit breaker: {pos.token0_symbol}/"
+                    f"{pos.token1_symbol} IL ${pos.il_usd:.2f} "
+                    f">= ${PER_POSITION_IL_HALT_USD}"
+                )
+                logger.error(f"[lp-engine] HALTED — {self.portfolio.halt_reason}")
 
         # Recalculate portfolio
         self._recalculate()
 
     @staticmethod
     def _compute_il(entry_ratio: float, current_ratio: float) -> float:
-        """Impermanent loss formula: 2*sqrt(r)/(1+r) - 1 where r = current/entry."""
-        if entry_ratio <= 0:
+        """Impermanent loss formula: 2*sqrt(r)/(1+r) - 1 where r = current/entry.
+
+        Clamped to MAX_IL_PCT_PER_POSITION (30%) as a safety floor. Real
+        Uniswap V3 IL on sensible pairs rarely exceeds 30% even over weeks
+        of hold. Anything more = feed corruption or decimal mismatch, not
+        actual market IL. A 30% clamp caps the blast radius from upstream
+        data bugs while still reflecting a catastrophic-but-plausible move.
+        """
+        if entry_ratio <= 0 or current_ratio <= 0:
             return 0.0
         r = current_ratio / entry_ratio
-        if r <= 0:
+        if r <= 0 or not math.isfinite(r):
             return 0.0
         il = 2 * math.sqrt(r) / (1 + r) - 1
-        return round(il * 100, 4)  # as percentage (negative = loss)
+        il_pct = il * 100  # percentage, negative = loss
+        # Clamp to [-MAX_IL_PCT_PER_POSITION, 0]. IL is always ≤ 0 in theory,
+        # but round-off can push it slightly positive near r=1.
+        if il_pct < -MAX_IL_PCT_PER_POSITION:
+            il_pct = -MAX_IL_PCT_PER_POSITION
+        if il_pct > 0:
+            il_pct = 0.0
+        return round(il_pct, 4)
 
     def close_position(self, pool_address: str) -> float:
         """Close LP position. Returns net P&L (fees - IL)."""
@@ -251,6 +358,8 @@ class PaperLPEngine:
             "total_fees_usd": round(self.portfolio.total_fees_earned, 2),
             "total_il_usd": round(self.portfolio.total_il, 2),
             "positions": positions_data,
+            # Note: halted/halt_reason are runtime-only (no schema columns yet).
+            # State resets on restart — by design, so operator investigates first.
         }
 
     def store_snapshot(self) -> dict:
@@ -291,9 +400,21 @@ class PaperLPEngine:
                 p.equity = snap_equity
                 p.total_fees_earned = snap.get("total_fees_usd", 0.0)
                 p.total_il = snap.get("total_il_usd", 0.0)
+                # halted/halt_reason are runtime-only; start fresh on restart
                 # Restore positions first, then calculate free_collateral
                 p.positions.clear()
                 for pos_data in snap.get("positions", []):
+                    # SAFETY (2026-04-15): never restore a position with missing or
+                    # bogus entry_price_ratio. The old `1.0` fallback is what
+                    # triggered the $12k IL wipe when legacy snapshots were loaded.
+                    entry_ratio = pos_data.get("entry_price_ratio", 0)
+                    current_ratio = pos_data.get("current_price_ratio", 0)
+                    if entry_ratio is None or entry_ratio <= 0 or current_ratio is None or current_ratio <= 0:
+                        logger.warning(
+                            f"[lp-engine] Dropping snapshot position {pos_data.get('pair','?')}: "
+                            f"invalid entry/current ratio ({entry_ratio}/{current_ratio})"
+                        )
+                        continue
                     pos = PaperLPPosition(
                         position_id=pos_data.get("position_id", ""),
                         pool_address=pos_data.get("pool", ""),
@@ -303,8 +424,8 @@ class PaperLPEngine:
                         tick_lower=pos_data.get("ticks", [0, 0])[0],
                         tick_upper=pos_data.get("ticks", [0, 0])[1],
                         liquidity_usd=pos_data.get("liquidity_usd", 0.0),
-                        entry_price_ratio=pos_data.get("entry_price_ratio", 1.0),
-                        current_price_ratio=pos_data.get("current_price_ratio", 1.0),
+                        entry_price_ratio=entry_ratio,
+                        current_price_ratio=current_ratio,
                         fees_earned_usd=pos_data.get("fees", 0.0),
                         il_pct=pos_data.get("il_pct", 0.0),
                         il_usd=pos_data.get("il_usd", 0.0),
