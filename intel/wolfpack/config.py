@@ -20,6 +20,8 @@ class Settings(BaseSettings):
     # Ollama Cloud (for Minimax and GLM via https://ollama.com/v1)
     ollama_api_key: str = ""
     ollama_cloud_base_url: str = "https://ollama.com/v1"
+    # NVIDIA NIM (for Kimi K2.5 via https://integrate.api.nvidia.com/v1)
+    nim_api_key: str = ""
 
     # Exchange API
     hyperliquid_wallet: str = ""
