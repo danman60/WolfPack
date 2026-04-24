@@ -897,6 +897,25 @@ class AutoTrader:
                             pass
                     continue
 
+            if (
+                action == "close"
+                and self._wallet_config is not None
+                and self._wallet_config.get("disable_brief_close", False)
+            ):
+                logger.info(
+                    f"[auto-trader] Brief close DISABLED for {pa_symbol} "
+                    f"(wallet config disable_brief_close=true)"
+                )
+                if action_id:
+                    try:
+                        db.table("wp_position_actions").update({
+                            "status": "auto_executed",
+                            "acted_at": datetime.now(timezone.utc).isoformat(),
+                        }).eq("id", action_id).execute()
+                    except Exception:
+                        pass
+                continue
+
             if action == "close":
                 current_price = (latest_prices or {}).get(pa_symbol, pos.current_price)
                 self.engine.update_prices({pa_symbol: current_price})
@@ -1067,7 +1086,15 @@ class AutoTrader:
         from wolfpack.strategies import STRATEGIES
         from wolfpack.strategies.regime_router import route_strategies, _ALLOWED_BY_REGIME
 
-        routing = route_strategies(regime_output, vol_output, symbol=symbol)
+        # Per-wallet bypass: when regime_router_enabled=false, run all strategies
+        # without regime-based filtering. Historical data (1,235 closed trades)
+        # shows routed trades bleed -$3,469 vs +$3,866 for unrouted — the router
+        # filters OUT the positive edge of the underlying mean_reversion strategy.
+        if self._wallet_config and self._wallet_config.get("regime_router_enabled", True) is False:
+            routing = {"allowed": None, "debounce": "", "specific_regime": "unknown", "macro_regime": "unknown"}
+            logger.info(f"[auto-trader] regime router BYPASSED for {symbol} (wallet config)")
+        else:
+            routing = route_strategies(regime_output, vol_output, symbol=symbol)
         allowed = routing.get("allowed")
         debounce = routing.get("debounce", "")
         specific_regime = routing.get("specific_regime", routing.get("macro_regime", "unknown"))
