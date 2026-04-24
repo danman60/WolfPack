@@ -56,6 +56,10 @@ class Agent(ABC):
     _token_tracker = None
     # Per-call context — set by analyze() implementations before LLM calls
     _current_symbol: str | None = None
+    # Provider preference for _call_llm_structured. "kimi" (default) tries
+    # NIM/Kimi first; "deepseek" puts DeepSeek first — use for agents whose
+    # large prompts are slow or 502-prone on Kimi's reasoning path (Brief).
+    preferred_provider: str = "kimi"
 
     @classmethod
     def set_token_tracker(cls, tracker) -> None:
@@ -216,12 +220,12 @@ class Agent(ABC):
             return json.dumps({"summary": "No LLM API key configured", "conviction": 0})
 
     async def _call_llm_structured(self, prompt: str, schema: dict) -> dict:
-        """Call LLM with provider fallback: Kimi → DeepSeek → Minimax → GLM.
+        """Call LLM with provider fallback.
 
-        Policy: Kimi K2.5 via NVIDIA NIM is primary (free developer tier).
-        DeepSeek native kept as paid fallback for when NIM 429s / credits exhaust.
-        Minimax + GLM via Ollama Cloud round out the chain (free tier, rate-limited).
-        OpenRouter and Anthropic are NOT in this chain.
+        Default order: Kimi (NIM) → DeepSeek → Minimax → GLM.
+        When self.preferred_provider == "deepseek", DeepSeek is tried first —
+        used for agents with large prompts where Kimi's reasoning-token burn
+        produces slow calls / NIM 502s (Brief).
 
         Each provider uses OpenAI-compatible API format with json_object mode.
         """
@@ -229,8 +233,10 @@ class Agent(ABC):
         nim_key = _get_key("NIM_API_KEY") or os.environ.get("NIM_API_KEY", "")
         ollama_key = settings.ollama_api_key or _get_key("OLLAMA_API_KEY") or os.environ.get("OLLAMA_API_KEY", "")
 
-        # 1. Kimi K2.5 via NVIDIA NIM (primary)
-        if nim_key:
+        async def try_kimi():
+            if not nim_key:
+                errors.append("NIM: no NIM_API_KEY configured — skipping Kimi")
+                return None
             try:
                 result = await self._call_cloud_structured(
                     prompt,
@@ -242,16 +248,15 @@ class Agent(ABC):
                 if not self._is_fallback_result(result):
                     return result
                 errors.append("Kimi: truncated/unparseable")
-                logger.warning(f"{self.name}: Kimi truncated, trying DeepSeek")
+                logger.warning(f"{self.name}: Kimi truncated, falling through")
             except Exception as e:
                 errors.append(f"Kimi: {e}")
-                logger.warning(f"{self.name}: Kimi failed, trying DeepSeek: {e}")
-        else:
-            errors.append("NIM: no NIM_API_KEY configured — skipping Kimi")
-            logger.warning(f"{self.name}: No NIM_API_KEY — skipping Kimi, trying DeepSeek")
+                logger.warning(f"{self.name}: Kimi failed, falling through: {e}")
+            return None
 
-        # 2. DeepSeek native (paid fallback)
-        if settings.deepseek_api_key:
+        async def try_deepseek():
+            if not settings.deepseek_api_key:
+                return None
             try:
                 api_key, base_url, chat_model, reasoner_model = self._get_deepseek_client_config()
                 model = self.model_override or chat_model
@@ -262,10 +267,21 @@ class Agent(ABC):
                 if not self._is_fallback_result(result):
                     return result
                 errors.append("DeepSeek: truncated/unparseable")
-                logger.warning(f"{self.name}: DeepSeek truncated, trying Minimax")
+                logger.warning(f"{self.name}: DeepSeek truncated, falling through")
             except Exception as e:
                 errors.append(f"DeepSeek: {e}")
-                logger.warning(f"{self.name}: DeepSeek failed, trying Minimax: {e}")
+                logger.warning(f"{self.name}: DeepSeek failed, falling through: {e}")
+            return None
+
+        primary_chain = (
+            [try_deepseek, try_kimi]
+            if self.preferred_provider == "deepseek"
+            else [try_kimi, try_deepseek]
+        )
+        for attempt in primary_chain:
+            result = await attempt()
+            if result is not None:
+                return result
 
         # 3. Minimax via Ollama Cloud (free tier, rate-limited)
         if ollama_key:

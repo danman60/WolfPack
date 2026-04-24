@@ -68,6 +68,11 @@ BRIEF_SCHEMA: dict = {
 
 
 class BriefAgent(Agent):
+    # Pin Brief to DeepSeek-first: Brief's 4-6k-token prompts run long on
+    # Kimi's reasoning path and triggered NIM 502s. DeepSeek handles the
+    # large-prompt synthesis more reliably; Kimi stays as fallback.
+    preferred_provider = "deepseek"
+
     # Default prompt sections — used as fallback when DB has no overrides
     _default_sections = {
         "role": """You are The Brief, the decision synthesizer for the WolfPack intelligence system.
@@ -232,11 +237,16 @@ Example 3 — Position management (adjust_stop on profitable long):
             "exchange": exchange,
         }
 
+        def _cap_signals(sig_list: Any, n: int = 5) -> Any:
+            if isinstance(sig_list, list):
+                return sig_list[:n]
+            return sig_list
+
         if market_data.get("quant_output"):
             qo = market_data["quant_output"]
             context["quant_analysis"] = {
                 "summary": qo.get("summary") if isinstance(qo, dict) else qo.summary,
-                "signals": qo.get("signals") if isinstance(qo, dict) else qo.signals,
+                "signals": _cap_signals(qo.get("signals") if isinstance(qo, dict) else qo.signals),
                 "confidence": qo.get("confidence") if isinstance(qo, dict) else qo.confidence,
             }
 
@@ -244,7 +254,7 @@ Example 3 — Position management (adjust_stop on profitable long):
             so = market_data["snoop_output"]
             context["snoop_analysis"] = {
                 "summary": so.get("summary") if isinstance(so, dict) else so.summary,
-                "signals": so.get("signals") if isinstance(so, dict) else so.signals,
+                "signals": _cap_signals(so.get("signals") if isinstance(so, dict) else so.signals),
                 "confidence": so.get("confidence") if isinstance(so, dict) else so.confidence,
             }
 
@@ -252,7 +262,7 @@ Example 3 — Position management (adjust_stop on profitable long):
             sgo = market_data["sage_output"]
             context["sage_analysis"] = {
                 "summary": sgo.get("summary") if isinstance(sgo, dict) else sgo.summary,
-                "signals": sgo.get("signals") if isinstance(sgo, dict) else sgo.signals,
+                "signals": _cap_signals(sgo.get("signals") if isinstance(sgo, dict) else sgo.signals),
                 "confidence": sgo.get("confidence") if isinstance(sgo, dict) else sgo.confidence,
             }
 
@@ -323,7 +333,7 @@ The trader has set high aggressiveness. Adjust your behavior:
 
         prompt = f"""Synthesize the following intelligence for {symbol} on {exchange} into trade recommendations and position management actions:
 
-{json.dumps(context, indent=2, default=str)}{yolo_override}{perf_section}{heuristic_section}"""
+{json.dumps(context, default=str, separators=(",", ":"))}{yolo_override}{perf_section}{heuristic_section}"""
 
         parsed = await self._call_llm_structured(prompt, BRIEF_SCHEMA)
 
