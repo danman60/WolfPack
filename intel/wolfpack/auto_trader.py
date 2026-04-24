@@ -1091,7 +1091,14 @@ class AutoTrader:
         # shows routed trades bleed -$3,469 vs +$3,866 for unrouted — the router
         # filters OUT the positive edge of the underlying mean_reversion strategy.
         if self._wallet_config and self._wallet_config.get("regime_router_enabled", True) is False:
-            routing = {"allowed": None, "debounce": "", "specific_regime": "unknown", "macro_regime": "unknown"}
+            routing = {
+                "allowed": None,
+                "debounce": "",
+                "specific_regime": "unknown",
+                "macro_regime": "unknown",
+                "reason": "regime_router_disabled_by_wallet_config",
+                "transition": False,
+            }
             logger.info(f"[auto-trader] regime router BYPASSED for {symbol} (wallet config)")
         else:
             routing = route_strategies(regime_output, vol_output, symbol=symbol)
