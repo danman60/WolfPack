@@ -27,8 +27,16 @@ DEEPSEEK_URL = "https://api.deepseek.com/chat/completions"
 MODEL_ID = "deepseek-chat"
 MAX_TOOL_ITERATIONS = 5
 
-# Provider configuration with fallback order
+# Provider configuration with fallback order — Minimax primary (free via Ollama
+# Cloud plan), DeepSeek fallback (paid), OpenRouter/Anthropic after that.
 PROVIDERS = [
+    {
+        "name": "minimax",
+        "url": "https://ollama.com/v1/chat/completions",
+        "model": "minimax-m2.7:cloud",
+        "key_env": "OLLAMA_API_KEY",
+        "format": "openai",
+    },
     {
         "name": "deepseek",
         "url": "https://api.deepseek.com/chat/completions",

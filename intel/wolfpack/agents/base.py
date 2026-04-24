@@ -216,36 +216,19 @@ class Agent(ABC):
             return json.dumps({"summary": "No LLM API key configured", "conviction": 0})
 
     async def _call_llm_structured(self, prompt: str, schema: dict) -> dict:
-        """Call LLM with provider fallback: DeepSeek → Minimax → GLM → Kimi.
+        """Call LLM with provider fallback: Minimax → DeepSeek → GLM → Kimi.
 
-        Policy: Only DeepSeek native + pre-configured cloud models (Minimax, GLM
-        via Ollama Cloud; Kimi via NVIDIA NIM). OpenRouter and Anthropic are
-        NOT in this chain — both ran out of credits in prod and the user wants
-        to avoid hitting them at all.
+        Policy: Minimax via Ollama Cloud is primary (free on user's Ollama plan).
+        DeepSeek kept as paid fallback for when Ollama Cloud is unavailable.
+        GLM (also Ollama Cloud) and Kimi (NVIDIA NIM) round out the chain.
+        OpenRouter and Anthropic are NOT in this chain.
 
         Each provider uses OpenAI-compatible API format with json_object mode.
         """
         errors = []
-
-        # 1. DeepSeek native (paid, primary)
-        if settings.deepseek_api_key:
-            try:
-                api_key, base_url, chat_model, reasoner_model = self._get_deepseek_client_config()
-                model = self.model_override or chat_model
-                if model in (settings.deepseek_reasoner_model, reasoner_model):
-                    result = await self._call_deepseek_reasoner(prompt)
-                else:
-                    result = await self._call_deepseek_structured(prompt)
-                if not self._is_fallback_result(result):
-                    return result
-                errors.append("DeepSeek: truncated/unparseable")
-                logger.warning(f"{self.name}: DeepSeek truncated, trying Minimax")
-            except Exception as e:
-                errors.append(f"DeepSeek: {e}")
-                logger.warning(f"{self.name}: DeepSeek failed, trying Minimax: {e}")
-
-        # 2. Minimax via Ollama Cloud (https://ollama.com/v1 with OLLAMA_API_KEY)
         ollama_key = settings.ollama_api_key or _get_key("OLLAMA_API_KEY") or os.environ.get("OLLAMA_API_KEY", "")
+
+        # 1. Minimax via Ollama Cloud (primary)
         if ollama_key:
             try:
                 result = await self._call_cloud_structured(
@@ -258,12 +241,33 @@ class Agent(ABC):
                 if not self._is_fallback_result(result):
                     return result
                 errors.append("Minimax: truncated/unparseable")
-                logger.warning(f"{self.name}: Minimax truncated, trying GLM")
+                logger.warning(f"{self.name}: Minimax truncated, trying DeepSeek")
             except Exception as e:
                 errors.append(f"Minimax: {e}")
-                logger.warning(f"{self.name}: Minimax failed, trying GLM: {e}")
+                logger.warning(f"{self.name}: Minimax failed, trying DeepSeek: {e}")
+        else:
+            errors.append("Ollama Cloud: no OLLAMA_API_KEY configured — skipping Minimax")
+            logger.warning(f"{self.name}: No OLLAMA_API_KEY — skipping Minimax, trying DeepSeek")
 
-            # 3. GLM via Ollama Cloud (same endpoint, same key)
+        # 2. DeepSeek native (paid fallback)
+        if settings.deepseek_api_key:
+            try:
+                api_key, base_url, chat_model, reasoner_model = self._get_deepseek_client_config()
+                model = self.model_override or chat_model
+                if model in (settings.deepseek_reasoner_model, reasoner_model):
+                    result = await self._call_deepseek_reasoner(prompt)
+                else:
+                    result = await self._call_deepseek_structured(prompt)
+                if not self._is_fallback_result(result):
+                    return result
+                errors.append("DeepSeek: truncated/unparseable")
+                logger.warning(f"{self.name}: DeepSeek truncated, trying GLM")
+            except Exception as e:
+                errors.append(f"DeepSeek: {e}")
+                logger.warning(f"{self.name}: DeepSeek failed, trying GLM: {e}")
+
+        # 3. GLM via Ollama Cloud (same endpoint, same key)
+        if ollama_key:
             try:
                 result = await self._call_cloud_structured(
                     prompt,
@@ -279,9 +283,6 @@ class Agent(ABC):
             except Exception as e:
                 errors.append(f"GLM: {e}")
                 logger.warning(f"{self.name}: GLM failed, trying Kimi: {e}")
-        else:
-            errors.append("Ollama Cloud: no OLLAMA_API_KEY configured — skipping Minimax + GLM")
-            logger.warning(f"{self.name}: No OLLAMA_API_KEY — skipping Minimax + GLM, trying Kimi")
 
         # 4. Kimi via NVIDIA NIM (last-resort cloud fallback)
         nim_key = _get_key("NIM_API_KEY") or os.environ.get("NIM_API_KEY", "")
@@ -403,7 +404,7 @@ class Agent(ABC):
                     {"role": "system", "content": self.system_prompt},
                     {"role": "user", "content": prompt},
                 ],
-                max_tokens=2048,
+                max_tokens=4096,
                 temperature=0.3,
                 response_format={"type": "json_object"},
             )
@@ -459,7 +460,7 @@ class Agent(ABC):
                     {"role": "system", "content": self.system_prompt},
                     {"role": "user", "content": prompt},
                 ],
-                max_tokens=2048,
+                max_tokens=4096,
                 temperature=0.3,
                 response_format={"type": "json_object"},
             )
