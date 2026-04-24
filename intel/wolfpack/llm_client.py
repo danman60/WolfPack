@@ -27,14 +27,15 @@ DEEPSEEK_URL = "https://api.deepseek.com/chat/completions"
 MODEL_ID = "deepseek-chat"
 MAX_TOOL_ITERATIONS = 5
 
-# Provider configuration with fallback order — Minimax primary (free via Ollama
-# Cloud plan), DeepSeek fallback (paid), OpenRouter/Anthropic after that.
+# Provider configuration with fallback order — Kimi K2.5 via NVIDIA NIM primary
+# (free developer tier), DeepSeek fallback (paid), Minimax (free, rate-limited),
+# then OpenRouter/Anthropic.
 PROVIDERS = [
     {
-        "name": "minimax",
-        "url": "https://ollama.com/v1/chat/completions",
-        "model": "minimax-m2.7:cloud",
-        "key_env": "OLLAMA_API_KEY",
+        "name": "kimi",
+        "url": "https://integrate.api.nvidia.com/v1/chat/completions",
+        "model": "moonshotai/kimi-k2.5",
+        "key_env": "NIM_API_KEY",
         "format": "openai",
     },
     {
@@ -42,6 +43,13 @@ PROVIDERS = [
         "url": "https://api.deepseek.com/chat/completions",
         "model": "deepseek-chat",
         "key_env": "DEEPSEEK_API_KEY",
+        "format": "openai",
+    },
+    {
+        "name": "minimax",
+        "url": "https://ollama.com/v1/chat/completions",
+        "model": "minimax-m2.7:cloud",
+        "key_env": "OLLAMA_API_KEY",
         "format": "openai",
     },
     {

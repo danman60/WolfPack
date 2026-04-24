@@ -216,38 +216,39 @@ class Agent(ABC):
             return json.dumps({"summary": "No LLM API key configured", "conviction": 0})
 
     async def _call_llm_structured(self, prompt: str, schema: dict) -> dict:
-        """Call LLM with provider fallback: Minimax → DeepSeek → GLM → Kimi.
+        """Call LLM with provider fallback: Kimi → DeepSeek → Minimax → GLM.
 
-        Policy: Minimax via Ollama Cloud is primary (free on user's Ollama plan).
-        DeepSeek kept as paid fallback for when Ollama Cloud is unavailable.
-        GLM (also Ollama Cloud) and Kimi (NVIDIA NIM) round out the chain.
+        Policy: Kimi K2.5 via NVIDIA NIM is primary (free developer tier).
+        DeepSeek native kept as paid fallback for when NIM 429s / credits exhaust.
+        Minimax + GLM via Ollama Cloud round out the chain (free tier, rate-limited).
         OpenRouter and Anthropic are NOT in this chain.
 
         Each provider uses OpenAI-compatible API format with json_object mode.
         """
         errors = []
+        nim_key = _get_key("NIM_API_KEY") or os.environ.get("NIM_API_KEY", "")
         ollama_key = settings.ollama_api_key or _get_key("OLLAMA_API_KEY") or os.environ.get("OLLAMA_API_KEY", "")
 
-        # 1. Minimax via Ollama Cloud (primary)
-        if ollama_key:
+        # 1. Kimi K2.5 via NVIDIA NIM (primary)
+        if nim_key:
             try:
                 result = await self._call_cloud_structured(
                     prompt,
-                    base_url=settings.ollama_cloud_base_url,
-                    model="minimax-m2.7:cloud",
-                    provider_name="Minimax",
-                    api_key=ollama_key,
+                    base_url="https://integrate.api.nvidia.com/v1",
+                    model="moonshotai/kimi-k2.5",
+                    provider_name="Kimi",
+                    api_key=nim_key,
                 )
                 if not self._is_fallback_result(result):
                     return result
-                errors.append("Minimax: truncated/unparseable")
-                logger.warning(f"{self.name}: Minimax truncated, trying DeepSeek")
+                errors.append("Kimi: truncated/unparseable")
+                logger.warning(f"{self.name}: Kimi truncated, trying DeepSeek")
             except Exception as e:
-                errors.append(f"Minimax: {e}")
-                logger.warning(f"{self.name}: Minimax failed, trying DeepSeek: {e}")
+                errors.append(f"Kimi: {e}")
+                logger.warning(f"{self.name}: Kimi failed, trying DeepSeek: {e}")
         else:
-            errors.append("Ollama Cloud: no OLLAMA_API_KEY configured — skipping Minimax")
-            logger.warning(f"{self.name}: No OLLAMA_API_KEY — skipping Minimax, trying DeepSeek")
+            errors.append("NIM: no NIM_API_KEY configured — skipping Kimi")
+            logger.warning(f"{self.name}: No NIM_API_KEY — skipping Kimi, trying DeepSeek")
 
         # 2. DeepSeek native (paid fallback)
         if settings.deepseek_api_key:
@@ -261,13 +262,30 @@ class Agent(ABC):
                 if not self._is_fallback_result(result):
                     return result
                 errors.append("DeepSeek: truncated/unparseable")
-                logger.warning(f"{self.name}: DeepSeek truncated, trying GLM")
+                logger.warning(f"{self.name}: DeepSeek truncated, trying Minimax")
             except Exception as e:
                 errors.append(f"DeepSeek: {e}")
-                logger.warning(f"{self.name}: DeepSeek failed, trying GLM: {e}")
+                logger.warning(f"{self.name}: DeepSeek failed, trying Minimax: {e}")
 
-        # 3. GLM via Ollama Cloud (same endpoint, same key)
+        # 3. Minimax via Ollama Cloud (free tier, rate-limited)
         if ollama_key:
+            try:
+                result = await self._call_cloud_structured(
+                    prompt,
+                    base_url=settings.ollama_cloud_base_url,
+                    model="minimax-m2.7:cloud",
+                    provider_name="Minimax",
+                    api_key=ollama_key,
+                )
+                if not self._is_fallback_result(result):
+                    return result
+                errors.append("Minimax: truncated/unparseable")
+                logger.warning(f"{self.name}: Minimax truncated, trying GLM")
+            except Exception as e:
+                errors.append(f"Minimax: {e}")
+                logger.warning(f"{self.name}: Minimax failed, trying GLM: {e}")
+
+            # 4. GLM via Ollama Cloud (same endpoint, same key)
             try:
                 result = await self._call_cloud_structured(
                     prompt,
@@ -279,29 +297,12 @@ class Agent(ABC):
                 if not self._is_fallback_result(result):
                     return result
                 errors.append("GLM: truncated/unparseable")
-                logger.warning(f"{self.name}: GLM truncated, trying Kimi")
+                logger.warning(f"{self.name}: GLM truncated — end of fallback chain")
             except Exception as e:
                 errors.append(f"GLM: {e}")
-                logger.warning(f"{self.name}: GLM failed, trying Kimi: {e}")
-
-        # 4. Kimi via NVIDIA NIM (last-resort cloud fallback)
-        nim_key = _get_key("NIM_API_KEY") or os.environ.get("NIM_API_KEY", "")
-        if nim_key:
-            try:
-                result = await self._call_cloud_structured(
-                    prompt, base_url="https://integrate.api.nvidia.com/v1",
-                    model="kimi-k2.5", provider_name="Kimi",
-                    api_key=nim_key,
-                )
-                if not self._is_fallback_result(result):
-                    return result
-                errors.append("Kimi: truncated/unparseable")
-                logger.warning(f"{self.name}: Kimi truncated — end of fallback chain")
-            except Exception as e:
-                errors.append(f"Kimi: {e}")
-                logger.warning(f"{self.name}: Kimi failed — end of fallback chain: {e}")
+                logger.warning(f"{self.name}: GLM failed — end of fallback chain: {e}")
         else:
-            errors.append("Kimi: no NIM_API_KEY configured")
+            errors.append("Ollama Cloud: no OLLAMA_API_KEY configured — skipping Minimax + GLM")
 
         # Exhausted all whitelisted providers. Do NOT fall through to OpenRouter
         # or Anthropic — the user explicitly excluded those to avoid paid overage.
