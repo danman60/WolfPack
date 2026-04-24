@@ -533,10 +533,17 @@ class AutoTrader:
             if direction == "wait":
                 continue
 
-            # Dynamic threshold based on performance — TOXIC combos blocked entirely
-            dynamic_threshold = self._perf_tracker.get_threshold(
-                symbol, direction, self.conviction_threshold, regime=self._current_regime
-            )
+            # Dynamic threshold based on performance — TOXIC combos blocked entirely.
+            # When regime_router_enabled=false, the perf_tracker's historical grades
+            # are contaminated by post-04-13 router-era losses (same window the router
+            # itself caused). Bypass to wallet's raw conviction_threshold so new trades
+            # aren't blocked by poisoned history. New post-reset data rebuilds the grade.
+            if self._wallet_config and self._wallet_config.get("regime_router_enabled", True) is False:
+                dynamic_threshold = self.conviction_threshold
+            else:
+                dynamic_threshold = self._perf_tracker.get_threshold(
+                    symbol, direction, self.conviction_threshold, regime=self._current_regime
+                )
 
             # Phase 3: v3 heuristic drives — adjust floor + detect unfamiliar setups
             if self._heuristics_enabled and self._heuristic_state is not None:
