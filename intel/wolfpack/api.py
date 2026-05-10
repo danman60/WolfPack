@@ -4058,7 +4058,7 @@ async def _background_tick_loop():
         except Exception as e:
             logger.warning(f"[tick-loop] Daily reconciliation error: {e}")
 
-        await asyncio.sleep(300)  # 5 minutes
+        await asyncio.sleep(14400)  # 4 hours — DeepSeek cost reduction (was 300s)
 
 
 # ── Prompt Templates ──
