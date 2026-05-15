@@ -1088,6 +1088,13 @@ class AutoTrader:
         if not self.enabled or not candles:
             return []
 
+        # Per-wallet symbol whitelist: when set, skip symbols not in the list.
+        # Default: no whitelist (backward-compatible — v1/v2/v3 unaffected).
+        if self._wallet_config:
+            _symbol_wl = self._wallet_config.get("symbol_whitelist")
+            if _symbol_wl and symbol not in _symbol_wl:
+                return []
+
         self.restore_from_snapshot()
 
         from wolfpack.strategies import STRATEGIES
@@ -1302,6 +1309,11 @@ class AutoTrader:
                 _disabled = self._wallet_config.get("disabled_strategies") or []
                 if strategy_name in _disabled:
                     continue
+                # Strategy whitelist (positive form): when set, ONLY these strategies fire.
+                # Default: no whitelist (backward-compatible).
+                _strategy_wl = self._wallet_config.get("strategy_whitelist")
+                if _strategy_wl and strategy_name not in _strategy_wl:
+                    continue
 
             # Check timeframe compatibility
             expected_tf = STRATEGY_TIMEFRAMES.get(strategy_name, "1h")
@@ -1318,10 +1330,20 @@ class AutoTrader:
                 # - band_fade: only fires in RANGING_* variants
                 # - ema_crossover / turtle_donchian: directional gating on TRENDING_UP vs TRENDING_DOWN
                 # Strategies that want the parent family can call regime_family(specific_regime).
+                _extra_kwargs: dict = {}
+                if (
+                    strategy_name == "mean_reversion"
+                    and self._wallet_config
+                    and self._wallet_config.get("mean_reversion_stop_atr_mult_override") is not None
+                ):
+                    _extra_kwargs["stop_atr_mult"] = float(
+                        self._wallet_config["mean_reversion_stop_atr_mult_override"]
+                    )
                 signal = strategy.evaluate(
                     candles,
                     current_idx,
                     macro_regime=specific_regime,
+                    **_extra_kwargs,
                 )
                 if signal is None:
                     continue
@@ -1329,6 +1351,14 @@ class AutoTrader:
                 direction = signal.get("direction", "wait")
                 if direction == "wait":
                     continue
+
+                # Per-wallet direction whitelist: when set, only listed directions fire.
+                # Note: 'close' is always allowed (it's an exit signal, not an entry).
+                # Default: no whitelist (backward-compatible — v1/v2/v3 unaffected).
+                if self._wallet_config and direction in ("long", "short"):
+                    _dir_wl = self._wallet_config.get("direction_whitelist")
+                    if _dir_wl and direction not in _dir_wl:
+                        continue
 
                 # VWAP filter on mechanical longs (scales with YOLO level)
                 # Uses the latest candle close since process_strategy_signals doesn't
