@@ -1,6 +1,32 @@
 # Current Work — WolfPack
 
-## Session 2026-06-01: Edge-hunt — 4 spikes, 1 survivor (Turtle BTC/ETH)
+## Session 2026-06-12: Three-gate validation — Turtle DEAD, funding-z BTC survives
+
+**Summary:** "Solve the problem" session. 3 parallel research backtests (walk-forward, breadth, funding-z revalidation). All research-only — NO trading logic, wallet config, or live code modified. Intel service remains paused on droplet (intentional since 2026-06-07, DeepSeek burn via dead kimi/NIM primary).
+
+**Scoreboard:**
+| Gate | Result |
+|---|---|
+| Turtle walk-forward BTC/ETH 4h | **FAIL** — OOS PF 0.30 (BTC) / 0.81 (ETH); prior BTC pass cell PF 0.31 OOS; 3/4 rolling folds negative; whole p20–55 surface underwater. Single-window pass = regime luck CONFIRMED. |
+| Turtle breadth (26 liquid HL perps, fixed p30) | **FAIL** — honest portfolio +3.97%/yr Sharpe 0.68; 2x lev = +7.7%/yr, MC tail DD >30% beyond 2x; alts = one beta factor, no diversification; ZEC carried 1/3 of return. XRP +77bps/trade in-sample = same trap shape as dead ETH, not pursued. |
+| **Funding-z revalidation** | **HOLDS on BTC** — all 4 gates pass on extended data (+0.415%/fire, t=2.68, n=145). Regime-gated leg (SIDEWAYS/BEAR, 3%SL/2%TP/48h): n=75/27mo, **+0.492%/trade, WR 66.7%, PF 1.77, MC prob-profit 98.6%, MC p5 +9.3%** (first positive p5 ever). Cum +45.7% vs HODL +3.7%. DOGE degraded (G2 46%<50%), sideways-only. ETH/SOL/LINK/AVAX/ARB dead. |
+
+**Research dirs (all NEW, nothing live touched):**
+- `docs/research/2026-06-turtle-walkforward/` — REPORT.md + results JSON
+- `docs/research/2026-06-turtle-breadth/` — REPORT.md, universe.json, portfolio results, candle cache
+- `docs/research/2026-06-fundingz-revalidation/` — REPORT.md, results.json, **trade_list_regime_gated.json** (832 trades w/ regime tags — portfolio-assembly input)
+
+**Architecture conclusion (12-month synthesis):** LLM-discretionary trading lost on every wallet; every surviving signal is mechanical. Deployment shape = mechanical funding-z BTC strategy on cron, zero LLM calls in trade path. Trend-following dead at every construction on crypto.
+
+**Next steps (need user decisions):**
+1. **Build mechanical funding-z BTC strategy** — regime classifier + funding-z<−2 trigger + 3%SL/2%TP/48h. BLOCKED on user: which wallet vehicle (new `paper_perp_v4` mechanical-only recommended) per multi-wallet protocol.
+2. If unpausing droplet for paper trading: fix `llm_client.py` dead kimi/NIM chain first OR run strategy standalone without agent loop (preferred — no LLM cost at all).
+3. Forward-test ≥3mo (rare-firing edge, ~2.8 trades/mo — small n quickly otherwise).
+4. Parked: Kronos (5 open questions), MiroFish, moonshot delete, Phase 13 sim bug, LINK funding-z (recent n=32 +1.075%/fire — watch only).
+
+---
+
+## Session 2026-06-01: Edge-hunt — 4 spikes, 1 survivor (Turtle BTC/ETH) [SUPERSEDED: turtle killed by walk-forward 2026-06-12]
 
 **Summary:** Peer's SPX GEX bot sparked an edge hunt. 4 free in-harness research spikes. 3 died, 1 survived. All research-only — NO trading logic, wallet config, or live code modified.
 

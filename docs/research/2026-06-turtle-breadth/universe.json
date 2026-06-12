@@ -1,0 +1,261 @@
+{
+  "fetched_at_utc": "2026-06-12T04:05:33Z",
+  "rule": "vol24h>$10M OR oi>$20M, min 1500 4h bars",
+  "universe": [
+    {
+      "symbol": "BTC",
+      "vol_24h_usd": 2538272471,
+      "oi_usd": 2022508624,
+      "via": "vol",
+      "n_candles": 5001,
+      "start": "2024-02-29",
+      "end": "2026-06-12"
+    },
+    {
+      "symbol": "ETH",
+      "vol_24h_usd": 962433265,
+      "oi_usd": 1156099370,
+      "via": "vol",
+      "n_candles": 5001,
+      "start": "2024-02-29",
+      "end": "2026-06-12"
+    },
+    {
+      "symbol": "HYPE",
+      "vol_24h_usd": 672637799,
+      "oi_usd": 1220164937,
+      "via": "vol",
+      "n_candles": 3324,
+      "start": "2024-12-05",
+      "end": "2026-06-12"
+    },
+    {
+      "symbol": "SOL",
+      "vol_24h_usd": 192078720,
+      "oi_usd": 248835704,
+      "via": "vol",
+      "n_candles": 5001,
+      "start": "2024-02-29",
+      "end": "2026-06-12"
+    },
+    {
+      "symbol": "ZEC",
+      "vol_24h_usd": 128686627,
+      "oi_usd": 177776189,
+      "via": "vol",
+      "n_candles": 2516,
+      "start": "2025-04-19",
+      "end": "2026-06-12"
+    },
+    {
+      "symbol": "WLD",
+      "vol_24h_usd": 65489076,
+      "oi_usd": 47705268,
+      "via": "vol",
+      "n_candles": 5001,
+      "start": "2024-02-29",
+      "end": "2026-06-12"
+    },
+    {
+      "symbol": "NEAR",
+      "vol_24h_usd": 46803551,
+      "oi_usd": 72838878,
+      "via": "vol",
+      "n_candles": 5001,
+      "start": "2024-02-29",
+      "end": "2026-06-12"
+    },
+    {
+      "symbol": "XMR",
+      "vol_24h_usd": 40115995,
+      "oi_usd": 42195576,
+      "via": "vol",
+      "n_candles": 1887,
+      "start": "2025-08-01",
+      "end": "2026-06-12"
+    },
+    {
+      "symbol": "XRP",
+      "vol_24h_usd": 35333806,
+      "oi_usd": 96596440,
+      "via": "vol",
+      "n_candles": 5001,
+      "start": "2024-02-29",
+      "end": "2026-06-12"
+    },
+    {
+      "symbol": "CRV",
+      "vol_24h_usd": 17061143,
+      "oi_usd": 7759570,
+      "via": "vol",
+      "n_candles": 5001,
+      "start": "2024-02-29",
+      "end": "2026-06-12"
+    },
+    {
+      "symbol": "XPL",
+      "vol_24h_usd": 14807538,
+      "oi_usd": 22316603,
+      "via": "vol",
+      "n_candles": 1764,
+      "start": "2025-08-22",
+      "end": "2026-06-12"
+    },
+    {
+      "symbol": "TON",
+      "vol_24h_usd": 14085012,
+      "oi_usd": 46670805,
+      "via": "vol",
+      "n_candles": 5001,
+      "start": "2024-02-29",
+      "end": "2026-06-12"
+    },
+    {
+      "symbol": "TRX",
+      "vol_24h_usd": 12808256,
+      "oi_usd": 17403823,
+      "via": "vol",
+      "n_candles": 5001,
+      "start": "2024-02-29",
+      "end": "2026-06-12"
+    },
+    {
+      "symbol": "ENA",
+      "vol_24h_usd": 12200106,
+      "oi_usd": 21772377,
+      "via": "vol",
+      "n_candles": 4805,
+      "start": "2024-04-02",
+      "end": "2026-06-12"
+    },
+    {
+      "symbol": "VVV",
+      "vol_24h_usd": 9494999,
+      "oi_usd": 27060624,
+      "via": "oi",
+      "n_candles": 3002,
+      "start": "2025-01-28",
+      "end": "2026-06-12"
+    },
+    {
+      "symbol": "ADA",
+      "vol_24h_usd": 9402843,
+      "oi_usd": 20876380,
+      "via": "oi",
+      "n_candles": 5001,
+      "start": "2024-02-29",
+      "end": "2026-06-12"
+    },
+    {
+      "symbol": "DOGE",
+      "vol_24h_usd": 7290179,
+      "oi_usd": 24028789,
+      "via": "oi",
+      "n_candles": 5001,
+      "start": "2024-02-29",
+      "end": "2026-06-12"
+    },
+    {
+      "symbol": "SUI",
+      "vol_24h_usd": 6150716,
+      "oi_usd": 35979695,
+      "via": "oi",
+      "n_candles": 5001,
+      "start": "2024-02-29",
+      "end": "2026-06-12"
+    },
+    {
+      "symbol": "TAO",
+      "vol_24h_usd": 5769425,
+      "oi_usd": 20223140,
+      "via": "oi",
+      "n_candles": 5001,
+      "start": "2024-02-29",
+      "end": "2026-06-12"
+    },
+    {
+      "symbol": "BNB",
+      "vol_24h_usd": 5015015,
+      "oi_usd": 33907020,
+      "via": "oi",
+      "n_candles": 5001,
+      "start": "2024-02-29",
+      "end": "2026-06-12"
+    },
+    {
+      "symbol": "AAVE",
+      "vol_24h_usd": 4866649,
+      "oi_usd": 45087557,
+      "via": "oi",
+      "n_candles": 5001,
+      "start": "2024-02-29",
+      "end": "2026-06-12"
+    },
+    {
+      "symbol": "PUMP",
+      "vol_24h_usd": 4185322,
+      "oi_usd": 20168984,
+      "via": "oi",
+      "n_candles": 2024,
+      "start": "2025-07-10",
+      "end": "2026-06-12"
+    },
+    {
+      "symbol": "AVAX",
+      "vol_24h_usd": 3732681,
+      "oi_usd": 23104410,
+      "via": "oi",
+      "n_candles": 5001,
+      "start": "2024-02-29",
+      "end": "2026-06-12"
+    },
+    {
+      "symbol": "LINK",
+      "vol_24h_usd": 3659042,
+      "oi_usd": 31353422,
+      "via": "oi",
+      "n_candles": 5001,
+      "start": "2024-02-29",
+      "end": "2026-06-12"
+    },
+    {
+      "symbol": "ASTER",
+      "vol_24h_usd": 3182316,
+      "oi_usd": 23095575,
+      "via": "oi",
+      "n_candles": 1596,
+      "start": "2025-09-19",
+      "end": "2026-06-12"
+    },
+    {
+      "symbol": "ZRO",
+      "vol_24h_usd": 2701796,
+      "oi_usd": 25448549,
+      "via": "oi",
+      "n_candles": 5001,
+      "start": "2024-02-29",
+      "end": "2026-06-12"
+    }
+  ],
+  "skipped_too_young": [
+    {
+      "symbol": "LIT",
+      "vol_24h_usd": 20596744,
+      "oi_usd": 63048524,
+      "via": "vol",
+      "n_candles": 1031,
+      "start": "2025-12-22",
+      "end": "2026-06-12"
+    },
+    {
+      "symbol": "MON",
+      "vol_24h_usd": 1390277,
+      "oi_usd": 26316161,
+      "via": "oi",
+      "n_candles": 1483,
+      "start": "2025-10-08",
+      "end": "2026-06-12"
+    }
+  ],
+  "fetch_failed": []
+}

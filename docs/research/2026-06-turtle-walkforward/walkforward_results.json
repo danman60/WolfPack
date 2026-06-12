@@ -1,0 +1,1326 @@
+{
+  "meta": {
+    "symbols": [
+      "BTC",
+      "ETH"
+    ],
+    "periods": [
+      20,
+      25,
+      30,
+      35,
+      40,
+      45,
+      50,
+      55
+    ],
+    "variants": [
+      "nofilter",
+      "gated"
+    ],
+    "start_equity": 25000.0,
+    "cost_default_bps": 10.0,
+    "cost_stress_bps": 15.0,
+    "atr_stop_mult": 2.0,
+    "sma_trend": 200,
+    "adx_trending": 25.0,
+    "warmup_bars": 201,
+    "n_folds": 4,
+    "fold_test_bars_4h": 540,
+    "candle_source": "hyperliquid candleSnapshot direct"
+  },
+  "coverage": {
+    "BTC_4h": {
+      "candles": 5001,
+      "start": "2024-02-29",
+      "end": "2026-06-12"
+    },
+    "ETH_4h": {
+      "candles": 5001,
+      "start": "2024-02-29",
+      "end": "2026-06-12"
+    },
+    "BTC_1d": {
+      "candles": 2124,
+      "start": "2020-08-19",
+      "end": "2026-06-12"
+    },
+    "ETH_1d": {
+      "candles": 2124,
+      "start": "2020-08-19",
+      "end": "2026-06-12"
+    }
+  },
+  "anchored": {
+    "BTC_4h": {
+      "n_candles": 5001,
+      "split_idx": 3000,
+      "is_range": [
+        "2024-02-29",
+        "2025-07-13"
+      ],
+      "oos_range": [
+        "2025-07-13",
+        "2026-06-12"
+      ],
+      "is_cells": {
+        "p20_nofilter": {
+          "n_trades": 19,
+          "total_return_pct": 6.83,
+          "expectancy_usd": 97.42,
+          "win_rate": 26.3,
+          "max_dd_pct": 3.9,
+          "profit_factor": 2.51
+        },
+        "p25_nofilter": {
+          "n_trades": 19,
+          "total_return_pct": 6.49,
+          "expectancy_usd": 91.11,
+          "win_rate": 26.3,
+          "max_dd_pct": 3.99,
+          "profit_factor": 2.29
+        },
+        "p30_nofilter": {
+          "n_trades": 17,
+          "total_return_pct": 7.5,
+          "expectancy_usd": 114.4,
+          "win_rate": 29.4,
+          "max_dd_pct": 3.82,
+          "profit_factor": 2.71
+        },
+        "p35_nofilter": {
+          "n_trades": 16,
+          "total_return_pct": 7.03,
+          "expectancy_usd": 115.87,
+          "win_rate": 25.0,
+          "max_dd_pct": 3.98,
+          "profit_factor": 2.52
+        },
+        "p40_nofilter": {
+          "n_trades": 16,
+          "total_return_pct": 6.66,
+          "expectancy_usd": 110.11,
+          "win_rate": 25.0,
+          "max_dd_pct": 3.98,
+          "profit_factor": 2.45
+        },
+        "p45_nofilter": {
+          "n_trades": 14,
+          "total_return_pct": 8.04,
+          "expectancy_usd": 147.85,
+          "win_rate": 28.6,
+          "max_dd_pct": 3.98,
+          "profit_factor": 2.89
+        },
+        "p50_nofilter": {
+          "n_trades": 16,
+          "total_return_pct": 6.74,
+          "expectancy_usd": 117.23,
+          "win_rate": 25.0,
+          "max_dd_pct": 3.98,
+          "profit_factor": 2.7
+        },
+        "p55_nofilter": {
+          "n_trades": 16,
+          "total_return_pct": 5.52,
+          "expectancy_usd": 100.79,
+          "win_rate": 25.0,
+          "max_dd_pct": 4.41,
+          "profit_factor": 2.58
+        },
+        "p20_gated": {
+          "n_trades": 17,
+          "total_return_pct": 7.5,
+          "expectancy_usd": 116.87,
+          "win_rate": 23.5,
+          "max_dd_pct": 4.02,
+          "profit_factor": 2.8
+        },
+        "p25_gated": {
+          "n_trades": 17,
+          "total_return_pct": 7.16,
+          "expectancy_usd": 109.78,
+          "win_rate": 23.5,
+          "max_dd_pct": 4.1,
+          "profit_factor": 2.53
+        },
+        "p30_gated": {
+          "n_trades": 15,
+          "total_return_pct": 8.18,
+          "expectancy_usd": 138.76,
+          "win_rate": 26.7,
+          "max_dd_pct": 3.54,
+          "profit_factor": 3.05
+        },
+        "p35_gated": {
+          "n_trades": 14,
+          "total_return_pct": 7.83,
+          "expectancy_usd": 152.6,
+          "win_rate": 28.6,
+          "max_dd_pct": 3.56,
+          "profit_factor": 3.25
+        },
+        "p40_gated": {
+          "n_trades": 14,
+          "total_return_pct": 7.46,
+          "expectancy_usd": 145.97,
+          "win_rate": 28.6,
+          "max_dd_pct": 3.63,
+          "profit_factor": 3.16
+        },
+        "p45_gated": {
+          "n_trades": 13,
+          "total_return_pct": 8.51,
+          "expectancy_usd": 174.87,
+          "win_rate": 30.8,
+          "max_dd_pct": 3.63,
+          "profit_factor": 3.51
+        },
+        "p50_gated": {
+          "n_trades": 14,
+          "total_return_pct": 7.54,
+          "expectancy_usd": 146.03,
+          "win_rate": 28.6,
+          "max_dd_pct": 3.58,
+          "profit_factor": 3.16
+        },
+        "p55_gated": {
+          "n_trades": 14,
+          "total_return_pct": 6.25,
+          "expectancy_usd": 118.55,
+          "win_rate": 28.6,
+          "max_dd_pct": 4.46,
+          "profit_factor": 2.68
+        }
+      },
+      "is_best": "p45_gated",
+      "oos_frozen": {
+        "n_trades": 10,
+        "total_return_pct": -2.44,
+        "expectancy_usd": -62.97,
+        "win_rate": 10.0,
+        "max_dd_pct": 3.97,
+        "profit_factor": 0.3
+      },
+      "oos_neighbors": {
+        "p35": {
+          "n_trades": 12,
+          "total_return_pct": -2.87,
+          "expectancy_usd": -54.2,
+          "win_rate": 8.3,
+          "max_dd_pct": 4.65,
+          "profit_factor": 0.29
+        },
+        "p40": {
+          "n_trades": 11,
+          "total_return_pct": -2.68,
+          "expectancy_usd": -53.51,
+          "win_rate": 9.1,
+          "max_dd_pct": 4.35,
+          "profit_factor": 0.31
+        },
+        "p50": {
+          "n_trades": 10,
+          "total_return_pct": -2.33,
+          "expectancy_usd": -62.03,
+          "win_rate": 10.0,
+          "max_dd_pct": 3.87,
+          "profit_factor": 0.3
+        },
+        "p55": {
+          "n_trades": 10,
+          "total_return_pct": -2.33,
+          "expectancy_usd": -62.03,
+          "win_rate": 10.0,
+          "max_dd_pct": 3.87,
+          "profit_factor": 0.3
+        }
+      },
+      "oos_stress_15bps": {
+        "n_trades": 10,
+        "total_return_pct": -2.56,
+        "expectancy_usd": -65.94,
+        "win_rate": 10.0,
+        "max_dd_pct": 4.07,
+        "profit_factor": 0.29
+      },
+      "oos_monte_carlo": {
+        "runnable": true,
+        "n": 10,
+        "p5_return_pct": -3.89,
+        "median_return_pct": -3.45,
+        "p95_return_pct": -2.16,
+        "ruin_probability_pct": 0.0,
+        "prob_profit_pct": 0.0,
+        "robustness_grade": "marginal"
+      }
+    },
+    "ETH_4h": {
+      "n_candles": 5001,
+      "split_idx": 3000,
+      "is_range": [
+        "2024-02-29",
+        "2025-07-13"
+      ],
+      "oos_range": [
+        "2025-07-13",
+        "2026-06-12"
+      ],
+      "is_cells": {
+        "p20_nofilter": {
+          "n_trades": 18,
+          "total_return_pct": 7.13,
+          "expectancy_usd": 96.5,
+          "win_rate": 27.8,
+          "max_dd_pct": 5.82,
+          "profit_factor": 1.93
+        },
+        "p25_nofilter": {
+          "n_trades": 17,
+          "total_return_pct": 7.92,
+          "expectancy_usd": 105.52,
+          "win_rate": 29.4,
+          "max_dd_pct": 5.16,
+          "profit_factor": 1.98
+        },
+        "p30_nofilter": {
+          "n_trades": 14,
+          "total_return_pct": 8.58,
+          "expectancy_usd": 132.56,
+          "win_rate": 35.7,
+          "max_dd_pct": 5.05,
+          "profit_factor": 2.16
+        },
+        "p35_nofilter": {
+          "n_trades": 14,
+          "total_return_pct": 8.36,
+          "expectancy_usd": 126.98,
+          "win_rate": 35.7,
+          "max_dd_pct": 5.05,
+          "profit_factor": 2.11
+        },
+        "p40_nofilter": {
+          "n_trades": 14,
+          "total_return_pct": 8.27,
+          "expectancy_usd": 123.74,
+          "win_rate": 35.7,
+          "max_dd_pct": 5.05,
+          "profit_factor": 2.06
+        },
+        "p45_nofilter": {
+          "n_trades": 13,
+          "total_return_pct": 7.61,
+          "expectancy_usd": 124.28,
+          "win_rate": 38.5,
+          "max_dd_pct": 4.9,
+          "profit_factor": 2.11
+        },
+        "p50_nofilter": {
+          "n_trades": 13,
+          "total_return_pct": 7.19,
+          "expectancy_usd": 120.7,
+          "win_rate": 30.8,
+          "max_dd_pct": 4.9,
+          "profit_factor": 2.05
+        },
+        "p55_nofilter": {
+          "n_trades": 13,
+          "total_return_pct": 7.19,
+          "expectancy_usd": 120.7,
+          "win_rate": 30.8,
+          "max_dd_pct": 4.9,
+          "profit_factor": 2.05
+        },
+        "p20_gated": {
+          "n_trades": 15,
+          "total_return_pct": 9.22,
+          "expectancy_usd": 149.7,
+          "win_rate": 33.3,
+          "max_dd_pct": 4.71,
+          "profit_factor": 2.6
+        },
+        "p25_gated": {
+          "n_trades": 15,
+          "total_return_pct": 9.19,
+          "expectancy_usd": 139.63,
+          "win_rate": 33.3,
+          "max_dd_pct": 4.71,
+          "profit_factor": 2.35
+        },
+        "p30_gated": {
+          "n_trades": 13,
+          "total_return_pct": 9.34,
+          "expectancy_usd": 159.96,
+          "win_rate": 38.5,
+          "max_dd_pct": 4.39,
+          "profit_factor": 2.49
+        },
+        "p35_gated": {
+          "n_trades": 13,
+          "total_return_pct": 9.12,
+          "expectancy_usd": 153.91,
+          "win_rate": 38.5,
+          "max_dd_pct": 4.39,
+          "profit_factor": 2.43
+        },
+        "p40_gated": {
+          "n_trades": 13,
+          "total_return_pct": 9.02,
+          "expectancy_usd": 150.41,
+          "win_rate": 38.5,
+          "max_dd_pct": 4.39,
+          "profit_factor": 2.38
+        },
+        "p45_gated": {
+          "n_trades": 12,
+          "total_return_pct": 8.36,
+          "expectancy_usd": 153.11,
+          "win_rate": 41.7,
+          "max_dd_pct": 4.24,
+          "profit_factor": 2.47
+        },
+        "p50_gated": {
+          "n_trades": 12,
+          "total_return_pct": 7.94,
+          "expectancy_usd": 149.16,
+          "win_rate": 33.3,
+          "max_dd_pct": 4.24,
+          "profit_factor": 2.4
+        },
+        "p55_gated": {
+          "n_trades": 12,
+          "total_return_pct": 7.94,
+          "expectancy_usd": 149.16,
+          "win_rate": 33.3,
+          "max_dd_pct": 4.24,
+          "profit_factor": 2.4
+        }
+      },
+      "is_best": "p30_gated",
+      "oos_frozen": {
+        "n_trades": 15,
+        "total_return_pct": -2.22,
+        "expectancy_usd": -22.18,
+        "win_rate": 6.7,
+        "max_dd_pct": 9.51,
+        "profit_factor": 0.81
+      },
+      "oos_neighbors": {
+        "p20": {
+          "n_trades": 20,
+          "total_return_pct": -3.97,
+          "expectancy_usd": -34.29,
+          "win_rate": 5.0,
+          "max_dd_pct": 11.13,
+          "profit_factor": 0.67
+        },
+        "p25": {
+          "n_trades": 17,
+          "total_return_pct": -3.1,
+          "expectancy_usd": -31.38,
+          "win_rate": 5.9,
+          "max_dd_pct": 10.32,
+          "profit_factor": 0.72
+        },
+        "p35": {
+          "n_trades": 15,
+          "total_return_pct": -2.22,
+          "expectancy_usd": -22.18,
+          "win_rate": 6.7,
+          "max_dd_pct": 9.51,
+          "profit_factor": 0.81
+        },
+        "p40": {
+          "n_trades": 13,
+          "total_return_pct": -1.18,
+          "expectancy_usd": -6.35,
+          "win_rate": 7.7,
+          "max_dd_pct": 8.54,
+          "profit_factor": 0.94
+        }
+      },
+      "oos_stress_15bps": {
+        "n_trades": 15,
+        "total_return_pct": -2.42,
+        "expectancy_usd": -25.55,
+        "win_rate": 6.7,
+        "max_dd_pct": 9.68,
+        "profit_factor": 0.78
+      },
+      "oos_monte_carlo": {
+        "runnable": true,
+        "n": 15,
+        "p5_return_pct": -9.09,
+        "median_return_pct": -7.29,
+        "p95_return_pct": -0.85,
+        "ruin_probability_pct": 0.0,
+        "prob_profit_pct": 2.4,
+        "robustness_grade": "marginal"
+      }
+    },
+    "BTC_1d": {
+      "n_candles": 2124,
+      "split_idx": 1274,
+      "is_range": [
+        "2020-08-19",
+        "2024-02-13"
+      ],
+      "oos_range": [
+        "2024-02-14",
+        "2026-06-12"
+      ],
+      "is_cells": {
+        "p20_nofilter": {
+          "n_trades": 6,
+          "total_return_pct": 5.38,
+          "expectancy_usd": 275.12,
+          "win_rate": 33.3,
+          "max_dd_pct": 6.55,
+          "profit_factor": 2.23
+        },
+        "p25_nofilter": {
+          "n_trades": 6,
+          "total_return_pct": 5.38,
+          "expectancy_usd": 275.12,
+          "win_rate": 33.3,
+          "max_dd_pct": 6.55,
+          "profit_factor": 2.23
+        },
+        "p30_nofilter": {
+          "n_trades": 6,
+          "total_return_pct": 5.35,
+          "expectancy_usd": 235.12,
+          "win_rate": 33.3,
+          "max_dd_pct": 6.58,
+          "profit_factor": 1.89
+        },
+        "p35_nofilter": {
+          "n_trades": 6,
+          "total_return_pct": 5.35,
+          "expectancy_usd": 235.12,
+          "win_rate": 33.3,
+          "max_dd_pct": 6.58,
+          "profit_factor": 1.89
+        },
+        "p40_nofilter": {
+          "n_trades": 6,
+          "total_return_pct": 5.35,
+          "expectancy_usd": 235.12,
+          "win_rate": 33.3,
+          "max_dd_pct": 6.58,
+          "profit_factor": 1.89
+        },
+        "p45_nofilter": {
+          "n_trades": 6,
+          "total_return_pct": 5.35,
+          "expectancy_usd": 235.12,
+          "win_rate": 33.3,
+          "max_dd_pct": 6.58,
+          "profit_factor": 1.89
+        },
+        "p50_nofilter": {
+          "n_trades": 6,
+          "total_return_pct": 5.35,
+          "expectancy_usd": 235.12,
+          "win_rate": 33.3,
+          "max_dd_pct": 6.58,
+          "profit_factor": 1.89
+        },
+        "p55_nofilter": {
+          "n_trades": 6,
+          "total_return_pct": 5.35,
+          "expectancy_usd": 235.12,
+          "win_rate": 33.3,
+          "max_dd_pct": 6.58,
+          "profit_factor": 1.89
+        },
+        "p20_gated": {
+          "n_trades": 6,
+          "total_return_pct": 5.38,
+          "expectancy_usd": 275.12,
+          "win_rate": 33.3,
+          "max_dd_pct": 6.55,
+          "profit_factor": 2.23
+        },
+        "p25_gated": {
+          "n_trades": 6,
+          "total_return_pct": 5.38,
+          "expectancy_usd": 275.12,
+          "win_rate": 33.3,
+          "max_dd_pct": 6.55,
+          "profit_factor": 2.23
+        },
+        "p30_gated": {
+          "n_trades": 6,
+          "total_return_pct": 5.35,
+          "expectancy_usd": 235.12,
+          "win_rate": 33.3,
+          "max_dd_pct": 6.58,
+          "profit_factor": 1.89
+        },
+        "p35_gated": {
+          "n_trades": 6,
+          "total_return_pct": 5.35,
+          "expectancy_usd": 235.12,
+          "win_rate": 33.3,
+          "max_dd_pct": 6.58,
+          "profit_factor": 1.89
+        },
+        "p40_gated": {
+          "n_trades": 6,
+          "total_return_pct": 5.35,
+          "expectancy_usd": 235.12,
+          "win_rate": 33.3,
+          "max_dd_pct": 6.58,
+          "profit_factor": 1.89
+        },
+        "p45_gated": {
+          "n_trades": 6,
+          "total_return_pct": 5.35,
+          "expectancy_usd": 235.12,
+          "win_rate": 33.3,
+          "max_dd_pct": 6.58,
+          "profit_factor": 1.89
+        },
+        "p50_gated": {
+          "n_trades": 6,
+          "total_return_pct": 5.35,
+          "expectancy_usd": 235.12,
+          "win_rate": 33.3,
+          "max_dd_pct": 6.58,
+          "profit_factor": 1.89
+        },
+        "p55_gated": {
+          "n_trades": 6,
+          "total_return_pct": 5.35,
+          "expectancy_usd": 235.12,
+          "win_rate": 33.3,
+          "max_dd_pct": 6.58,
+          "profit_factor": 1.89
+        }
+      },
+      "is_best": "p20_nofilter",
+      "oos_frozen": {
+        "n_trades": 6,
+        "total_return_pct": 1.28,
+        "expectancy_usd": 66.36,
+        "win_rate": 50.0,
+        "max_dd_pct": 8.12,
+        "profit_factor": 1.44
+      },
+      "oos_neighbors": {
+        "p10": {
+          "n_trades": 6,
+          "total_return_pct": 2.71,
+          "expectancy_usd": 116.32,
+          "win_rate": 50.0,
+          "max_dd_pct": 6.97,
+          "profit_factor": 2.04
+        },
+        "p15": {
+          "n_trades": 6,
+          "total_return_pct": 1.28,
+          "expectancy_usd": 66.36,
+          "win_rate": 50.0,
+          "max_dd_pct": 8.12,
+          "profit_factor": 1.44
+        },
+        "p25": {
+          "n_trades": 5,
+          "total_return_pct": 1.79,
+          "expectancy_usd": 95.51,
+          "win_rate": 60.0,
+          "max_dd_pct": 6.66,
+          "profit_factor": 1.86
+        },
+        "p30": {
+          "n_trades": 4,
+          "total_return_pct": 5.23,
+          "expectancy_usd": 333.64,
+          "win_rate": 50.0,
+          "max_dd_pct": 6.66,
+          "profit_factor": 3.4
+        }
+      },
+      "oos_stress_15bps": {
+        "n_trades": 6,
+        "total_return_pct": 1.22,
+        "expectancy_usd": 63.69,
+        "win_rate": 50.0,
+        "max_dd_pct": 8.15,
+        "profit_factor": 1.42
+      },
+      "oos_monte_carlo": {
+        "runnable": false,
+        "n": 6
+      }
+    },
+    "ETH_1d": {
+      "n_candles": 2124,
+      "split_idx": 1274,
+      "is_range": [
+        "2020-08-19",
+        "2024-02-13"
+      ],
+      "oos_range": [
+        "2024-02-14",
+        "2026-06-12"
+      ],
+      "is_cells": {
+        "p20_nofilter": {
+          "n_trades": 4,
+          "total_return_pct": 12.96,
+          "expectancy_usd": 1151.51,
+          "win_rate": 100.0,
+          "max_dd_pct": 15.91,
+          "profit_factor": 999.99
+        },
+        "p25_nofilter": {
+          "n_trades": 4,
+          "total_return_pct": 12.96,
+          "expectancy_usd": 1151.51,
+          "win_rate": 100.0,
+          "max_dd_pct": 15.91,
+          "profit_factor": 999.99
+        },
+        "p30_nofilter": {
+          "n_trades": 4,
+          "total_return_pct": 12.96,
+          "expectancy_usd": 1151.51,
+          "win_rate": 100.0,
+          "max_dd_pct": 15.91,
+          "profit_factor": 999.99
+        },
+        "p35_nofilter": {
+          "n_trades": 4,
+          "total_return_pct": 11.61,
+          "expectancy_usd": 1066.91,
+          "win_rate": 100.0,
+          "max_dd_pct": 15.91,
+          "profit_factor": 999.99
+        },
+        "p40_nofilter": {
+          "n_trades": 5,
+          "total_return_pct": 9.13,
+          "expectancy_usd": 629.31,
+          "win_rate": 80.0,
+          "max_dd_pct": 9.97,
+          "profit_factor": 10.99
+        },
+        "p45_nofilter": {
+          "n_trades": 5,
+          "total_return_pct": 8.39,
+          "expectancy_usd": 592.22,
+          "win_rate": 80.0,
+          "max_dd_pct": 10.25,
+          "profit_factor": 10.4
+        },
+        "p50_nofilter": {
+          "n_trades": 5,
+          "total_return_pct": 7.16,
+          "expectancy_usd": 530.67,
+          "win_rate": 80.0,
+          "max_dd_pct": 9.97,
+          "profit_factor": 9.43
+        },
+        "p55_nofilter": {
+          "n_trades": 5,
+          "total_return_pct": 7.16,
+          "expectancy_usd": 530.67,
+          "win_rate": 80.0,
+          "max_dd_pct": 9.97,
+          "profit_factor": 9.43
+        },
+        "p20_gated": {
+          "n_trades": 5,
+          "total_return_pct": 10.75,
+          "expectancy_usd": 546.8,
+          "win_rate": 80.0,
+          "max_dd_pct": 7.52,
+          "profit_factor": 3.56
+        },
+        "p25_gated": {
+          "n_trades": 5,
+          "total_return_pct": 10.75,
+          "expectancy_usd": 546.8,
+          "win_rate": 80.0,
+          "max_dd_pct": 7.52,
+          "profit_factor": 3.56
+        },
+        "p30_gated": {
+          "n_trades": 5,
+          "total_return_pct": 10.75,
+          "expectancy_usd": 546.8,
+          "win_rate": 80.0,
+          "max_dd_pct": 7.52,
+          "profit_factor": 3.56
+        },
+        "p35_gated": {
+          "n_trades": 5,
+          "total_return_pct": 9.42,
+          "expectancy_usd": 480.45,
+          "win_rate": 80.0,
+          "max_dd_pct": 8.63,
+          "profit_factor": 3.25
+        },
+        "p40_gated": {
+          "n_trades": 5,
+          "total_return_pct": 9.42,
+          "expectancy_usd": 480.45,
+          "win_rate": 80.0,
+          "max_dd_pct": 8.63,
+          "profit_factor": 3.25
+        },
+        "p45_gated": {
+          "n_trades": 5,
+          "total_return_pct": 8.68,
+          "expectancy_usd": 443.27,
+          "win_rate": 80.0,
+          "max_dd_pct": 8.39,
+          "profit_factor": 3.08
+        },
+        "p50_gated": {
+          "n_trades": 5,
+          "total_return_pct": 7.45,
+          "expectancy_usd": 381.54,
+          "win_rate": 80.0,
+          "max_dd_pct": 7.99,
+          "profit_factor": 2.79
+        },
+        "p55_gated": {
+          "n_trades": 5,
+          "total_return_pct": 7.45,
+          "expectancy_usd": 381.54,
+          "win_rate": 80.0,
+          "max_dd_pct": 7.99,
+          "profit_factor": 2.79
+        }
+      },
+      "is_best": "p20_nofilter",
+      "oos_frozen": {
+        "n_trades": 4,
+        "total_return_pct": 2.24,
+        "expectancy_usd": 153.41,
+        "win_rate": 50.0,
+        "max_dd_pct": 7.55,
+        "profit_factor": 2.36
+      },
+      "oos_neighbors": {
+        "p10": {
+          "n_trades": 5,
+          "total_return_pct": 2.18,
+          "expectancy_usd": 107.95,
+          "win_rate": 40.0,
+          "max_dd_pct": 8.6,
+          "profit_factor": 1.63
+        },
+        "p15": {
+          "n_trades": 4,
+          "total_return_pct": 2.24,
+          "expectancy_usd": 153.41,
+          "win_rate": 50.0,
+          "max_dd_pct": 7.55,
+          "profit_factor": 2.36
+        },
+        "p25": {
+          "n_trades": 4,
+          "total_return_pct": -0.19,
+          "expectancy_usd": 1.61,
+          "win_rate": 50.0,
+          "max_dd_pct": 9.74,
+          "profit_factor": 1.01
+        },
+        "p30": {
+          "n_trades": 4,
+          "total_return_pct": -1.13,
+          "expectancy_usd": -57.52,
+          "win_rate": 25.0,
+          "max_dd_pct": 9.27,
+          "profit_factor": 0.62
+        }
+      },
+      "oos_stress_15bps": {
+        "n_trades": 4,
+        "total_return_pct": 2.2,
+        "expectancy_usd": 150.79,
+        "win_rate": 50.0,
+        "max_dd_pct": 7.54,
+        "profit_factor": 2.33
+      },
+      "oos_monte_carlo": {
+        "runnable": false,
+        "n": 4
+      }
+    }
+  },
+  "rolling": {
+    "BTC": [
+      {
+        "fold": 1,
+        "train_bars": 2841,
+        "test_range": [
+          "2025-06-17",
+          "2025-09-15"
+        ],
+        "is_best": "p35_gated",
+        "is_best_metrics": {
+          "n_trades": 12,
+          "total_return_pct": 7.14,
+          "expectancy_usd": 163.08,
+          "win_rate": 25.0,
+          "max_dd_pct": 3.56,
+          "profit_factor": 3.23
+        },
+        "is_top3": [
+          [
+            "p35_gated",
+            163.08,
+            3.23,
+            12
+          ],
+          [
+            "p40_gated",
+            155.4,
+            3.13,
+            12
+          ],
+          [
+            "p50_gated",
+            152.93,
+            3.02,
+            12
+          ]
+        ],
+        "oos": {
+          "n_trades": 4,
+          "total_return_pct": -0.16,
+          "expectancy_usd": -6.78,
+          "win_rate": 50.0,
+          "max_dd_pct": 1.54,
+          "profit_factor": 0.76
+        }
+      },
+      {
+        "fold": 2,
+        "train_bars": 3381,
+        "test_range": [
+          "2025-09-15",
+          "2025-12-14"
+        ],
+        "is_best": "p45_gated",
+        "is_best_metrics": {
+          "n_trades": 15,
+          "total_return_pct": 7.5,
+          "expectancy_usd": 132.36,
+          "win_rate": 33.3,
+          "max_dd_pct": 3.63,
+          "profit_factor": 2.94
+        },
+        "is_top3": [
+          [
+            "p45_gated",
+            132.36,
+            2.94,
+            15
+          ],
+          [
+            "p35_gated",
+            120.5,
+            2.94,
+            16
+          ],
+          [
+            "p40_gated",
+            112.75,
+            2.76,
+            16
+          ]
+        ],
+        "oos": {
+          "n_trades": 2,
+          "total_return_pct": -0.65,
+          "expectancy_usd": -100.42,
+          "win_rate": 0.0,
+          "max_dd_pct": 1.71,
+          "profit_factor": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "train_bars": 3921,
+        "test_range": [
+          "2025-12-14",
+          "2026-03-14"
+        ],
+        "is_best": "p45_gated",
+        "is_best_metrics": {
+          "n_trades": 17,
+          "total_return_pct": 6.3,
+          "expectancy_usd": 97.26,
+          "win_rate": 23.5,
+          "max_dd_pct": 3.63,
+          "profit_factor": 2.26
+        },
+        "is_top3": [
+          [
+            "p45_gated",
+            97.26,
+            2.26,
+            17
+          ],
+          [
+            "p35_gated",
+            81.68,
+            2.17,
+            19
+          ],
+          [
+            "p45_nofilter",
+            80.7,
+            1.97,
+            18
+          ]
+        ],
+        "oos": {
+          "n_trades": 4,
+          "total_return_pct": -1.73,
+          "expectancy_usd": -98.04,
+          "win_rate": 0.0,
+          "max_dd_pct": 2.2,
+          "profit_factor": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "train_bars": 4461,
+        "test_range": [
+          "2026-03-14",
+          "2026-06-12"
+        ],
+        "is_best": "p45_gated",
+        "is_best_metrics": {
+          "n_trades": 21,
+          "total_return_pct": 4.46,
+          "expectancy_usd": 58.88,
+          "win_rate": 19.1,
+          "max_dd_pct": 4.23,
+          "profit_factor": 1.72
+        },
+        "is_top3": [
+          [
+            "p45_gated",
+            58.88,
+            1.72,
+            21
+          ],
+          [
+            "p50_gated",
+            53.18,
+            1.67,
+            21
+          ],
+          [
+            "p45_nofilter",
+            47.16,
+            1.54,
+            22
+          ]
+        ],
+        "oos": {
+          "n_trades": 2,
+          "total_return_pct": 0.67,
+          "expectancy_usd": 87.81,
+          "win_rate": 50.0,
+          "max_dd_pct": 1.04,
+          "profit_factor": 2.74
+        }
+      }
+    ],
+    "ETH": [
+      {
+        "fold": 1,
+        "train_bars": 2841,
+        "test_range": [
+          "2025-06-17",
+          "2025-09-15"
+        ],
+        "is_best": "p30_gated",
+        "is_best_metrics": {
+          "n_trades": 11,
+          "total_return_pct": 7.68,
+          "expectancy_usd": 151.82,
+          "win_rate": 36.4,
+          "max_dd_pct": 4.39,
+          "profit_factor": 2.36
+        },
+        "is_top3": [
+          [
+            "p30_gated",
+            151.82,
+            2.36,
+            11
+          ],
+          [
+            "p35_gated",
+            151.79,
+            2.36,
+            11
+          ],
+          [
+            "p45_gated",
+            150.85,
+            2.39,
+            10
+          ]
+        ],
+        "oos": {
+          "n_trades": 2,
+          "total_return_pct": 10.71,
+          "expectancy_usd": 1337.33,
+          "win_rate": 50.0,
+          "max_dd_pct": 3.6,
+          "profit_factor": 18.19
+        }
+      },
+      {
+        "fold": 2,
+        "train_bars": 3381,
+        "test_range": [
+          "2025-09-15",
+          "2025-12-14"
+        ],
+        "is_best": "p45_gated",
+        "is_best_metrics": {
+          "n_trades": 12,
+          "total_return_pct": 18.01,
+          "expectancy_usd": 354.24,
+          "win_rate": 41.7,
+          "max_dd_pct": 4.24,
+          "profit_factor": 4.4
+        },
+        "is_top3": [
+          [
+            "p45_gated",
+            354.24,
+            4.4,
+            12
+          ],
+          [
+            "p30_gated",
+            350.0,
+            4.27,
+            13
+          ],
+          [
+            "p50_gated",
+            349.51,
+            4.27,
+            12
+          ]
+        ],
+        "oos": {
+          "n_trades": 3,
+          "total_return_pct": -1.3,
+          "expectancy_usd": -111.63,
+          "win_rate": 0.0,
+          "max_dd_pct": 2.55,
+          "profit_factor": 0.0
+        }
+      },
+      {
+        "fold": 3,
+        "train_bars": 3921,
+        "test_range": [
+          "2025-12-14",
+          "2026-03-14"
+        ],
+        "is_best": "p30_gated",
+        "is_best_metrics": {
+          "n_trades": 16,
+          "total_return_pct": 15.85,
+          "expectancy_usd": 231.4,
+          "win_rate": 31.2,
+          "max_dd_pct": 4.39,
+          "profit_factor": 3.07
+        },
+        "is_top3": [
+          [
+            "p30_gated",
+            231.4,
+            3.07,
+            16
+          ],
+          [
+            "p45_gated",
+            227.84,
+            3.09,
+            15
+          ],
+          [
+            "p35_gated",
+            224.51,
+            3.01,
+            16
+          ]
+        ],
+        "oos": {
+          "n_trades": 4,
+          "total_return_pct": -2.07,
+          "expectancy_usd": -142.51,
+          "win_rate": 0.0,
+          "max_dd_pct": 2.94,
+          "profit_factor": 0.0
+        }
+      },
+      {
+        "fold": 4,
+        "train_bars": 4461,
+        "test_range": [
+          "2026-03-14",
+          "2026-06-12"
+        ],
+        "is_best": "p45_gated",
+        "is_best_metrics": {
+          "n_trades": 17,
+          "total_return_pct": 13.17,
+          "expectancy_usd": 175.5,
+          "win_rate": 29.4,
+          "max_dd_pct": 5.23,
+          "profit_factor": 2.44
+        },
+        "is_top3": [
+          [
+            "p45_gated",
+            175.5,
+            2.44,
+            17
+          ],
+          [
+            "p50_gated",
+            160.01,
+            2.18,
+            17
+          ],
+          [
+            "p55_gated",
+            160.01,
+            2.18,
+            17
+          ]
+        ],
+        "oos": {
+          "n_trades": 6,
+          "total_return_pct": -3.38,
+          "expectancy_usd": -92.84,
+          "win_rate": 0.0,
+          "max_dd_pct": 4.09,
+          "profit_factor": 0.0
+        }
+      }
+    ]
+  },
+  "prior_best_cells_oos_4h": {
+    "BTC_p40_gated": {
+      "n_trades": 11,
+      "total_return_pct": -2.68,
+      "expectancy_usd": -53.51,
+      "win_rate": 9.1,
+      "max_dd_pct": 4.35,
+      "profit_factor": 0.31
+    },
+    "ETH_p30_nofilter": {
+      "n_trades": 9,
+      "total_return_pct": 2.93,
+      "expectancy_usd": 78.39,
+      "win_rate": 22.2,
+      "max_dd_pct": 6.38,
+      "profit_factor": 1.7
+    }
+  },
+  "nofilter_family_oos_4h": {
+    "ETH_p20_nofilter": {
+      "n_trades": 11,
+      "total_return_pct": 2.43,
+      "expectancy_usd": 53.5,
+      "win_rate": 18.2,
+      "max_dd_pct": 6.52,
+      "profit_factor": 1.53
+    },
+    "ETH_p25_nofilter": {
+      "n_trades": 11,
+      "total_return_pct": 2.05,
+      "expectancy_usd": 45.8,
+      "win_rate": 18.2,
+      "max_dd_pct": 6.84,
+      "profit_factor": 1.42
+    },
+    "ETH_p30_nofilter": {
+      "n_trades": 9,
+      "total_return_pct": 2.93,
+      "expectancy_usd": 78.39,
+      "win_rate": 22.2,
+      "max_dd_pct": 6.38,
+      "profit_factor": 1.7
+    },
+    "ETH_p30_nofilter_mc": {
+      "runnable": false,
+      "n": 9
+    },
+    "ETH_p35_nofilter": {
+      "n_trades": 15,
+      "total_return_pct": -2.19,
+      "expectancy_usd": -23.03,
+      "win_rate": 6.7,
+      "max_dd_pct": 9.48,
+      "profit_factor": 0.8
+    },
+    "ETH_p40_nofilter": {
+      "n_trades": 13,
+      "total_return_pct": -1.14,
+      "expectancy_usd": -7.32,
+      "win_rate": 7.7,
+      "max_dd_pct": 8.51,
+      "profit_factor": 0.94
+    },
+    "BTC_p20_nofilter": {
+      "n_trades": 13,
+      "total_return_pct": -3.33,
+      "expectancy_usd": -57.46,
+      "win_rate": 15.4,
+      "max_dd_pct": 5.23,
+      "profit_factor": 0.27
+    },
+    "BTC_p25_nofilter": {
+      "n_trades": 14,
+      "total_return_pct": -3.93,
+      "expectancy_usd": -58.32,
+      "win_rate": 7.1,
+      "max_dd_pct": 5.81,
+      "profit_factor": 0.24
+    },
+    "BTC_p30_nofilter": {
+      "n_trades": 13,
+      "total_return_pct": -3.34,
+      "expectancy_usd": -62.05,
+      "win_rate": 7.7,
+      "max_dd_pct": 5.12,
+      "profit_factor": 0.25
+    },
+    "BTC_p35_nofilter": {
+      "n_trades": 12,
+      "total_return_pct": -2.87,
+      "expectancy_usd": -54.2,
+      "win_rate": 8.3,
+      "max_dd_pct": 4.65,
+      "profit_factor": 0.29
+    },
+    "BTC_p40_nofilter": {
+      "n_trades": 11,
+      "total_return_pct": -2.68,
+      "expectancy_usd": -53.51,
+      "win_rate": 9.1,
+      "max_dd_pct": 4.35,
+      "profit_factor": 0.31
+    }
+  }
+}
