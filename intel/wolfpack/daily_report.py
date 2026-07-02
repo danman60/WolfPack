@@ -401,7 +401,29 @@ Generated at {generated_time} &mdash; WolfPack Intel v0.1
 
 
 def send_email(html: str, subject: str) -> bool:
-    """Send HTML email via Resend API."""
+    """Send HTML email via Resend API (or AWS SES when EMAIL_PROVIDER=ses)."""
+    if os.environ.get("EMAIL_PROVIDER") == "ses":
+        try:
+            import boto3
+
+            client = boto3.client("sesv2", region_name="us-east-1")
+            resp = client.send_email(
+                FromEmailAddress=os.environ.get("EMAIL_FROM", FROM_EMAIL),
+                Destination={"ToAddresses": [TO_EMAIL]},
+                Content={
+                    "Simple": {
+                        "Subject": {"Data": subject},
+                        "Body": {"Html": {"Data": html}},
+                    }
+                },
+                ConfigurationSetName=os.environ.get("SES_CONFIG_SET", "fleet-misc"),
+            )
+            logger.info(f"Email sent: {resp.get('MessageId', 'ok')}")
+            return True
+        except Exception as e:
+            logger.error(f"Email send failed: {e}")
+            return False
+
     if not RESEND_API_KEY:
         logger.error("RESEND_API_KEY not set — cannot send email")
         return False
