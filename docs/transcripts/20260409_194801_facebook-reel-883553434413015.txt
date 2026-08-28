@@ -1,0 +1,63 @@
+# Transcript: Facebook Reel 883553434413015
+# Source: https://www.facebook.com/share/v/18GETDzfYR/
+# Project: WolfPack
+# Model: base | Language: en | Duration: 90.0s
+# Note: yt-dlp Facebook extractor broken; mp4 captured via Playwright fallback
+
+[0.0s - 2.4s] You only need two indicators to win in this game, here they are.
+[2.4s - 5.5s] What I want you to do is go to your indicator tab and search SMA.
+[5.5s - 7.0s] A moving average simple will appear.
+[7.0s - 10.5s] You need to click on this twice because we need to set up two simple moving averages.
+[10.5s - 12.1s] You'll see this blue line added to your charts.
+[12.1s - 13.8s] What I want you to do is double click on this.
+[13.8s - 16.2s] Change the length of first one to 200.
+[16.2s - 17.3s] Keep the source close.
+[17.3s - 18.6s] Everything else can stay the same.
+[18.6s - 20.6s] Go to style and make this orange.
+[20.6s - 21.8s] Everything else can stay the same.
+[21.8s - 22.8s] Go to visibility.
+[22.8s - 23.8s] Everything can stay the same.
+[23.8s - 24.6s] Just press OK.
+[24.6s - 27.0s] Now what I want you to do is double click on the blue line again.
+[27.0s - 28.3s] Visibility the same.
+[28.3s - 29.0s] Go to style.
+[29.0s - 30.9s] Make this like red color and go to inputs.
+[30.9s - 32.8s] The length you need to select is 400.
+[32.8s - 35.0s] Make sure the source is closed and press OK.
+[35.0s - 37.0s] As you can see two lines added to your charts.
+[37.0s - 38.3s] Now essentially what the game plan is.
+[38.3s - 41.6s] When the prices are approaching towards this 200 and 400.
+[41.6s - 43.0s] And this works on a five minute chart.
+[43.0s - 45.6s] By the way, the zone in the middle is called value zone.
+[45.6s - 48.0s] Whenever the prices can get into this value zone,
+[48.0s - 50.2s] you need to watch the price section very carefully.
+[50.2s - 52.7s] Usually where you will see is you will see some sort of consolidation
+[52.7s - 54.1s] happening within this value zone.
+[54.1s - 56.4s] After this value zone and the consolidation breaks,
+[56.4s - 58.2s] the price section can make a big move.
+[58.2s - 59.2s] Like you can see right here.
+[59.2s - 60.6s] And when the value zone is this way,
+[60.6s - 61.8s] do not take the trade place.
+[61.8s - 63.9s] The value zone has to be considerably tied up,
+[63.9s - 64.6s] not like this.
+[64.6s - 66.9s] Like for example, the value zone is pretty tight here.
+[66.9s - 67.4s] What happened?
+[67.4s - 69.2s] The prices came within this value zone.
+[69.2s - 70.5s] Made a little consolidation.
+[70.5s - 71.4s] After the consolidation,
+[71.4s - 73.5s] we saw such a huge move towards the downside.
+[73.5s - 74.2s] I mean, check this out.
+[74.2s - 75.6s] You have another example right here.
+[75.6s - 77.3s] Made a huge move towards the downside.
+[77.3s - 78.4s] Or another example here.
+[78.4s - 79.5s] According to the value zone,
+[79.5s - 81.4s] started consolidating after the consolidation.
+[81.4s - 83.2s] Made a huge move towards the upside.
+[83.2s - 84.9s] I trade this setup every single day.
+[84.9s - 86.9s] If you want to watch my screen while I'm trading this setup,
+[86.9s - 88.3s] just comment the word system down below
+[88.3s - 89.9s] and I'll send you all the details right away.
+
+---
+
+You only need two indicators to win in this game, here they are. What I want you to do is go to your indicator tab and search SMA. A moving average simple will appear. You need to click on this twice because we need to set up two simple moving averages. You'll see this blue line added to your charts. What I want you to do is double click on this. Change the length of first one to 200. Keep the source close. Everything else can stay the same. Go to style and make this orange. Everything else can stay the same. Go to visibility. Everything can stay the same. Just press OK. Now what I want you to do is double click on the blue line again. Visibility the same. Go to style. Make this like red color and go to inputs. The length you need to select is 400. Make sure the source is closed and press OK. As you can see two lines added to your charts. Now essentially what the game plan is. When the prices are approaching towards this 200 and 400. And this works on a five minute chart. By the way, the zone in the middle is called value zone. Whenever the prices can get into this value zone, you need to watch the price section very carefully. Usually where you will see is you will see some sort of consolidation happening within this value zone. After this value zone and the consolidation breaks, the price section can make a big move. Like you can see right here. And when the value zone is this way, do not take the trade place. The value zone has to be considerably tied up, not like this. Like for example, the value zone is pretty tight here. What happened? The prices came within this value zone. Made a little consolidation. After the consolidation, we saw such a huge move towards the downside. I mean, check this out. You have another example right here. Made a huge move towards the downside. Or another example here. According to the value zone, started consolidating after the consolidation. Made a huge move towards the upside. I trade this setup every single day. If you want to watch my screen while I'm trading this setup, just comment the word system down below and I'll send you all the details right away.

@@ -1,0 +1,14 @@
+# Transcript: Tradingwithmustafah — 3 step strategy
+# Source: https://www.facebook.com/share/r/18JCs6ZGHv/
+# Project: WolfPack
+# Model: small (lang=en, vad_filter=True) | Duration: 23.3s
+
+[0.0s - 3.6s] Do you know Trader Tom's strategy answer yes or no?
+[3.6s - 5.6s] Can you create a pine script for me
+[5.6s - 18.6s] to use as a strategy on TradingView?
+[18.6s - 20.4s] And if you want to know how to automate this,
+[20.4s - 23.3s] feel free to join the community, link in bio.
+
+---
+
+Do you know Trader Tom's strategy answer yes or no? Can you create a pine script for me to use as a strategy on TradingView? And if you want to know how to automate this, feel free to join the community, link in bio.

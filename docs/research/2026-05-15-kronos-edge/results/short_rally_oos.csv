@@ -1,0 +1,5 @@
+symbol,is_n,is_total_pct,is_sharpe,is_win_rate,oos_n,oos_total_pct,oos_sharpe,oos_win_rate,oos_hodl_pct,best_rally_lb,best_rally_thr,best_rsi_thr,best_tp_pct,best_sl_pct,best_hold_bars
+BTCUSDT,8,5.972,6.629,75.0,1,1.404,,100.0,9.375,6,2.5,70.0,3.0,2.5,24
+ETHUSDT,21,7.451,4.605,90.48,3,2.511,4194183853223178.0,100.0,-2.375,4,2.5,65.0,1.0,4.0,24
+LINKUSDT,19,11.203,9.7,94.74,9,-2.696,-2.584,77.78,15.419,12,2.5,70.0,1.0,4.0,24
+DOGEUSDT,13,5.973,3.577,61.54,5,3.004,4.467,60.0,19.959,4,2.5,70.0,3.0,2.5,24

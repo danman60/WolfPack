@@ -1,151 +1,145 @@
 # Current Work — WolfPack
 
-## Session 2026-06-12: Three-gate validation — Turtle DEAD, funding-z BTC survives
+## Session 2026-08-27/28: Alpha reset — carry edge found, specified, and sized
 
-**Summary:** "Solve the problem" session. 3 parallel research backtests (walk-forward, breadth, funding-z revalidation). All research-only — NO trading logic, wallet config, or live code modified. Intel service remains paused on droplet (intentional since 2026-06-07, DeepSeek burn via dead kimi/NIM primary).
+**Summary:** "Crack the fruitless search for alpha" session. Root-caused 12 months of null
+results to a *dataset* problem, not a strategy problem, then found, validated and sized the
+first strategy in the repo's history to survive honest gates. **NO trading logic, wallet config,
+live code or migration was touched.** Research-only, per the Multi-Wallet Evolution Protocol.
 
-**Scoreboard:**
-| Gate | Result |
+### The root cause of 12 months of nulls
+
+All 13 prior backtest phases ran on `candleSnapshot` — 5,000 OHLCV bars, 6 fields,
+~210k datapoints for the whole program. **`s3://hyperliquid-archive/asset_ctxs/` publishes
+1-minute `funding`, `open_interest`, `premium`, `oracle_px`, `mark_px`, `mid_px`,
+`impact_bid_px`, `impact_ask_px` for 232 coins back to 2023-05-20** — 10 MB/day compressed for
+the entire universe, **~$1.06 AWS egress for 3 years** (Requester Pays; `ses-mailer` creds work).
+For BTC alone that is ~340× the observations with six flow/positioning columns.
+The repo was searching the one dataset every other retail bot also searches.
+
+### What survived — deployable spec
+
+**Tail-screened one-sided delta-neutral carry.** Short perp + long spot, top-5 by trailing-7d
+funding, weekly rebalance, >$10M median volume, <15bps measured spread, exclude any name whose
+worst observed hourly basis move is below −3% (bans 80 of 230, incl. LIT and PUMP).
+
+| leverage | 2026 ret | 2025 ret | 2026 maxDD | worst day |
+|---|---|---|---|---|
+| 1× | 6.76% | 17.10% | 0.19% | −0.10% |
+| **3×** | **20.28%** | **51.30%** | **0.56%** | **−0.31%** |
+
+Full period 2025-01 → 2026-06 at 3×: ann 44.30%, maxDD 3.57%, Calmar 12.4, monthly Sharpe 4.90,
+0/16 negative months. **Use ~20%/yr as the forward number, not 44%.**
+
+Binding leverage constraint is the unclipped basis tail: HYPE worst hour −2.82% → safe L=3.5.
+BTC/ETH are safe to L≈19. Recommended 3×, **Hyperliquid spot + Hyperliquid perp only** so
+cross-margin holds the hedge.
+
+### What died (with numbers)
+
+| idea | result |
 |---|---|
-| Turtle walk-forward BTC/ETH 4h | **FAIL** — OOS PF 0.30 (BTC) / 0.81 (ETH); prior BTC pass cell PF 0.31 OOS; 3/4 rolling folds negative; whole p20–55 surface underwater. Single-window pass = regime luck CONFIRMED. |
-| Turtle breadth (26 liquid HL perps, fixed p30) | **FAIL** — honest portfolio +3.97%/yr Sharpe 0.68; 2x lev = +7.7%/yr, MC tail DD >30% beyond 2x; alts = one beta factor, no diversification; ZEC carried 1/3 of return. XRP +77bps/trade in-sample = same trap shape as dead ETH, not pursued. |
-| **Funding-z revalidation** | **HOLDS on BTC** — all 4 gates pass on extended data (+0.415%/fire, t=2.68, n=145). Regime-gated leg (SIDEWAYS/BEAR, 3%SL/2%TP/48h): n=75/27mo, **+0.492%/trade, WR 66.7%, PF 1.77, MC prob-profit 98.6%, MC p5 +9.3%** (first positive p5 ever). Cum +45.7% vs HODL +3.7%. DOGE degraded (G2 46%<50%), sideways-only. ETH/SOL/LINK/AVAX/ARB dead. |
+| Cross-sectional funding carry (perp-only, no spot leg) | **DEAD** — −47% to −95% ann, 210-348% maxDD. Cross-sectional price dispersion dwarfs the funding differential. |
+| Two-sided carry (long perp on negative funding) | **NOT EXECUTABLE** — looked like +37% in 2026; collapses to **+0.62%** once the short-spot leg is restricted to names where spot borrow is feasible. |
+| OI-delta × price-delta flow quadrants (h=60m) | **DEAD** — "new longs" gross +0.75bps vs 3.4bps measured cost. |
+| Hourly reselection | **construction artifact** — −17% to −31%, pure turnover. Weekly + hysteresis fixed it. |
+| Majors-only carry decay | Real: per-year 15.9% → 13.3% → 6.4%. Crowding on BTC/ETH, **not** market-wide — HYPE still pays 8.03% on $223M volume at 2.39bps. |
 
-**Research dirs (all NEW, nothing live touched):**
-- `docs/research/2026-06-turtle-walkforward/` — REPORT.md + results JSON
-- `docs/research/2026-06-turtle-breadth/` — REPORT.md, universe.json, portfolio results, candle cache
-- `docs/research/2026-06-fundingz-revalidation/` — REPORT.md, results.json, **trade_list_regime_gated.json** (832 trades w/ regime tags — portfolio-assembly input)
+### Artifacts
 
-**Architecture conclusion (12-month synthesis):** LLM-discretionary trading lost on every wallet; every surviving signal is mechanical. Deployment shape = mechanical funding-z BTC strategy on cron, zero LLM calls in trade path. Trend-following dead at every construction on crypto.
+- `docs/research/2026-08-carry-edge/` — REPORT.md (213 lines), PREREG.md, 13 scripts
+- `docs/plans/2026-08-27-alpha-reset.md` — 4-phase plan (Phase 0 done; 1-3 pending)
+- `data/hl-hourly-2025-2026/` — **6 parquet files, 63 MB, all 230 coins hourly 2025-01-01 →
+  2026-06-18, 2.32M rows.** Gitignored. This is the reusable panel — do not re-pull for
+  2025-26 work.
+- Vault: `~/vault/Knowledge/WolfPack-Memory.md` has the findings + 3 gotchas
 
-**Next steps (need user decisions):**
-1. **Build mechanical funding-z BTC strategy** — regime classifier + funding-z<−2 trigger + 3%SL/2%TP/48h. BLOCKED on user: which wallet vehicle (new `paper_perp_v4` mechanical-only recommended) per multi-wallet protocol.
-2. If unpausing droplet for paper trading: fix `llm_client.py` dead kimi/NIM chain first OR run strategy standalone without agent loop (preferred — no LLM cost at all).
-3. Forward-test ≥3mo (rare-firing edge, ~2.8 trades/mo — small n quickly otherwise).
-4. Parked: Kronos (5 open questions), MiroFish, moonshot delete, Phase 13 sim bug, LINK funding-z (recent n=32 +1.075%/fire — watch only).
+## Build Status
+NOT RUN. No application code was modified this session.
 
----
+## Known Bugs & Issues (unchanged from prior sessions, plus new)
 
-## Session 2026-06-01: Edge-hunt — 4 spikes, 1 survivor (Turtle BTC/ETH) [SUPERSEDED: turtle killed by walk-forward 2026-06-12]
+**New this session — in the research scripts, not the app:**
+- `docs/research/2026-08-carry-edge/study.py` H2/H3 — division-by-zero produces `inf` for the
+  `newshort` / `longliq` quadrants and both premium z-score buckets. **Those four tests are
+  UNTESTED, not dead.** Fix the guard before scoring them.
+- `dynamic.py` `onpct`/`flips` columns are miscomputed (missing `*8760` in that one expression).
+  The `ann`/`maxDD`/2025/2026 columns in that table ARE correct. Superseded by `dynamic2.py`.
 
-**Summary:** Peer's SPX GEX bot sparked an edge hunt. 4 free in-harness research spikes. 3 died, 1 survived. All research-only — NO trading logic, wallet config, or live code modified.
+**Pre-existing (carried forward):**
+- `intel/wolfpack/research/moonshot_screener.py` — `is_shot` gate fires 0× by construction.
+- `supabase/migrations/20260601_moonshot_signals.sql` — written, NOT applied. Do not auto-apply.
+- `docs/research/2026-05-backtest-sweep/run_phase13_historical_windows.py::leg1_equity_curve`
+  (~:125-160) — returns 0.00% despite 17-29 trades. Phase 12 shares it.
+- `pool_screening._il_penalty()` (:75-90) takes no args, hardcodes `r=1.1`, always returns −15.
+- `/pools/*` API surface (`api.py:3617-3628`, `:3801-3812`) still queries decommissioned Graph
+  endpoints with an empty key. Commit `667021a` fixed the LP *bot* (RPC + GeckoTerminal) and
+  never fixed the API/UI path — the "LP Pools" page is likely rendering empty.
 
-**Scoreboard:**
-| Idea | Result |
-|---|---|
-| GEX regime (vol proxy) | **DEAD** — inverts hypothesis, returns near-random by regime |
-| Moonshot scalper | **DEAD** — −0.55%/trade @30bps on 20 HL small-caps; 22% delisted = survivorship swamps |
-| Caller attribution | **DEAD** — no source both attributable AND HL-tradeable (/biz anon, Reddit blocked) |
-| **Turtle trend BTC/ETH** | **LIVE** — ETH +12.9% (PF2.03, MC90.5%), BTC +3.5% (PF1.61, MC74.9%), 27mo 4h, period 30–40 |
+**Validation defects in the existing gate machinery (documented, NOT yet fixed):**
+- 4 copy-pasted implementations of the 4 gates with drift. Gate 4 threshold 0.75 (Phase 4) vs
+  0.50 (funding copies) — **funding-z was validated against the looser gate.**
+- Gate 1 horizon selected by max t-stat over `[1,4,12,24]` then tested at t>2.0 as a single test.
+- `COST_PCT = 0.001` blanket. Measured touch spreads: BTC 1.65bps, ETH 1.98bps, SEI 4.56bps.
+- `Z_WINDOW = 180` fitted and never perturbed by Gate 4.
+- funding-z headline MC ("prob-profit 98.6%, p5 +9.3%") came from an **IID** bootstrap
+  (`run_fundingz_revalidation.py:318`), not `MonteCarloEngine`'s block bootstrap. Not comparable
+  to the turtle MC figures quoted beside them.
+- Gate 3 docstring claims "beats HODL" is required; code computes and ignores it.
+- `modules/backtest.py::OverfitDetector` is dead code; docstring falsely claims it runs
+  automatically.
 
-**New research files (all NEW, nothing live touched):**
-- `docs/research/2026-06-gex-proxy/` — GEX proxy FAIL
-- `docs/research/2026-06-transcript-edge-mining.md` — 54 transcripts mined; top-3 edges already in repo (orb_session/measured_move/turtle_donchian)
-- `docs/research/2026-06-turtle-regime/` — Turtle sweep; BTC+ETH PASS, LINK FAIL; "55>20" only weakly holds (sweet spot p30–40)
-- `docs/research/2026-06-moonshot-scalper-scope.md` + `docs/research/2026-06-moonshot-scalper/` — scope + buzz-overlap probe + mechanical-leg backtest (all FAIL)
-- `intel/wolfpack/research/moonshot_screener.py` (+ `__init__.py`) — prototype, **has dead-gate bug**
-- `supabase/migrations/20260601_moonshot_signals.sql` — **written, NOT applied. Do not auto-apply.**
-- `docs/transcripts/20260601_*day-trading-for-5-year-olds*` — another 15min ORB + affiliate shill, no new edge
+## Incomplete Work
+- Phases 1-3 of `docs/plans/2026-08-27-alpha-reset.md` — gates not yet fixed, no
+  `edge_gates.py` written, no `HYPOTHESIS_LOG.md`, no FDR/Deflated-Sharpe pass.
+- No live or paper deployment of the carry strategy. No `paper_perp_v4` wallet created.
+- L2 orderbook archive (`s3://hyperliquid-archive/market_data/`, 2023-04-15→, ~16 MB/day/coin)
+  **never touched** — nothing in WolfPack has ever used it.
 
-**Known bug:** `moonshot_screener.py` `is_shot` gate (`regime==breakout AND momentum≥0.4 AND conviction≥0.5`) fires 0× by construction — momentum_buckets caps momentum_score at ~0.40 on breakout bars, AND never passes. Fix or delete (moonshot dead).
+## Tests
+- Last test run: none this session. No app code changed.
+- Untested: nothing new in the application. All work was offline research.
 
-**Next steps (priority):**
-1. **Turtle walk-forward validation** — split 27mo BTC/ETH IS/OOS (60/40), confirm p30–40 holds OOS. MC 5th-pct negative on all best cells → single-window risk. Only real edge; prove before capital. If holds → paper-wallet candidate (confirm WHICH wallet first per multi-wallet protocol; per-wallet whitelists exist in auto_trader.py).
-2. **Moonshot disposition** — fix screener dead-gate OR delete `intel/wolfpack/research/` + unapplied migration. Lean delete.
-3. (Optional) ORB+FVG at funding-reset/CME-open — transcript candidate #2, not yet backtested.
+## Next Steps (priority order)
+1. **Answer the two blocked questions** — is there live capital in any LP position, and is
+   `lp_auto_enabled` on? (A guard hook blocked reading `intel/.env`.) The LP system is still
+   called from the live tick loop at `api.py:3180` and has a documented $12k IL wipe.
+2. **Decide the spot-leg venue for carry.** Hyperliquid spot + HL perp (cross-margin, safe at 3×)
+   vs a second venue (a price rip margin-calls the perp before the spot gain is reachable —
+   fatal at 3×). This gates any deployment.
+3. **Forward-test carry at 1× for 3 months** in a new `paper_perp_v4` mechanical wallet
+   (`parent_wallet_id`, `generation`, `display_name`, thesis paragraph per the protocol).
+   Zero LLM calls in the trade path. 0/16 negative months needs live confirmation before size.
+4. Phase 1 gate fixes before any further searching.
+5. Fix the `inf` guard in `study.py` and score the four untested flow hypotheses.
 
-**Gotchas:**
-- Backtest lookback ceiling: intel API caps ~5001 candles → 4h=27mo, 15m=52d, 1m=17d. Use 4h/1d for trend, 15m for scalp.
-- Realistic small-cap perp cost = 30–40bps, NOT harness default 10bps.
-- `intel/wolfpack/strategies/__init__.py` (M in git) modified BEFORE this session — not mine.
+## Gotchas for Next Session
+- **The 8 GB raw archive lives only in the ephemeral session scratchpad and is now gone.**
+  Re-pull costs ~$1 and ~35 min: `aws s3 cp s3://hyperliquid-archive/asset_ctxs/YYYYMMDD.csv.lz4
+  --request-payer requester` (dates 2023-05-20 → 2026-08-01; 108 dates are absent from the
+  archive). **The derived hourly panel survives at `data/hl-hourly-2025-2026/` — use it.**
+- **Requester Pays**: anonymous S3 access is refused. `ses-mailer` IAM creds work. Archive lags
+  ~4 weeks behind live.
+- **New listings poison flow studies.** TIA's basis printed **−18.94% in one hour** on its
+  2023-10-31 listing day; naive equal-weighting turned a 13% portfolio drawdown into 108.7%.
+  Clip hourly basis change and exclude coins listed inside the sample.
+- **Never annualize an hourly Sharpe on funding data.** √8760 scaling reported Sharpe 11.93 where
+  the honest monthly figure is 2.01. Funding is heavily autocorrelated.
+- **A completed background job is not a completed result.** The first "full-history" run returned
+  entirely plausible numbers off a *stale* `panel.parquet` — consolidation OOM'd before writing
+  and the analysis silently re-read the old 411-day file. The span field was the only tell.
+  Assert the data span inside every analysis.
+- `pl.concat` over ~1,000 daily frames OOMs. Write batched parquet parts instead
+  (`consolidate2.py` does this).
+- Python needs a venv here (PEP 668 blocks `pip install`); `uv venv` + `uv pip install` works.
+- `graphify-out` is stale (built at `bb15cdd`, HEAD was `f5f0b00`) — predates the 2026-06 work.
 
----
+## Files Touched This Session
+- `docs/plans/2026-08-27-alpha-reset.md` (new)
+- `docs/research/2026-08-carry-edge/` (new — REPORT.md, PREREG.md, 13 .py)
+- `data/hl-hourly-2025-2026/` (new, gitignored — 6 parquet, 63 MB)
+- `.gitignore` (added `data/`)
+- `CURRENT_WORK.md` (this file)
+- `~/vault/Knowledge/WolfPack-Memory.md` (appended)
 
-## Active Investigation: Kronos forecasting-model install (2026-05-14 EDT)
-
-**Status:** Installed end-to-end on SPYBALLOON. Sanity check passed. **Design doc written. No WolfPack code changed.** Awaiting user sign-off on host / cadence / wallet / scope (Open questions in the design doc).
-
-**What was installed:**
-- `~/projects/Kronos/` (cloned upstream `shiyu-coder/Kronos`, MIT license)
-- `~/projects/Kronos/venv/` — torch 2.12.0+cu130, CUDA 13, RTX 3060 verified working
-- HF cache at `/mnt/firmament/hf-cache/` (534 MB total): Kronos-Tokenizer-base, Kronos-Tokenizer-2k, Kronos-mini (16 MB), Kronos-small (95 MB), Kronos-base (391 MB). Kronos-large is closed-source — skipped.
-- Sanity check: `~/projects/Kronos/samples/sanity_check_btc.py` — BTC/USDT 1h, lookback 480, horizon 24. **Load 2.1s, predict 0.45s, peak VRAM 136 MB.** Single-window holdout metrics: Close MAPE 0.94%, direction agreement 22/24, 24h cumulative sign match. Not edge-proof; n=1.
-
-**Design doc:** `docs/plans/2026-05-14-kronos-integration.md` — Sage augmentation as Path A, Brief veto deferred, multi-wallet `paper_perp_v4` ("Kronos-augmented Sage") as the A/B test vehicle. **No DROPLET deploy or production restart performed.**
-
-**Open questions for the user** (do NOT guess on these — see design doc Open Questions section):
-1. Host: SPYBALLOON (recommended) vs FIRMAMENT?
-2. Call cadence: every cycle, on Sage request, or only on candidate-trade?
-3. Model: Kronos-small for everything, or Kronos-base for headline assets?
-4. Symbol scope: current BTC/ETH/LINK watchlist or broader?
-5. Wallet vehicle: new `paper_perp_v4` vs shadow-mode on existing wallets?
-
-**Prior on edge:** low-to-moderate. WolfPack's only validated edge so far (Phase 6/8 funding-z-low long) is funding-rate-based, not OHLCV — and Kronos cannot see funding. Treat as a longshot worth A/B-testing because install is cheap.
-
----
-
-## Prior Investigation: Edge Provenance Multi-Phase Backtest (2026-05-06 → 2026-05-07)
-
-**Reason for fresh restart:** Long session (covered 13 backtest phases). Phase 12/13 portfolio simulator returned 0.00% Leg 1 returns across all windows despite 5-29 trade fires per window — this contradicts Phase 6/8 which reported Sharpe 4.56 on BTC and +0.83% per BEAR-regime trade. Phase 12/13 leg1_equity_curve has a bug. Ready to debug + re-run with fresh context.
-
-## What was investigated this session
-
-User opened with "pretty poor progress this last month." Investigation walked through 13 numbered phases of backtest research located in `docs/research/2026-05-backtest-sweep/`:
-
-- **Phase 1**: 11 strategies × 7 symbols × 90d at 1h. Result: 1 marginal cell.
-- **Phase 2**: regime decomposition on mean_reversion. DOGE only OOS-stable.
-- **Phase 3**: 12 strategies × 7 symbols × 28mo at 4h. 2 of 168 cells passed acceptance. Bull-market noise.
-- **Phase 4**: edge provenance validator (4 gates) on 5 OHLCV hypotheses. H1 capitulation flush survived on AVAX/DOGE/LINK.
-- **Phase 5**: capitulation_flush as full strategy (added `intel/wolfpack/strategies/capitulation_flush.py`). Lost money on every symbol — signal-vs-strategy gap.
-- **Phase 6**: funding-rate hypotheses on Hyperliquid funding history. **F2 funding-z-low → long survived all 4 gates on BTC and DOGE.** First defensible "yes" in the entire investigation.
-- **Phase 7**: funding-squeeze-long as strategy with stops/TPs. Best params produced ~3%/yr DOGE, ~2%/yr BTC. Loses to HODL on every symbol.
-- **Phase 8**: regime-segmented Phase 7. Strategy DID beat HODL in SIDEWAYS and BEAR sub-regimes (BTC SIDEWAYS edge +0.41%/trade, BEAR edge +0.67%/trade). Bull market was swamping the result.
-- **Phase 9**: Leg 2 (BULL signals) and Leg 3 (BEAR signals) hypothesis tests. Leg 2 hypotheses all failed walk-forward. Leg 3 D3 (TSMOM short) survived on ETH and ARB but with caveats.
-- **Phase 10**: 3-leg portfolio (sideways harvester + BULL ladder + BEAR mirror) on last 90 days. **0/7 symbols beat HODL.** Leg 2 lost on 6/7 even in bull tape.
-- **Phase 11**: Phase 10 + 3 fixes (hysteresis, hold-while-regime, leading classifier). Made things worse — avg portfolio −4.43% vs Phase 10 −0.33%.
-- **Phase 12**: HODL + Drawdown Harvester (80/20, 90/10, 70/30 blends). Last 90 days = bull, Leg 1 didn't fire. Returned 0.00% on every blend variant. **First sign of simulator bug.**
-- **Phase 13**: Phase 12 architecture re-tested on historical worst-drawdown and most-sideways 90d windows per symbol. **Leg 1 fired 5-29 times per window but reported 0.00% return on every single window.** Confirmed bug.
-
-## Critical bug to debug
-
-**File:** `docs/research/2026-05-backtest-sweep/run_phase13_historical_windows.py` (and Phase 12 has same bug)
-**Function:** `leg1_equity_curve` (lines ~125-160)
-
-Leg 1 fires 17-29 trades in BTC's worst-drawdown 90d window (Nov 2025 → Feb 2026 where HODL was −38.7%), yet the simulator returns total return = 0.00% and max DD = 0.00%. This contradicts Phase 6 which used the same data + signal and produced Sharpe 4.56 on BTC.
-
-Likely culprits:
-1. Equity curve forward-fill clobbering trade-exit values
-2. trade_pct=0.10 sizing collapsing to zero somehow
-3. The `eq[i] = eq[i-1]` line at top of outer loop overwriting the inner-loop trade-exit writes
-4. Maybe new_eq = eq_at_entry * ... where eq_at_entry got corrupted
-
-Need to add print statements at entry/exit to verify equity values are non-1.0 during/after trades.
-
-## Trade history of conclusions
-1. ❌ The original 11-strategy framework has no edge in OHLCV
-2. ❌ RSI(2) Connors textbook strategy fails on crypto perps
-3. ✅ Capitulation flush HAS statistical signal but fails as a strategy due to SL/TP geometry
-4. ✅ Funding-z low → long has REAL edge (Phase 6/8) but is rare-firing and modest magnitude
-5. ❌ 3-leg regime-routed portfolio with bull-rider doesn't beat HODL — bull leg is structurally hard
-6. ⚠️ HODL + Drawdown Harvester blend hypothesis is UNVALIDATED due to simulator bug
-
-## Next steps for fresh session
-
-1. **Debug Phase 13 leg1_equity_curve.** Add inline logging or write tiny unit test confirming trade P&L hits the equity array. Compare against Phase 6 methodology that produced Sharpe 4.56.
-2. **Re-run Phase 13** with fixed simulator on the worst-drawdown windows (BTC Nov 2025–Feb 2026, ETH Jan-Apr 2025, etc.).
-3. **Decide architecturally**: if fixed Leg 1 generates real alpha during HODL drawdowns, the 80/20 blend is real. If it doesn't, the architecture is dead.
-4. **Do NOT cut over to live capital.** All paper wallets v1/v2/v3 should remain paused per prior session decisions.
-
-## Wallet state (per multi-wallet evolution protocol)
-
-All 3 paper wallets (paper_perp, paper_perp_v2, paper_perp_v3) have `regime_router_enabled=false` and have been losing money for ~12 days. v1 −$727, v2 −$392, v3 −$175 as of 2026-05-06 morning. **Recommendation pending: pause all 3 until methodology produces validated strategy.**
-
-## Files added this session
-
-- `intel/wolfpack/strategies/capitulation_flush.py` — registered, not deployed live
-- `intel/wolfpack/strategies/rsi2_connors.py` — registered, validated as losing
-- `docs/research/2026-05-backtest-sweep/` — 13 backtest scripts + JSON results + markdown summaries
-
-## Commits made this session
-
-None. All Phase 1-13 work is research only — strategy files were registered but no live config changes shipped. Trading bot is unchanged from 2026-04-24 commit `6169f35`.
+**No application code, trading logic, wallet config, or migration was modified.**

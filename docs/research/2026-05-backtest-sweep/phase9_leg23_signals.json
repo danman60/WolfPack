@@ -1,0 +1,653 @@
+[
+  {
+    "hypothesis": "B1_premium_high_uptrend_LONG",
+    "symbol": "BTC",
+    "n_fired": 341,
+    "best_h": 6,
+    "g1": {
+      "pass": false,
+      "n": 340,
+      "mean_pct": 0.19431546812650094,
+      "t_stat": 1.5459543821548622,
+      "reason": "t=1.55 eff=+0.194% dir=True"
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "B1_premium_high_uptrend_LONG",
+    "symbol": "ETH",
+    "n_fired": 299,
+    "best_h": 6,
+    "g1": {
+      "pass": true,
+      "n": 298,
+      "mean_pct": 1.2425756612948744,
+      "t_stat": 5.255802299204101,
+      "reason": null
+    },
+    "g2": {
+      "pass": false,
+      "is_n": 203,
+      "is_mean_pct": 1.7572094841250885,
+      "oos_n": 95,
+      "oos_mean_pct": 0.142884439878732
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "B1_premium_high_uptrend_LONG",
+    "symbol": "SOL",
+    "n_fired": 315,
+    "best_h": 6,
+    "g1": {
+      "pass": true,
+      "n": 313,
+      "mean_pct": 0.7674686273748136,
+      "t_stat": 3.4162554198413257,
+      "reason": null
+    },
+    "g2": {
+      "pass": false,
+      "is_n": 240,
+      "is_mean_pct": 1.2165584226028465,
+      "oos_n": 73,
+      "oos_mean_pct": -0.7089909733748841
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "B1_premium_high_uptrend_LONG",
+    "symbol": "LINK",
+    "n_fired": 333,
+    "best_h": 12,
+    "g1": {
+      "pass": true,
+      "n": 331,
+      "mean_pct": 0.7926343050026908,
+      "t_stat": 2.204096167993652,
+      "reason": null
+    },
+    "g2": {
+      "pass": false,
+      "is_n": 272,
+      "is_mean_pct": 1.0727120174231621,
+      "oos_n": 59,
+      "oos_mean_pct": -0.49857142005439736
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "B1_premium_high_uptrend_LONG",
+    "symbol": "AVAX",
+    "n_fired": 282,
+    "best_h": 6,
+    "g1": {
+      "pass": false,
+      "n": 280,
+      "mean_pct": 0.33441672249247634,
+      "t_stat": 1.2567494769020806,
+      "reason": "t=1.26 eff=+0.334% dir=True"
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "B1_premium_high_uptrend_LONG",
+    "symbol": "ARB",
+    "n_fired": 250,
+    "best_h": 1,
+    "g1": {
+      "pass": false,
+      "n": 250,
+      "mean_pct": 0.10653544208409707,
+      "t_stat": 0.7067361231798389,
+      "reason": "t=0.71 eff=+0.107% dir=True"
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "B1_premium_high_uptrend_LONG",
+    "symbol": "DOGE",
+    "n_fired": 373,
+    "best_h": 12,
+    "g1": {
+      "pass": true,
+      "n": 373,
+      "mean_pct": 2.293144020624176,
+      "t_stat": 5.3614917112976,
+      "reason": null
+    },
+    "g2": {
+      "pass": false,
+      "is_n": 262,
+      "is_mean_pct": 3.4437250825065346,
+      "oos_n": 111,
+      "oos_mean_pct": -0.42264190922427164
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "B2_funding_moderate_uptrend_LONG",
+    "symbol": "BTC",
+    "n_fired": 430,
+    "best_h": 6,
+    "g1": {
+      "pass": false,
+      "n": 427,
+      "mean_pct": 0.1530450645105956,
+      "t_stat": 1.4489383312230075,
+      "reason": "t=1.45 eff=+0.153% dir=True"
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "B2_funding_moderate_uptrend_LONG",
+    "symbol": "ETH",
+    "n_fired": 541,
+    "best_h": 12,
+    "g1": {
+      "pass": true,
+      "n": 535,
+      "mean_pct": 0.8248879157808743,
+      "t_stat": 3.227708146534501,
+      "reason": null
+    },
+    "g2": {
+      "pass": false,
+      "is_n": 373,
+      "is_mean_pct": 1.5845325902832421,
+      "oos_n": 162,
+      "oos_mean_pct": -0.9241705014375401
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "B2_funding_moderate_uptrend_LONG",
+    "symbol": "SOL",
+    "n_fired": 532,
+    "best_h": 12,
+    "g1": {
+      "pass": true,
+      "n": 525,
+      "mean_pct": 0.701114025478628,
+      "t_stat": 2.9917203221424806,
+      "reason": null
+    },
+    "g2": {
+      "pass": false,
+      "is_n": 372,
+      "is_mean_pct": 1.2560641230741392,
+      "oos_n": 153,
+      "oos_mean_pct": -0.6481764078908505
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "B2_funding_moderate_uptrend_LONG",
+    "symbol": "LINK",
+    "n_fired": 267,
+    "best_h": 6,
+    "g1": {
+      "pass": false,
+      "n": 267,
+      "mean_pct": 0.6226542942517111,
+      "t_stat": 1.9333284035644347,
+      "reason": "t=1.93 eff=+0.623% dir=True"
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "B2_funding_moderate_uptrend_LONG",
+    "symbol": "AVAX",
+    "n_fired": 641,
+    "best_h": 6,
+    "g1": {
+      "pass": false,
+      "n": 640,
+      "mean_pct": 0.2525190669509378,
+      "t_stat": 1.4567089987469886,
+      "reason": "t=1.46 eff=+0.253% dir=True"
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "B2_funding_moderate_uptrend_LONG",
+    "symbol": "ARB",
+    "n_fired": 410,
+    "best_h": 3,
+    "g1": {
+      "pass": false,
+      "n": 408,
+      "mean_pct": 0.2842395467313154,
+      "t_stat": 1.5016480976777151,
+      "reason": "t=1.50 eff=+0.284% dir=True"
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "B2_funding_moderate_uptrend_LONG",
+    "symbol": "DOGE",
+    "n_fired": 588,
+    "best_h": 12,
+    "g1": {
+      "pass": true,
+      "n": 588,
+      "mean_pct": 1.4558434467180994,
+      "t_stat": 3.9358094515809614,
+      "reason": null
+    },
+    "g2": {
+      "pass": false,
+      "is_n": 331,
+      "is_mean_pct": 2.8671348394196223,
+      "oos_n": 257,
+      "oos_mean_pct": -0.36181200458230506
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "B3_tsmom_long_LONG",
+    "symbol": "BTC",
+    "n_fired": 1568,
+    "best_h": 12,
+    "g1": {
+      "pass": false,
+      "n": 1557,
+      "mean_pct": 0.08060796095412957,
+      "t_stat": 0.9784825687092841,
+      "reason": "t=0.98 eff=+0.081% dir=True"
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "B3_tsmom_long_LONG",
+    "symbol": "ETH",
+    "n_fired": 1394,
+    "best_h": 12,
+    "g1": {
+      "pass": true,
+      "n": 1385,
+      "mean_pct": 0.455189315584286,
+      "t_stat": 3.172039612199632,
+      "reason": null
+    },
+    "g2": {
+      "pass": false,
+      "is_n": 1114,
+      "is_mean_pct": 0.8212352057574774,
+      "oos_n": 271,
+      "oos_mean_pct": -1.0495159303675048
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "B3_tsmom_long_LONG",
+    "symbol": "SOL",
+    "n_fired": 1660,
+    "best_h": 12,
+    "g1": {
+      "pass": true,
+      "n": 1650,
+      "mean_pct": 0.352603779566321,
+      "t_stat": 2.4397609475482116,
+      "reason": null
+    },
+    "g2": {
+      "pass": false,
+      "is_n": 1397,
+      "is_mean_pct": 0.5190218331800103,
+      "oos_n": 253,
+      "oos_mean_pct": -0.5663132990831811
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "B3_tsmom_long_LONG",
+    "symbol": "LINK",
+    "n_fired": 1298,
+    "best_h": 12,
+    "g1": {
+      "pass": false,
+      "n": 1286,
+      "mean_pct": 0.23605939440179846,
+      "t_stat": 1.1417129052251183,
+      "reason": "t=1.14 eff=+0.236% dir=True"
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "B3_tsmom_long_LONG",
+    "symbol": "AVAX",
+    "n_fired": 1410,
+    "best_h": 6,
+    "g1": {
+      "pass": false,
+      "n": 1405,
+      "mean_pct": 0.04241792857637465,
+      "t_stat": 0.3214423644619209,
+      "reason": "t=0.32 eff=+0.042% dir=True"
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "B3_tsmom_long_LONG",
+    "symbol": "ARB",
+    "n_fired": 1006,
+    "best_h": 3,
+    "g1": {
+      "pass": false,
+      "n": 1003,
+      "mean_pct": 0.08895101043496947,
+      "t_stat": 0.7006139719655011,
+      "reason": "t=0.70 eff=+0.089% dir=True"
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "B3_tsmom_long_LONG",
+    "symbol": "DOGE",
+    "n_fired": 1470,
+    "best_h": 12,
+    "g1": {
+      "pass": true,
+      "n": 1458,
+      "mean_pct": 1.1960426474548818,
+      "t_stat": 4.624577655467208,
+      "reason": null
+    },
+    "g2": {
+      "pass": false,
+      "is_n": 1219,
+      "is_mean_pct": 1.5665316717301092,
+      "oos_n": 239,
+      "oos_mean_pct": -0.6936063926769247
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "D1_funding_high_downtrend_SHORT",
+    "symbol": "BTC",
+    "n_fired": 15,
+    "passed_to": "fire"
+  },
+  {
+    "hypothesis": "D1_funding_high_downtrend_SHORT",
+    "symbol": "ETH",
+    "n_fired": 13,
+    "passed_to": "fire"
+  },
+  {
+    "hypothesis": "D1_funding_high_downtrend_SHORT",
+    "symbol": "SOL",
+    "n_fired": 7,
+    "passed_to": "fire"
+  },
+  {
+    "hypothesis": "D1_funding_high_downtrend_SHORT",
+    "symbol": "LINK",
+    "n_fired": 6,
+    "passed_to": "fire"
+  },
+  {
+    "hypothesis": "D1_funding_high_downtrend_SHORT",
+    "symbol": "AVAX",
+    "n_fired": 13,
+    "passed_to": "fire"
+  },
+  {
+    "hypothesis": "D1_funding_high_downtrend_SHORT",
+    "symbol": "ARB",
+    "n_fired": 22,
+    "best_h": null,
+    "g1": null,
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "D1_funding_high_downtrend_SHORT",
+    "symbol": "DOGE",
+    "n_fired": 3,
+    "passed_to": "fire"
+  },
+  {
+    "hypothesis": "D2_premium_low_downtrend_SHORT",
+    "symbol": "BTC",
+    "n_fired": 243,
+    "best_h": 1,
+    "g1": {
+      "pass": false,
+      "n": 243,
+      "mean_pct": -0.05317992549137913,
+      "t_stat": -0.7288819047354784,
+      "reason": "t=-0.73 eff=-0.053% dir=False"
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "D2_premium_low_downtrend_SHORT",
+    "symbol": "ETH",
+    "n_fired": 259,
+    "best_h": 3,
+    "g1": {
+      "pass": false,
+      "n": 259,
+      "mean_pct": 0.08921582902924223,
+      "t_stat": 0.4919646457215861,
+      "reason": "t=0.49 eff=+0.089% dir=True"
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "D2_premium_low_downtrend_SHORT",
+    "symbol": "SOL",
+    "n_fired": 215,
+    "best_h": 3,
+    "g1": {
+      "pass": false,
+      "n": 215,
+      "mean_pct": 0.27611721151024743,
+      "t_stat": 1.1699628275744054,
+      "reason": "t=1.17 eff=+0.276% dir=True"
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "D2_premium_low_downtrend_SHORT",
+    "symbol": "LINK",
+    "n_fired": 327,
+    "best_h": 3,
+    "g1": {
+      "pass": false,
+      "n": 327,
+      "mean_pct": 0.24350445033811224,
+      "t_stat": 1.1506169874740744,
+      "reason": "t=1.15 eff=+0.244% dir=True"
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "D2_premium_low_downtrend_SHORT",
+    "symbol": "AVAX",
+    "n_fired": 293,
+    "best_h": 12,
+    "g1": {
+      "pass": false,
+      "n": 293,
+      "mean_pct": -0.3302681663615636,
+      "t_stat": -0.8787459042828989,
+      "reason": "t=-0.88 eff=-0.330% dir=False"
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "D2_premium_low_downtrend_SHORT",
+    "symbol": "ARB",
+    "n_fired": 337,
+    "best_h": 3,
+    "g1": {
+      "pass": false,
+      "n": 337,
+      "mean_pct": 0.29450761294732763,
+      "t_stat": 1.3031455255429862,
+      "reason": "t=1.30 eff=+0.295% dir=True"
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "D2_premium_low_downtrend_SHORT",
+    "symbol": "DOGE",
+    "n_fired": 255,
+    "best_h": 3,
+    "g1": {
+      "pass": false,
+      "n": 255,
+      "mean_pct": 0.09465009337575689,
+      "t_stat": 0.37981085189984126,
+      "reason": "t=0.38 eff=+0.095% dir=True"
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "D3_tsmom_short_SHORT",
+    "symbol": "BTC",
+    "n_fired": 1291,
+    "best_h": 12,
+    "g1": {
+      "pass": false,
+      "n": 1291,
+      "mean_pct": 0.032076275484662894,
+      "t_stat": 0.29663018936096847,
+      "reason": "t=0.30 eff=+0.032% dir=True"
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "D3_tsmom_short_SHORT",
+    "symbol": "ETH",
+    "n_fired": 1968,
+    "best_h": 12,
+    "g1": {
+      "pass": true,
+      "n": 1968,
+      "mean_pct": 0.3130199820044697,
+      "t_stat": 2.6895613627999717,
+      "reason": null
+    },
+    "g2": {
+      "pass": true,
+      "is_n": 1367,
+      "is_mean_pct": 0.23527432677713975,
+      "oos_n": 601,
+      "oos_mean_pct": 0.4898557735115584
+    },
+    "g3": {
+      "pass": true,
+      "cumulative_pct": 419.2233245847964,
+      "sharpe": 0.557376464039753,
+      "hodl_pct": 4.001435492553385,
+      "beats_hodl": true,
+      "n_trades": 1968
+    },
+    "g4": {
+      "pass": true,
+      "ok": 2,
+      "fail": 0
+    },
+    "passed_to": "Gate 4"
+  },
+  {
+    "hypothesis": "D3_tsmom_short_SHORT",
+    "symbol": "SOL",
+    "n_fired": 1864,
+    "best_h": 1,
+    "g1": {
+      "pass": false,
+      "n": 1864,
+      "mean_pct": -3.5489019740161354e-05,
+      "t_stat": -0.0007744231369111413,
+      "reason": "t=-0.00 eff=-0.000% dir=False"
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "D3_tsmom_short_SHORT",
+    "symbol": "LINK",
+    "n_fired": 2063,
+    "best_h": 12,
+    "g1": {
+      "pass": false,
+      "n": 2063,
+      "mean_pct": 0.1904964757265745,
+      "t_stat": 1.3067183105211435,
+      "reason": "t=1.31 eff=+0.190% dir=True"
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "D3_tsmom_short_SHORT",
+    "symbol": "AVAX",
+    "n_fired": 2150,
+    "best_h": 12,
+    "g1": {
+      "pass": true,
+      "n": 2150,
+      "mean_pct": 0.3031727506731086,
+      "t_stat": 2.1240725080102725,
+      "reason": null
+    },
+    "g2": {
+      "pass": false,
+      "is_n": 1403,
+      "is_mean_pct": -0.007246406765376962,
+      "oos_n": 747,
+      "oos_mean_pct": 0.886195612635887
+    },
+    "passed_to": "Gate 1"
+  },
+  {
+    "hypothesis": "D3_tsmom_short_SHORT",
+    "symbol": "ARB",
+    "n_fired": 2773,
+    "best_h": 12,
+    "g1": {
+      "pass": true,
+      "n": 2773,
+      "mean_pct": 0.7593373604089281,
+      "t_stat": 5.742893043917104,
+      "reason": null
+    },
+    "g2": {
+      "pass": true,
+      "is_n": 1803,
+      "is_mean_pct": 0.5114118315425431,
+      "oos_n": 970,
+      "oos_mean_pct": 1.2201721321059307
+    },
+    "g3": {
+      "pass": true,
+      "cumulative_pct": 1828.3425004139574,
+      "sharpe": 1.2792638997831511,
+      "hodl_pct": -92.45737801293356,
+      "beats_hodl": true,
+      "n_trades": 2773
+    },
+    "g4": {
+      "pass": true,
+      "ok": 2,
+      "fail": 0
+    },
+    "passed_to": "Gate 4"
+  },
+  {
+    "hypothesis": "D3_tsmom_short_SHORT",
+    "symbol": "DOGE",
+    "n_fired": 2068,
+    "best_h": 12,
+    "g1": {
+      "pass": false,
+      "n": 2068,
+      "mean_pct": 0.0428160154626231,
+      "t_stat": 0.3181792710272002,
+      "reason": "t=0.32 eff=+0.043% dir=True"
+    },
+    "passed_to": "Gate 1"
+  }
+]

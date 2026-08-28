@@ -1,0 +1,13 @@
+symbol,n,win_rate,avg_net_pct,total_pct,max_dd_pct,sharpe,hodl_pct,tp_rate,sl_rate,timeout_rate,variant
+BTCUSDT,11,9.09,-0.3315,-3.733,-6.314,-3.758,18.2,9.1,90.9,0.0,short_with_sweep
+BTCUSDT,26,19.23,-0.3175,-8.215,-9.373,-3.929,18.2,15.4,80.8,3.8,short_no_sweep
+BTCUSDT,15,20.0,-0.2193,-3.415,-6.004,-2.664,18.2,13.3,80.0,6.7,both_with_sweep
+ETHUSDT,15,20.0,-0.2711,-4.239,-9.89,-2.759,10.93,20.0,80.0,0.0,short_with_sweep
+ETHUSDT,33,21.21,-0.1607,-5.763,-13.888,-1.56,10.93,21.2,75.8,3.0,short_no_sweep
+ETHUSDT,27,22.22,-0.2966,-8.091,-18.286,-3.205,10.93,22.2,77.8,0.0,both_with_sweep
+LINKUSDT,13,30.77,0.626,7.903,-4.174,4.221,18.552,30.8,69.2,0.0,short_with_sweep
+LINKUSDT,29,27.59,0.1238,2.832,-7.831,1.0,18.552,27.6,72.4,0.0,short_no_sweep
+LINKUSDT,22,31.82,0.2992,6.12,-9.678,2.353,18.552,27.3,68.2,4.5,both_with_sweep
+DOGEUSDT,12,25.0,0.5133,5.825,-8.385,3.404,7.952,25.0,75.0,0.0,short_with_sweep
+DOGEUSDT,30,26.67,0.4308,12.331,-10.957,2.781,7.952,26.7,73.3,0.0,short_no_sweep
+DOGEUSDT,16,18.75,0.0122,-0.354,-11.581,0.088,7.952,18.8,81.2,0.0,both_with_sweep

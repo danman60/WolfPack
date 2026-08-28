@@ -1,0 +1,21 @@
+# Transcript: 15K views · 267 reactions | How To Learn Orderflow Trading. 4 Simple Steps. | Aleks Rosme
+# Source: https://www.facebook.com/share/r/1YXj1yEHBp/
+# Project: WolfPack
+# Model: base | Language: en | Duration: 56.8s
+# Transcribed: 2026-04-10 14:23:01
+
+[0.0s - 4.2s] If I had to start over and learn all the flow, this is the exact framework that I would use after
+[4.2s - 9.1s] five years of experience explained in under 60 seconds. First, you want to learn how to identify
+[9.1s - 14.6s] major structural points like previous daily, weekly, overnight, highs and lows so you can see
+[14.6s - 20.2s] what's happening around those levels and build your ideas. Second, you move to auction market
+[20.2s - 26.1s] theory, you need to understand what's value, how it moves, that gives you a context for your trade.
+[26.1s - 30.3s] Then you want to learn about options flow and add gamma levels so you have better understanding
+[30.3s - 35.6s] of context and more confidence for your ideas. Second step is to learn about volume profile combined
+[35.6s - 42.7s] with delta profile, learn about POCs, HVNs, LVNs, shelves, ledges. This is always going to give you
+[42.7s - 47.8s] location for your trades exactly where you want to enter. And only after all of that, you want to
+[47.8s - 53.3s] learn about order flow tools such as footprint, book map, aggressive trades to spot absorption
+[53.3s - 62.4s] and aggression. Without proper context, they're meaningless.
+
+---
+
+If I had to start over and learn all the flow, this is the exact framework that I would use after five years of experience explained in under 60 seconds. First, you want to learn how to identify major structural points like previous daily, weekly, overnight, highs and lows so you can see what's happening around those levels and build your ideas. Second, you move to auction market theory, you need to understand what's value, how it moves, that gives you a context for your trade. Then you want to learn about options flow and add gamma levels so you have better understanding of context and more confidence for your ideas. Second step is to learn about volume profile combined with delta profile, learn about POCs, HVNs, LVNs, shelves, ledges. This is always going to give you location for your trades exactly where you want to enter. And only after all of that, you want to learn about order flow tools such as footprint, book map, aggressive trades to spot absorption and aggression. Without proper context, they're meaningless.

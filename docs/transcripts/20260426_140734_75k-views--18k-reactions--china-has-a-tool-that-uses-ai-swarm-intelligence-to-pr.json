@@ -1,0 +1,142 @@
+{
+  "title": "75K views \u00b7 1.8K reactions | China has a tool that uses AI swarm intelligence to predict the future. It\u2019s called MiroFish and yes, it\u2019s open-source! #china #ainews #futuretech #aitools #gigaqian | Giga Qian",
+  "url": "https://www.facebook.com/share/v/18JwjNWzaZ/",
+  "project": "WolfPack",
+  "model": "base",
+  "language": "en",
+  "language_probability": 0.99,
+  "duration_seconds": 124.4,
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 5.7,
+      "text": "China now has a tool that takes information from everywhere and shows you the future and it only gets crazier from there."
+    },
+    {
+      "start": 5.7,
+      "end": 11.2,
+      "text": "It was built by a 20-year-old. It was vibe-coded. In only 10 days, he got millions of dollars,"
+    },
+    {
+      "start": 11.2,
+      "end": 16.4,
+      "text": "and he went from intern to CEO overnight. Hi, I'm Gigi Chen. I do business in China and speak Chinese,"
+    },
+    {
+      "start": 16.4,
+      "end": 18.8,
+      "text": "and I like to tell you what's really going on over there."
+    },
+    {
+      "start": 18.8,
+      "end": 22.6,
+      "text": "If you like checking out GitHub's global trending list, you might have seen Miro Fish,"
+    },
+    {
+      "start": 22.6,
+      "end": 27.0,
+      "text": "which recently occupied the top spot. It's a versatile prediction tool that runs large-scale"
+    },
+    {
+      "start": 27.0,
+      "end": 33.0,
+      "text": "simulations using multiple independent AI agents, up to a million of them simultaneously."
+    },
+    {
+      "start": 33.0,
+      "end": 36.2,
+      "text": "For my nerds out there, it does this using the Oasis engine from Camel AI,"
+    },
+    {
+      "start": 36.2,
+      "end": 41.5,
+      "text": "GraphRag for Knowledge Grouse, Zepp Cloud for Memory, and OpenAI SDK compatible LLMs."
+    },
+    {
+      "start": 41.5,
+      "end": 46.2,
+      "text": "But how did it happen? You've got a senior undergraduate student at the Beijing University of"
+    },
+    {
+      "start": 46.2,
+      "end": 51.5,
+      "text": "Posts and Telecommunications, nicknamed by Fu. He's anxious about finding internships,"
+    },
+    {
+      "start": 51.5,
+      "end": 56.8,
+      "text": "so he decides to finish his grad project in advance. This project was called Betta Fish."
+    },
+    {
+      "start": 57.0,
+      "end": 60.5,
+      "text": "It collects public opinion data from over 30 social media platforms,"
+    },
+    {
+      "start": 60.5,
+      "end": 64.0,
+      "text": "and then puts out structured analysis, and you can tell it how you want it to do it."
+    },
+    {
+      "start": 64.0,
+      "end": 67.0,
+      "text": "His advisor, Dunk Donum, and told him it was garbage."
+    },
+    {
+      "start": 67.0,
+      "end": 70.6,
+      "text": "But it was up on GitHub and getting some traction. To get over the hill,"
+    },
+    {
+      "start": 70.6,
+      "end": 76.2,
+      "text": "Bifu posted somewhere familiar to some. Xiao Hongshu, Bifu was getting a lot of messages,"
+    },
+    {
+      "start": 76.2,
+      "end": 81.3,
+      "text": "and after a while, he decided to respond to one. They came from the founder of Shandong Group in"
+    },
+    {
+      "start": 81.3,
+      "end": 86.5,
+      "text": "Shanghai, who used to be the richest dude in China. And he dunked on him again. Only this time,"
+    },
+    {
+      "start": 86.5,
+      "end": 92.4,
+      "text": "he explained that he appreciated Bifu's demonstrated planning abilities. He had his internship."
+    },
+    {
+      "start": 92.4,
+      "end": 96.7,
+      "text": "Bifu had latitude, so he got to work on a new project, and he thought to himself,"
+    },
+    {
+      "start": 96.7,
+      "end": 101.8,
+      "text": "what if he could see the information from the real world and build a high-fidelity parallel"
+    },
+    {
+      "start": 101.8,
+      "end": 107.2,
+      "text": "digital world? Instead of just analyzing, you birth a digital microcosm that can predict"
+    },
+    {
+      "start": 107.2,
+      "end": 113.8,
+      "text": "the future. Shandong threw in 30 million RMB, and he built a beast. As far as we know,"
+    },
+    {
+      "start": 113.8,
+      "end": 118.6,
+      "text": "it's impossible to predict the future with 100% accuracy. But what if you had a tool that can"
+    },
+    {
+      "start": 118.6,
+      "end": 124.3,
+      "text": "make you the best at it? Yeah, so what would you use this for? I already have some ideas."
+    }
+  ],
+  "full_text": "China now has a tool that takes information from everywhere and shows you the future and it only gets crazier from there. It was built by a 20-year-old. It was vibe-coded. In only 10 days, he got millions of dollars, and he went from intern to CEO overnight. Hi, I'm Gigi Chen. I do business in China and speak Chinese, and I like to tell you what's really going on over there. If you like checking out GitHub's global trending list, you might have seen Miro Fish, which recently occupied the top spot. It's a versatile prediction tool that runs large-scale simulations using multiple independent AI agents, up to a million of them simultaneously. For my nerds out there, it does this using the Oasis engine from Camel AI, GraphRag for Knowledge Grouse, Zepp Cloud for Memory, and OpenAI SDK compatible LLMs. But how did it happen? You've got a senior undergraduate student at the Beijing University of Posts and Telecommunications, nicknamed by Fu. He's anxious about finding internships, so he decides to finish his grad project in advance. This project was called Betta Fish. It collects public opinion data from over 30 social media platforms, and then puts out structured analysis, and you can tell it how you want it to do it. His advisor, Dunk Donum, and told him it was garbage. But it was up on GitHub and getting some traction. To get over the hill, Bifu posted somewhere familiar to some. Xiao Hongshu, Bifu was getting a lot of messages, and after a while, he decided to respond to one. They came from the founder of Shandong Group in Shanghai, who used to be the richest dude in China. And he dunked on him again. Only this time, he explained that he appreciated Bifu's demonstrated planning abilities. He had his internship. Bifu had latitude, so he got to work on a new project, and he thought to himself, what if he could see the information from the real world and build a high-fidelity parallel digital world? Instead of just analyzing, you birth a digital microcosm that can predict the future. Shandong threw in 30 million RMB, and he built a beast. As far as we know, it's impossible to predict the future with 100% accuracy. But what if you had a tool that can make you the best at it? Yeah, so what would you use this for? I already have some ideas."
+}

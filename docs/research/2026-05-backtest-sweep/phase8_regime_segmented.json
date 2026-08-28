@@ -1,0 +1,294 @@
+{
+  "BTC": {
+    "regime_counts": {
+      "SIDEWAYS": 2917,
+      "UNKNOWN": 180,
+      "BEAR": 761,
+      "BULL": 1143
+    },
+    "total_trades": 75,
+    "params": {
+      "sl_pct": 3.0,
+      "tp_pct": 2.0,
+      "max_hold": 12
+    },
+    "by_regime": {
+      "SIDEWAYS": {
+        "n_trades": 42,
+        "wins": 28,
+        "wr": 0.6666666666666666,
+        "strat_mean_pct": 0.4645320814805794,
+        "strat_total_pct": 19.510347422184335,
+        "hodl_mean_pct_per_window": 0.05074598580055387,
+        "edge_vs_hodl_per_trade": 0.41378609568002556,
+        "regime_bars": 2917
+      },
+      "BEAR": {
+        "n_trades": 31,
+        "wins": 23,
+        "wr": 0.7419354838709677,
+        "strat_mean_pct": 0.8319978265334019,
+        "strat_total_pct": 25.79193262253546,
+        "hodl_mean_pct_per_window": 0.1629935135446104,
+        "edge_vs_hodl_per_trade": 0.6690043129887915,
+        "regime_bars": 761
+      }
+    }
+  },
+  "ETH": {
+    "regime_counts": {
+      "SIDEWAYS": 1943,
+      "UNKNOWN": 180,
+      "BEAR": 1526,
+      "BULL": 1352
+    },
+    "total_trades": 133,
+    "params": {
+      "sl_pct": 3.0,
+      "tp_pct": 2.0,
+      "max_hold": 12
+    },
+    "by_regime": {
+      "BEAR": {
+        "n_trades": 73,
+        "wins": 38,
+        "wr": 0.5205479452054794,
+        "strat_mean_pct": -0.519583841412027,
+        "strat_total_pct": -37.92962042307797,
+        "hodl_mean_pct_per_window": -0.2830534213306406,
+        "edge_vs_hodl_per_trade": -0.23653042008138636,
+        "regime_bars": 1526
+      },
+      "SIDEWAYS": {
+        "n_trades": 51,
+        "wins": 31,
+        "wr": 0.6078431372549019,
+        "strat_mean_pct": -0.012057513949804973,
+        "strat_total_pct": -0.6149332114400536,
+        "hodl_mean_pct_per_window": -0.07299572546938696,
+        "edge_vs_hodl_per_trade": 0.06093821151958198,
+        "regime_bars": 1943
+      },
+      "BULL": {
+        "n_trades": 9,
+        "wins": 2,
+        "wr": 0.2222222222222222,
+        "strat_mean_pct": -1.686129582919313,
+        "strat_total_pct": -15.175166246273818,
+        "hodl_mean_pct_per_window": 0.6687853907474927,
+        "edge_vs_hodl_per_trade": -2.354914973666806,
+        "regime_bars": 1352
+      }
+    }
+  },
+  "SOL": {
+    "regime_counts": {
+      "SIDEWAYS": 1591,
+      "UNKNOWN": 180,
+      "BEAR": 1586,
+      "BULL": 1644
+    },
+    "total_trades": 110,
+    "params": {
+      "sl_pct": 3.0,
+      "tp_pct": 2.0,
+      "max_hold": 12
+    },
+    "by_regime": {
+      "BEAR": {
+        "n_trades": 58,
+        "wins": 32,
+        "wr": 0.5517241379310345,
+        "strat_mean_pct": -0.34137931034482916,
+        "strat_total_pct": -19.80000000000009,
+        "hodl_mean_pct_per_window": -0.1038490540611686,
+        "edge_vs_hodl_per_trade": -0.23753025628366056,
+        "regime_bars": 1586
+      },
+      "BULL": {
+        "n_trades": 11,
+        "wins": 5,
+        "wr": 0.45454545454545453,
+        "strat_mean_pct": -0.8272727272727319,
+        "strat_total_pct": -9.100000000000051,
+        "hodl_mean_pct_per_window": 0.1079730216214898,
+        "edge_vs_hodl_per_trade": -0.9352457488942217,
+        "regime_bars": 1644
+      },
+      "SIDEWAYS": {
+        "n_trades": 41,
+        "wins": 24,
+        "wr": 0.5853658536585366,
+        "strat_mean_pct": -0.1337497114987831,
+        "strat_total_pct": -5.483738171450106,
+        "hodl_mean_pct_per_window": 0.41331705092309223,
+        "edge_vs_hodl_per_trade": -0.5470667624218754,
+        "regime_bars": 1591
+      }
+    }
+  },
+  "LINK": {
+    "regime_counts": {
+      "SIDEWAYS": 1921,
+      "UNKNOWN": 180,
+      "BEAR": 1713,
+      "BULL": 1187
+    },
+    "total_trades": 115,
+    "params": {
+      "sl_pct": 3.0,
+      "tp_pct": 2.0,
+      "max_hold": 12
+    },
+    "by_regime": {
+      "BEAR": {
+        "n_trades": 66,
+        "wins": 37,
+        "wr": 0.5606060606060606,
+        "strat_mean_pct": -0.29696969696969777,
+        "strat_total_pct": -19.600000000000055,
+        "hodl_mean_pct_per_window": -0.21521378560763318,
+        "edge_vs_hodl_per_trade": -0.08175591136206459,
+        "regime_bars": 1713
+      },
+      "SIDEWAYS": {
+        "n_trades": 45,
+        "wins": 30,
+        "wr": 0.6666666666666666,
+        "strat_mean_pct": 0.3216300810083458,
+        "strat_total_pct": 14.47335364537556,
+        "hodl_mean_pct_per_window": -0.02439455252269484,
+        "edge_vs_hodl_per_trade": 0.3460246335310406,
+        "regime_bars": 1921
+      }
+    }
+  },
+  "AVAX": {
+    "regime_counts": {
+      "SIDEWAYS": 1521,
+      "UNKNOWN": 180,
+      "BEAR": 1942,
+      "BULL": 1358
+    },
+    "total_trades": 148,
+    "params": {
+      "sl_pct": 3.0,
+      "tp_pct": 2.0,
+      "max_hold": 12
+    },
+    "by_regime": {
+      "BEAR": {
+        "n_trades": 101,
+        "wins": 58,
+        "wr": 0.5742574257425742,
+        "strat_mean_pct": -0.21295858219633496,
+        "strat_total_pct": -21.50881680182983,
+        "hodl_mean_pct_per_window": -0.34303102243609807,
+        "edge_vs_hodl_per_trade": 0.1300724402397631,
+        "regime_bars": 1942
+      },
+      "SIDEWAYS": {
+        "n_trades": 42,
+        "wins": 22,
+        "wr": 0.5238095238095238,
+        "strat_mean_pct": -0.36346200401618756,
+        "strat_total_pct": -15.265404168679877,
+        "hodl_mean_pct_per_window": -0.1615807452167371,
+        "edge_vs_hodl_per_trade": -0.20188125879945046,
+        "regime_bars": 1521
+      },
+      "BULL": {
+        "n_trades": 5,
+        "wins": 3,
+        "wr": 0.6,
+        "strat_mean_pct": -0.10000000000000168,
+        "strat_total_pct": -0.5000000000000084,
+        "hodl_mean_pct_per_window": 0.2640345591795914,
+        "edge_vs_hodl_per_trade": -0.3640345591795931,
+        "regime_bars": 1358
+      }
+    }
+  },
+  "ARB": {
+    "regime_counts": {
+      "SIDEWAYS": 1270,
+      "UNKNOWN": 180,
+      "BEAR": 2519,
+      "BULL": 1032
+    },
+    "total_trades": 136,
+    "params": {
+      "sl_pct": 3.0,
+      "tp_pct": 2.0,
+      "max_hold": 12
+    },
+    "by_regime": {
+      "BEAR": {
+        "n_trades": 104,
+        "wins": 54,
+        "wr": 0.5192307692307693,
+        "strat_mean_pct": -0.5038461538461545,
+        "strat_total_pct": -52.40000000000006,
+        "hodl_mean_pct_per_window": -0.7936989891501703,
+        "edge_vs_hodl_per_trade": 0.28985283530401584,
+        "regime_bars": 2519
+      },
+      "SIDEWAYS": {
+        "n_trades": 23,
+        "wins": 15,
+        "wr": 0.6521739130434783,
+        "strat_mean_pct": 0.16086956521739149,
+        "strat_total_pct": 3.700000000000004,
+        "hodl_mean_pct_per_window": 0.1987859213276333,
+        "edge_vs_hodl_per_trade": -0.03791635611024183,
+        "regime_bars": 1270
+      },
+      "BULL": {
+        "n_trades": 9,
+        "wins": 4,
+        "wr": 0.4444444444444444,
+        "strat_mean_pct": -0.8777777777777787,
+        "strat_total_pct": -7.9000000000000075,
+        "hodl_mean_pct_per_window": -0.25092384933218653,
+        "edge_vs_hodl_per_trade": -0.6268539284455921,
+        "regime_bars": 1032
+      }
+    }
+  },
+  "DOGE": {
+    "regime_counts": {
+      "SIDEWAYS": 1622,
+      "UNKNOWN": 180,
+      "BEAR": 1855,
+      "BULL": 1344
+    },
+    "total_trades": 95,
+    "params": {
+      "sl_pct": 3.0,
+      "tp_pct": 2.0,
+      "max_hold": 12
+    },
+    "by_regime": {
+      "BEAR": {
+        "n_trades": 61,
+        "wins": 34,
+        "wr": 0.5573770491803278,
+        "strat_mean_pct": -0.3131147540983602,
+        "strat_total_pct": -19.099999999999973,
+        "hodl_mean_pct_per_window": -0.24955124863740327,
+        "edge_vs_hodl_per_trade": -0.06356350546095693,
+        "regime_bars": 1855
+      },
+      "SIDEWAYS": {
+        "n_trades": 30,
+        "wins": 20,
+        "wr": 0.6666666666666666,
+        "strat_mean_pct": 0.3271845758064069,
+        "strat_total_pct": 9.815537274192208,
+        "hodl_mean_pct_per_window": -0.011799958965676803,
+        "edge_vs_hodl_per_trade": 0.33898453477208373,
+        "regime_bars": 1622
+      }
+    }
+  }
+}

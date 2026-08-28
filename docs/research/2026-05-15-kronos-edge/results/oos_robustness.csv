@@ -1,0 +1,10 @@
+strategy,symbol,in_sample_total_pct,in_sample_sharpe,in_sample_hodl_pct,in_sample_n,oos_total_pct,oos_sharpe,oos_hodl_pct,oos_n
+kronos_direct thr=0.005,BTCUSDT,27.811,4.864,9.179,46,-5.747,-3.334,7.382,23
+bollinger_classical lookback=100 thr=2.5 hold=24,BTCUSDT,9.119,7.418,9.119,13,2.978,11.235,8.042,6
+bollinger_vol_norm lookback=100 thr=2.5 hold=24,BTCUSDT,19.499,7.374,9.119,13,11.255,11.182,8.042,6
+kronos_direct thr=0.01,ETHUSDT,12.237,1.874,13.75,45,2.398,1.607,-1.525,22
+bollinger_classical lookback=100 thr=2.5 hold=24,ETHUSDT,13.444,5.557,15.248,15,11.89,17.388,-1.754,8
+bollinger_vol_norm lookback=100 thr=2.5 hold=24,ETHUSDT,18.142,4.765,15.248,15,32.034,17.036,-1.754,8
+kronos_direct thr=0.01,LINKUSDT,48.334,5.473,2.697,46,-5.489,-1.53,12.594,23
+bollinger_classical lookback=100 thr=2.5 hold=24,LINKUSDT,19.866,10.745,1.91,12,6.073,6.206,14.286,7
+bollinger_vol_norm lookback=100 thr=2.5 hold=24,LINKUSDT,32.244,10.065,1.91,12,8.651,4.306,14.286,7

@@ -1,0 +1,4874 @@
+[
+  {
+    "symbol": "BTC",
+    "strategy": "regime_momentum",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -9.218,
+      "sharpe": -4.2368,
+      "calmar": -0.9522,
+      "max_dd_pct": 9.6802,
+      "wr": 27.3,
+      "trades": 370,
+      "expectancy_pct": -0.0979,
+      "profit_factor": 0.7418
+    },
+    "is": {
+      "trades": 270,
+      "pnl_usd": -1021.23
+    },
+    "oos": {
+      "n": 100,
+      "wins": 29,
+      "wr": 0.29,
+      "pnl_usd": -171.36,
+      "ret_pct": -687.8,
+      "sharpe": -1.047577805922836
+    },
+    "passes_acceptance": false,
+    "duration_s": 2.79
+  },
+  {
+    "symbol": "BTC",
+    "strategy": "ema_crossover",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -8.868,
+      "sharpe": -2.315,
+      "calmar": -0.8401,
+      "max_dd_pct": 10.5557,
+      "wr": 36.07,
+      "trades": 61,
+      "expectancy_pct": -0.8936,
+      "profit_factor": 0.5201
+    },
+    "is": {
+      "trades": 46,
+      "pnl_usd": -1868.55
+    },
+    "oos": {
+      "n": 15,
+      "wins": 7,
+      "wr": 0.4666666666666667,
+      "pnl_usd": -114.16999999999997,
+      "ret_pct": -318.06999999999994,
+      "sharpe": -0.9040117849953785
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.43
+  },
+  {
+    "symbol": "BTC",
+    "strategy": "vol_breakout",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -0.1787,
+      "sharpe": -0.7462,
+      "calmar": -0.4665,
+      "max_dd_pct": 0.383,
+      "wr": 40.0,
+      "trades": 5,
+      "expectancy_pct": -0.7399,
+      "profit_factor": 0.4577
+    },
+    "is": {
+      "trades": 4,
+      "pnl_usd": -36.15
+    },
+    "oos": {
+      "n": 1,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": -0.71,
+      "ret_pct": -4.41,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.46
+  },
+  {
+    "symbol": "BTC",
+    "strategy": "orb_session",
+    "interval": "1h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.05
+  },
+  {
+    "symbol": "BTC",
+    "strategy": "turtle_donchian",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -4.3739,
+      "sharpe": -2.0296,
+      "calmar": -0.7988,
+      "max_dd_pct": 5.4757,
+      "wr": 21.05,
+      "trades": 38,
+      "expectancy_pct": -0.6953,
+      "profit_factor": 0.367
+    },
+    "is": {
+      "trades": 27,
+      "pnl_usd": -1031.27
+    },
+    "oos": {
+      "n": 11,
+      "wins": 3,
+      "wr": 0.2727272727272727,
+      "pnl_usd": 56.11000000000001,
+      "ret_pct": 163.17000000000002,
+      "sharpe": 0.8443139642108521
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.5
+  },
+  {
+    "symbol": "BTC",
+    "strategy": "measured_move",
+    "interval": "1h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.03
+  },
+  {
+    "symbol": "BTC",
+    "strategy": "mean_reversion",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -2.388,
+      "sharpe": -1.9298,
+      "calmar": -0.748,
+      "max_dd_pct": 3.1924,
+      "wr": 30.990000000000002,
+      "trades": 71,
+      "expectancy_pct": 0.078,
+      "profit_factor": 1.1251
+    },
+    "is": {
+      "trades": 51,
+      "pnl_usd": 168.16999999999996
+    },
+    "oos": {
+      "n": 20,
+      "wins": 7,
+      "wr": 0.35,
+      "pnl_usd": -7.869999999999995,
+      "ret_pct": -24.66000000000001,
+      "sharpe": -0.12272572438885547
+    },
+    "passes_acceptance": false,
+    "duration_s": 2.99
+  },
+  {
+    "symbol": "BTC",
+    "strategy": "band_fade",
+    "interval": "1h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.29
+  },
+  {
+    "symbol": "BTC",
+    "strategy": "trend_pullback",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -11.9467,
+      "sharpe": -8.4855,
+      "calmar": -0.9876,
+      "max_dd_pct": 12.0965,
+      "wr": 42.22,
+      "trades": 315,
+      "expectancy_pct": -0.1867,
+      "profit_factor": 0.6988
+    },
+    "is": {
+      "trades": 222,
+      "pnl_usd": -966.52
+    },
+    "oos": {
+      "n": 93,
+      "wins": 39,
+      "wr": 0.41935483870967744,
+      "pnl_usd": -414.71000000000004,
+      "ret_pct": -1844.5,
+      "sharpe": -3.0046307255892057
+    },
+    "passes_acceptance": false,
+    "duration_s": 9.98
+  },
+  {
+    "symbol": "BTC",
+    "strategy": "slow_drift_follow",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -3.3115,
+      "sharpe": -6.1291,
+      "calmar": -0.9391,
+      "max_dd_pct": 3.5262,
+      "wr": 34.04,
+      "trades": 282,
+      "expectancy_pct": -0.0722,
+      "profit_factor": 0.8522
+    },
+    "is": {
+      "trades": 202,
+      "pnl_usd": -39.579999999999984
+    },
+    "oos": {
+      "n": 80,
+      "wins": 28,
+      "wr": 0.35,
+      "pnl_usd": -159.9,
+      "ret_pct": -1642.5,
+      "sharpe": -3.434664748353441
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.77
+  },
+  {
+    "symbol": "BTC",
+    "strategy": "range_breakout",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -2.5154,
+      "sharpe": -2.7478,
+      "calmar": -0.8903,
+      "max_dd_pct": 2.8252,
+      "wr": 41.67,
+      "trades": 180,
+      "expectancy_pct": -0.1968,
+      "profit_factor": 0.8206
+    },
+    "is": {
+      "trades": 131,
+      "pnl_usd": -362.67
+    },
+    "oos": {
+      "n": 49,
+      "wins": 21,
+      "wr": 0.42857142857142855,
+      "pnl_usd": 10.67999999999999,
+      "ret_pct": 112.0300000000001,
+      "sharpe": 0.18334474331572925
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.32
+  },
+  {
+    "symbol": "BTC",
+    "strategy": "rsi2_connors",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -11.6131,
+      "sharpe": -9.5558,
+      "calmar": -0.9991,
+      "max_dd_pct": 11.6231,
+      "wr": 51.41,
+      "trades": 566,
+      "expectancy_pct": -0.1054,
+      "profit_factor": 0.6981
+    },
+    "is": {
+      "trades": 395,
+      "pnl_usd": -627.04
+    },
+    "oos": {
+      "n": 171,
+      "wins": 85,
+      "wr": 0.49707602339181284,
+      "pnl_usd": -498.15,
+      "ret_pct": -2740.5,
+      "sharpe": -3.119913937399213
+    },
+    "passes_acceptance": false,
+    "duration_s": 2.93
+  },
+  {
+    "symbol": "ETH",
+    "strategy": "regime_momentum",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -6.7774,
+      "sharpe": -2.22,
+      "calmar": -0.8118,
+      "max_dd_pct": 8.3491,
+      "wr": 33.43,
+      "trades": 338,
+      "expectancy_pct": -0.0349,
+      "profit_factor": 0.9163
+    },
+    "is": {
+      "trades": 241,
+      "pnl_usd": -506.24
+    },
+    "oos": {
+      "n": 97,
+      "wins": 32,
+      "wr": 0.32989690721649484,
+      "pnl_usd": 19.42000000000003,
+      "ret_pct": -66.95999999999994,
+      "sharpe": -0.06654465740608652
+    },
+    "passes_acceptance": false,
+    "duration_s": 2.83
+  },
+  {
+    "symbol": "ETH",
+    "strategy": "ema_crossover",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -9.1303,
+      "sharpe": -1.7544,
+      "calmar": -0.9015,
+      "max_dd_pct": 10.1277,
+      "wr": 43.4,
+      "trades": 53,
+      "expectancy_pct": -1.0507,
+      "profit_factor": 0.5176
+    },
+    "is": {
+      "trades": 33,
+      "pnl_usd": -1869.34
+    },
+    "oos": {
+      "n": 20,
+      "wins": 7,
+      "wr": 0.35,
+      "pnl_usd": -174.20000000000002,
+      "ret_pct": -498.24,
+      "sharpe": -1.503391620478399
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.44
+  },
+  {
+    "symbol": "ETH",
+    "strategy": "vol_breakout",
+    "interval": "1h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.49
+  },
+  {
+    "symbol": "ETH",
+    "strategy": "orb_session",
+    "interval": "1h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.07
+  },
+  {
+    "symbol": "ETH",
+    "strategy": "turtle_donchian",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -10.8819,
+      "sharpe": -3.7519,
+      "calmar": -0.9713,
+      "max_dd_pct": 11.2035,
+      "wr": 8.7,
+      "trades": 46,
+      "expectancy_pct": -1.3873,
+      "profit_factor": 0.1621
+    },
+    "is": {
+      "trades": 30,
+      "pnl_usd": -1828.23
+    },
+    "oos": {
+      "n": 16,
+      "wins": 2,
+      "wr": 0.125,
+      "pnl_usd": -439.34000000000003,
+      "ret_pct": -1290.13,
+      "sharpe": -5.780119407785113
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.54
+  },
+  {
+    "symbol": "ETH",
+    "strategy": "measured_move",
+    "interval": "1h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.06
+  },
+  {
+    "symbol": "ETH",
+    "strategy": "mean_reversion",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -3.1179,
+      "sharpe": -2.0265,
+      "calmar": -0.8094,
+      "max_dd_pct": 3.8523,
+      "wr": 29.49,
+      "trades": 78,
+      "expectancy_pct": -0.0198,
+      "profit_factor": 0.97
+    },
+    "is": {
+      "trades": 57,
+      "pnl_usd": -253.55000000000004
+    },
+    "oos": {
+      "n": 21,
+      "wins": 8,
+      "wr": 0.38095238095238093,
+      "pnl_usd": 193.3,
+      "ret_pct": 669.39,
+      "sharpe": 2.411876234965003
+    },
+    "passes_acceptance": false,
+    "duration_s": 3.04
+  },
+  {
+    "symbol": "ETH",
+    "strategy": "band_fade",
+    "interval": "1h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.3
+  },
+  {
+    "symbol": "ETH",
+    "strategy": "trend_pullback",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -10.3203,
+      "sharpe": -5.3339,
+      "calmar": -0.9576,
+      "max_dd_pct": 10.7769,
+      "wr": 43.22,
+      "trades": 317,
+      "expectancy_pct": -0.1145,
+      "profit_factor": 0.8442
+    },
+    "is": {
+      "trades": 228,
+      "pnl_usd": -517.56
+    },
+    "oos": {
+      "n": 89,
+      "wins": 39,
+      "wr": 0.43820224719101125,
+      "pnl_usd": -329.32,
+      "ret_pct": -1437.74,
+      "sharpe": -1.9532803146877877
+    },
+    "passes_acceptance": false,
+    "duration_s": 9.95
+  },
+  {
+    "symbol": "ETH",
+    "strategy": "slow_drift_follow",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -4.4013,
+      "sharpe": -5.6732,
+      "calmar": -0.9365,
+      "max_dd_pct": 4.6998,
+      "wr": 32.940000000000005,
+      "trades": 337,
+      "expectancy_pct": -0.1063,
+      "profit_factor": 0.8402
+    },
+    "is": {
+      "trades": 238,
+      "pnl_usd": -190.79000000000002
+    },
+    "oos": {
+      "n": 99,
+      "wins": 29,
+      "wr": 0.29292929292929293,
+      "pnl_usd": -158.29,
+      "ret_pct": -1641.8600000000001,
+      "sharpe": -2.1158025893519294
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.8
+  },
+  {
+    "symbol": "ETH",
+    "strategy": "range_breakout",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -2.6392,
+      "sharpe": -2.1137,
+      "calmar": -0.9573,
+      "max_dd_pct": 2.7569,
+      "wr": 41.77,
+      "trades": 158,
+      "expectancy_pct": -0.2681,
+      "profit_factor": 0.8343
+    },
+    "is": {
+      "trades": 111,
+      "pnl_usd": -333.2
+    },
+    "oos": {
+      "n": 47,
+      "wins": 19,
+      "wr": 0.40425531914893614,
+      "pnl_usd": -88.75,
+      "ret_pct": -903.1200000000002,
+      "sharpe": -1.0869392677030665
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.33
+  },
+  {
+    "symbol": "ETH",
+    "strategy": "rsi2_connors",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -14.0615,
+      "sharpe": -8.5446,
+      "calmar": -0.9988,
+      "max_dd_pct": 14.0789,
+      "wr": 57.010000000000005,
+      "trades": 556,
+      "expectancy_pct": -0.1183,
+      "profit_factor": 0.7587
+    },
+    "is": {
+      "trades": 376,
+      "pnl_usd": -848.35
+    },
+    "oos": {
+      "n": 180,
+      "wins": 94,
+      "wr": 0.5222222222222223,
+      "pnl_usd": -388.48,
+      "ret_pct": -2201.4599999999996,
+      "sharpe": -1.7751012787671585
+    },
+    "passes_acceptance": false,
+    "duration_s": 2.89
+  },
+  {
+    "symbol": "SOL",
+    "strategy": "regime_momentum",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -17.0023,
+      "sharpe": -5.5595,
+      "calmar": -0.9754,
+      "max_dd_pct": 17.4316,
+      "wr": 32.65,
+      "trades": 392,
+      "expectancy_pct": -0.1811,
+      "profit_factor": 0.6717
+    },
+    "is": {
+      "trades": 270,
+      "pnl_usd": -1421.49
+    },
+    "oos": {
+      "n": 122,
+      "wins": 35,
+      "wr": 0.28688524590163933,
+      "pnl_usd": -702.4,
+      "ret_pct": -2640.25,
+      "sharpe": -2.8132093946219277
+    },
+    "passes_acceptance": false,
+    "duration_s": 2.82
+  },
+  {
+    "symbol": "SOL",
+    "strategy": "ema_crossover",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -6.9784,
+      "sharpe": -1.2022,
+      "calmar": -0.683,
+      "max_dd_pct": 10.2167,
+      "wr": 30.159999999999997,
+      "trades": 63,
+      "expectancy_pct": -0.5313,
+      "profit_factor": 0.7439
+    },
+    "is": {
+      "trades": 47,
+      "pnl_usd": -199.81000000000012
+    },
+    "oos": {
+      "n": 16,
+      "wins": 4,
+      "wr": 0.25,
+      "pnl_usd": -1080.29,
+      "ret_pct": -3002.13,
+      "sharpe": -7.887056768308037
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.44
+  },
+  {
+    "symbol": "SOL",
+    "strategy": "vol_breakout",
+    "interval": "1h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.52
+  },
+  {
+    "symbol": "SOL",
+    "strategy": "orb_session",
+    "interval": "1h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.05
+  },
+  {
+    "symbol": "SOL",
+    "strategy": "turtle_donchian",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -10.7726,
+      "sharpe": -3.6047,
+      "calmar": -0.9487,
+      "max_dd_pct": 11.3552,
+      "wr": 10.870000000000001,
+      "trades": 46,
+      "expectancy_pct": -1.4101,
+      "profit_factor": 0.1957
+    },
+    "is": {
+      "trades": 29,
+      "pnl_usd": -1642.33
+    },
+    "oos": {
+      "n": 17,
+      "wins": 2,
+      "wr": 0.11764705882352941,
+      "pnl_usd": -663.43,
+      "ret_pct": -1941.32,
+      "sharpe": -11.033168340990926
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.54
+  },
+  {
+    "symbol": "SOL",
+    "strategy": "measured_move",
+    "interval": "1h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.06
+  },
+  {
+    "symbol": "SOL",
+    "strategy": "mean_reversion",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -1.9012,
+      "sharpe": -1.0248,
+      "calmar": -0.6871,
+      "max_dd_pct": 2.7668,
+      "wr": 26.229999999999997,
+      "trades": 61,
+      "expectancy_pct": 0.0956,
+      "profit_factor": 1.0832
+    },
+    "is": {
+      "trades": 49,
+      "pnl_usd": 224.04999999999998
+    },
+    "oos": {
+      "n": 12,
+      "wins": 4,
+      "wr": 0.3333333333333333,
+      "pnl_usd": -62.109999999999985,
+      "ret_pct": -205.09000000000003,
+      "sharpe": -1.3520061403168404
+    },
+    "passes_acceptance": false,
+    "duration_s": 3.05
+  },
+  {
+    "symbol": "SOL",
+    "strategy": "band_fade",
+    "interval": "1h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.31
+  },
+  {
+    "symbol": "SOL",
+    "strategy": "trend_pullback",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -15.5691,
+      "sharpe": -7.4783,
+      "calmar": -0.9867,
+      "max_dd_pct": 15.7783,
+      "wr": 42.46,
+      "trades": 358,
+      "expectancy_pct": -0.1521,
+      "profit_factor": 0.8055
+    },
+    "is": {
+      "trades": 250,
+      "pnl_usd": -724.8299999999999
+    },
+    "oos": {
+      "n": 108,
+      "wins": 42,
+      "wr": 0.3888888888888889,
+      "pnl_usd": -526.75,
+      "ret_pct": -2432.94,
+      "sharpe": -2.433952635066877
+    },
+    "passes_acceptance": false,
+    "duration_s": 10.01
+  },
+  {
+    "symbol": "SOL",
+    "strategy": "slow_drift_follow",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -5.0818,
+      "sharpe": -6.1431,
+      "calmar": -0.9772,
+      "max_dd_pct": 5.2002,
+      "wr": 34.74,
+      "trades": 331,
+      "expectancy_pct": -0.1419,
+      "profit_factor": 0.7879
+    },
+    "is": {
+      "trades": 237,
+      "pnl_usd": -489.96
+    },
+    "oos": {
+      "n": 94,
+      "wins": 39,
+      "wr": 0.4148936170212766,
+      "pnl_usd": 25.97,
+      "ret_pct": 280.39,
+      "sharpe": 0.3581801944101139
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.82
+  },
+  {
+    "symbol": "SOL",
+    "strategy": "range_breakout",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -4.3402,
+      "sharpe": -3.3325,
+      "calmar": -0.9375,
+      "max_dd_pct": 4.6295,
+      "wr": 37.059999999999995,
+      "trades": 170,
+      "expectancy_pct": -0.3389,
+      "profit_factor": 0.7967
+    },
+    "is": {
+      "trades": 119,
+      "pnl_usd": -475.21999999999997
+    },
+    "oos": {
+      "n": 51,
+      "wins": 20,
+      "wr": 0.39215686274509803,
+      "pnl_usd": -95.75000000000001,
+      "ret_pct": -990.3100000000001,
+      "sharpe": -1.186234170050604
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.32
+  },
+  {
+    "symbol": "SOL",
+    "strategy": "rsi2_connors",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -16.1866,
+      "sharpe": -8.9644,
+      "calmar": -0.9862,
+      "max_dd_pct": 16.4126,
+      "wr": 57.089999999999996,
+      "trades": 515,
+      "expectancy_pct": -0.1271,
+      "profit_factor": 0.7743
+    },
+    "is": {
+      "trades": 358,
+      "pnl_usd": -641.15
+    },
+    "oos": {
+      "n": 157,
+      "wins": 76,
+      "wr": 0.4840764331210191,
+      "pnl_usd": -544.29,
+      "ret_pct": -3145.95,
+      "sharpe": -2.8048288665065386
+    },
+    "passes_acceptance": false,
+    "duration_s": 2.91
+  },
+  {
+    "symbol": "LINK",
+    "strategy": "regime_momentum",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -16.0002,
+      "sharpe": -5.2509,
+      "calmar": -0.9653,
+      "max_dd_pct": 16.5757,
+      "wr": 29.67,
+      "trades": 364,
+      "expectancy_pct": -0.1966,
+      "profit_factor": 0.6989
+    },
+    "is": {
+      "trades": 256,
+      "pnl_usd": -1603.6599999999999
+    },
+    "oos": {
+      "n": 108,
+      "wins": 37,
+      "wr": 0.3425925925925926,
+      "pnl_usd": -402.57,
+      "ret_pct": -1616.1899999999998,
+      "sharpe": -2.0171048130370255
+    },
+    "passes_acceptance": false,
+    "duration_s": 2.82
+  },
+  {
+    "symbol": "LINK",
+    "strategy": "ema_crossover",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -8.6832,
+      "sharpe": -1.4663,
+      "calmar": -0.6971,
+      "max_dd_pct": 12.456,
+      "wr": 30.769999999999996,
+      "trades": 65,
+      "expectancy_pct": -0.699,
+      "profit_factor": 0.7115
+    },
+    "is": {
+      "trades": 42,
+      "pnl_usd": -1059.5800000000002
+    },
+    "oos": {
+      "n": 23,
+      "wins": 5,
+      "wr": 0.21739130434782608,
+      "pnl_usd": -627.39,
+      "ret_pct": -1781.27,
+      "sharpe": -3.8531228383488934
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.46
+  },
+  {
+    "symbol": "LINK",
+    "strategy": "vol_breakout",
+    "interval": "1h",
+    "full": {
+      "ret_pct": 0.1249,
+      "sharpe": 1.1041,
+      "calmar": 1.8479,
+      "max_dd_pct": 0.0676,
+      "wr": 100.0,
+      "trades": 1,
+      "expectancy_pct": 3.0079,
+      "profit_factor": 999.99
+    },
+    "is": {
+      "trades": 1,
+      "pnl_usd": 33.51
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.52
+  },
+  {
+    "symbol": "LINK",
+    "strategy": "orb_session",
+    "interval": "1h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.07
+  },
+  {
+    "symbol": "LINK",
+    "strategy": "turtle_donchian",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -12.1782,
+      "sharpe": -4.0076,
+      "calmar": -0.9101,
+      "max_dd_pct": 13.3812,
+      "wr": 10.0,
+      "trades": 50,
+      "expectancy_pct": -1.3763,
+      "profit_factor": 0.1698
+    },
+    "is": {
+      "trades": 31,
+      "pnl_usd": -1989.24
+    },
+    "oos": {
+      "n": 19,
+      "wins": 3,
+      "wr": 0.15789473684210525,
+      "pnl_usd": -448.87,
+      "ret_pct": -1329.6100000000001,
+      "sharpe": -5.005042741347502
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.55
+  },
+  {
+    "symbol": "LINK",
+    "strategy": "measured_move",
+    "interval": "1h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.06
+  },
+  {
+    "symbol": "LINK",
+    "strategy": "mean_reversion",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -3.649,
+      "sharpe": -1.9567,
+      "calmar": -0.8218,
+      "max_dd_pct": 4.4401,
+      "wr": 28.21,
+      "trades": 78,
+      "expectancy_pct": 0.0999,
+      "profit_factor": 1.1003
+    },
+    "is": {
+      "trades": 53,
+      "pnl_usd": 273.63
+    },
+    "oos": {
+      "n": 25,
+      "wins": 7,
+      "wr": 0.28,
+      "pnl_usd": -54.38000000000001,
+      "ret_pct": -179.87999999999997,
+      "sharpe": -0.6554665001880317
+    },
+    "passes_acceptance": false,
+    "duration_s": 3.01
+  },
+  {
+    "symbol": "LINK",
+    "strategy": "band_fade",
+    "interval": "1h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.3
+  },
+  {
+    "symbol": "LINK",
+    "strategy": "trend_pullback",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -17.9312,
+      "sharpe": -8.0135,
+      "calmar": -0.9427,
+      "max_dd_pct": 19.0211,
+      "wr": 38.36,
+      "trades": 318,
+      "expectancy_pct": -0.3642,
+      "profit_factor": 0.6202
+    },
+    "is": {
+      "trades": 227,
+      "pnl_usd": -2204.83
+    },
+    "oos": {
+      "n": 91,
+      "wins": 34,
+      "wr": 0.37362637362637363,
+      "pnl_usd": -450.14,
+      "ret_pct": -2130.97,
+      "sharpe": -2.5965910519465396
+    },
+    "passes_acceptance": false,
+    "duration_s": 9.99
+  },
+  {
+    "symbol": "LINK",
+    "strategy": "slow_drift_follow",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -5.6394,
+      "sharpe": -6.5164,
+      "calmar": -0.9636,
+      "max_dd_pct": 5.8521,
+      "wr": 32.75,
+      "trades": 342,
+      "expectancy_pct": -0.17,
+      "profit_factor": 0.7705
+    },
+    "is": {
+      "trades": 252,
+      "pnl_usd": -531.85
+    },
+    "oos": {
+      "n": 90,
+      "wins": 31,
+      "wr": 0.34444444444444444,
+      "pnl_usd": -38.21,
+      "ret_pct": -395.47,
+      "sharpe": -0.4716080220018694
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.83
+  },
+  {
+    "symbol": "LINK",
+    "strategy": "range_breakout",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -5.2292,
+      "sharpe": -3.8872,
+      "calmar": -0.8894,
+      "max_dd_pct": 5.8793,
+      "wr": 33.53,
+      "trades": 173,
+      "expectancy_pct": -0.687,
+      "profit_factor": 0.6176
+    },
+    "is": {
+      "trades": 124,
+      "pnl_usd": -890.05
+    },
+    "oos": {
+      "n": 49,
+      "wins": 16,
+      "wr": 0.32653061224489793,
+      "pnl_usd": -272.54,
+      "ret_pct": -2848.28,
+      "sharpe": -3.7094846429158332
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.34
+  },
+  {
+    "symbol": "LINK",
+    "strategy": "rsi2_connors",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -15.2288,
+      "sharpe": -8.3283,
+      "calmar": -0.9992,
+      "max_dd_pct": 15.2407,
+      "wr": 58.48,
+      "trades": 501,
+      "expectancy_pct": -0.1526,
+      "profit_factor": 0.7235
+    },
+    "is": {
+      "trades": 339,
+      "pnl_usd": -670.74
+    },
+    "oos": {
+      "n": 162,
+      "wins": 80,
+      "wr": 0.49382716049382713,
+      "pnl_usd": -726.11,
+      "ret_pct": -4155.64,
+      "sharpe": -3.639935478647988
+    },
+    "passes_acceptance": false,
+    "duration_s": 2.96
+  },
+  {
+    "symbol": "AVAX",
+    "strategy": "regime_momentum",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -10.7765,
+      "sharpe": -3.3151,
+      "calmar": -0.9956,
+      "max_dd_pct": 10.824,
+      "wr": 34.54,
+      "trades": 359,
+      "expectancy_pct": -0.0273,
+      "profit_factor": 0.9622
+    },
+    "is": {
+      "trades": 245,
+      "pnl_usd": 123.85
+    },
+    "oos": {
+      "n": 114,
+      "wins": 37,
+      "wr": 0.32456140350877194,
+      "pnl_usd": -362.82,
+      "ret_pct": -1355.48,
+      "sharpe": -1.47790395366944
+    },
+    "passes_acceptance": false,
+    "duration_s": 2.82
+  },
+  {
+    "symbol": "AVAX",
+    "strategy": "ema_crossover",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -2.5945,
+      "sharpe": -0.3938,
+      "calmar": -0.2709,
+      "max_dd_pct": 9.5768,
+      "wr": 33.33,
+      "trades": 48,
+      "expectancy_pct": -0.092,
+      "profit_factor": 0.9563
+    },
+    "is": {
+      "trades": 32,
+      "pnl_usd": 1110.38
+    },
+    "oos": {
+      "n": 16,
+      "wins": 3,
+      "wr": 0.1875,
+      "pnl_usd": -1307.81,
+      "ret_pct": -3450.9700000000003,
+      "sharpe": -6.961372508805382
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.46
+  },
+  {
+    "symbol": "AVAX",
+    "strategy": "vol_breakout",
+    "interval": "1h",
+    "full": {
+      "ret_pct": 0.0531,
+      "sharpe": 0.6429,
+      "calmar": 0.8506,
+      "max_dd_pct": 0.0624,
+      "wr": 100.0,
+      "trades": 1,
+      "expectancy_pct": 1.9062,
+      "profit_factor": 999.99
+    },
+    "is": {
+      "trades": 1,
+      "pnl_usd": 15.23
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.52
+  },
+  {
+    "symbol": "AVAX",
+    "strategy": "orb_session",
+    "interval": "1h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.07
+  },
+  {
+    "symbol": "AVAX",
+    "strategy": "turtle_donchian",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -8.0065,
+      "sharpe": -2.4924,
+      "calmar": -0.8904,
+      "max_dd_pct": 8.9916,
+      "wr": 15.379999999999999,
+      "trades": 39,
+      "expectancy_pct": -1.141,
+      "profit_factor": 0.2971
+    },
+    "is": {
+      "trades": 23,
+      "pnl_usd": -1167.66
+    },
+    "oos": {
+      "n": 16,
+      "wins": 3,
+      "wr": 0.1875,
+      "pnl_usd": -439.45,
+      "ret_pct": -1256.1200000000001,
+      "sharpe": -5.248317873450057
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.53
+  },
+  {
+    "symbol": "AVAX",
+    "strategy": "measured_move",
+    "interval": "1h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.06
+  },
+  {
+    "symbol": "AVAX",
+    "strategy": "mean_reversion",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -3.8665,
+      "sharpe": -2.0126,
+      "calmar": -0.6706,
+      "max_dd_pct": 5.766,
+      "wr": 27.27,
+      "trades": 77,
+      "expectancy_pct": -0.063,
+      "profit_factor": 0.9243
+    },
+    "is": {
+      "trades": 58,
+      "pnl_usd": -430.65
+    },
+    "oos": {
+      "n": 19,
+      "wins": 7,
+      "wr": 0.3684210526315789,
+      "pnl_usd": 268.79,
+      "ret_pct": 944.7900000000001,
+      "sharpe": 2.7873722178371243
+    },
+    "passes_acceptance": false,
+    "duration_s": 3.04
+  },
+  {
+    "symbol": "AVAX",
+    "strategy": "band_fade",
+    "interval": "1h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.31
+  },
+  {
+    "symbol": "AVAX",
+    "strategy": "trend_pullback",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -14.091,
+      "sharpe": -6.2299,
+      "calmar": -0.9813,
+      "max_dd_pct": 14.3601,
+      "wr": 39.62,
+      "trades": 318,
+      "expectancy_pct": -0.1484,
+      "profit_factor": 0.8297
+    },
+    "is": {
+      "trades": 219,
+      "pnl_usd": -259.66999999999996
+    },
+    "oos": {
+      "n": 99,
+      "wins": 29,
+      "wr": 0.29292929292929293,
+      "pnl_usd": -798.97,
+      "ret_pct": -3602.92,
+      "sharpe": -4.144270024863385
+    },
+    "passes_acceptance": false,
+    "duration_s": 10.03
+  },
+  {
+    "symbol": "AVAX",
+    "strategy": "slow_drift_follow",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -6.5265,
+      "sharpe": -7.4972,
+      "calmar": -0.999,
+      "max_dd_pct": 6.5333,
+      "wr": 32.58,
+      "trades": 356,
+      "expectancy_pct": -0.2091,
+      "profit_factor": 0.722
+    },
+    "is": {
+      "trades": 245,
+      "pnl_usd": -557.04
+    },
+    "oos": {
+      "n": 111,
+      "wins": 36,
+      "wr": 0.32432432432432434,
+      "pnl_usd": -170.81,
+      "ret_pct": -1808.67,
+      "sharpe": -2.0536334379537147
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.8
+  },
+  {
+    "symbol": "AVAX",
+    "strategy": "range_breakout",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -3.9711,
+      "sharpe": -2.9433,
+      "calmar": -0.9427,
+      "max_dd_pct": 4.2124,
+      "wr": 40.129999999999995,
+      "trades": 157,
+      "expectancy_pct": -0.3139,
+      "profit_factor": 0.817
+    },
+    "is": {
+      "trades": 112,
+      "pnl_usd": -263.35
+    },
+    "oos": {
+      "n": 45,
+      "wins": 20,
+      "wr": 0.4444444444444444,
+      "pnl_usd": -222.39,
+      "ret_pct": -2294.78,
+      "sharpe": -2.7613961037623427
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.33
+  },
+  {
+    "symbol": "AVAX",
+    "strategy": "rsi2_connors",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -18.7682,
+      "sharpe": -10.5462,
+      "calmar": -0.9979,
+      "max_dd_pct": 18.8077,
+      "wr": 58.87,
+      "trades": 530,
+      "expectancy_pct": -0.1548,
+      "profit_factor": 0.7266
+    },
+    "is": {
+      "trades": 358,
+      "pnl_usd": -659.34
+    },
+    "oos": {
+      "n": 172,
+      "wins": 92,
+      "wr": 0.5348837209302325,
+      "pnl_usd": -799.27,
+      "ret_pct": -4712.54,
+      "sharpe": -3.3526866053109146
+    },
+    "passes_acceptance": false,
+    "duration_s": 3.0
+  },
+  {
+    "symbol": "ARB",
+    "strategy": "regime_momentum",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -18.969,
+      "sharpe": -4.9825,
+      "calmar": -0.97,
+      "max_dd_pct": 19.5551,
+      "wr": 33.33,
+      "trades": 387,
+      "expectancy_pct": -0.1544,
+      "profit_factor": 0.7638
+    },
+    "is": {
+      "trades": 260,
+      "pnl_usd": -1508.51
+    },
+    "oos": {
+      "n": 127,
+      "wins": 37,
+      "wr": 0.29133858267716534,
+      "pnl_usd": -395.21000000000004,
+      "ret_pct": -1915.9199999999998,
+      "sharpe": -1.4391007668562834
+    },
+    "passes_acceptance": false,
+    "duration_s": 2.85
+  },
+  {
+    "symbol": "ARB",
+    "strategy": "ema_crossover",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -9.2953,
+      "sharpe": -1.2855,
+      "calmar": -0.6991,
+      "max_dd_pct": 13.2968,
+      "wr": 29.03,
+      "trades": 62,
+      "expectancy_pct": -0.7281,
+      "profit_factor": 0.7291
+    },
+    "is": {
+      "trades": 40,
+      "pnl_usd": -1295.05
+    },
+    "oos": {
+      "n": 22,
+      "wins": 6,
+      "wr": 0.2727272727272727,
+      "pnl_usd": -412.89000000000004,
+      "ret_pct": -1158.47,
+      "sharpe": -1.5808405094831104
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.46
+  },
+  {
+    "symbol": "ARB",
+    "strategy": "vol_breakout",
+    "interval": "1h",
+    "full": {
+      "ret_pct": 0.3795,
+      "sharpe": 1.727,
+      "calmar": 3.0554,
+      "max_dd_pct": 0.1242,
+      "wr": 100.0,
+      "trades": 1,
+      "expectancy_pct": 14.4935,
+      "profit_factor": 999.99
+    },
+    "is": {
+      "trades": 1,
+      "pnl_usd": 96.57
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.52
+  },
+  {
+    "symbol": "ARB",
+    "strategy": "orb_session",
+    "interval": "1h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.09
+  },
+  {
+    "symbol": "ARB",
+    "strategy": "turtle_donchian",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -8.6759,
+      "sharpe": -2.0269,
+      "calmar": -0.6805,
+      "max_dd_pct": 12.7492,
+      "wr": 7.32,
+      "trades": 41,
+      "expectancy_pct": -1.1622,
+      "profit_factor": 0.4549
+    },
+    "is": {
+      "trades": 31,
+      "pnl_usd": -2403.65
+    },
+    "oos": {
+      "n": 10,
+      "wins": 2,
+      "wr": 0.2,
+      "pnl_usd": 647.8799999999999,
+      "ret_pct": 2005.4299999999998,
+      "sharpe": 2.820812994982576
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.56
+  },
+  {
+    "symbol": "ARB",
+    "strategy": "measured_move",
+    "interval": "1h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.07
+  },
+  {
+    "symbol": "ARB",
+    "strategy": "mean_reversion",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -5.5634,
+      "sharpe": -2.4795,
+      "calmar": -0.9479,
+      "max_dd_pct": 5.869,
+      "wr": 26.6,
+      "trades": 94,
+      "expectancy_pct": -0.0512,
+      "profit_factor": 0.9545
+    },
+    "is": {
+      "trades": 66,
+      "pnl_usd": 321.99
+    },
+    "oos": {
+      "n": 28,
+      "wins": 7,
+      "wr": 0.25,
+      "pnl_usd": -467.05,
+      "ret_pct": -1620.0400000000002,
+      "sharpe": -3.9981880134137824
+    },
+    "passes_acceptance": false,
+    "duration_s": 3.08
+  },
+  {
+    "symbol": "ARB",
+    "strategy": "band_fade",
+    "interval": "1h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.32
+  },
+  {
+    "symbol": "ARB",
+    "strategy": "trend_pullback",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -17.3042,
+      "sharpe": -6.4757,
+      "calmar": -0.9352,
+      "max_dd_pct": 18.5029,
+      "wr": 44.41,
+      "trades": 358,
+      "expectancy_pct": -0.1707,
+      "profit_factor": 0.8138
+    },
+    "is": {
+      "trades": 250,
+      "pnl_usd": -998.04
+    },
+    "oos": {
+      "n": 108,
+      "wins": 47,
+      "wr": 0.4351851851851852,
+      "pnl_usd": -412.24,
+      "ret_pct": -1928.24,
+      "sharpe": -1.6013801632181603
+    },
+    "passes_acceptance": false,
+    "duration_s": 10.12
+  },
+  {
+    "symbol": "ARB",
+    "strategy": "slow_drift_follow",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -7.2941,
+      "sharpe": -7.3676,
+      "calmar": -0.9707,
+      "max_dd_pct": 7.5141,
+      "wr": 35.480000000000004,
+      "trades": 372,
+      "expectancy_pct": -0.1421,
+      "profit_factor": 0.8124
+    },
+    "is": {
+      "trades": 258,
+      "pnl_usd": -530.87
+    },
+    "oos": {
+      "n": 114,
+      "wins": 42,
+      "wr": 0.3684210526315789,
+      "pnl_usd": 9.339999999999998,
+      "ret_pct": 109.65999999999998,
+      "sharpe": 0.09712651859008405
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.82
+  },
+  {
+    "symbol": "ARB",
+    "strategy": "range_breakout",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -4.5272,
+      "sharpe": -2.7748,
+      "calmar": -0.7556,
+      "max_dd_pct": 5.9918,
+      "wr": 40.0,
+      "trades": 155,
+      "expectancy_pct": -0.3919,
+      "profit_factor": 0.8161
+    },
+    "is": {
+      "trades": 117,
+      "pnl_usd": -986.38
+    },
+    "oos": {
+      "n": 38,
+      "wins": 22,
+      "wr": 0.5789473684210527,
+      "pnl_usd": 380.96,
+      "ret_pct": 4017.51,
+      "sharpe": 4.709066098355982
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.33
+  },
+  {
+    "symbol": "ARB",
+    "strategy": "rsi2_connors",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -20.1562,
+      "sharpe": -9.6388,
+      "calmar": -0.9982,
+      "max_dd_pct": 20.1924,
+      "wr": 59.51,
+      "trades": 531,
+      "expectancy_pct": -0.1571,
+      "profit_factor": 0.762
+    },
+    "is": {
+      "trades": 369,
+      "pnl_usd": -1296.7
+    },
+    "oos": {
+      "n": 162,
+      "wins": 99,
+      "wr": 0.6111111111111112,
+      "pnl_usd": -256.36,
+      "ret_pct": -1518.29,
+      "sharpe": -1.0226232586637083
+    },
+    "passes_acceptance": false,
+    "duration_s": 3.03
+  },
+  {
+    "symbol": "DOGE",
+    "strategy": "regime_momentum",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -11.1805,
+      "sharpe": -3.3631,
+      "calmar": -0.9592,
+      "max_dd_pct": 11.6565,
+      "wr": 33.62,
+      "trades": 354,
+      "expectancy_pct": -0.0309,
+      "profit_factor": 0.9363
+    },
+    "is": {
+      "trades": 225,
+      "pnl_usd": 614.6
+    },
+    "oos": {
+      "n": 129,
+      "wins": 40,
+      "wr": 0.31007751937984496,
+      "pnl_usd": -1011.6,
+      "ret_pct": -3660.5299999999997,
+      "sharpe": -4.70958677653914
+    },
+    "passes_acceptance": false,
+    "duration_s": 2.86
+  },
+  {
+    "symbol": "DOGE",
+    "strategy": "ema_crossover",
+    "interval": "1h",
+    "full": {
+      "ret_pct": 0.8729,
+      "sharpe": 0.1984,
+      "calmar": 0.0912,
+      "max_dd_pct": 9.5704,
+      "wr": 35.089999999999996,
+      "trades": 57,
+      "expectancy_pct": 0.3703,
+      "profit_factor": 1.1949
+    },
+    "is": {
+      "trades": 29,
+      "pnl_usd": 1381.87
+    },
+    "oos": {
+      "n": 28,
+      "wins": 9,
+      "wr": 0.32142857142857145,
+      "pnl_usd": -627.78,
+      "ret_pct": -1610.5600000000002,
+      "sharpe": -3.1015188882390103
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.46
+  },
+  {
+    "symbol": "DOGE",
+    "strategy": "vol_breakout",
+    "interval": "1h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.51
+  },
+  {
+    "symbol": "DOGE",
+    "strategy": "orb_session",
+    "interval": "1h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.09
+  },
+  {
+    "symbol": "DOGE",
+    "strategy": "turtle_donchian",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -7.7865,
+      "sharpe": -2.2156,
+      "calmar": -0.7901,
+      "max_dd_pct": 9.8556,
+      "wr": 14.29,
+      "trades": 42,
+      "expectancy_pct": -0.8639,
+      "profit_factor": 0.446
+    },
+    "is": {
+      "trades": 25,
+      "pnl_usd": -1186.59
+    },
+    "oos": {
+      "n": 17,
+      "wins": 3,
+      "wr": 0.17647058823529413,
+      "pnl_usd": -143.11,
+      "ret_pct": -384.3199999999999,
+      "sharpe": -0.9324110739912111
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.57
+  },
+  {
+    "symbol": "DOGE",
+    "strategy": "measured_move",
+    "interval": "1h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.13
+  },
+  {
+    "symbol": "DOGE",
+    "strategy": "mean_reversion",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -2.6458,
+      "sharpe": -1.3759,
+      "calmar": -0.503,
+      "max_dd_pct": 5.2603,
+      "wr": 28.57,
+      "trades": 84,
+      "expectancy_pct": -0.1344,
+      "profit_factor": 0.8842
+    },
+    "is": {
+      "trades": 60,
+      "pnl_usd": -840.29
+    },
+    "oos": {
+      "n": 24,
+      "wins": 11,
+      "wr": 0.4583333333333333,
+      "pnl_usd": 488.57000000000005,
+      "ret_pct": 1692.04,
+      "sharpe": 4.221949559174894
+    },
+    "passes_acceptance": false,
+    "duration_s": 3.08
+  },
+  {
+    "symbol": "DOGE",
+    "strategy": "band_fade",
+    "interval": "1h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.31
+  },
+  {
+    "symbol": "DOGE",
+    "strategy": "trend_pullback",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -15.4311,
+      "sharpe": -7.2045,
+      "calmar": -0.9356,
+      "max_dd_pct": 16.4929,
+      "wr": 46.2,
+      "trades": 342,
+      "expectancy_pct": -0.1642,
+      "profit_factor": 0.796
+    },
+    "is": {
+      "trades": 239,
+      "pnl_usd": -1077.26
+    },
+    "oos": {
+      "n": 103,
+      "wins": 45,
+      "wr": 0.4368932038834951,
+      "pnl_usd": -193.46,
+      "ret_pct": -873.3100000000001,
+      "sharpe": -0.8552587480735871
+    },
+    "passes_acceptance": false,
+    "duration_s": 10.12
+  },
+  {
+    "symbol": "DOGE",
+    "strategy": "slow_drift_follow",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -3.5539,
+      "sharpe": -4.0065,
+      "calmar": -0.9653,
+      "max_dd_pct": 3.6815,
+      "wr": 38.04,
+      "trades": 326,
+      "expectancy_pct": 0.0084,
+      "profit_factor": 1.0097
+    },
+    "is": {
+      "trades": 235,
+      "pnl_usd": -57.09
+    },
+    "oos": {
+      "n": 91,
+      "wins": 37,
+      "wr": 0.4065934065934066,
+      "pnl_usd": 76.62,
+      "ret_pct": 795.3200000000002,
+      "sharpe": 1.0133552597497424
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.84
+  },
+  {
+    "symbol": "DOGE",
+    "strategy": "range_breakout",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -4.6412,
+      "sharpe": -3.3644,
+      "calmar": -0.8871,
+      "max_dd_pct": 5.2318,
+      "wr": 37.2,
+      "trades": 164,
+      "expectancy_pct": -0.3458,
+      "profit_factor": 0.8063
+    },
+    "is": {
+      "trades": 115,
+      "pnl_usd": -377.78
+    },
+    "oos": {
+      "n": 49,
+      "wins": 20,
+      "wr": 0.40816326530612246,
+      "pnl_usd": -179.04000000000002,
+      "ret_pct": -1853.3400000000001,
+      "sharpe": -2.1363083721307787
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.34
+  },
+  {
+    "symbol": "DOGE",
+    "strategy": "rsi2_connors",
+    "interval": "1h",
+    "full": {
+      "ret_pct": -19.7601,
+      "sharpe": -11.3975,
+      "calmar": -0.9965,
+      "max_dd_pct": 19.8291,
+      "wr": 56.28999999999999,
+      "trades": 533,
+      "expectancy_pct": -0.2464,
+      "profit_factor": 0.6039
+    },
+    "is": {
+      "trades": 357,
+      "pnl_usd": -1735.35
+    },
+    "oos": {
+      "n": 176,
+      "wins": 93,
+      "wr": 0.5284090909090909,
+      "pnl_usd": -620.33,
+      "ret_pct": -3677.44,
+      "sharpe": -2.8042974627213653
+    },
+    "passes_acceptance": false,
+    "duration_s": 2.99
+  },
+  {
+    "symbol": "BTC",
+    "strategy": "regime_momentum",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 1.5717,
+      "sharpe": 0.3732,
+      "calmar": 0.2597,
+      "max_dd_pct": 6.053,
+      "wr": 36.26,
+      "trades": 342,
+      "expectancy_pct": 0.1412,
+      "profit_factor": 1.1779
+    },
+    "is": {
+      "trades": 249,
+      "pnl_usd": 1278.62
+    },
+    "oos": {
+      "n": 93,
+      "wins": 34,
+      "wr": 0.3655913978494624,
+      "pnl_usd": 249.07,
+      "ret_pct": 1134.2999999999997,
+      "sharpe": 0.6481688129414647
+    },
+    "passes_acceptance": true,
+    "duration_s": 2.86
+  },
+  {
+    "symbol": "BTC",
+    "strategy": "ema_crossover",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -1.0065,
+      "sharpe": -0.0554,
+      "calmar": -0.0846,
+      "max_dd_pct": 11.9043,
+      "wr": 31.25,
+      "trades": 64,
+      "expectancy_pct": 0.0535,
+      "profit_factor": 1.0015
+    },
+    "is": {
+      "trades": 43,
+      "pnl_usd": -610.41
+    },
+    "oos": {
+      "n": 21,
+      "wins": 6,
+      "wr": 0.2857142857142857,
+      "pnl_usd": 620.3800000000001,
+      "ret_pct": 1775.37,
+      "sharpe": 1.7796041699519989
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.46
+  },
+  {
+    "symbol": "BTC",
+    "strategy": "vol_breakout",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.53
+  },
+  {
+    "symbol": "BTC",
+    "strategy": "orb_session",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.1
+  },
+  {
+    "symbol": "BTC",
+    "strategy": "turtle_donchian",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 5.9131,
+      "sharpe": 1.0524,
+      "calmar": 0.8776,
+      "max_dd_pct": 6.7377,
+      "wr": 25.0,
+      "trades": 32,
+      "expectancy_pct": 1.4912,
+      "profit_factor": 1.7813
+    },
+    "is": {
+      "trades": 21,
+      "pnl_usd": 2166.93
+    },
+    "oos": {
+      "n": 11,
+      "wins": 2,
+      "wr": 0.18181818181818182,
+      "pnl_usd": -423.64,
+      "ret_pct": -1033.6200000000001,
+      "sharpe": -3.1316969897075597
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.56
+  },
+  {
+    "symbol": "BTC",
+    "strategy": "measured_move",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.07
+  },
+  {
+    "symbol": "BTC",
+    "strategy": "mean_reversion",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -4.2918,
+      "sharpe": -1.8437,
+      "calmar": -0.8444,
+      "max_dd_pct": 5.0825,
+      "wr": 23.3,
+      "trades": 103,
+      "expectancy_pct": -0.2159,
+      "profit_factor": 0.8169
+    },
+    "is": {
+      "trades": 78,
+      "pnl_usd": -628.11
+    },
+    "oos": {
+      "n": 25,
+      "wins": 6,
+      "wr": 0.24,
+      "pnl_usd": -43.87999999999999,
+      "ret_pct": -141.83999999999997,
+      "sharpe": -0.49427147425687845
+    },
+    "passes_acceptance": false,
+    "duration_s": 3.05
+  },
+  {
+    "symbol": "BTC",
+    "strategy": "band_fade",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.3
+  },
+  {
+    "symbol": "BTC",
+    "strategy": "trend_pullback",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -7.08,
+      "sharpe": -2.296,
+      "calmar": -0.7765,
+      "max_dd_pct": 9.1182,
+      "wr": 46.25,
+      "trades": 307,
+      "expectancy_pct": -0.0166,
+      "profit_factor": 0.9837
+    },
+    "is": {
+      "trades": 218,
+      "pnl_usd": 427.86
+    },
+    "oos": {
+      "n": 89,
+      "wins": 37,
+      "wr": 0.4157303370786517,
+      "pnl_usd": -540.93,
+      "ret_pct": -2264.0899999999997,
+      "sharpe": -1.831558741504048
+    },
+    "passes_acceptance": false,
+    "duration_s": 10.17
+  },
+  {
+    "symbol": "BTC",
+    "strategy": "slow_drift_follow",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -5.8791,
+      "sharpe": -5.345,
+      "calmar": -0.9812,
+      "max_dd_pct": 5.9915,
+      "wr": 28.73,
+      "trades": 355,
+      "expectancy_pct": -0.2291,
+      "profit_factor": 0.757
+    },
+    "is": {
+      "trades": 255,
+      "pnl_usd": -593.38
+    },
+    "oos": {
+      "n": 100,
+      "wins": 32,
+      "wr": 0.32,
+      "pnl_usd": -203.54000000000002,
+      "ret_pct": -2135.0,
+      "sharpe": -1.6036748051754532
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.82
+  },
+  {
+    "symbol": "BTC",
+    "strategy": "range_breakout",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -1.1503,
+      "sharpe": -0.5938,
+      "calmar": -0.3363,
+      "max_dd_pct": 3.4205,
+      "wr": 42.17,
+      "trades": 166,
+      "expectancy_pct": -0.1154,
+      "profit_factor": 0.941
+    },
+    "is": {
+      "trades": 120,
+      "pnl_usd": -288.3
+    },
+    "oos": {
+      "n": 46,
+      "wins": 23,
+      "wr": 0.5,
+      "pnl_usd": 90.26,
+      "ret_pct": 929.2699999999999,
+      "sharpe": 0.7372306396123839
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.34
+  },
+  {
+    "symbol": "BTC",
+    "strategy": "rsi2_connors",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -10.4749,
+      "sharpe": -4.2556,
+      "calmar": -0.8491,
+      "max_dd_pct": 12.336,
+      "wr": 59.9,
+      "trades": 601,
+      "expectancy_pct": -0.0646,
+      "profit_factor": 0.8981
+    },
+    "is": {
+      "trades": 422,
+      "pnl_usd": -238.07999999999998
+    },
+    "oos": {
+      "n": 179,
+      "wins": 105,
+      "wr": 0.5865921787709497,
+      "pnl_usd": -488.74999999999994,
+      "ret_pct": -2645.93,
+      "sharpe": -1.238495896062085
+    },
+    "passes_acceptance": false,
+    "duration_s": 2.97
+  },
+  {
+    "symbol": "ETH",
+    "strategy": "regime_momentum",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 2.5035,
+      "sharpe": 0.4599,
+      "calmar": 0.3919,
+      "max_dd_pct": 6.3883,
+      "wr": 38.129999999999995,
+      "trades": 375,
+      "expectancy_pct": 0.2099,
+      "profit_factor": 1.1715
+    },
+    "is": {
+      "trades": 266,
+      "pnl_usd": 2138.19
+    },
+    "oos": {
+      "n": 109,
+      "wins": 43,
+      "wr": 0.3944954128440367,
+      "pnl_usd": -50.38999999999999,
+      "ret_pct": 399.67000000000013,
+      "sharpe": 0.18078373644232634
+    },
+    "passes_acceptance": false,
+    "duration_s": 2.88
+  },
+  {
+    "symbol": "ETH",
+    "strategy": "ema_crossover",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -3.2274,
+      "sharpe": -0.1971,
+      "calmar": -0.2264,
+      "max_dd_pct": 14.258,
+      "wr": 40.0,
+      "trades": 60,
+      "expectancy_pct": -0.1099,
+      "profit_factor": 0.9457
+    },
+    "is": {
+      "trades": 44,
+      "pnl_usd": -2461.83
+    },
+    "oos": {
+      "n": 16,
+      "wins": 8,
+      "wr": 0.5,
+      "pnl_usd": 1934.4399999999998,
+      "ret_pct": 5707.610000000001,
+      "sharpe": 4.894265799386315
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.46
+  },
+  {
+    "symbol": "ETH",
+    "strategy": "vol_breakout",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.53
+  },
+  {
+    "symbol": "ETH",
+    "strategy": "orb_session",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.09
+  },
+  {
+    "symbol": "ETH",
+    "strategy": "turtle_donchian",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 8.599,
+      "sharpe": 1.0813,
+      "calmar": 1.2525,
+      "max_dd_pct": 6.8653,
+      "wr": 18.75,
+      "trades": 32,
+      "expectancy_pct": 2.0092,
+      "profit_factor": 1.6416
+    },
+    "is": {
+      "trades": 23,
+      "pnl_usd": 2958.43
+    },
+    "oos": {
+      "n": 9,
+      "wins": 1,
+      "wr": 0.1111111111111111,
+      "pnl_usd": -669.28,
+      "ret_pct": -1608.57,
+      "sharpe": -5.0538865369477275
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.55
+  },
+  {
+    "symbol": "ETH",
+    "strategy": "measured_move",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.13
+  },
+  {
+    "symbol": "ETH",
+    "strategy": "mean_reversion",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -9.544,
+      "sharpe": -3.3724,
+      "calmar": -0.8165,
+      "max_dd_pct": 11.6883,
+      "wr": 22.68,
+      "trades": 97,
+      "expectancy_pct": -0.6157,
+      "profit_factor": 0.6404
+    },
+    "is": {
+      "trades": 75,
+      "pnl_usd": -2289.66
+    },
+    "oos": {
+      "n": 22,
+      "wins": 9,
+      "wr": 0.4090909090909091,
+      "pnl_usd": 556.71,
+      "ret_pct": 2081.9,
+      "sharpe": 5.042932158775379
+    },
+    "passes_acceptance": false,
+    "duration_s": 3.07
+  },
+  {
+    "symbol": "ETH",
+    "strategy": "band_fade",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.31
+  },
+  {
+    "symbol": "ETH",
+    "strategy": "trend_pullback",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -18.1409,
+      "sharpe": -4.7724,
+      "calmar": -0.8335,
+      "max_dd_pct": 21.765,
+      "wr": 44.65,
+      "trades": 327,
+      "expectancy_pct": -0.2278,
+      "profit_factor": 0.8363
+    },
+    "is": {
+      "trades": 221,
+      "pnl_usd": -1812.13
+    },
+    "oos": {
+      "n": 106,
+      "wins": 54,
+      "wr": 0.5094339622641509,
+      "pnl_usd": 75.72,
+      "ret_pct": 472.00999999999993,
+      "sharpe": 0.22723480109666647
+    },
+    "passes_acceptance": false,
+    "duration_s": 10.19
+  },
+  {
+    "symbol": "ETH",
+    "strategy": "slow_drift_follow",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -6.0212,
+      "sharpe": -4.0116,
+      "calmar": -0.9719,
+      "max_dd_pct": 6.1955,
+      "wr": 32.08,
+      "trades": 399,
+      "expectancy_pct": -0.2799,
+      "profit_factor": 0.7546
+    },
+    "is": {
+      "trades": 281,
+      "pnl_usd": -787.05
+    },
+    "oos": {
+      "n": 118,
+      "wins": 43,
+      "wr": 0.3644067796610169,
+      "pnl_usd": -300.2,
+      "ret_pct": -3160.22,
+      "sharpe": -1.5064653858460182
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.84
+  },
+  {
+    "symbol": "ETH",
+    "strategy": "range_breakout",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -4.0776,
+      "sharpe": -1.5266,
+      "calmar": -0.6517,
+      "max_dd_pct": 6.2567,
+      "wr": 39.629999999999995,
+      "trades": 164,
+      "expectancy_pct": -0.5218,
+      "profit_factor": 0.8279
+    },
+    "is": {
+      "trades": 115,
+      "pnl_usd": -501.79999999999995
+    },
+    "oos": {
+      "n": 49,
+      "wins": 18,
+      "wr": 0.3673469387755102,
+      "pnl_usd": -349.63,
+      "ret_pct": -3576.1199999999994,
+      "sharpe": -2.020462139918251
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.34
+  },
+  {
+    "symbol": "ETH",
+    "strategy": "rsi2_connors",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -10.7352,
+      "sharpe": -3.1198,
+      "calmar": -0.9324,
+      "max_dd_pct": 11.5134,
+      "wr": 61.040000000000006,
+      "trades": 539,
+      "expectancy_pct": -0.0728,
+      "profit_factor": 0.919
+    },
+    "is": {
+      "trades": 381,
+      "pnl_usd": 128.52
+    },
+    "oos": {
+      "n": 158,
+      "wins": 90,
+      "wr": 0.569620253164557,
+      "pnl_usd": -878.3399999999999,
+      "ret_pct": -4734.31,
+      "sharpe": -1.7881127737651858
+    },
+    "passes_acceptance": false,
+    "duration_s": 2.98
+  },
+  {
+    "symbol": "SOL",
+    "strategy": "regime_momentum",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -4.0756,
+      "sharpe": -0.5232,
+      "calmar": -0.482,
+      "max_dd_pct": 8.4552,
+      "wr": 39.839999999999996,
+      "trades": 374,
+      "expectancy_pct": 0.1263,
+      "profit_factor": 1.0916
+    },
+    "is": {
+      "trades": 256,
+      "pnl_usd": 1711.59
+    },
+    "oos": {
+      "n": 118,
+      "wins": 35,
+      "wr": 0.2966101694915254,
+      "pnl_usd": -490.54999999999995,
+      "ret_pct": -945.2900000000003,
+      "sharpe": -0.29856457339039133
+    },
+    "passes_acceptance": false,
+    "duration_s": 2.87
+  },
+  {
+    "symbol": "SOL",
+    "strategy": "ema_crossover",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -3.0904,
+      "sharpe": -0.0957,
+      "calmar": -0.1761,
+      "max_dd_pct": 17.546,
+      "wr": 40.38,
+      "trades": 52,
+      "expectancy_pct": -0.0138,
+      "profit_factor": 0.9655
+    },
+    "is": {
+      "trades": 32,
+      "pnl_usd": 2055.5
+    },
+    "oos": {
+      "n": 20,
+      "wins": 6,
+      "wr": 0.3,
+      "pnl_usd": -2415.76,
+      "ret_pct": -6124.79,
+      "sharpe": -4.388002279751795
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.48
+  },
+  {
+    "symbol": "SOL",
+    "strategy": "vol_breakout",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.53
+  },
+  {
+    "symbol": "SOL",
+    "strategy": "orb_session",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.1
+  },
+  {
+    "symbol": "SOL",
+    "strategy": "turtle_donchian",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -0.7132,
+      "sharpe": 0.0167,
+      "calmar": -0.0687,
+      "max_dd_pct": 10.3846,
+      "wr": 30.56,
+      "trades": 36,
+      "expectancy_pct": 0.5681,
+      "profit_factor": 1.2
+    },
+    "is": {
+      "trades": 22,
+      "pnl_usd": 2225.52
+    },
+    "oos": {
+      "n": 14,
+      "wins": 2,
+      "wr": 0.14285714285714285,
+      "pnl_usd": -1517.36,
+      "ret_pct": -3927.98,
+      "sharpe": -17.486979676131757
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.54
+  },
+  {
+    "symbol": "SOL",
+    "strategy": "measured_move",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.12
+  },
+  {
+    "symbol": "SOL",
+    "strategy": "mean_reversion",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -8.3838,
+      "sharpe": -2.3751,
+      "calmar": -0.7251,
+      "max_dd_pct": 11.5627,
+      "wr": 25.61,
+      "trades": 82,
+      "expectancy_pct": -0.5192,
+      "profit_factor": 0.7169
+    },
+    "is": {
+      "trades": 65,
+      "pnl_usd": -1678.4
+    },
+    "oos": {
+      "n": 17,
+      "wins": 7,
+      "wr": 0.4117647058823529,
+      "pnl_usd": 424.1,
+      "ret_pct": 1569.8500000000001,
+      "sharpe": 3.968219295115704
+    },
+    "passes_acceptance": false,
+    "duration_s": 3.04
+  },
+  {
+    "symbol": "SOL",
+    "strategy": "band_fade",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.31
+  },
+  {
+    "symbol": "SOL",
+    "strategy": "trend_pullback",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -14.7966,
+      "sharpe": -2.9485,
+      "calmar": -0.8646,
+      "max_dd_pct": 17.1142,
+      "wr": 46.48,
+      "trades": 327,
+      "expectancy_pct": -0.0841,
+      "profit_factor": 0.9466
+    },
+    "is": {
+      "trades": 223,
+      "pnl_usd": -168.63000000000005
+    },
+    "oos": {
+      "n": 104,
+      "wins": 48,
+      "wr": 0.46153846153846156,
+      "pnl_usd": -510.14000000000004,
+      "ret_pct": -2175.92,
+      "sharpe": -0.9228875273425211
+    },
+    "passes_acceptance": false,
+    "duration_s": 9.94
+  },
+  {
+    "symbol": "SOL",
+    "strategy": "slow_drift_follow",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -4.5658,
+      "sharpe": -2.2335,
+      "calmar": -0.7604,
+      "max_dd_pct": 6.0041,
+      "wr": 36.7,
+      "trades": 406,
+      "expectancy_pct": -0.0065,
+      "profit_factor": 0.9935
+    },
+    "is": {
+      "trades": 285,
+      "pnl_usd": -86.48000000000002
+    },
+    "oos": {
+      "n": 121,
+      "wins": 44,
+      "wr": 0.36363636363636365,
+      "pnl_usd": 52.56000000000002,
+      "ret_pct": 585.5399999999998,
+      "sharpe": 0.24303778732270728
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.83
+  },
+  {
+    "symbol": "SOL",
+    "strategy": "range_breakout",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 1.0032,
+      "sharpe": 0.3485,
+      "calmar": 0.2982,
+      "max_dd_pct": 3.3646,
+      "wr": 45.14,
+      "trades": 144,
+      "expectancy_pct": 0.2195,
+      "profit_factor": 1.0585
+    },
+    "is": {
+      "trades": 97,
+      "pnl_usd": 646.19
+    },
+    "oos": {
+      "n": 47,
+      "wins": 20,
+      "wr": 0.425531914893617,
+      "pnl_usd": -350.59,
+      "ret_pct": -3392.33,
+      "sharpe": -1.5531427474062522
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.36
+  },
+  {
+    "symbol": "SOL",
+    "strategy": "rsi2_connors",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -19.2761,
+      "sharpe": -4.6441,
+      "calmar": -0.9613,
+      "max_dd_pct": 20.0516,
+      "wr": 59.489999999999995,
+      "trades": 553,
+      "expectancy_pct": -0.123,
+      "profit_factor": 0.9027
+    },
+    "is": {
+      "trades": 383,
+      "pnl_usd": -1024.47
+    },
+    "oos": {
+      "n": 170,
+      "wins": 95,
+      "wr": 0.5588235294117647,
+      "pnl_usd": -198.91,
+      "ret_pct": -1174.3400000000001,
+      "sharpe": -0.33591335335073874
+    },
+    "passes_acceptance": false,
+    "duration_s": 2.96
+  },
+  {
+    "symbol": "LINK",
+    "strategy": "regime_momentum",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -7.115,
+      "sharpe": -0.916,
+      "calmar": -0.4585,
+      "max_dd_pct": 15.5174,
+      "wr": 37.53,
+      "trades": 397,
+      "expectancy_pct": 0.057,
+      "profit_factor": 1.0401
+    },
+    "is": {
+      "trades": 265,
+      "pnl_usd": 2373.1
+    },
+    "oos": {
+      "n": 132,
+      "wins": 43,
+      "wr": 0.32575757575757575,
+      "pnl_usd": -1752.7,
+      "ret_pct": -4728.33,
+      "sharpe": -1.8696485150065265
+    },
+    "passes_acceptance": false,
+    "duration_s": 2.82
+  },
+  {
+    "symbol": "LINK",
+    "strategy": "ema_crossover",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 6.0921,
+      "sharpe": 0.5226,
+      "calmar": 0.4755,
+      "max_dd_pct": 12.8118,
+      "wr": 32.79,
+      "trades": 61,
+      "expectancy_pct": 1.0209,
+      "profit_factor": 1.1939
+    },
+    "is": {
+      "trades": 41,
+      "pnl_usd": 3388.72
+    },
+    "oos": {
+      "n": 20,
+      "wins": 6,
+      "wr": 0.3,
+      "pnl_usd": -1361.18,
+      "ret_pct": -3134.1099999999997,
+      "sharpe": -2.140111259592205
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.48
+  },
+  {
+    "symbol": "LINK",
+    "strategy": "vol_breakout",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.54
+  },
+  {
+    "symbol": "LINK",
+    "strategy": "orb_session",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.11
+  },
+  {
+    "symbol": "LINK",
+    "strategy": "turtle_donchian",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -9.5304,
+      "sharpe": -0.7351,
+      "calmar": -0.4312,
+      "max_dd_pct": 22.1013,
+      "wr": 10.2,
+      "trades": 49,
+      "expectancy_pct": -1.0177,
+      "profit_factor": 0.6902
+    },
+    "is": {
+      "trades": 29,
+      "pnl_usd": 892.9199999999997
+    },
+    "oos": {
+      "n": 20,
+      "wins": 1,
+      "wr": 0.05,
+      "pnl_usd": -2831.12,
+      "ret_pct": -7858.150000000001,
+      "sharpe": -22.35213967756869
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.56
+  },
+  {
+    "symbol": "LINK",
+    "strategy": "measured_move",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.08
+  },
+  {
+    "symbol": "LINK",
+    "strategy": "mean_reversion",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -11.6029,
+      "sharpe": -2.8345,
+      "calmar": -0.7414,
+      "max_dd_pct": 15.6499,
+      "wr": 24.0,
+      "trades": 100,
+      "expectancy_pct": -0.5681,
+      "profit_factor": 0.7069
+    },
+    "is": {
+      "trades": 84,
+      "pnl_usd": -2652.2200000000003
+    },
+    "oos": {
+      "n": 16,
+      "wins": 8,
+      "wr": 0.5,
+      "pnl_usd": 991.11,
+      "ret_pct": 3822.2200000000003,
+      "sharpe": 8.455759835068369
+    },
+    "passes_acceptance": false,
+    "duration_s": 3.08
+  },
+  {
+    "symbol": "LINK",
+    "strategy": "band_fade",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.31
+  },
+  {
+    "symbol": "LINK",
+    "strategy": "trend_pullback",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -13.8007,
+      "sharpe": -2.5226,
+      "calmar": -0.9125,
+      "max_dd_pct": 15.1242,
+      "wr": 46.67,
+      "trades": 315,
+      "expectancy_pct": 0.0641,
+      "profit_factor": 1.0329
+    },
+    "is": {
+      "trades": 208,
+      "pnl_usd": 867.26
+    },
+    "oos": {
+      "n": 107,
+      "wins": 49,
+      "wr": 0.45794392523364486,
+      "pnl_usd": -426.08000000000004,
+      "ret_pct": -1899.1000000000004,
+      "sharpe": -0.7570991043102947
+    },
+    "passes_acceptance": false,
+    "duration_s": 10.07
+  },
+  {
+    "symbol": "LINK",
+    "strategy": "slow_drift_follow",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -9.7885,
+      "sharpe": -4.8514,
+      "calmar": -0.9515,
+      "max_dd_pct": 10.2871,
+      "wr": 31.259999999999998,
+      "trades": 435,
+      "expectancy_pct": -0.3823,
+      "profit_factor": 0.758
+    },
+    "is": {
+      "trades": 299,
+      "pnl_usd": -1413.51
+    },
+    "oos": {
+      "n": 136,
+      "wins": 44,
+      "wr": 0.3235294117647059,
+      "pnl_usd": -196.48999999999998,
+      "ret_pct": -2117.15,
+      "sharpe": -0.7394556517360831
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.86
+  },
+  {
+    "symbol": "LINK",
+    "strategy": "range_breakout",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.2898,
+      "sharpe": 0.1154,
+      "calmar": 0.0796,
+      "max_dd_pct": 3.6385,
+      "wr": 43.79,
+      "trades": 153,
+      "expectancy_pct": -0.0605,
+      "profit_factor": 0.9801
+    },
+    "is": {
+      "trades": 104,
+      "pnl_usd": 675.4699999999999
+    },
+    "oos": {
+      "n": 49,
+      "wins": 18,
+      "wr": 0.3673469387755102,
+      "pnl_usd": -790.6800000000001,
+      "ret_pct": -7757.84,
+      "sharpe": -3.753833884734285
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.35
+  },
+  {
+    "symbol": "LINK",
+    "strategy": "rsi2_connors",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -20.2755,
+      "sharpe": -4.7811,
+      "calmar": -0.9736,
+      "max_dd_pct": 20.8259,
+      "wr": 60.75000000000001,
+      "trades": 530,
+      "expectancy_pct": -0.1851,
+      "profit_factor": 0.8527
+    },
+    "is": {
+      "trades": 359,
+      "pnl_usd": -1802.1399999999999
+    },
+    "oos": {
+      "n": 171,
+      "wins": 100,
+      "wr": 0.5847953216374269,
+      "pnl_usd": -27.860000000000007,
+      "ret_pct": -175.92999999999992,
+      "sharpe": -0.06194198262329908
+    },
+    "passes_acceptance": false,
+    "duration_s": 2.93
+  },
+  {
+    "symbol": "AVAX",
+    "strategy": "regime_momentum",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -2.0569,
+      "sharpe": -0.1828,
+      "calmar": -0.1344,
+      "max_dd_pct": 15.3042,
+      "wr": 38.95,
+      "trades": 362,
+      "expectancy_pct": 0.2403,
+      "profit_factor": 1.1299
+    },
+    "is": {
+      "trades": 249,
+      "pnl_usd": 3032.22
+    },
+    "oos": {
+      "n": 113,
+      "wins": 43,
+      "wr": 0.3805309734513274,
+      "pnl_usd": -765.0900000000001,
+      "ret_pct": -1214.6000000000001,
+      "sharpe": -0.3720112321658844
+    },
+    "passes_acceptance": false,
+    "duration_s": 2.86
+  },
+  {
+    "symbol": "AVAX",
+    "strategy": "ema_crossover",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 3.7549,
+      "sharpe": 0.3752,
+      "calmar": 0.283,
+      "max_dd_pct": 13.2659,
+      "wr": 40.0,
+      "trades": 50,
+      "expectancy_pct": 0.965,
+      "profit_factor": 1.1228
+    },
+    "is": {
+      "trades": 30,
+      "pnl_usd": 2618.51
+    },
+    "oos": {
+      "n": 20,
+      "wins": 5,
+      "wr": 0.25,
+      "pnl_usd": -1191.82,
+      "ret_pct": -2728.85,
+      "sharpe": -1.5920733617573883
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.48
+  },
+  {
+    "symbol": "AVAX",
+    "strategy": "vol_breakout",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.52
+  },
+  {
+    "symbol": "AVAX",
+    "strategy": "orb_session",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.09
+  },
+  {
+    "symbol": "AVAX",
+    "strategy": "turtle_donchian",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -9.9958,
+      "sharpe": -0.8789,
+      "calmar": -0.5843,
+      "max_dd_pct": 17.108,
+      "wr": 13.950000000000001,
+      "trades": 43,
+      "expectancy_pct": -1.2508,
+      "profit_factor": 0.6299
+    },
+    "is": {
+      "trades": 29,
+      "pnl_usd": -879.8100000000002
+    },
+    "oos": {
+      "n": 14,
+      "wins": 2,
+      "wr": 0.14285714285714285,
+      "pnl_usd": -1156.53,
+      "ret_pct": -3311.6,
+      "sharpe": -7.860887308824569
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.54
+  },
+  {
+    "symbol": "AVAX",
+    "strategy": "measured_move",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.1
+  },
+  {
+    "symbol": "AVAX",
+    "strategy": "mean_reversion",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -6.2521,
+      "sharpe": -1.4988,
+      "calmar": -0.5791,
+      "max_dd_pct": 10.7954,
+      "wr": 26.8,
+      "trades": 97,
+      "expectancy_pct": 0.0081,
+      "profit_factor": 0.9854
+    },
+    "is": {
+      "trades": 75,
+      "pnl_usd": -1336.28
+    },
+    "oos": {
+      "n": 22,
+      "wins": 10,
+      "wr": 0.45454545454545453,
+      "pnl_usd": 1258.58,
+      "ret_pct": 4605.89,
+      "sharpe": 6.535207259253792
+    },
+    "passes_acceptance": false,
+    "duration_s": 3.08
+  },
+  {
+    "symbol": "AVAX",
+    "strategy": "band_fade",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.3
+  },
+  {
+    "symbol": "AVAX",
+    "strategy": "trend_pullback",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -2.2646,
+      "sharpe": -0.3386,
+      "calmar": -0.1984,
+      "max_dd_pct": 11.4117,
+      "wr": 47.370000000000005,
+      "trades": 304,
+      "expectancy_pct": 0.2272,
+      "profit_factor": 1.126
+    },
+    "is": {
+      "trades": 201,
+      "pnl_usd": 1961.73
+    },
+    "oos": {
+      "n": 103,
+      "wins": 42,
+      "wr": 0.4077669902912621,
+      "pnl_usd": -250.20999999999995,
+      "ret_pct": -922.49,
+      "sharpe": -0.319387158171769
+    },
+    "passes_acceptance": false,
+    "duration_s": 10.06
+  },
+  {
+    "symbol": "AVAX",
+    "strategy": "slow_drift_follow",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -8.1305,
+      "sharpe": -3.979,
+      "calmar": -0.926,
+      "max_dd_pct": 8.78,
+      "wr": 35.5,
+      "trades": 400,
+      "expectancy_pct": -0.1648,
+      "profit_factor": 0.8883
+    },
+    "is": {
+      "trades": 274,
+      "pnl_usd": -717.26
+    },
+    "oos": {
+      "n": 126,
+      "wins": 48,
+      "wr": 0.38095238095238093,
+      "pnl_usd": 56.17000000000001,
+      "ret_pct": 641.82,
+      "sharpe": 0.25782165591424044
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.86
+  },
+  {
+    "symbol": "AVAX",
+    "strategy": "range_breakout",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -0.4198,
+      "sharpe": -0.0845,
+      "calmar": -0.1216,
+      "max_dd_pct": 3.4518,
+      "wr": 42.76,
+      "trades": 152,
+      "expectancy_pct": -0.0238,
+      "profit_factor": 0.99
+    },
+    "is": {
+      "trades": 102,
+      "pnl_usd": 255.29999999999998
+    },
+    "oos": {
+      "n": 50,
+      "wins": 19,
+      "wr": 0.38,
+      "pnl_usd": -317.71000000000004,
+      "ret_pct": -3100.2,
+      "sharpe": -1.1520666301915714
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.36
+  },
+  {
+    "symbol": "AVAX",
+    "strategy": "rsi2_connors",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -17.2212,
+      "sharpe": -4.017,
+      "calmar": -0.8733,
+      "max_dd_pct": 19.7194,
+      "wr": 60.99,
+      "trades": 564,
+      "expectancy_pct": -0.0831,
+      "profit_factor": 0.934
+    },
+    "is": {
+      "trades": 369,
+      "pnl_usd": -1089.43
+    },
+    "oos": {
+      "n": 195,
+      "wins": 117,
+      "wr": 0.6,
+      "pnl_usd": 225.95,
+      "ret_pct": 1261.7400000000002,
+      "sharpe": 0.3168110202539985
+    },
+    "passes_acceptance": false,
+    "duration_s": 2.97
+  },
+  {
+    "symbol": "ARB",
+    "strategy": "regime_momentum",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -8.0841,
+      "sharpe": -0.9971,
+      "calmar": -0.6629,
+      "max_dd_pct": 12.1945,
+      "wr": 37.21,
+      "trades": 387,
+      "expectancy_pct": 0.1201,
+      "profit_factor": 1.0646
+    },
+    "is": {
+      "trades": 264,
+      "pnl_usd": 1550.1399999999999
+    },
+    "oos": {
+      "n": 123,
+      "wins": 43,
+      "wr": 0.34959349593495936,
+      "pnl_usd": -510.99000000000007,
+      "ret_pct": -1262.8200000000002,
+      "sharpe": -0.37552712283394246
+    },
+    "passes_acceptance": false,
+    "duration_s": 2.83
+  },
+  {
+    "symbol": "ARB",
+    "strategy": "ema_crossover",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 1.6586,
+      "sharpe": 0.2445,
+      "calmar": 0.0907,
+      "max_dd_pct": 18.2958,
+      "wr": 39.22,
+      "trades": 51,
+      "expectancy_pct": 0.7561,
+      "profit_factor": 1.0725
+    },
+    "is": {
+      "trades": 35,
+      "pnl_usd": 2765.48
+    },
+    "oos": {
+      "n": 16,
+      "wins": 4,
+      "wr": 0.25,
+      "pnl_usd": -1796.6500000000003,
+      "ret_pct": -4075.98,
+      "sharpe": -2.0442276138114033
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.47
+  },
+  {
+    "symbol": "ARB",
+    "strategy": "vol_breakout",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.53
+  },
+  {
+    "symbol": "ARB",
+    "strategy": "orb_session",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.1
+  },
+  {
+    "symbol": "ARB",
+    "strategy": "turtle_donchian",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.3801,
+      "sharpe": 0.1334,
+      "calmar": 0.0331,
+      "max_dd_pct": 11.4809,
+      "wr": 25.929999999999996,
+      "trades": 27,
+      "expectancy_pct": 0.7386,
+      "profit_factor": 1.1789
+    },
+    "is": {
+      "trades": 19,
+      "pnl_usd": 1137.3500000000001
+    },
+    "oos": {
+      "n": 8,
+      "wins": 2,
+      "wr": 0.25,
+      "pnl_usd": -537.8,
+      "ret_pct": -1402.9,
+      "sharpe": -4.517689898676802
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.56
+  },
+  {
+    "symbol": "ARB",
+    "strategy": "measured_move",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.08
+  },
+  {
+    "symbol": "ARB",
+    "strategy": "mean_reversion",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -9.4119,
+      "sharpe": -2.4557,
+      "calmar": -0.8764,
+      "max_dd_pct": 10.7392,
+      "wr": 27.85,
+      "trades": 79,
+      "expectancy_pct": -0.4369,
+      "profit_factor": 0.8007
+    },
+    "is": {
+      "trades": 62,
+      "pnl_usd": -904.6899999999999
+    },
+    "oos": {
+      "n": 17,
+      "wins": 5,
+      "wr": 0.29411764705882354,
+      "pnl_usd": -118.88999999999997,
+      "ret_pct": -423.0500000000001,
+      "sharpe": -0.9425865795767107
+    },
+    "passes_acceptance": false,
+    "duration_s": 3.04
+  },
+  {
+    "symbol": "ARB",
+    "strategy": "band_fade",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.31
+  },
+  {
+    "symbol": "ARB",
+    "strategy": "trend_pullback",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -16.9295,
+      "sharpe": -2.9264,
+      "calmar": -0.9725,
+      "max_dd_pct": 17.4082,
+      "wr": 46.23,
+      "trades": 292,
+      "expectancy_pct": -0.0235,
+      "profit_factor": 0.9869
+    },
+    "is": {
+      "trades": 202,
+      "pnl_usd": 68.90999999999995
+    },
+    "oos": {
+      "n": 90,
+      "wins": 36,
+      "wr": 0.4,
+      "pnl_usd": -254.05999999999997,
+      "ret_pct": -1128.01,
+      "sharpe": -0.3413786720270404
+    },
+    "passes_acceptance": false,
+    "duration_s": 10.0
+  },
+  {
+    "symbol": "ARB",
+    "strategy": "slow_drift_follow",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -7.7494,
+      "sharpe": -3.5729,
+      "calmar": -0.8524,
+      "max_dd_pct": 9.0914,
+      "wr": 33.589999999999996,
+      "trades": 387,
+      "expectancy_pct": -0.1548,
+      "profit_factor": 0.9051
+    },
+    "is": {
+      "trades": 277,
+      "pnl_usd": -185.28000000000003
+    },
+    "oos": {
+      "n": 110,
+      "wins": 32,
+      "wr": 0.2909090909090909,
+      "pnl_usd": -394.55,
+      "ret_pct": -4169.360000000001,
+      "sharpe": -1.6700356331164425
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.89
+  },
+  {
+    "symbol": "ARB",
+    "strategy": "range_breakout",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -0.0791,
+      "sharpe": 0.0083,
+      "calmar": -0.0139,
+      "max_dd_pct": 5.6765,
+      "wr": 43.62,
+      "trades": 149,
+      "expectancy_pct": 0.1355,
+      "profit_factor": 1.0263
+    },
+    "is": {
+      "trades": 105,
+      "pnl_usd": 74.91
+    },
+    "oos": {
+      "n": 44,
+      "wins": 20,
+      "wr": 0.45454545454545453,
+      "pnl_usd": 96.59000000000006,
+      "ret_pct": 1045.9099999999999,
+      "sharpe": 0.3891277372048227
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.34
+  },
+  {
+    "symbol": "ARB",
+    "strategy": "rsi2_connors",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -17.3593,
+      "sharpe": -3.7069,
+      "calmar": -0.9201,
+      "max_dd_pct": 18.8661,
+      "wr": 66.02,
+      "trades": 518,
+      "expectancy_pct": 0.0256,
+      "profit_factor": 1.0106
+    },
+    "is": {
+      "trades": 359,
+      "pnl_usd": -730.67
+    },
+    "oos": {
+      "n": 159,
+      "wins": 108,
+      "wr": 0.6792452830188679,
+      "pnl_usd": 866.21,
+      "ret_pct": 5204.37,
+      "sharpe": 1.5091255279546625
+    },
+    "passes_acceptance": false,
+    "duration_s": 2.98
+  },
+  {
+    "symbol": "DOGE",
+    "strategy": "regime_momentum",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 11.6926,
+      "sharpe": 1.4195,
+      "calmar": 1.4326,
+      "max_dd_pct": 8.1619,
+      "wr": 40.99,
+      "trades": 383,
+      "expectancy_pct": 0.4937,
+      "profit_factor": 1.3776
+    },
+    "is": {
+      "trades": 274,
+      "pnl_usd": 5264.54
+    },
+    "oos": {
+      "n": 109,
+      "wins": 38,
+      "wr": 0.3486238532110092,
+      "pnl_usd": 689.36,
+      "ret_pct": 2663.83,
+      "sharpe": 0.8578087036144115
+    },
+    "passes_acceptance": true,
+    "duration_s": 2.88
+  },
+  {
+    "symbol": "DOGE",
+    "strategy": "ema_crossover",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -12.0457,
+      "sharpe": -0.2977,
+      "calmar": -0.2849,
+      "max_dd_pct": 42.2858,
+      "wr": 39.22,
+      "trades": 51,
+      "expectancy_pct": -0.9732,
+      "profit_factor": 0.8115
+    },
+    "is": {
+      "trades": 32,
+      "pnl_usd": -1613.4
+    },
+    "oos": {
+      "n": 19,
+      "wins": 6,
+      "wr": 0.3157894736842105,
+      "pnl_usd": -934.3399999999999,
+      "ret_pct": -2567.0000000000005,
+      "sharpe": -1.7548084873380099
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.46
+  },
+  {
+    "symbol": "DOGE",
+    "strategy": "vol_breakout",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.52
+  },
+  {
+    "symbol": "DOGE",
+    "strategy": "orb_session",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.09
+  },
+  {
+    "symbol": "DOGE",
+    "strategy": "turtle_donchian",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 28.8236,
+      "sharpe": 1.5802,
+      "calmar": 1.8828,
+      "max_dd_pct": 15.3089,
+      "wr": 29.03,
+      "trades": 31,
+      "expectancy_pct": 8.2427,
+      "profit_factor": 3.2035
+    },
+    "is": {
+      "trades": 19,
+      "pnl_usd": 10265.36
+    },
+    "oos": {
+      "n": 12,
+      "wins": 3,
+      "wr": 0.25,
+      "pnl_usd": -978.0,
+      "ret_pct": -1960.03,
+      "sharpe": -4.15440242896415
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.55
+  },
+  {
+    "symbol": "DOGE",
+    "strategy": "measured_move",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 1.09
+  },
+  {
+    "symbol": "DOGE",
+    "strategy": "mean_reversion",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -11.8163,
+      "sharpe": -2.2957,
+      "calmar": -0.8186,
+      "max_dd_pct": 14.4354,
+      "wr": 25.240000000000002,
+      "trades": 103,
+      "expectancy_pct": -1.1736,
+      "profit_factor": 0.5996
+    },
+    "is": {
+      "trades": 75,
+      "pnl_usd": -2906.8199999999997
+    },
+    "oos": {
+      "n": 28,
+      "wins": 7,
+      "wr": 0.25,
+      "pnl_usd": -562.5400000000001,
+      "ret_pct": -2061.0899999999997,
+      "sharpe": -2.428051136474524
+    },
+    "passes_acceptance": false,
+    "duration_s": 3.05
+  },
+  {
+    "symbol": "DOGE",
+    "strategy": "band_fade",
+    "interval": "4h",
+    "full": {
+      "ret_pct": 0.0,
+      "sharpe": 0.0,
+      "calmar": 0.0,
+      "max_dd_pct": 0.0,
+      "wr": 0.0,
+      "trades": 0,
+      "expectancy_pct": 0.0,
+      "profit_factor": 0.0
+    },
+    "is": {
+      "trades": 0,
+      "pnl_usd": 0
+    },
+    "oos": {
+      "n": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "pnl_usd": 0.0,
+      "ret_pct": 0.0,
+      "sharpe": 0.0
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.32
+  },
+  {
+    "symbol": "DOGE",
+    "strategy": "trend_pullback",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -7.7901,
+      "sharpe": -1.2604,
+      "calmar": -0.7233,
+      "max_dd_pct": 10.7708,
+      "wr": 47.949999999999996,
+      "trades": 317,
+      "expectancy_pct": 0.2155,
+      "profit_factor": 1.1266
+    },
+    "is": {
+      "trades": 209,
+      "pnl_usd": 717.9300000000001
+    },
+    "oos": {
+      "n": 108,
+      "wins": 54,
+      "wr": 0.5,
+      "pnl_usd": 877.49,
+      "ret_pct": 3903.4100000000003,
+      "sharpe": 1.446547062546912
+    },
+    "passes_acceptance": false,
+    "duration_s": 10.0
+  },
+  {
+    "symbol": "DOGE",
+    "strategy": "slow_drift_follow",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -7.2178,
+      "sharpe": -3.3473,
+      "calmar": -0.8832,
+      "max_dd_pct": 8.1726,
+      "wr": 34.2,
+      "trades": 421,
+      "expectancy_pct": -0.0882,
+      "profit_factor": 0.9337
+    },
+    "is": {
+      "trades": 309,
+      "pnl_usd": -464.74
+    },
+    "oos": {
+      "n": 112,
+      "wins": 44,
+      "wr": 0.39285714285714285,
+      "pnl_usd": 84.87,
+      "ret_pct": 936.2,
+      "sharpe": 0.39601828116457155
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.87
+  },
+  {
+    "symbol": "DOGE",
+    "strategy": "range_breakout",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -2.6344,
+      "sharpe": -0.7022,
+      "calmar": -0.507,
+      "max_dd_pct": 5.196,
+      "wr": 42.5,
+      "trades": 160,
+      "expectancy_pct": -0.1085,
+      "profit_factor": 0.9717
+    },
+    "is": {
+      "trades": 104,
+      "pnl_usd": 552.5900000000001
+    },
+    "oos": {
+      "n": 56,
+      "wins": 19,
+      "wr": 0.3392857142857143,
+      "pnl_usd": -744.96,
+      "ret_pct": -7473.45,
+      "sharpe": -2.8046258551098875
+    },
+    "passes_acceptance": false,
+    "duration_s": 0.35
+  },
+  {
+    "symbol": "DOGE",
+    "strategy": "rsi2_connors",
+    "interval": "4h",
+    "full": {
+      "ret_pct": -12.6096,
+      "sharpe": -2.6246,
+      "calmar": -0.6918,
+      "max_dd_pct": 18.226,
+      "wr": 62.239999999999995,
+      "trades": 519,
+      "expectancy_pct": 0.032,
+      "profit_factor": 1.0307
+    },
+    "is": {
+      "trades": 342,
+      "pnl_usd": 175.21
+    },
+    "oos": {
+      "n": 177,
+      "wins": 107,
+      "wr": 0.6045197740112994,
+      "pnl_usd": 193.11999999999998,
+      "ret_pct": 1079.1600000000003,
+      "sharpe": 0.32834715363601663
+    },
+    "passes_acceptance": false,
+    "duration_s": 2.94
+  }
+]

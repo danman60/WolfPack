@@ -1,0 +1,1115 @@
+{
+  "BTC": {
+    "baseline": {
+      "trades": 36,
+      "ret_pct": -0.7905,
+      "wr": 36.11,
+      "calmar": -0.5695,
+      "max_dd": 1.388
+    },
+    "by_feature": {
+      "atr_pct": [
+        [
+          "high",
+          {
+            "n": 15,
+            "pnl": 470.55000000000007
+          }
+        ],
+        [
+          "low",
+          {
+            "n": 10,
+            "pnl": -90.96000000000001
+          }
+        ],
+        [
+          "mid",
+          {
+            "n": 8,
+            "pnl": -169.57
+          }
+        ]
+      ],
+      "trend_v_ema200": [
+        [
+          "above_ema200",
+          {
+            "n": 32,
+            "pnl": 233.24000000000012
+          }
+        ],
+        [
+          "below_ema200",
+          {
+            "n": 1,
+            "pnl": -23.22
+          }
+        ]
+      ],
+      "ema20_slope": [
+        [
+          "rising",
+          {
+            "n": 33,
+            "pnl": 210.02000000000004
+          }
+        ]
+      ],
+      "rsi": [
+        [
+          "overbought",
+          {
+            "n": 29,
+            "pnl": 296.26999999999987
+          }
+        ],
+        [
+          "neutral",
+          {
+            "n": 4,
+            "pnl": -86.25
+          }
+        ]
+      ],
+      "bbw_pct": [
+        [
+          "high",
+          {
+            "n": 18,
+            "pnl": 365.63999999999993
+          }
+        ],
+        [
+          "mid",
+          {
+            "n": 11,
+            "pnl": -43.779999999999994
+          }
+        ],
+        [
+          "low",
+          {
+            "n": 4,
+            "pnl": -111.84
+          }
+        ]
+      ],
+      "hurst": [
+        [
+          "trending",
+          {
+            "n": 29,
+            "pnl": 185.48000000000005
+          }
+        ],
+        [
+          "mean_rev",
+          {
+            "n": 4,
+            "pnl": 24.54
+          }
+        ]
+      ]
+    },
+    "top_regimes": [
+      [
+        "above_ema200|atr_high|trend_rising",
+        {
+          "n": 14,
+          "wins": 8,
+          "pnl": 493.77,
+          "longs": 0,
+          "shorts": 14
+        }
+      ],
+      [
+        "below_ema200|atr_high|trend_rising",
+        {
+          "n": 1,
+          "wins": 0,
+          "pnl": -23.22,
+          "longs": 0,
+          "shorts": 1
+        }
+      ],
+      [
+        "above_ema200|atr_low|trend_rising",
+        {
+          "n": 10,
+          "wins": 3,
+          "pnl": -90.96000000000001,
+          "longs": 0,
+          "shorts": 10
+        }
+      ],
+      [
+        "above_ema200|atr_mid|trend_rising",
+        {
+          "n": 8,
+          "wins": 1,
+          "pnl": -169.57,
+          "longs": 0,
+          "shorts": 8
+        }
+      ]
+    ],
+    "is_oos": {
+      "is_n": 21,
+      "is_pnl": 309.52,
+      "oos_n": 15,
+      "oos_pnl": -109.23
+    }
+  },
+  "ETH": {
+    "baseline": {
+      "trades": 41,
+      "ret_pct": -0.9012,
+      "wr": 31.71,
+      "calmar": -0.5454,
+      "max_dd": 1.6524
+    },
+    "by_feature": {
+      "atr_pct": [
+        [
+          "high",
+          {
+            "n": 25,
+            "pnl": 503.32000000000005
+          }
+        ],
+        [
+          "low",
+          {
+            "n": 8,
+            "pnl": 77.58
+          }
+        ],
+        [
+          "mid",
+          {
+            "n": 6,
+            "pnl": -124.23000000000002
+          }
+        ]
+      ],
+      "trend_v_ema200": [
+        [
+          "above_ema200",
+          {
+            "n": 36,
+            "pnl": 531.98
+          }
+        ],
+        [
+          "below_ema200",
+          {
+            "n": 3,
+            "pnl": -75.31
+          }
+        ]
+      ],
+      "ema20_slope": [
+        [
+          "rising",
+          {
+            "n": 39,
+            "pnl": 456.6700000000001
+          }
+        ]
+      ],
+      "rsi": [
+        [
+          "overbought",
+          {
+            "n": 37,
+            "pnl": 519.3299999999999
+          }
+        ],
+        [
+          "neutral",
+          {
+            "n": 2,
+            "pnl": -62.66
+          }
+        ]
+      ],
+      "bbw_pct": [
+        [
+          "high",
+          {
+            "n": 24,
+            "pnl": 597.57
+          }
+        ],
+        [
+          "mid",
+          {
+            "n": 7,
+            "pnl": -23.60000000000001
+          }
+        ],
+        [
+          "low",
+          {
+            "n": 8,
+            "pnl": -117.3
+          }
+        ]
+      ],
+      "hurst": [
+        [
+          "mean_rev",
+          {
+            "n": 7,
+            "pnl": 294.40999999999997
+          }
+        ],
+        [
+          "trending",
+          {
+            "n": 32,
+            "pnl": 162.26000000000005
+          }
+        ]
+      ]
+    },
+    "top_regimes": [
+      [
+        "above_ema200|atr_high|trend_rising",
+        {
+          "n": 23,
+          "wins": 9,
+          "pnl": 569.0300000000001,
+          "longs": 0,
+          "shorts": 23
+        }
+      ],
+      [
+        "above_ema200|atr_low|trend_rising",
+        {
+          "n": 7,
+          "wins": 3,
+          "pnl": 87.17999999999999,
+          "longs": 0,
+          "shorts": 7
+        }
+      ],
+      [
+        "below_ema200|atr_low|trend_rising",
+        {
+          "n": 1,
+          "wins": 0,
+          "pnl": -9.6,
+          "longs": 0,
+          "shorts": 1
+        }
+      ],
+      [
+        "below_ema200|atr_high|trend_rising",
+        {
+          "n": 2,
+          "wins": 0,
+          "pnl": -65.71000000000001,
+          "longs": 0,
+          "shorts": 2
+        }
+      ],
+      [
+        "above_ema200|atr_mid|trend_rising",
+        {
+          "n": 6,
+          "wins": 1,
+          "pnl": -124.23000000000002,
+          "longs": 0,
+          "shorts": 6
+        }
+      ]
+    ],
+    "is_oos": {
+      "is_n": 29,
+      "is_pnl": 216.51,
+      "oos_n": 12,
+      "oos_pnl": 159.82999999999998
+    }
+  },
+  "SOL": {
+    "baseline": {
+      "trades": 30,
+      "ret_pct": -0.9836,
+      "wr": 30.0,
+      "calmar": -0.5365,
+      "max_dd": 1.8336
+    },
+    "by_feature": {
+      "atr_pct": [
+        [
+          "high",
+          {
+            "n": 18,
+            "pnl": 341.12
+          }
+        ],
+        [
+          "low",
+          {
+            "n": 3,
+            "pnl": -15.120000000000001
+          }
+        ],
+        [
+          "mid",
+          {
+            "n": 6,
+            "pnl": -81.78000000000002
+          }
+        ]
+      ],
+      "trend_v_ema200": [
+        [
+          "above_ema200",
+          {
+            "n": 27,
+            "pnl": 244.22
+          }
+        ]
+      ],
+      "ema20_slope": [
+        [
+          "rising",
+          {
+            "n": 27,
+            "pnl": 244.22
+          }
+        ]
+      ],
+      "rsi": [
+        [
+          "overbought",
+          {
+            "n": 26,
+            "pnl": 252.47999999999993
+          }
+        ],
+        [
+          "neutral",
+          {
+            "n": 1,
+            "pnl": -8.26
+          }
+        ]
+      ],
+      "bbw_pct": [
+        [
+          "high",
+          {
+            "n": 17,
+            "pnl": 326.97
+          }
+        ],
+        [
+          "mid",
+          {
+            "n": 6,
+            "pnl": -33.92
+          }
+        ],
+        [
+          "low",
+          {
+            "n": 4,
+            "pnl": -48.83
+          }
+        ]
+      ],
+      "hurst": [
+        [
+          "trending",
+          {
+            "n": 20,
+            "pnl": 334.47
+          }
+        ],
+        [
+          "mean_rev",
+          {
+            "n": 7,
+            "pnl": -90.25
+          }
+        ]
+      ]
+    },
+    "top_regimes": [
+      [
+        "above_ema200|atr_high|trend_rising",
+        {
+          "n": 18,
+          "wins": 6,
+          "pnl": 341.12,
+          "longs": 0,
+          "shorts": 18
+        }
+      ],
+      [
+        "above_ema200|atr_low|trend_rising",
+        {
+          "n": 3,
+          "wins": 1,
+          "pnl": -15.120000000000001,
+          "longs": 0,
+          "shorts": 3
+        }
+      ],
+      [
+        "above_ema200|atr_mid|trend_rising",
+        {
+          "n": 6,
+          "wins": 2,
+          "pnl": -81.78000000000002,
+          "longs": 0,
+          "shorts": 6
+        }
+      ]
+    ],
+    "is_oos": {
+      "is_n": 20,
+      "is_pnl": 88.49000000000002,
+      "oos_n": 10,
+      "oos_pnl": -4.749999999999998
+    }
+  },
+  "LINK": {
+    "baseline": {
+      "trades": 42,
+      "ret_pct": -2.0617,
+      "wr": 28.57,
+      "calmar": -0.9239,
+      "max_dd": 2.2315
+    },
+    "by_feature": {
+      "atr_pct": [
+        [
+          "high",
+          {
+            "n": 23,
+            "pnl": 286.8
+          }
+        ],
+        [
+          "low",
+          {
+            "n": 5,
+            "pnl": -22.470000000000013
+          }
+        ],
+        [
+          "mid",
+          {
+            "n": 12,
+            "pnl": -81.07
+          }
+        ]
+      ],
+      "trend_v_ema200": [
+        [
+          "above_ema200",
+          {
+            "n": 39,
+            "pnl": 211.18000000000006
+          }
+        ],
+        [
+          "below_ema200",
+          {
+            "n": 1,
+            "pnl": -27.92
+          }
+        ]
+      ],
+      "ema20_slope": [
+        [
+          "rising",
+          {
+            "n": 40,
+            "pnl": 183.26
+          }
+        ]
+      ],
+      "rsi": [
+        [
+          "overbought",
+          {
+            "n": 36,
+            "pnl": 105.09999999999997
+          }
+        ],
+        [
+          "neutral",
+          {
+            "n": 4,
+            "pnl": 78.16000000000003
+          }
+        ]
+      ],
+      "bbw_pct": [
+        [
+          "high",
+          {
+            "n": 21,
+            "pnl": 637.82
+          }
+        ],
+        [
+          "low",
+          {
+            "n": 7,
+            "pnl": -169.42
+          }
+        ],
+        [
+          "mid",
+          {
+            "n": 12,
+            "pnl": -285.14
+          }
+        ]
+      ],
+      "hurst": [
+        [
+          "trending",
+          {
+            "n": 32,
+            "pnl": 323.75000000000006
+          }
+        ],
+        [
+          "mean_rev",
+          {
+            "n": 8,
+            "pnl": -140.48999999999998
+          }
+        ]
+      ]
+    },
+    "top_regimes": [
+      [
+        "above_ema200|atr_high|trend_rising",
+        {
+          "n": 23,
+          "wins": 7,
+          "pnl": 286.8,
+          "longs": 0,
+          "shorts": 23
+        }
+      ],
+      [
+        "above_ema200|atr_low|trend_rising",
+        {
+          "n": 5,
+          "wins": 1,
+          "pnl": -22.470000000000013,
+          "longs": 0,
+          "shorts": 5
+        }
+      ],
+      [
+        "below_ema200|atr_mid|trend_rising",
+        {
+          "n": 1,
+          "wins": 0,
+          "pnl": -27.92,
+          "longs": 0,
+          "shorts": 1
+        }
+      ],
+      [
+        "above_ema200|atr_mid|trend_rising",
+        {
+          "n": 11,
+          "wins": 4,
+          "pnl": -53.15,
+          "longs": 0,
+          "shorts": 11
+        }
+      ]
+    ],
+    "is_oos": {
+      "is_n": 30,
+      "is_pnl": 69.41,
+      "oos_n": 12,
+      "oos_pnl": 13.080000000000013
+    }
+  },
+  "AVAX": {
+    "baseline": {
+      "trades": 39,
+      "ret_pct": -0.7982,
+      "wr": 28.21,
+      "calmar": -0.3492,
+      "max_dd": 2.2858
+    },
+    "by_feature": {
+      "atr_pct": [
+        [
+          "high",
+          {
+            "n": 19,
+            "pnl": 225.29000000000002
+          }
+        ],
+        [
+          "mid",
+          {
+            "n": 9,
+            "pnl": 118.25
+          }
+        ],
+        [
+          "low",
+          {
+            "n": 10,
+            "pnl": -68.22
+          }
+        ]
+      ],
+      "trend_v_ema200": [
+        [
+          "above_ema200",
+          {
+            "n": 38,
+            "pnl": 275.32000000000005
+          }
+        ]
+      ],
+      "ema20_slope": [
+        [
+          "rising",
+          {
+            "n": 38,
+            "pnl": 275.32000000000005
+          }
+        ]
+      ],
+      "rsi": [
+        [
+          "overbought",
+          {
+            "n": 37,
+            "pnl": 300.23
+          }
+        ],
+        [
+          "neutral",
+          {
+            "n": 1,
+            "pnl": -24.91
+          }
+        ]
+      ],
+      "bbw_pct": [
+        [
+          "high",
+          {
+            "n": 19,
+            "pnl": 190.71
+          }
+        ],
+        [
+          "mid",
+          {
+            "n": 12,
+            "pnl": 85.73000000000003
+          }
+        ],
+        [
+          "low",
+          {
+            "n": 7,
+            "pnl": -1.1200000000000117
+          }
+        ]
+      ],
+      "hurst": [
+        [
+          "trending",
+          {
+            "n": 26,
+            "pnl": 245.98000000000008
+          }
+        ],
+        [
+          "mean_rev",
+          {
+            "n": 12,
+            "pnl": 29.340000000000014
+          }
+        ]
+      ]
+    },
+    "top_regimes": [
+      [
+        "above_ema200|atr_high|trend_rising",
+        {
+          "n": 19,
+          "wins": 5,
+          "pnl": 225.29000000000002,
+          "longs": 0,
+          "shorts": 19
+        }
+      ],
+      [
+        "above_ema200|atr_mid|trend_rising",
+        {
+          "n": 9,
+          "wins": 4,
+          "pnl": 118.25,
+          "longs": 0,
+          "shorts": 9
+        }
+      ],
+      [
+        "above_ema200|atr_low|trend_rising",
+        {
+          "n": 10,
+          "wins": 2,
+          "pnl": -68.22,
+          "longs": 0,
+          "shorts": 10
+        }
+      ]
+    ],
+    "is_oos": {
+      "is_n": 31,
+      "is_pnl": 280.49,
+      "oos_n": 8,
+      "oos_pnl": -69.98
+    }
+  },
+  "ARB": {
+    "baseline": {
+      "trades": 42,
+      "ret_pct": -2.7964,
+      "wr": 28.57,
+      "calmar": -0.5781,
+      "max_dd": 4.8376
+    },
+    "by_feature": {
+      "atr_pct": [
+        [
+          "mid",
+          {
+            "n": 15,
+            "pnl": 113.09999999999998
+          }
+        ],
+        [
+          "low",
+          {
+            "n": 9,
+            "pnl": 11.530000000000008
+          }
+        ],
+        [
+          "high",
+          {
+            "n": 18,
+            "pnl": -256.26
+          }
+        ]
+      ],
+      "trend_v_ema200": [
+        [
+          "below_ema200",
+          {
+            "n": 4,
+            "pnl": 227.07
+          }
+        ],
+        [
+          "above_ema200",
+          {
+            "n": 38,
+            "pnl": -358.7
+          }
+        ]
+      ],
+      "ema20_slope": [
+        [
+          "rising",
+          {
+            "n": 42,
+            "pnl": -131.63
+          }
+        ]
+      ],
+      "rsi": [
+        [
+          "neutral",
+          {
+            "n": 1,
+            "pnl": -5.92
+          }
+        ],
+        [
+          "overbought",
+          {
+            "n": 41,
+            "pnl": -125.71000000000004
+          }
+        ]
+      ],
+      "bbw_pct": [
+        [
+          "high",
+          {
+            "n": 24,
+            "pnl": 178.58999999999986
+          }
+        ],
+        [
+          "low",
+          {
+            "n": 7,
+            "pnl": -18.759999999999962
+          }
+        ],
+        [
+          "mid",
+          {
+            "n": 11,
+            "pnl": -291.46
+          }
+        ]
+      ],
+      "hurst": [
+        [
+          "trending",
+          {
+            "n": 26,
+            "pnl": 176.71999999999994
+          }
+        ],
+        [
+          "mean_rev",
+          {
+            "n": 16,
+            "pnl": -308.34999999999997
+          }
+        ]
+      ]
+    },
+    "top_regimes": [
+      [
+        "below_ema200|atr_mid|trend_rising",
+        {
+          "n": 3,
+          "wins": 1,
+          "pnl": 148.03,
+          "longs": 0,
+          "shorts": 3
+        }
+      ],
+      [
+        "below_ema200|atr_low|trend_rising",
+        {
+          "n": 1,
+          "wins": 1,
+          "pnl": 79.04,
+          "longs": 0,
+          "shorts": 1
+        }
+      ],
+      [
+        "above_ema200|atr_mid|trend_rising",
+        {
+          "n": 12,
+          "wins": 4,
+          "pnl": -34.93000000000002,
+          "longs": 0,
+          "shorts": 12
+        }
+      ],
+      [
+        "above_ema200|atr_low|trend_rising",
+        {
+          "n": 8,
+          "wins": 2,
+          "pnl": -67.51,
+          "longs": 0,
+          "shorts": 8
+        }
+      ],
+      [
+        "above_ema200|atr_high|trend_rising",
+        {
+          "n": 18,
+          "wins": 4,
+          "pnl": -256.26,
+          "longs": 0,
+          "shorts": 18
+        }
+      ]
+    ],
+    "is_oos": {
+      "is_n": 26,
+      "is_pnl": 413.91,
+      "oos_n": 16,
+      "oos_pnl": -545.54
+    }
+  },
+  "DOGE": {
+    "baseline": {
+      "trades": 47,
+      "ret_pct": 0.4608,
+      "wr": 34.04,
+      "calmar": 0.1841,
+      "max_dd": 2.5024
+    },
+    "by_feature": {
+      "atr_pct": [
+        [
+          "high",
+          {
+            "n": 29,
+            "pnl": 349.38000000000005
+          }
+        ],
+        [
+          "mid",
+          {
+            "n": 11,
+            "pnl": 56.059999999999974
+          }
+        ],
+        [
+          "low",
+          {
+            "n": 5,
+            "pnl": -104.46000000000001
+          }
+        ]
+      ],
+      "trend_v_ema200": [
+        [
+          "above_ema200",
+          {
+            "n": 44,
+            "pnl": 336.2700000000001
+          }
+        ],
+        [
+          "below_ema200",
+          {
+            "n": 1,
+            "pnl": -35.29
+          }
+        ]
+      ],
+      "ema20_slope": [
+        [
+          "rising",
+          {
+            "n": 45,
+            "pnl": 300.9800000000001
+          }
+        ]
+      ],
+      "rsi": [
+        [
+          "overbought",
+          {
+            "n": 45,
+            "pnl": 300.9800000000001
+          }
+        ]
+      ],
+      "bbw_pct": [
+        [
+          "high",
+          {
+            "n": 30,
+            "pnl": 489.33000000000004
+          }
+        ],
+        [
+          "mid",
+          {
+            "n": 9,
+            "pnl": -46.20999999999998
+          }
+        ],
+        [
+          "low",
+          {
+            "n": 6,
+            "pnl": -142.14
+          }
+        ]
+      ],
+      "hurst": [
+        [
+          "trending",
+          {
+            "n": 33,
+            "pnl": 190.91000000000005
+          }
+        ],
+        [
+          "mean_rev",
+          {
+            "n": 12,
+            "pnl": 110.07000000000004
+          }
+        ]
+      ]
+    },
+    "top_regimes": [
+      [
+        "above_ema200|atr_high|trend_rising",
+        {
+          "n": 29,
+          "wins": 9,
+          "pnl": 349.38000000000005,
+          "longs": 0,
+          "shorts": 29
+        }
+      ],
+      [
+        "above_ema200|atr_mid|trend_rising",
+        {
+          "n": 11,
+          "wins": 5,
+          "pnl": 56.059999999999974,
+          "longs": 0,
+          "shorts": 11
+        }
+      ],
+      [
+        "below_ema200|atr_low|trend_rising",
+        {
+          "n": 1,
+          "wins": 0,
+          "pnl": -35.29,
+          "longs": 0,
+          "shorts": 1
+        }
+      ],
+      [
+        "above_ema200|atr_low|trend_rising",
+        {
+          "n": 4,
+          "wins": 1,
+          "pnl": -69.17,
+          "longs": 0,
+          "shorts": 4
+        }
+      ]
+    ],
+    "is_oos": {
+      "is_n": 35,
+      "is_pnl": 136.66,
+      "oos_n": 12,
+      "oos_pnl": 221.19
+    }
+  }
+}

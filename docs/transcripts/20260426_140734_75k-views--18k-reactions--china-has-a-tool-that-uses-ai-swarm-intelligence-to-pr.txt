@@ -1,0 +1,36 @@
+# Transcript: 75K views · 1.8K reactions | China has a tool that uses AI swarm intelligence to predict the future. It’s called MiroFish and yes, it’s open-source! #china #ainews #futuretech #aitools #gigaqian | Giga Qian
+# Source: https://www.facebook.com/share/v/18JwjNWzaZ/
+# Project: WolfPack
+# Model: base | Language: en | Duration: 124.4s
+# Transcribed: 2026-04-26 14:07:41
+
+[0.0s - 5.7s] China now has a tool that takes information from everywhere and shows you the future and it only gets crazier from there.
+[5.7s - 11.2s] It was built by a 20-year-old. It was vibe-coded. In only 10 days, he got millions of dollars,
+[11.2s - 16.4s] and he went from intern to CEO overnight. Hi, I'm Gigi Chen. I do business in China and speak Chinese,
+[16.4s - 18.8s] and I like to tell you what's really going on over there.
+[18.8s - 22.6s] If you like checking out GitHub's global trending list, you might have seen Miro Fish,
+[22.6s - 27.0s] which recently occupied the top spot. It's a versatile prediction tool that runs large-scale
+[27.0s - 33.0s] simulations using multiple independent AI agents, up to a million of them simultaneously.
+[33.0s - 36.2s] For my nerds out there, it does this using the Oasis engine from Camel AI,
+[36.2s - 41.5s] GraphRag for Knowledge Grouse, Zepp Cloud for Memory, and OpenAI SDK compatible LLMs.
+[41.5s - 46.2s] But how did it happen? You've got a senior undergraduate student at the Beijing University of
+[46.2s - 51.5s] Posts and Telecommunications, nicknamed by Fu. He's anxious about finding internships,
+[51.5s - 56.8s] so he decides to finish his grad project in advance. This project was called Betta Fish.
+[57.0s - 60.5s] It collects public opinion data from over 30 social media platforms,
+[60.5s - 64.0s] and then puts out structured analysis, and you can tell it how you want it to do it.
+[64.0s - 67.0s] His advisor, Dunk Donum, and told him it was garbage.
+[67.0s - 70.6s] But it was up on GitHub and getting some traction. To get over the hill,
+[70.6s - 76.2s] Bifu posted somewhere familiar to some. Xiao Hongshu, Bifu was getting a lot of messages,
+[76.2s - 81.3s] and after a while, he decided to respond to one. They came from the founder of Shandong Group in
+[81.3s - 86.5s] Shanghai, who used to be the richest dude in China. And he dunked on him again. Only this time,
+[86.5s - 92.4s] he explained that he appreciated Bifu's demonstrated planning abilities. He had his internship.
+[92.4s - 96.7s] Bifu had latitude, so he got to work on a new project, and he thought to himself,
+[96.7s - 101.8s] what if he could see the information from the real world and build a high-fidelity parallel
+[101.8s - 107.2s] digital world? Instead of just analyzing, you birth a digital microcosm that can predict
+[107.2s - 113.8s] the future. Shandong threw in 30 million RMB, and he built a beast. As far as we know,
+[113.8s - 118.6s] it's impossible to predict the future with 100% accuracy. But what if you had a tool that can
+[118.6s - 124.3s] make you the best at it? Yeah, so what would you use this for? I already have some ideas.
+
+---
+
+China now has a tool that takes information from everywhere and shows you the future and it only gets crazier from there. It was built by a 20-year-old. It was vibe-coded. In only 10 days, he got millions of dollars, and he went from intern to CEO overnight. Hi, I'm Gigi Chen. I do business in China and speak Chinese, and I like to tell you what's really going on over there. If you like checking out GitHub's global trending list, you might have seen Miro Fish, which recently occupied the top spot. It's a versatile prediction tool that runs large-scale simulations using multiple independent AI agents, up to a million of them simultaneously. For my nerds out there, it does this using the Oasis engine from Camel AI, GraphRag for Knowledge Grouse, Zepp Cloud for Memory, and OpenAI SDK compatible LLMs. But how did it happen? You've got a senior undergraduate student at the Beijing University of Posts and Telecommunications, nicknamed by Fu. He's anxious about finding internships, so he decides to finish his grad project in advance. This project was called Betta Fish. It collects public opinion data from over 30 social media platforms, and then puts out structured analysis, and you can tell it how you want it to do it. His advisor, Dunk Donum, and told him it was garbage. But it was up on GitHub and getting some traction. To get over the hill, Bifu posted somewhere familiar to some. Xiao Hongshu, Bifu was getting a lot of messages, and after a while, he decided to respond to one. They came from the founder of Shandong Group in Shanghai, who used to be the richest dude in China. And he dunked on him again. Only this time, he explained that he appreciated Bifu's demonstrated planning abilities. He had his internship. Bifu had latitude, so he got to work on a new project, and he thought to himself, what if he could see the information from the real world and build a high-fidelity parallel digital world? Instead of just analyzing, you birth a digital microcosm that can predict the future. Shandong threw in 30 million RMB, and he built a beast. As far as we know, it's impossible to predict the future with 100% accuracy. But what if you had a tool that can make you the best at it? Yeah, so what would you use this for? I already have some ideas.

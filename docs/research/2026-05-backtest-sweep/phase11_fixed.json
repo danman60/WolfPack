@@ -1,0 +1,211 @@
+{
+  "BTC": {
+    "regime_dist_post_hysteresis": {
+      "BEAR": 59,
+      "SIDEWAYS": 380,
+      "BULL": 101
+    },
+    "regime_dist_raw": {
+      "BEAR": 61,
+      "SIDEWAYS": 368,
+      "BULL": 111
+    },
+    "post_hysteresis_transitions": 34,
+    "leg1": {
+      "trades": 13,
+      "ret_pct": 1.252390126805536
+    },
+    "leg2": {
+      "trades": 11,
+      "ret_pct": -8.143297866154409
+    },
+    "leg3": {
+      "trades": 7,
+      "ret_pct": -5.340590740387685
+    },
+    "portfolio_ret_pct": -4.077166159912194,
+    "hodl_ret_pct": 13.72382569326542,
+    "sma200_timing_ret_pct": 4.380681763200167,
+    "beats_hodl": "False",
+    "beats_sma_timing": "False"
+  },
+  "ETH": {
+    "regime_dist_post_hysteresis": {
+      "SIDEWAYS": 399,
+      "BEAR": 27,
+      "BULL": 114
+    },
+    "regime_dist_raw": {
+      "BEAR": 37,
+      "SIDEWAYS": 388,
+      "BULL": 115
+    },
+    "post_hysteresis_transitions": 27,
+    "leg1": {
+      "trades": 17,
+      "ret_pct": -0.9985094948623874
+    },
+    "leg2": {
+      "trades": 10,
+      "ret_pct": -14.73004976949629
+    },
+    "leg3": {
+      "trades": 4,
+      "ret_pct": -8.900024677655892
+    },
+    "portfolio_ret_pct": -8.209527980671528,
+    "hodl_ret_pct": 11.864406779661017,
+    "sma200_timing_ret_pct": -8.351197607380968,
+    "beats_hodl": "False",
+    "beats_sma_timing": "True"
+  },
+  "SOL": {
+    "regime_dist_post_hysteresis": {
+      "BEAR": 131,
+      "SIDEWAYS": 372,
+      "BULL": 37
+    },
+    "regime_dist_raw": {
+      "BEAR": 134,
+      "SIDEWAYS": 352,
+      "BULL": 54
+    },
+    "post_hysteresis_transitions": 24,
+    "leg1": {
+      "trades": 7,
+      "ret_pct": 0.03559466346390039
+    },
+    "leg2": {
+      "trades": 6,
+      "ret_pct": -1.1717538641551561
+    },
+    "leg3": {
+      "trades": 7,
+      "ret_pct": -9.116379107430973
+    },
+    "portfolio_ret_pct": -3.417512769374076,
+    "hodl_ret_pct": 1.787746749290083,
+    "sma200_timing_ret_pct": -18.758925872867817,
+    "beats_hodl": "False",
+    "beats_sma_timing": "True"
+  },
+  "LINK": {
+    "regime_dist_post_hysteresis": {
+      "SIDEWAYS": 418,
+      "BULL": 122
+    },
+    "regime_dist_raw": {
+      "SIDEWAYS": 408,
+      "BEAR": 10,
+      "BULL": 122
+    },
+    "post_hysteresis_transitions": 19,
+    "leg1": {
+      "trades": 19,
+      "ret_pct": 1.2491305897042615
+    },
+    "leg2": {
+      "trades": 10,
+      "ret_pct": -16.383582551850406
+    },
+    "leg3": {
+      "trades": 0,
+      "ret_pct": 0.0
+    },
+    "portfolio_ret_pct": -5.044817320715378,
+    "hodl_ret_pct": 12.314875528523297,
+    "sma200_timing_ret_pct": -9.976431012396791,
+    "beats_hodl": "False",
+    "beats_sma_timing": "True"
+  },
+  "AVAX": {
+    "regime_dist_post_hysteresis": {
+      "SIDEWAYS": 408,
+      "BEAR": 32,
+      "BULL": 100
+    },
+    "regime_dist_raw": {
+      "SIDEWAYS": 397,
+      "BEAR": 37,
+      "BULL": 106
+    },
+    "post_hysteresis_transitions": 29,
+    "leg1": {
+      "trades": 13,
+      "ret_pct": -0.039778567729564784
+    },
+    "leg2": {
+      "trades": 9,
+      "ret_pct": -16.69326758376527
+    },
+    "leg3": {
+      "trades": 6,
+      "ret_pct": -14.663988506868176
+    },
+    "portfolio_ret_pct": -10.465678219454333,
+    "hodl_ret_pct": 2.9055376001210513,
+    "sma200_timing_ret_pct": -21.792368765781468,
+    "beats_hodl": "False",
+    "beats_sma_timing": "True"
+  },
+  "ARB": {
+    "regime_dist_post_hysteresis": {
+      "SIDEWAYS": 363,
+      "BEAR": 123,
+      "BULL": 54
+    },
+    "regime_dist_raw": {
+      "BEAR": 125,
+      "SIDEWAYS": 352,
+      "BULL": 63
+    },
+    "post_hysteresis_transitions": 32,
+    "leg1": {
+      "trades": 28,
+      "ret_pct": -0.18818377946270282
+    },
+    "leg2": {
+      "trades": 6,
+      "ret_pct": 9.375668288343997
+    },
+    "leg3": {
+      "trades": 10,
+      "ret_pct": -13.430712796518328
+    },
+    "portfolio_ret_pct": -1.4144094292123377,
+    "hodl_ret_pct": 6.685656836461138,
+    "sma200_timing_ret_pct": 13.622410294421439,
+    "beats_hodl": "False",
+    "beats_sma_timing": "False"
+  },
+  "DOGE": {
+    "regime_dist_post_hysteresis": {
+      "BEAR": 92,
+      "SIDEWAYS": 303,
+      "BULL": 145
+    },
+    "regime_dist_raw": {
+      "BEAR": 109,
+      "SIDEWAYS": 285,
+      "BULL": 146
+    },
+    "post_hysteresis_transitions": 30,
+    "leg1": {
+      "trades": 8,
+      "ret_pct": 0.8031949976384123
+    },
+    "leg2": {
+      "trades": 7,
+      "ret_pct": -0.5195958225689079
+    },
+    "leg3": {
+      "trades": 9,
+      "ret_pct": 4.565680135269523
+    },
+    "portfolio_ret_pct": 1.6164264367796832,
+    "hodl_ret_pct": 10.71833724981769,
+    "sma200_timing_ret_pct": -14.48801273312782,
+    "beats_hodl": "False",
+    "beats_sma_timing": "True"
+  }
+}

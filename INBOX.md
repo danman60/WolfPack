@@ -381,3 +381,137 @@ Saved to `docs/transcripts/20260409_202133_tradingwithmustafah-3-step-strategy.t
 ### New Transcription: 15K views · 267 reactions | How To Learn Orderflow Trading. 4 Simple Steps. | Aleks Rosme
 **Source:** https://www.facebook.com/share/r/1YXj1yEHBp/
 Saved to `docs/transcripts/20260410_142257_15k-views--267-reactions--how-to-learn-orderflow-trading-4-simple-steps--aleks-r.txt`. Whisper base model, auto-transcribed.
+
+## From sysadmin-2 — 2026-04-26 14:07
+### New Transcription: 75K views · 1.8K reactions | China has a tool that uses AI swarm intelligence to predict the future. It’s called MiroFish and yes, it’s open-source! #china #ainews #futuretech #aitools #gigaqian | Giga Qian
+**Source:** https://www.facebook.com/share/v/18JwjNWzaZ/
+Saved to `docs/transcripts/20260426_140734_75k-views--18k-reactions--china-has-a-tool-that-uses-ai-swarm-intelligence-to-pr.txt`. Whisper base model, auto-transcribed.
+
+## From sysadmin-2 — 2026-04-26 16:30
+### Research Pass: MiroFish for WolfPack — Findings + Verdict
+
+**Source video:** https://www.facebook.com/share/v/18JwjNWzaZ/ (transcript: `docs/transcripts/20260426_140734_75k-views--18k-reactions--china-has-a-tool-that-uses-ai-swarm-intelligence-to-pr.txt`)
+
+**Repo:** https://github.com/666ghj/MiroFish — 57.5k stars, 8.8k forks, 255 open issues, AGPL-3.0, Python 3.11–3.12, last push 2026-04-02
+**Homepage:** https://mirofish.ai
+**DeepWiki:** https://deepwiki.com/666ghj/MiroFish
+**Live demo:** https://666ghj.github.io/mirofish-demo/
+**Backed by:** Shanda Group (Chinese conglomerate, founder Tan Yuan invested 30M RMB per the source video)
+
+**Underlying engine:** OASIS — https://github.com/camel-ai/oasis (4.4k stars, Apache-2.0, by CAMEL-AI). Open Agent Social Interaction Simulations. Scales to 1M agents on Twitter/Reddit-clone platforms. **Unlike MiroFish, OASIS itself is Apache-2.0** and could be used directly without the AGPL umbrella.
+
+**Local-first fork (alternative to upstream):** https://github.com/justinfinnn/MiroFish (2 stars, last push 2026-03-15) — replaces Zep Cloud with **Neo4j + Graphiti**, supports **Codex OAuth** (no API key), 100% self-hostable. Same pipeline as upstream.
+
+---
+
+### How MiroFish Actually Works (from source inspection)
+
+Pipeline (`backend/app/services/`):
+1. **Text ingest** (`text_processor.py`) — uploads docs (PDF/text), chunks at 500 tokens with 50 overlap
+2. **Ontology extraction** (`ontology_generator.py`) — LLM extracts entities + relationships from seed text
+3. **Graph build** (`graph_builder.py`) — pushes entities into Zep Cloud (or Neo4j+Graphiti in fork) as a knowledge graph
+4. **Agent persona generation** (`oasis_profile_generator.py`) — converts each entity node into an OASIS Agent Profile: `user_id`, `username`, `bio`, `persona`, `karma`, `friend_count`, `follower_count`, `age`, `gender`, `mbti`, `country`, `profession`, `interested_topics`. Generates Twitter-style AND Reddit-style profiles.
+5. **Simulation config** (`simulation_config_generator.py`) — round count, interaction rules, prediction question
+6. **OASIS run** (`simulation_runner.py`) — agents post / like / repost / reply on simulated Twitter + Reddit platforms. Action types include `CREATE_POST`, `LIKE_POST`, etc. Dual-platform parallel.
+7. **Memory updates** (`zep_graph_memory_updater.py`) — graph state evolves between rounds
+8. **Report agent** (`report_agent.py`) — synthesizes final prediction + lets you chat with any agent in the simulated world
+
+**LLM:** any OpenAI-SDK-compatible. README recommends **Alibaba Qwen-plus via Bailian** (high token cost). Local fork supports OpenAI / Codex OAuth / any compatible.
+
+**Key dependencies:** `flask>=3.0`, `openai>=1.0`, `zep-cloud==3.13.0`, `camel-oasis==0.2.5`, `camel-ai==0.2.78`, `PyMuPDF`, `pydantic`. Frontend is Node.js 18+.
+
+**Ports:** backend `5001`, frontend `3000`.
+
+---
+
+### Critical Limitation (read this before getting excited)
+
+**MiroFish simulates Twitter/Reddit-style social agents — not markets.** The output is forum posts, likes, and replies on cloned social platforms. The README's "predict anything" claim is marketing. Their published demos are:
+- Wuhan University public-opinion event simulation
+- "Dream of the Red Chamber" lost-ending generation
+
+**Financial prediction is in the README under "more examples coming soon" — it does not exist as a packaged use case.** The repo does NOT ingest price series, order books, on-chain data, funding rates, or whale flows. Its native input is unstructured text (news article, policy draft, novel chapter).
+
+This narrows the WolfPack fit substantially.
+
+---
+
+### Realistic Fit for WolfPack
+
+| WolfPack agent | MiroFish fit | Verdict |
+|---|---|---|
+| **The Snoop** (social sentiment, narrative tracking) | ✅ DIRECT — MiroFish simulates how a narrative spreads through a social-graph clone. Feed it a piece of news (e.g., "ETH ETF approved", "Mt. Gox creditors selling 80k BTC") and watch sentiment evolve over N rounds. | Augment Snoop with a "narrative-evolution sim" module |
+| **The Sage** (forecasting) | ⚠️ INDIRECT — only useful if you accept that crowd-sentiment dynamics → price moves. Would need a wrapper translating simulated post sentiment into a price signal. Not provided by MiroFish. | Speculative, not drop-in |
+| **The Quant** (TA, regime, signals) | ❌ NO — MiroFish does not consume price/volume/orderbook | Skip |
+| **8 quant modules** | ❌ NO — orthogonal | Skip |
+| **The Brief** (synthesis) | ✅ Receiver — consumes Snoop+Sage outputs unchanged | No change needed |
+
+**Most credible WolfPack use case:** event-driven narrative simulation. When a news event hits (CPI print, hack, ETF flow, regulator announcement), feed the article into MiroFish, run a 20–40-round Twitter/Reddit sim with personas seeded from current crypto-Twitter archetypes (max bull, perma bear, on-chain analyst, retail FOMO trader, OG whale, news-trader bot, normie). Read the simulated narrative trajectory and use it as one input into Snoop's sentiment score.
+
+This is **research-grade signal**, not execution-grade. It belongs as input to The Brief's discretion check, not as a sizing/conviction primitive.
+
+---
+
+### Multi-Wallet Evolution Fit
+
+Per WolfPack/CLAUDE.md's wallet-evolution protocol: spawn `paper_perp_v4` ("Narrative Sim") whose conviction modifier is sourced from MiroFish event-sim output. A/B against v1/v2/v3. Same market data, different conviction layer. This is the cleanest way to test whether the signal is real before risking capital.
+
+---
+
+### Practical Setup Path
+
+**Recommended:** use the **local-first fork** (`justinfinnn/MiroFish`), not upstream. Reasons:
+1. No Zep Cloud paid dependency
+2. Codex OAuth → no API key burn
+3. Neo4j + Graphiti → graph state stays local, queryable from WolfPack intel/
+4. Same pipeline as upstream
+
+**Resource ask:** OASIS 1M-agent demos run on big infra. For WolfPack's narrative-sim use case, hundreds-to-thousands of agents on FIRMAMENT 4090 should be plenty (RAM-bound, not GPU-bound — agents are LLM calls, can route through `qwen3-coder:30b` or `glm-4.7-flash` on FIRMAMENT for speed).
+
+**Run-it path (if you want to evaluate):**
+```
+1. Clone justinfinnn/MiroFish into ~/projects/mirofish (separate from WolfPack)
+2. docker run neo4j:5  (already documented in fork README)
+3. cp .env.example .env, set GRAPH_PROVIDER=local, MODELING_BACKEND=api_key,
+   LLM_BASE_URL=http://100.75.112.14:11434/v1, LLM_MODEL_NAME=qwen3-coder:30b
+4. uv sync && python run.py  (backend on :5001)
+5. Submit a test seed: a recent crypto-news article. 20 rounds, ~50 agents.
+6. Compare simulated post sentiment trajectory vs actual 24h crypto-Twitter sentiment
+   (pull from existing Snoop pipeline). If correlation > random, signal is worth keeping.
+```
+
+---
+
+### License Math
+
+- **MiroFish: AGPL-3.0** — copyleft + network use clause. If you call MiroFish over HTTP from WolfPack intel/, that triggers AGPL's network distribution clause: any WolfPack user accessing the system would have a right to the modified MiroFish source. WolfPack is currently personal/closed; this would force MiroFish (and any modifications) public.
+- **OASIS: Apache-2.0** — no copyleft. If you skip MiroFish and build directly on OASIS + your own ontology/profile/report layer, no license bind.
+
+**Decision shape:** if WolfPack stays personal forever, AGPL is fine. If you ever want to commercialize WolfPack-as-a-service, build on OASIS directly and skip the MiroFish wrapper. The MiroFish wrapper is ~13 services in `backend/app/services/` — non-trivial to reproduce but not 50k-LoC either.
+
+---
+
+### Open Questions Before Committing
+
+1. **Does crypto-Twitter narrative simulation actually predict price?** Unknown. Needs the `paper_perp_v4` A/B run before any capital allocation.
+2. **Token cost per simulation?** README warns Qwen-plus runs are "high consumption". 40 rounds × 50 agents × 2 platforms = ~4k LLM calls per sim. On FIRMAMENT-local, free. On cloud, real money.
+3. **Does it handle non-English input?** Source repo is bilingual ZH/EN — has `locales/` directory and `get_locale()` calls. English appears first-class.
+4. **Issue #582 (long-text auto-chunking)** is open — may matter if seed inputs are large research reports.
+
+---
+
+### TL;DR Verdict
+
+**Yes, MiroFish could power up WolfPack — but only as Snoop augmentation (event-driven narrative simulation), not as a forecasting engine.** Realistic plan: run the local-first fork on FIRMAMENT, wire it into Snoop as a new signal source, gate the signal behind a `paper_perp_v4` A/B wallet, and only promote to a real wallet if the signal beats baseline over a meaningful sample. **Use `justinfinnn/MiroFish` (Neo4j+Graphiti+Codex), not upstream.** Watch the AGPL implications.
+
+
+## From android-launcher-2 — 2026-06-01 02:58
+### New Transcription: 7.4K views · 182 reactions | Day trading for 5 year olds - Ai edition | Erick Jablonski
+**Source:** https://www.facebook.com/share/r/18mxM829nS/
+Saved to `docs/transcripts/20260601_025833_74k-views--182-reactions--day-trading-for-5-year-olds---ai-edition--erick-jablon.txt`. Whisper base model, auto-transcribed.
+
+## From sysadmin — 2026-06-15 13:55
+### Open-source tools to evaluate (from a GitHub roundup)
+- **TradingAgents** — AI multi-agent quantitative trading framework. github.com/TauricResearch/TradingAgents — directly relevant to WolfPack's trading intel/signal engine.
+- **Fincept Terminal** — open-source Bloomberg Terminal alternative. github.com/Fincept-Corporation — market data/terminal UI ideas.
+- **Flowsint** — open-source OSINT intelligence analysis tool. github.com/reconurge/flowsint — for the WolfPack intel side.

@@ -1,0 +1,7 @@
+symbol,bucket,n_trades,win_rate,avg_net_pct,total_ret_pct,sharpe
+BTCUSDT,agree,45,37.78,-0.3398,-14.7,-4.009
+BTCUSDT,disagree,16,43.75,0.4983,7.941,4.61
+ETHUSDT,agree,40,55.0,0.1347,4.41,1.1
+ETHUSDT,disagree,30,46.67,-0.1133,-4.542,-0.744
+LINKUSDT,agree,44,50.0,0.1713,6.545,1.393
+LINKUSDT,disagree,23,65.22,0.1899,3.947,1.719
