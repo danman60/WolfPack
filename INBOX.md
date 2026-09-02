@@ -515,3 +515,63 @@ Saved to `docs/transcripts/20260601_025833_74k-views--182-reactions--day-trading
 - **TradingAgents** — AI multi-agent quantitative trading framework. github.com/TauricResearch/TradingAgents — directly relevant to WolfPack's trading intel/signal engine.
 - **Fincept Terminal** — open-source Bloomberg Terminal alternative. github.com/Fincept-Corporation — market data/terminal UI ideas.
 - **Flowsint** — open-source OSINT intelligence analysis tool. github.com/reconurge/flowsint — for the WolfPack intel side.
+
+## From SYSADMIN — 2026-09-01 15:36 ET
+
+### CRITICAL — 29 WolfPack tables world-writable (RLS off)
+
+Supabase flagged `rls_disabled_in_public` on these 29 table(s):
+
+- `public.wp_exchange_configs`
+- `public.wp_wallets`
+- `public.wp_wallet_state`
+- `public.wp_wallet_state_history`
+- `public.wp_auto_trades`
+- `public.wp_trade_history`
+- `public.wp_trade_recommendations`
+- `public.wp_runtime_config`
+- `public.wp_strategy_configs`
+- `public.wp_circuit_breaker_state`
+- `public.wp_portfolio_snapshots`
+- `public.wp_auto_portfolio_snapshots`
+- `public.wp_equity_highwater`
+- `public.wp_lp_positions`
+- `public.wp_lp_events`
+- `public.wp_lp_snapshots`
+- `public.wp_position_actions`
+- `public.wp_veto_log`
+- `public.wp_watchdog_state`
+- `public.wp_watchlist`
+- `public.wp_candle_cache`
+- `public.wp_backtest_runs`
+- `public.wp_backtest_trades`
+- `public.wp_cycle_metrics`
+- `public.wp_module_outputs`
+- `public.wp_agent_outputs`
+- `public.wp_prompt_templates`
+- `public.wp_token_usage`
+- `public.wp_cutover_checklist`
+
+**`wp_exchange_configs` is the priority** — columns `exchange_id, wallet_address, api_key_encrypted`.
+Publicly readable. `wp_wallets` returned a real row on an anon read.
+
+Note the bot has been **offline since the droplet was destroyed 2026-08-05**, so nothing is trading — but
+the tables are live on CC&SS and exposed regardless of whether the bot runs. Rotate any exchange API key
+that was ever stored here before restarting WolfPack.
+
+**Verified, not just an advisor warning.** Using the PUBLIC anon key from `~/.env.keys`:
+`curl -H "apikey: $ANON" <project>/rest/v1/<table>?select=*&limit=1` returned **HTTP 200 with real rows**.
+`information_schema.role_table_grants` shows role `anon` holds full write privileges (select, insert,
+update, delete, and table-wipe), and RLS is OFF — so these tables are readable AND writable from the
+public internet by anyone holding the anon key, which ships inside every client app by design.
+
+**Fix:** `ALTER TABLE <t> ENABLE ROW LEVEL SECURITY;` then add policies matching how the app actually reads.
+
+WARNING: **Do NOT blanket-enable RLS without tracing each table's access path first.** Enabling RLS with
+no policy denies ALL access and will break anything reading these with the anon key. Check whether the
+caller uses the service-role key (unaffected) or the anon key (needs a policy) before touching a live table.
+
+Source: Supabase advisor email 2026-09-01 15:25 UTC + `get_advisors(security)` on both projects.
+Routed by SYSADMIN.
+
+---
