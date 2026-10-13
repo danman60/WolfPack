@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "review": "Exact390 and1440 composed screenshots inspected. Visible slider rails and colored knobs; full heading and all6 charts; Reset remains one word; no clipping or overlap. Saved forecast remains unchanged on reload and current valuation uses refreshed prices.",
+  "images": {
+    "sliders-1440.png": "e787f892f12f5494d44f136622f5228d0b1ad36af036c9d2444d77befe32190b",
+    "sliders-390.png": "fcabc86682647f2fc16bdfb965c4dff4bbe3a2552e6bc7fb711a8ffb470d5558"
+  }
+}

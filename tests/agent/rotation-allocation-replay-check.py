@@ -17,7 +17,11 @@ const mutation=api.replayAllocationCycles({points:mutated},config);console.log(J
  value=lambda units,marks:sum(float(units[x])*marks[x] for x in assets)
  for c in full['cycles']:
   assert c['trainingEnd']<c['signalAt']<c['fillAt']<c['dueAt']
-  before=c['startingBalances'];start=value(before,price[c['signalAt']]);at=[e for e in events if e['at']<=c['dueAt']][-1]['balances'];actual=value(at,price[c['dueAt']])-start;hold=value(before,price[c['dueAt']])-start
+  before=c['startingBalances'];
+  if c['preserveUnits']:
+   assert c['feesCad']==0 and c['plannedBalances']==before
+   prior=[e for e in events if e['at']<=c['fillAt']];assert (prior[-1]['balances'] if prior else full['cycles'][0]['startingBalances'])==before
+  start=value(before,price[c['signalAt']]);at=[e for e in events if e['at']<=c['dueAt']][-1]['balances'];actual=value(at,price[c['dueAt']])-start;hold=value(before,price[c['dueAt']])-start
   assert abs(c['actualProfitCad']-actual)<1e-7 and abs(c['actualAdvantageCad']-(actual-hold))<1e-7
   i=next(i for i,r in enumerate(points) if (dt.date.fromisoformat(r['date'])+dt.timedelta(days=1)).isoformat()==c['signalAt'][:10]);fit,_,_=common.independently_fit(points[:i+1],'weekly');expected=(fit['1']+fit['10'])/2
   assert np.allclose([c['forecastReturns'][x] for x in assets[1:]],expected,atol=1e-11)

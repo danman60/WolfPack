@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "target": {
+    "environment": "Preview",
+    "deploymentId": "dpl_E4nQjJZKKryihZUgN2Kj7effEyPp",
+    "url": "https://wolf-pack-2gtfxnggf-danman60s-projects.vercel.app/rotation",
+    "gitSha": "ad5911caaf473dbfe4f10cd091033f3a7d2b1eb7",
+    "apiTarget": null,
+    "readyState": "READY"
+  },
+  "url": "https://wolf-pack-2gtfxnggf-danman60s-projects.vercel.app/rotation",
+  "checks": [
+    "Decimal .1 and 0.1 opening balances saved through customer form",
+    "Six observed-price pairs and real dated news analysis",
+    "Saved risk and cost preferences through primary controls",
+    "Recommendation saves frozen forecast, actual holdings, market and analysis without a trade",
+    "Not-due check-in displays frozen forecast without invented outcome",
+    "Exact-percent override autosaves; original snapshot remains immutable",
+    "Customer Apply created paper batch and reached completed",
+    "Reload preserves ledger and immutable original forecast"
+  ],
+  "batchStatus": "completed",
+  "projectionId": "25b5c9c0-dd7b-4720-9260-1308e119a76b",
+  "batchId": "ed0cbb33-77e6-4b4b-8ed9-e7d9d582098f"
+}

@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "gitSha": "ad5911caaf473dbfe4f10cd091033f3a7d2b1eb7",
+  "genuineHistoryRows": 719,
+  "maximumIndependentForecastError": 3.729655473350135e-17,
+  "actualPaperOrders": 3,
+  "independentCashAndUnitsReconciliation": true,
+  "feesCad": 2.37055519
+}

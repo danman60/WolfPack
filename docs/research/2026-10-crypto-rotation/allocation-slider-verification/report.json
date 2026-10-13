@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "target": {
+    "environment": "local",
+    "url": "http://127.0.0.1:3218/rotation"
+  },
+  "checks": [
+    "CAD keyboard linked pie and weights; one save; HOLD cleared; ledger unchanged",
+    "BTC keyboard linked pie and weights; one save; HOLD cleared; ledger unchanged",
+    "ETH keyboard linked pie and weights; one save; HOLD cleared; ledger unchanged",
+    "LINK keyboard linked pie and weights; one save; HOLD cleared; ledger unchanged",
+    "mouse live linked values before release, no premature save, release saves without ledger changes",
+    "touch live linked values before release, no premature save, release saves without ledger changes"
+  ]
+}

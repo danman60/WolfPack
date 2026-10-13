@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "scope": "Local slider delta, real QA Agent authenticated isolated paper member. No Apply or funded execution.",
+  "checks": [
+    "CAD keyboard linked pie and weights; one save; HOLD cleared; ledger unchanged",
+    "BTC keyboard linked pie and weights; one save; HOLD cleared; ledger unchanged",
+    "ETH keyboard linked pie and weights; one save; HOLD cleared; ledger unchanged",
+    "LINK keyboard linked pie and weights; one save; HOLD cleared; ledger unchanged",
+    "mouse live linked values before release, no premature save, release saves without ledger changes",
+    "touch live linked values before release, no premature save, release saves without ledger changes"
+  ],
+  "displayPrecision": "Native range0.1 percentage point display can differ up to0.05 from full-precision saved proportions. Saved weights sum1 checked independently.",
+  "harnessCorrections": [
+    "Initial assertion compared rounded range value with exact stored weight; corrected display tolerance.",
+    "Second probe lost one non-OK allocation GET without status captured. Added diagnostic status/body and waits for enabled controls; successful full rerun retained."
+  ],
+  "images": {
+    "sliders-1440.png": "265f9241a08bd92b84a3a826db239cd9631e4e40f74abc3e44bd3bd17b77ef97",
+    "sliders-390.png": "02b008e6afbd6211af8fbbed79578237056b546563500b5c2325fe481a459af8"
+  },
+  "visual": "Visible rails, pie and full six-chart composition. Phone Reset word wraps; reported for small presentation correction."
+}

@@ -1,0 +1,84 @@
+{
+  "status": "PASS",
+  "target": {
+    "environment": "Preview",
+    "deploymentId": "dpl_E4nQjJZKKryihZUgN2Kj7effEyPp",
+    "url": "https://wolf-pack-2gtfxnggf-danman60s-projects.vercel.app/rotation",
+    "gitSha": "ad5911caaf473dbfe4f10cd091033f3a7d2b1eb7",
+    "apiTarget": null,
+    "readyState": "READY"
+  },
+  "url": "https://wolf-pack-2gtfxnggf-danman60s-projects.vercel.app/rotation",
+  "checks": [
+    "Duplicate Apply returns same existing batch without duplicate ledger",
+    "Cross-origin mutation rejected",
+    "Other owner cannot retrieve/apply/advance/check in another member records",
+    "Stale portfolio revision rejected; current projection saved",
+    "Untrusted live-mode fields cannot enable funded execution; duplicate active Apply idempotent",
+    "Pause persists without fills; stale batch revision rejected; resume succeeds",
+    "One actual paper fill persists; stopping remaining orders preserves filled ledger and prevents further fills"
+  ],
+  "finalBatch": {
+    "id": "0d2b2d39-0524-4a44-a204-0de38e0783ff",
+    "mode": "paper",
+    "orders": [
+      {
+        "id": "c117228a-8665-445c-9292-7df004a034f9",
+        "to": "CAD",
+        "from": "BTC",
+        "fills": [
+          {
+            "side": "sell",
+            "asset": "BTC",
+            "price": "118154.97999972",
+            "feeCad": "6.54002466",
+            "grossCad": "3270.01232758",
+            "quantity": "0.02767562"
+          }
+        ],
+        "index": 0,
+        "amount": "0.02767562",
+        "feeCad": 6.54002466,
+        "status": "filled",
+        "filledAt": "2026-10-13T20:39:59.617Z",
+        "clientOrderId": "0d2b2d39-0524-4a44-a204-0de38e0783ff:0"
+      },
+      {
+        "id": "9efcf173-b682-4101-96fe-0ee0678bf983",
+        "to": "ETH",
+        "from": "CAD",
+        "index": 1,
+        "amount": "7136.60597157",
+        "status": "queued",
+        "clientOrderId": "0d2b2d39-0524-4a44-a204-0de38e0783ff:1"
+      },
+      {
+        "id": "ed7ffee7-16e8-42f4-bb1c-12b1ec94406b",
+        "to": "LINK",
+        "from": "CAD",
+        "index": 2,
+        "amount": "7309.49608254",
+        "status": "queued",
+        "clientOrderId": "0d2b2d39-0524-4a44-a204-0de38e0783ff:2"
+      }
+    ],
+    "status": "cancelled",
+    "costsCad": 11.176798042397422,
+    "revision": 6,
+    "createdAt": "2026-10-13T20:39:58.369Z",
+    "updatedAt": "2026-10-13T20:40:00.047Z",
+    "maxCostCad": 119.06260416339033,
+    "pauseReason": "Owner stopped remaining trades. Confirmed fills remain in the ledger.",
+    "portfolioId": "041c0096-1b15-4622-aab8-79566229762b",
+    "projectionId": "f396c3ef-798b-4153-95eb-93af240e1b3a",
+    "targetWeights": {
+      "BTC": 0.33333333,
+      "CAD": 0,
+      "ETH": 0.33333333,
+      "LINK": 0.33333334
+    },
+    "expectedPortfolioRevision": 4
+  },
+  "ledgerRevisionBefore": 3,
+  "ledgerRevisionAfter": 4
+}

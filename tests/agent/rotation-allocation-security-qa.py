@@ -4,11 +4,12 @@ import argparse,json,sys,time,uuid
 from pathlib import Path
 sys.path.insert(0,str(Path.home()/'projects/qa-agent'))
 from executors.web import WebExecutor
+from rotation_qa_target import validate_target,protect_context
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--url',required=True);p.add_argument('--state',type=Path,required=True);p.add_argument('--accounts',type=Path,required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args();assert a.url=='http://127.0.0.1:3218/rotation';print('QA target:',a.url,flush=True);origin=a.url.removesuffix('/rotation');b=WebExecutor();other=WebExecutor();assert b.setup();other.context=b.browser.new_context(user_agent="QA-Agent/1.0");other.page=other.context.new_page();checks=[]
+ p=argparse.ArgumentParser();p.add_argument('--url',required=True);p.add_argument('--state',type=Path,required=True);p.add_argument('--accounts',type=Path,required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--expected-sha');p.add_argument('--protection-file',type=Path);a=p.parse_args();target=validate_target(a.url,a.expected_sha);print('QA target:',a.url,flush=True);origin=a.url.removesuffix('/rotation');b=WebExecutor();other=WebExecutor();assert b.setup();protectedHeaders=protect_context(b.context,a.url,a.protection_file);other.context=b.browser.new_context(user_agent="QA-Agent/1.0");other.page=other.context.new_page();protect_context(other.context,a.url,a.protection_file);checks=[]
  def req(browser,path,body=None,status=200,originHeader=origin):
-  r=browser.context.request.get(origin+'/api/rotation/'+path) if body is None else browser.context.request.post(origin+'/api/rotation/'+path,data=body,headers={'Origin':originHeader});assert r.status==status,(path,r.status,r.text()[:200]);return r.json()
+  r=browser.context.request.get(origin+'/api/rotation/'+path,headers=protectedHeaders) if body is None else browser.context.request.post(origin+'/api/rotation/'+path,data=body,headers={'Origin':originHeader,**protectedHeaders});assert r.status==status,(path,r.status,r.text()[:200]);return r.json()
  def passed(s):checks.append(s);print('PASS',s,flush=True)
  try:
   b.context.add_cookies(json.loads(a.state.read_text())['cookies']);before=req(b,'portfolio')['portfolio'];old=req(b,'allocation')['batches'][0]
@@ -35,6 +36,6 @@ def main():
   batch=step('advance')['batch'];assert any(o['status']=='intent' for o in batch['orders']);assert req(b,'portfolio')['portfolio']==before
   batch=step('advance')['batch'];filled=req(b,'portfolio')['portfolio'];assert filled['revision']==before['revision']+1 and sum(o['status']=='filled' for o in batch['orders'])==1
   batch=step('pause')['batch'];batch=step('cancel')['batch'];assert batch['status']=='cancelled';assert req(b,'portfolio')['portfolio']==filled;assert step('advance')['portfolio']==filled;passed('One actual paper fill persists; stopping remaining orders preserves filled ledger and prevents further fills')
-  a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps({'status':'PASS','url':a.url,'checks':checks,'finalBatch':batch,'ledgerRevisionBefore':before['revision'],'ledgerRevisionAfter':filled['revision']},indent=2))
+  a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps({'status':'PASS','target':target,'url':a.url,'checks':checks,'finalBatch':batch,'ledgerRevisionBefore':before['revision'],'ledgerRevisionAfter':filled['revision']},indent=2))
  finally:other.context.close();b.teardown()
 if __name__=='__main__':main()

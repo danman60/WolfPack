@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "sourceCommit": "ad5911caaf473dbfe4f10cd091033f3a7d2b1eb7",
+  "scope": "Baseline before owner-requested linked sliders; not final release verification.",
+  "visualReview": "Both composed pages inspected. Full heading, saved HOLD forecast, zero additional cost, completed paper batch and six charts readable. No clipped or overlapping content.",
+  "images": {
+    "completed-390.png": "e31cdd1c0e33649e0832681f8d885dddbd0b5c9f5144a56cc9e0e837ceed1124",
+    "completed-1440.png": "db363779177d79574c9a8ea8ca9fbe1d62eadd55c6a32d5ee66f2ff4e2762c9c"
+  }
+}

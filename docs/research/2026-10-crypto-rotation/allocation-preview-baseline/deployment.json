@@ -1,0 +1,10 @@
+{
+  "cliTarget": "preview",
+  "environment": "Preview",
+  "deploymentId": "dpl_E4nQjJZKKryihZUgN2Kj7effEyPp",
+  "projectId": "prj_FAJItmAzRQEhtdLIcH6NywjKh9Of",
+  "url": "https://wolf-pack-2gtfxnggf-danman60s-projects.vercel.app/rotation",
+  "gitSha": "ad5911caaf473dbfe4f10cd091033f3a7d2b1eb7",
+  "apiTarget": null,
+  "readyState": "READY"
+}

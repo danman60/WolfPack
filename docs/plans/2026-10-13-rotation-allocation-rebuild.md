@@ -53,3 +53,9 @@ Acceptance: compilation and QA pass; credentials remain server-only; original di
 - Reviewed actual desktop/phone images privately delivered Telegram21692/21693. No inventedprofitable example inserted.
 - Bounded historical diagnostic36cycles/259days lost money and lagged unchangedunits; no futureprofitability or validatedforecastedge claimed. Matured prospective browsercheckin awaits natural due time; its math/sourcecutoffs tested independently.
 - Native signed execution remains blocked only on provider/account choice, asyncquestion and PA decisions queued. PaperApply is operational; never report it as fundedexecution. Original wallets, dirty files and processes preserved.
+
+## Owner steering — 2026-10-13T16:43:03.938685-04:00 Eastern
+
+Owner: "Include simple sliders as well as pie graph and they all stay linked ans update in real time". Add four visible sliders for BTC/ETH/LINK/CAD to the existing workspace. Use the same proposed weights for sliders, pie, exact percentages and live after-cost projection; sum100. Redistribute other regions proportionally so each slider can reach its full range. Manual slider edits clear exact-unit HOLD intent. Save an immutable projection at pointer release/keyboard commit, never every movement. Actual holdings remain unchanged until Apply.
+
+Frontend owns existing TSX/CSS only. Acceptance: real mouse/touch/keyboard linkage, total100, immediate pie/percentage/profit feedback, one saved snapshot per committed adjustment, HOLD/manual distinction, real390/1440 mechanical/visual review. No new backend policy/account changes. Existing ad5911c truePreview baseline checks remain useful; final release uses a new tested source commit including sliders. Production remains unchanged until newPreview checks pass.

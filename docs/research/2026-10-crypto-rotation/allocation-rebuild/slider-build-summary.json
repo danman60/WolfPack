@@ -1,0 +1,22 @@
+{
+  "verifiedAt": "2026-10-13T16:52:06.584929-04:00",
+  "build": "PASS",
+  "command": "npm run build -- --webpack",
+  "postBuildTypeScript": "PASS",
+  "postBuildCommand": "npx tsc --noEmit --incremental false",
+  "sourceManifestSha256": "a8985eb58d433ba33a15f0552ecc46bd680a8e0645edff6a5340c8c247950824",
+  "changedSinceSnapshot": [],
+  "changedFromPriorBuild": [
+    "src/components/rotation/AllocationWorkspace.tsx",
+    "src/components/rotation/AllocationWorkspace.module.css"
+  ],
+  "scope": "Four linked native allocation sliders; existing backend unchanged.",
+  "warnings": [
+    "Existing optional MetaMask React Native async-storage warning; build succeeded."
+  ],
+  "includes": [
+    "Four linked allocation sliders",
+    "Scoped visible rails and asset thumbs",
+    "Single-line Reset on phone"
+  ]
+}

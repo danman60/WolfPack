@@ -4,11 +4,12 @@ import argparse,json,sys,time,os
 from pathlib import Path
 sys.path.insert(0,str(Path.home()/'projects/qa-agent'))
 from executors.web import WebExecutor
+from rotation_qa_target import validate_target,protect_context
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--url',required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args()
- assert a.url=='http://127.0.0.1:3218/rotation','Only explicit local endpoint is permitted'
- print('QA target:',a.url,flush=True);a.output.mkdir(parents=True,exist_ok=True);origin=a.url.removesuffix('/rotation');b=WebExecutor();assert b.setup();checks=[]
+ p=argparse.ArgumentParser();p.add_argument('--url',required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--expected-sha');p.add_argument('--protection-file',type=Path);a=p.parse_args()
+ target=validate_target(a.url,a.expected_sha)
+ print('QA target:',a.url,flush=True);a.output.mkdir(parents=True,exist_ok=True);origin=a.url.removesuffix('/rotation');b=WebExecutor();assert b.setup();protectedHeaders=protect_context(b.context,a.url,a.protection_file);checks=[]
  def wait(fn,msg):
   end=time.monotonic()+150
   while time.monotonic()<end:
@@ -17,7 +18,7 @@ def main():
    time.sleep(.3)
   raise AssertionError(msg)
  def get(path):
-  r=b.context.request.get(origin+'/api/rotation/'+path);assert r.ok,(path,r.status,r.text()[:300]);return r.json()
+  r=b.context.request.get(origin+'/api/rotation/'+path,headers=protectedHeaders);assert r.ok,(path,r.status,r.text()[:300]);return r.json()
  def click(label):b.page.get_by_role('button',name=label,exact=True).click()
  def passed(label):checks.append(label);print('PASS',label,flush=True)
  try:
@@ -29,7 +30,7 @@ def main():
    wait(lambda:b.page.get_by_role('button',name='Enter paper demo',exact=True).count(),'Demo button');click('Enter paper demo')
    wait(lambda:'Set your starting point' in b.snapshot(),'Fresh demo setup')
    b.context.storage_state(path=str(state));state.chmod(0o600)
-  wait(lambda:'My plan' in b.snapshot(),'Workspace')
+  wait(lambda:'Set your starting point' in b.snapshot() or 'My plan' in b.snapshot(),'Workspace')
   if get('portfolio')['portfolio'] is None:
    for label,value in {'Portfolio name':'Allocation QA isolated paper','Opening CAD':'10000','Opening BTC':'.1','Opening ETH':'0.1','Opening LINK':'10','Fee (bps)':'20'}.items():b.page.get_by_label(label,exact=False).fill(value)
    b.page.get_by_label('Review cadence',exact=False).filter(visible=True).select_option('weekly');click('Create paper portfolio')
@@ -62,7 +63,7 @@ def main():
    b.set_viewport(width,height);time.sleep(.5);assert b.page.evaluate('document.documentElement.scrollWidth<=document.documentElement.clientWidth');b.page.screenshot(path=str(a.output/f'applied-{width}.png'),full_page=True)
   assert b.navigate(a.url);wait(lambda:'Preview recommended allocation' in b.snapshot(),'Restored workspace');assert get('portfolio')['portfolio']==after
   old=[x for x in get('allocation')['projections'] if x['id']==saved['id']][0];assert old==saved;passed('Reload preserves ledger and immutable original forecast')
-  (a.output/'report.json').write_text(json.dumps({'status':'PASS','url':a.url,'checks':checks,'batchStatus':batch['status'],'projectionId':selected['id'],'batchId':batch['id']},indent=2))
+  (a.output/'report.json').write_text(json.dumps({'status':'PASS','target':target,'url':a.url,'checks':checks,'batchStatus':batch['status'],'projectionId':selected['id'],'batchId':batch['id']},indent=2))
  except Exception as e:
   (a.output/'failure.json').write_text(json.dumps({'error':str(e),'checks':checks},indent=2));(a.output/'failure-snapshot.txt').write_text(b.snapshot());raise
  finally:b.teardown()
