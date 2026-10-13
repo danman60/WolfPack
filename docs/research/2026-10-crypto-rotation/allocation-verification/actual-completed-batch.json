@@ -1,0 +1,85 @@
+{
+  "id": "6540f72f-245b-4df2-970a-a26a77803341",
+  "mode": "paper",
+  "orders": [
+    {
+      "id": "c37fbdb5-77c6-4f3a-a18e-cfa58d34ad6d",
+      "to": "CAD",
+      "from": "BTC",
+      "fills": [
+        {
+          "side": "sell",
+          "asset": "BTC",
+          "price": "118084.03670357",
+          "feeCad": "2.26634913",
+          "grossCad": "1133.17456478",
+          "quantity": "0.00959634"
+        }
+      ],
+      "index": 0,
+      "amount": "0.00959634",
+      "feeCad": 2.26634913,
+      "status": "filled",
+      "filledAt": "2026-10-13T20:13:42.882Z",
+      "clientOrderId": "6540f72f-245b-4df2-970a-a26a77803341:0"
+    },
+    {
+      "id": "b094157d-71c0-458e-a3b2-d43897594962",
+      "to": "CAD",
+      "from": "ETH",
+      "fills": [
+        {
+          "side": "sell",
+          "asset": "ETH",
+          "price": "3557.76",
+          "feeCad": "0.06830188",
+          "grossCad": "34.15093824",
+          "quantity": "0.009599"
+        }
+      ],
+      "index": 1,
+      "amount": "0.009599",
+      "feeCad": 0.06830188,
+      "status": "filled",
+      "filledAt": "2026-10-13T20:13:44.874Z",
+      "clientOrderId": "6540f72f-245b-4df2-970a-a26a77803341:1"
+    },
+    {
+      "id": "fa1eb4c0-a030-4a37-9274-7aa8f5a96e20",
+      "to": "CAD",
+      "from": "LINK",
+      "fills": [
+        {
+          "side": "sell",
+          "asset": "LINK",
+          "price": "18.29",
+          "feeCad": "0.03528507",
+          "grossCad": "17.642534",
+          "quantity": "0.9646"
+        }
+      ],
+      "index": 2,
+      "amount": "0.9646",
+      "feeCad": 0.03528507,
+      "status": "filled",
+      "filledAt": "2026-10-13T20:14:13.074Z",
+      "clientOrderId": "6540f72f-245b-4df2-970a-a26a77803341:2"
+    }
+  ],
+  "status": "completed",
+  "costsCad": 4.5466487916019105,
+  "revision": 6,
+  "createdAt": "2026-10-13T20:13:39.792Z",
+  "updatedAt": "2026-10-13T20:14:11.523Z",
+  "maxCostCad": 5.71453851148477,
+  "pauseReason": null,
+  "portfolioId": "1580220d-7020-43e7-b70d-1d9d6932611a",
+  "projectionId": "105623fc-c302-4d7e-92c9-e75c5d8850e8",
+  "targetWeights": {
+    "BTC": 0.47815999779137097,
+    "CAD": 0.5,
+    "ETH": 0.014422662797362049,
+    "LINK": 0.0074173394112669756
+  },
+  "expectedPortfolioRevision": 3
+}

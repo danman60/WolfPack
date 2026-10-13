@@ -1,0 +1,67 @@
+{
+  "status": "PASS",
+  "url": "http://127.0.0.1:3218/rotation",
+  "checks": [
+    "Duplicate Apply returns same completed batch without duplicate ledger",
+    "Cross-origin mutation rejected",
+    "Other owner cannot retrieve/apply/advance/check in another member records",
+    "Stale portfolio revision rejected; current projection saved",
+    "Untrusted live-mode fields cannot enable funded execution; duplicate active Apply idempotent",
+    "Pause persists without fills; stale batch revision rejected; resume succeeds",
+    "One actual paper fill persists; stopping remaining orders preserves filled ledger and prevents further fills"
+  ],
+  "finalBatch": {
+    "id": "5c3d999d-852c-4b44-bf67-232111b9d82e",
+    "mode": "paper",
+    "orders": [
+      {
+        "id": "928d9cc5-43a5-49cf-8793-67190da23ee3",
+        "to": "ETH",
+        "from": "CAD",
+        "fills": [
+          {
+            "side": "buy",
+            "asset": "ETH",
+            "price": "3574.25",
+            "feeCad": "14.23854672",
+            "grossCad": "7119.27335775",
+            "quantity": "1.991823"
+          }
+        ],
+        "index": 0,
+        "amount": "7133.51190447",
+        "feeCad": 14.23854672,
+        "status": "filled",
+        "filledAt": "2026-10-13T20:18:52.777Z",
+        "clientOrderId": "5c3d999d-852c-4b44-bf67-232111b9d82e:0"
+      },
+      {
+        "id": "78f8743c-e315-41ef-a5af-830cd2d26803",
+        "to": "LINK",
+        "from": "CAD",
+        "index": 1,
+        "amount": "7303.74897126",
+        "status": "queued",
+        "clientOrderId": "5c3d999d-852c-4b44-bf67-232111b9d82e:1"
+      }
+    ],
+    "status": "cancelled",
+    "costsCad": 33.62894362500083,
+    "revision": 6,
+    "createdAt": "2026-10-13T20:18:49.882Z",
+    "updatedAt": "2026-10-13T20:18:53.856Z",
+    "maxCostCad": 95.42160887274652,
+    "pauseReason": "Owner stopped remaining trades. Confirmed fills remain in the ledger.",
+    "portfolioId": "1580220d-7020-43e7-b70d-1d9d6932611a",
+    "projectionId": "7c204c9e-db36-4ffc-89db-08c4247fc265",
+    "targetWeights": {
+      "BTC": 0.33333333,
+      "CAD": 0,
+      "ETH": 0.33333333,
+      "LINK": 0.33333334
+    },
+    "expectedPortfolioRevision": 5
+  },
+  "ledgerRevisionBefore": 4,
+  "ledgerRevisionAfter": 5
+}

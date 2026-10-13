@@ -1,0 +1,95 @@
+{
+  "id": "1580220d-7020-43e7-b70d-1d9d6932611a",
+  "name": "Allocation QA isolated paper",
+  "events": [
+    {
+      "at": "2026-10-13T20:13:28.744Z",
+      "id": "c1ff9371-926e-44f9-80b0-4e5e4a175d19",
+      "kind": "opening",
+      "feeCad": "0",
+      "balances": {
+        "BTC": "0.1",
+        "CAD": "10000",
+        "ETH": "0.1",
+        "LINK": "10"
+      },
+      "description": "Paper opening balances; crypto basis set to opening CAD midpoint.",
+      "realizedPnlCad": "0"
+    },
+    {
+      "at": "2026-10-13T20:13:42.882Z",
+      "id": "c37fbdb5-77c6-4f3a-a18e-cfa58d34ad6d",
+      "kind": "shift",
+      "feeCad": "2.26634913",
+      "balances": {
+        "BTC": "0.09040366",
+        "CAD": "11130.90821565",
+        "ETH": "0.1",
+        "LINK": "10"
+      },
+      "description": "Paper shift 0.00959634 BTC \u2192 1130.90821565 CAD.",
+      "realizedPnlCad": "-4.27714986"
+    },
+    {
+      "at": "2026-10-13T20:13:44.874Z",
+      "id": "b094157d-71c0-458e-a3b2-d43897594962",
+      "kind": "shift",
+      "feeCad": "0.06830188",
+      "balances": {
+        "BTC": "0.09040366",
+        "CAD": "11164.99085201",
+        "ETH": "0.090401",
+        "LINK": "10"
+      },
+      "description": "Paper shift 0.009599 ETH \u2192 34.08263636 CAD.",
+      "realizedPnlCad": "-0.16721957"
+    },
+    {
+      "at": "2026-10-13T20:14:13.074Z",
+      "id": "fa1eb4c0-a030-4a37-9274-7aa8f5a96e20",
+      "kind": "shift",
+      "feeCad": "0.03528507",
+      "balances": {
+        "BTC": "0.09040366",
+        "CAD": "11182.59810094",
+        "ETH": "0.090401",
+        "LINK": "9.0354"
+      },
+      "description": "Paper shift 0.9646 LINK \u2192 17.60724893 CAD.",
+      "realizedPnlCad": "-0.10280707"
+    }
+  ],
+  "feeBps": 20,
+  "cadence": "weekly",
+  "feesCad": "2.36993608",
+  "opening": {
+    "BTC": "0.1",
+    "CAD": "10000",
+    "ETH": "0.1",
+    "LINK": "10"
+  },
+  "version": 1,
+  "balances": {
+    "BTC": "0.09040366",
+    "CAD": "11182.59810094",
+    "ETH": "0.090401",
+    "LINK": "9.0354"
+  },
+  "baseline": {
+    "BTC": "0.1",
+    "CAD": "10000",
+    "ETH": "0.1",
+    "LINK": "10"
+  },
+  "basisCad": {
+    "BTC": "10694.17213449",
+    "CAD": "0",
+    "ETH": "322.55664407",
+    "LINK": "165.889944"
+  },
+  "revision": 3,
+  "createdAt": "2026-10-13T20:13:28.744Z",
+  "netFlowsCad": "0",
+  "realizedPnlCad": "-4.5471765",
+  "initialValueCad": "22369.764"
+}

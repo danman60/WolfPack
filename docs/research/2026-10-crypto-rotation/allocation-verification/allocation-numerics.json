@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "arbitrary_weight_cases": 7,
+  "maximum_equity_error_vs_independent_linear_solution": 4.3748514144681394e-08,
+  "checks": [
+    "all eight trade-sign regions solved independently",
+    "actual fill cash and units reconciled",
+    "matched unchanged-unit baseline",
+    "fees/spread/slippage counted once",
+    "deterministic repeated browser/server pure calculation",
+    "source portfolio unchanged",
+    "invalid weights rejected",
+    "insufficient depth infeasible"
+  ],
+  "scope": "Synthetic accounting controls only; no profitable forecasting claim."
+}

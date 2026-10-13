@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "genuineSavedHistoryRows": 719,
+  "liveSavedForecastMaxPythonError": 3.729655473350135e-17,
+  "liveBatchOrders": 3,
+  "liveBatchUnitsAndCashIndependentlyReconciled": true,
+  "actualFeesCad": 2.36993608,
+  "scope": "Actual local UI saved forecast and completed paper batch; observed public prices, no funded trades."
+}

@@ -1,0 +1,58 @@
+{
+  "reviewedAt": "2026-10-13T16:19:56.398037-04:00",
+  "url": "http://localhost:3218/rotation",
+  "screenshots": [
+    "/home/danman60/.claude/shots/pending/wolfpack-allocation-handles-final-390-20261013T201904.png",
+    "/home/danman60/.claude/shots/pending/wolfpack-allocation-handles-final-1440-20261013T201904.png",
+    "/home/danman60/.claude/shots/pending/wolfpack-allocation-phone-final-390-20261013T201931.png"
+  ],
+  "mechanical": "PASS all3 screenshots",
+  "visual": "PASS",
+  "checks": [
+    "Full390/1440 composed layout retains readable colors, six observed charts, truthful sentiment status, primarypie/recommendation.",
+    "Actual390x844 phone viewport inspected at native size: readable heading/units/percentages, four separated handles with leaders, no clipped horizontal layout.",
+    "QA Agent DOM measurement nearest visible handle centers31.4107px versus10.4334px diameter; previously coincident empty-asset handles separated.",
+    "No ledger or preference mutations during capture."
+  ],
+  "geometry": {
+    "points": [
+      {
+        "asset": "BTC allocation boundary",
+        "x": 100.48360061645508,
+        "y": 642.8819885253906,
+        "width": 10.433433532714844
+      },
+      {
+        "asset": "ETH allocation boundary",
+        "x": 131.80292892456055,
+        "y": 640.4874267578125,
+        "width": 10.433448791503906
+      },
+      {
+        "asset": "LINK allocation boundary",
+        "x": 160.5804443359375,
+        "y": 653.0766906738281,
+        "width": 10.433441162109375
+      },
+      {
+        "asset": "CAD allocation boundary",
+        "x": 180.07917022705078,
+        "y": 677.7025451660156,
+        "width": 10.433425903320312
+      }
+    ],
+    "separations": [
+      31.410734657591878,
+      60.955414664648536,
+      86.8787998673909,
+      31.41074591917758,
+      60.955397730084925,
+      31.4107150642446
+    ]
+  },
+  "sourceHashes": {
+    "app/src/components/rotation/AllocationWorkspace.tsx": "eca9232025fde4b6259f6e283c4b0b83d0d1b121a6af14173b6c76d5126dce61",
+    "app/src/components/rotation/AllocationWorkspace.module.css": "c6a1b189ce8379b00aa0a7bf0ee93956464a52badccb87619f9647448e53266d",
+    "app/src/app/rotation/page.tsx": "6f02c002f9067b063c10c37a8ace77dd096a40af400ef24f68e7f52a2064d4c5"
+  }
+}

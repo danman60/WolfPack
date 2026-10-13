@@ -1,0 +1,24 @@
+{
+  "reviewedAt": "2026-10-13T16:21:58.613384-04:00",
+  "verdict": "PASS",
+  "screenshots": [
+    {
+      "path": "/tmp/wolfpack-allocation-delivery/completed-390.png",
+      "sha256": "ad18e45301c6578c7811192aa51fc08faeb479f4150b74319bfd16349f2f3afc"
+    },
+    {
+      "path": "/tmp/wolfpack-allocation-delivery/completed-1440.png",
+      "sha256": "90e7a7d5009265f0c0fcbcc70740463782cfa8c236c4cc8663f10f3f9c75f810"
+    }
+  ],
+  "checks": [
+    "Exact390/1440 images inspected; full top heading present after fresh-context scroll reset.",
+    "Current held units reflect three completed paper orders; no real exchange connection claimed.",
+    "Original saved forecast remains -115.77CAD versus original units, total projected loss-85.79CAD; negative outcome not hidden or relabeled as profit.",
+    "Batch completed and filled orders visible; Apply disabled, Nextcheckin available.",
+    "Four zero-weight-adjacent handles distinct with leaders; six readable observed pair charts.",
+    "Mixed/unavailable sentiment gray, negative news orange, positive green; real coverage limitations remain visible.",
+    "No horizontal clipping, broken lines, overlapping text or inconsistent palette detected."
+  ],
+  "deliveryQualification": "Paper execution of a deliberate custom QA allocation. Not a recommendation to copy these holdings or evidence of forecast profitability."
+}

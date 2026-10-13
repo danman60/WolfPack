@@ -1,0 +1,26 @@
+{
+  "reviewedAt": "2026-10-13T16:33:09.345663-04:00",
+  "verdict": "PASS",
+  "screenshots": [
+    {
+      "path": "/tmp/wolfpack-allocation-hold-delivery/completed-390.png",
+      "sha256": "6e2b2ce5dfbccc1ba5e93e45d53a6b01b819e9ffb5e36a75a1704a5f26b53ff9"
+    },
+    {
+      "path": "/tmp/wolfpack-allocation-hold-delivery/completed-1440.png",
+      "sha256": "69487a6ef527c6ddaff15a0f3c7a3e5cf69632f02f3164e72865f85acbb7f417"
+    }
+  ],
+  "checks": [
+    "Exact390/1440 images inspected: completeheading, legiblelayout, no clipped or overlapping content.",
+    "Genuine HOLD recommendation now has preservedoriginalunits, zeroorders, zero modeledcost, zeroextra projectedprofit versusHOLD.",
+    "Saved originalforecast remains +2.88CAD total with matchedHOLD+2.88CAD; displayed as uncertainforecast, not realizedprofit.",
+    "Batch completed text explicitly says HOLD preserves every unit; currentquotes timestamp newer than frozenprojection.",
+    "Four boundaryhandles distinguishable; six observedcharts and truthful TA/news color semantics visible."
+  ],
+  "sourceHashes": {
+    "app/src/components/rotation/AllocationWorkspace.tsx": "b954ed8b66e422fe2094665f504fcd823ed149f92da6f0f0c25af7d27ff4308b",
+    "app/src/components/rotation/AllocationWorkspace.module.css": "c6a1b189ce8379b00aa0a7bf0ee93956464a52badccb87619f9647448e53266d",
+    "app/src/app/rotation/page.tsx": "fc5e3ec2e12f23ebbfc78361ed8ba232461b50720c908cb34650c0c944fad528"
+  }
+}

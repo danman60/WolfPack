@@ -1,0 +1,17 @@
+{
+  "reviewedAt": "2026-10-13T16:20:48.595171-04:00",
+  "screenshots": [
+    "/tmp/wolfpack-allocation-final-v3/final-1440.png",
+    "/tmp/wolfpack-allocation-final-v3/final-390.png"
+  ],
+  "desktop": "PASS",
+  "phone": "Recapture requested: upper heading omitted by retained scroll position, not present in earlier shot captures.",
+  "state": "Saved custom negative-return draft after zero-weight gesture tests. Not an executed app recommendation.",
+  "checks": [
+    "Distinct fanned handles and true-arc leaders visible.",
+    "Current held units stay distinct from zero-target BTC/ETH weights.",
+    "Negative total and incremental forecast shown honestly.",
+    "Six real pair charts, TA/news labels and current/proposed separation readable."
+  ],
+  "delivery": "Use completed-batch screenshot separately; do not label this test draft as app advice."
+}

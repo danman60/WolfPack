@@ -1,0 +1,33 @@
+{
+  "configuration": {
+    "cadence": "weekly",
+    "cryptoBudgetPercent": 60,
+    "feeBps": 20,
+    "adversePriceBps": 10,
+    "initialWeights": {
+      "CAD": 0.4,
+      "BTC": 0.2,
+      "ETH": 0.2,
+      "LINK": 0.2
+    }
+  },
+  "firstCompletedClose": "2026-01-28T00:00:00.000Z",
+  "lastCompletedClose": "2026-10-13T00:00:00.000Z",
+  "continuousHoldEndingCad": 9779.631172860372,
+  "strategyMaximumDrawdown": 0.18102010932102053,
+  "holdMaximumDrawdown": 0.23215900370643128,
+  "noInterestCashEndingCad": 10000.00054467586,
+  "continuousAdvantageCad": -688.65374711195,
+  "status": "PASS",
+  "cycles": 36,
+  "days": 259,
+  "independentForecastFits": 36,
+  "prefixAndFuturePerturbation": "PASS",
+  "eventWealthAndMatchedBaseline": "PASS",
+  "startingValueCad": 10000.00054467586,
+  "endingValueCad": 9090.977425748422,
+  "feesCad": "19.41023539",
+  "sourceSha256": "b07ba2cc72df5f3644f1c77221f506cf98323f873fa0749d14f1a5a00b0b2b21",
+  "scope": "One declared weekly60% risk scenario, genuine most-recent719 Coinbase/BoC closes. Modeled10bps adverse fills and20bps fee; no historical order-book depth or sentiment claim; not an optimization.",
+  "holdCyclesWithZeroFeesAndExactNextCloseUnits": 34
+}

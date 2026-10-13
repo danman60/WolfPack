@@ -1,0 +1,24 @@
+{
+  "reviewedAt": "2026-10-13T16:28:30.217540-04:00",
+  "verdict": "PASS",
+  "screenshots": [
+    {
+      "path": "/tmp/wolfpack-allocation-delta-delivery/completed-390.png",
+      "sha256": "4fba46609745a42ed4c1abd22d42216a4b54d0e8fcb10aa7c60333841464a312"
+    },
+    {
+      "path": "/tmp/wolfpack-allocation-delta-delivery/completed-1440.png",
+      "sha256": "1f3f0175a0df88c1d7cb95732af73ce7a4d3e44b2cae8d8704cb47dfda1af858"
+    }
+  ],
+  "checks": [
+    "Exact completed390/1440 images retain completeheading, portfolio/proposed rings, stable saved forecast and completed3order batch.",
+    "Mainmarket timestamp now current parent quote; saved forecast still explicitlyoriginalbaseline.",
+    "Six observed paircharts, honest sentimentcoverage, no clipped or overlapping text."
+  ],
+  "integration": "Parent25second marketpoll supplies latestquote;5minute allocation/analysis refresh preserves draft/saved/batch. Separate independent QA verifies realquote polls/offline recovery/draft preservation.",
+  "sourceHashes": {
+    "app/src/components/rotation/AllocationWorkspace.tsx": "c1bd027bb78ba54a5107ab788dc48ed1a014e0336e2ce2583e43afe2c28c9593",
+    "app/src/app/rotation/page.tsx": "fc5e3ec2e12f23ebbfc78361ed8ba232461b50720c908cb34650c0c944fad528"
+  }
+}

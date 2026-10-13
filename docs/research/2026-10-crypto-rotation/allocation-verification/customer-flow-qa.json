@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "url": "http://127.0.0.1:3218/rotation",
+  "checks": [
+    "Decimal .1 and 0.1 opening balances saved through customer form",
+    "Six observed-price pairs and real dated news analysis",
+    "Saved risk and cost preferences through primary controls",
+    "Recommendation saves frozen forecast, actual holdings, market and analysis without a trade",
+    "Not-due check-in displays frozen forecast without invented outcome",
+    "Exact-percent override autosaves; original snapshot remains immutable",
+    "Customer Apply created paper batch and reached completed",
+    "Reload preserves ledger and immutable original forecast"
+  ],
+  "batchStatus": "completed",
+  "projectionId": "105623fc-c302-4d7e-92c9-e75c5d8850e8",
+  "batchId": "6540f72f-245b-4df2-970a-a26a77803341"
+}

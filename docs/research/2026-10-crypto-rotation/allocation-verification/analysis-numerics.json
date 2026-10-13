@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "genuine_history_pairs": 6,
+  "indicator_values_compared": 66,
+  "maximum_absolute_indicator_error": 4.3655745685100555e-11,
+  "controls": [
+    "flat/rising/falling RSI",
+    "latest excluded from prior closing zones",
+    "future observation rejected",
+    "date gap rejected",
+    "explicit headline asset attribution",
+    "future/stale/foreign-host headline exclusion",
+    "deduplication",
+    "unavailable asset score remains null",
+    "negation handling",
+    "malformed RSS rejected"
+  ],
+  "scope": "Numerical and parsing verification, not predictive performance evidence."
+}

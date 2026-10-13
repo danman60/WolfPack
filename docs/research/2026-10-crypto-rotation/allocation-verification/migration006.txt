@@ -1,0 +1,12 @@
+Verified 2026-10-13T16:12:43.723655-04:00 Eastern
+Source: supabase/migrations/202610130006_rotation_allocation_batches.sql
+Applied as workshop_owner to workshop on netcup-db, ON_ERROR_STOP, explicit BEGIN/COMMIT.
+Version: 202610130006_rotation_allocation_batches
+wpr_batches row-level security: enabled; force RLS: false
+Owner-select policy: wpr_batch_owner
+Table SELECT: anon false / authenticated true
+Table INSERT: authenticated false
+RPC EXECUTE: anon false / authenticated false / service_role true
+Batch rows before QA: 0
+New unique per-owner projection batch and immutable per-owner projection outcome indexes.
+Existing wp_* wallets/tables untouched.

@@ -1,0 +1,45 @@
+{
+  "headline": "Keep your current holdings",
+  "legs": [
+    {
+      "id": "06c70e0c-c7da-4589-8f05-0132a95dd89b",
+      "to": "CAD",
+      "from": "LINK",
+      "fills": [
+        {
+          "side": "sell",
+          "asset": "LINK",
+          "price": "18.25",
+          "feeCad": "0.00055115",
+          "grossCad": "0.275575",
+          "quantity": "0.0151"
+        }
+      ],
+      "amount": "0.0151",
+      "feeCad": 0.00055115,
+      "grossCad": 0.275575,
+      "received": "0.27502385"
+    }
+  ],
+  "unchangedUnits": false,
+  "startingBalances": {
+    "BTC": "0",
+    "CAD": "21176.35497418",
+    "ETH": "0",
+    "LINK": "57.8791"
+  },
+  "plannedBalances": {
+    "BTC": "0",
+    "CAD": "21176.62999803",
+    "ETH": "0",
+    "LINK": "57.864"
+  },
+  "actualPortfolioUnchanged": true,
+  "weights": {
+    "BTC": 0,
+    "CAD": 0.952315536572848,
+    "ETH": 0,
+    "LINK": 0.04768446342715209
+  },
+  "id": "0cd3850e-5760-4e8b-b7a9-38ffe4e7c47f"
+}

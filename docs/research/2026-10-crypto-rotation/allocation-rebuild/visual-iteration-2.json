@@ -1,0 +1,23 @@
+{
+  "reviewedAt": "2026-10-13T16:15:15.555878-04:00",
+  "url": "http://localhost:3218/rotation",
+  "screenshots": [
+    "/home/danman60/.claude/shots/pending/wolfpack-allocation-second-390-20261013T201423.png",
+    "/home/danman60/.claude/shots/pending/wolfpack-allocation-second-1440-20261013T201423.png"
+  ],
+  "mechanical": "PASS both sizes",
+  "visual": "PASS",
+  "checks": [
+    "390px and1440px no off-page layout, clipped text, broken charts or contrast failures.",
+    "Portfolio pie and single recommendation dominate; legacy research/warnings/revision controls now collapsed.",
+    "All six observed pair charts visible in responsive grid, closing support/resistance shaded, TA mixed gray, BTC negative news orange, ETH positive green, missing LINK coverage gray.",
+    "Unchanged HOLD zero-cost forecast now renders without false infeasibility error.",
+    "No illustrative data or invented returns introduced."
+  ],
+  "sourceHashes": {
+    "app/src/components/rotation/AllocationWorkspace.tsx": "c56b55cca5d2981f825f29b99d9422bfa40526f5953e1afafae267fbf66a3e25",
+    "app/src/components/rotation/AllocationWorkspace.module.css": "f95f611187c3dd29501fd809750b7a1bdfd6551e934053ca2b1b790cc7def013",
+    "app/src/app/rotation/page.tsx": "6f02c002f9067b063c10c37a8ace77dd096a40af400ef24f68e7f52a2064d4c5"
+  },
+  "note": "Hash includes subsequent text-only correction of frozen forecast comparator to original units; HOLD screenshot has no active saved batch so unchanged visual. Applied batch screenshots are separately owned by QA."
+}

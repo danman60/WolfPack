@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "checks": [
+    "Actual browser offline interval produces stale valuation warning",
+    "Save/apply/recommendation preview gated by current quote freshness",
+    "Frozen saved forecast unaffected by offline state",
+    "Real automatic25second market poll recovers after reconnect"
+  ],
+  "scope": "Actual network availability changed only in isolated QA browser context; market responses were not replaced."
+}

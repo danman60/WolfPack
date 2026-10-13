@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "checks": [
+    "mouse drag from all-CAD with four separate handles saves without moving actual holdings",
+    "touch drag from all-CAD with four separate handles saves without moving actual holdings"
+  ],
+  "screenshots": [
+    {
+      "url": "http://127.0.0.1:3218/rotation",
+      "width": 390,
+      "pass": true,
+      "fail": [],
+      "warn": []
+    },
+    {
+      "url": "http://127.0.0.1:3218/rotation",
+      "width": 1440,
+      "pass": true,
+      "fail": [],
+      "warn": []
+    }
+  ]
+}

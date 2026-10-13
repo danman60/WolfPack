@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "checks": [
+    "Real forecast refresh preserves completed batch and its frozen displayed estimate",
+    "Two observed market polls update current marked value while pre-Apply forecast remains frozen",
+    "Unsaved owner weight draft survives real workspace refresh without autosave or reset"
+  ],
+  "marketSnapshotsObserved": [
+    {
+      "id": "ac3eb9cb-58b6-4072-a8d9-8a95020d63fa",
+      "fetchedAt": "2026-10-13T20:25:07.683Z"
+    },
+    {
+      "id": "390a73db-5e90-442c-852a-987faec6b6da",
+      "fetchedAt": "2026-10-13T20:25:32.431Z"
+    },
+    {
+      "id": "c31c5590-a5b0-4cae-ab4b-7703cdf1c422",
+      "fetchedAt": "2026-10-13T20:25:57.484Z"
+    },
+    {
+      "id": "22d87377-6735-49f1-8ef8-17520045ed0f",
+      "fetchedAt": "2026-10-13T20:26:23.190Z"
+    }
+  ],
+  "verifiedCurrentValueCad": 22237.85766818,
+  "latestSourceMarketId": "22d87377-6735-49f1-8ef8-17520045ed0f",
+  "savedBeforeApplyId": "21c5f20b-993b-4a86-a523-b2130ebbabe2",
+  "finalSavedId": "e31765c6-6428-465c-9b4a-af9ccaafae1b",
+  "automaticForecastTimer": "Source registers same tested refresh callback every300000ms; five-minute wall-clock firing not claimed."
+}

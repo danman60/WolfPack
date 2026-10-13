@@ -1,0 +1,76 @@
+{
+  "status": "PASS",
+  "url": "http://127.0.0.1:3218/rotation",
+  "checks": [
+    "Duplicate Apply returns same completed batch without duplicate ledger",
+    "Cross-origin mutation rejected",
+    "Other owner cannot retrieve/apply/advance/check in another member records",
+    "Stale portfolio revision rejected; current projection saved",
+    "Untrusted live-mode fields cannot enable funded execution; duplicate active Apply idempotent",
+    "Pause persists without fills; stale batch revision rejected; resume succeeds",
+    "One actual paper fill persists; stopping remaining orders preserves filled ledger and prevents further fills"
+  ],
+  "finalBatch": {
+    "id": "28b2d099-0ec4-473d-82e9-231f5f2483df",
+    "mode": "paper",
+    "orders": [
+      {
+        "id": "caf74b3e-c4b3-4936-9e2f-0c4bffd24a24",
+        "to": "CAD",
+        "from": "BTC",
+        "fills": [
+          {
+            "side": "sell",
+            "asset": "BTC",
+            "price": "117987.32411087",
+            "feeCad": "6.52237232",
+            "grossCad": "3261.18615665",
+            "quantity": "0.02764014"
+          }
+        ],
+        "index": 0,
+        "amount": "0.02764014",
+        "feeCad": 6.52237232,
+        "status": "filled",
+        "filledAt": "2026-10-13T20:15:36.537Z",
+        "clientOrderId": "28b2d099-0ec4-473d-82e9-231f5f2483df:0"
+      },
+      {
+        "id": "af1dcb87-0aaf-4aa2-b7c3-804630813249",
+        "to": "ETH",
+        "from": "CAD",
+        "index": 1,
+        "amount": "7133.99171392",
+        "status": "queued",
+        "clientOrderId": "28b2d099-0ec4-473d-82e9-231f5f2483df:1"
+      },
+      {
+        "id": "9d90ea99-f9b8-4415-ad55-32af94dfa890",
+        "to": "LINK",
+        "from": "CAD",
+        "index": 2,
+        "amount": "7303.29367549",
+        "status": "queued",
+        "clientOrderId": "28b2d099-0ec4-473d-82e9-231f5f2483df:2"
+      }
+    ],
+    "status": "cancelled",
+    "costsCad": 13.620384847501555,
+    "revision": 6,
+    "createdAt": "2026-10-13T20:15:33.734Z",
+    "updatedAt": "2026-10-13T20:15:37.453Z",
+    "maxCostCad": 113.80374011549793,
+    "pauseReason": "Owner stopped remaining trades. Confirmed fills remain in the ledger.",
+    "portfolioId": "1580220d-7020-43e7-b70d-1d9d6932611a",
+    "projectionId": "8ea96272-164e-45b9-95b2-8b900523d707",
+    "targetWeights": {
+      "BTC": 0.33333333,
+      "CAD": 0,
+      "ETH": 0.33333333,
+      "LINK": 0.33333334
+    },
+    "expectedPortfolioRevision": 4
+  },
+  "ledgerRevisionBefore": 3,
+  "ledgerRevisionAfter": 4
+}

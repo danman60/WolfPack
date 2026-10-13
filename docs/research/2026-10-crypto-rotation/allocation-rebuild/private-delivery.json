@@ -1,0 +1,17 @@
+{
+  "deliveredAtEastern": "2026-10-13T16:25:07.756053-04:00",
+  "method": "tg-dm helper with explicit private delivery; reviewed measured PASS before send",
+  "messages": [
+    {
+      "messageId": 21692,
+      "file": "wolfpack-allocation-handles-final-1440-20261013T201904.png",
+      "scope": "real local paper account; genuine HOLD recommendation"
+    },
+    {
+      "messageId": 21693,
+      "file": "wolfpack-allocation-phone-final-390-20261013T201931.png",
+      "scope": "390x844 readable viewport"
+    }
+  ],
+  "nativeExecution": "No private exchange connected; provider choice pending."
+}

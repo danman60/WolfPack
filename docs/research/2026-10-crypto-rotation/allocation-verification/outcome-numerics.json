@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "checks": [
+    "deposit and withdrawal excluded from profit in both paths",
+    "one millisecond after due trade excluded",
+    "unchanged units produce zero advantage despite deposit",
+    "partial/full/not executed classified separately",
+    "hypothetical target distinct from actual wealth",
+    "original frozen forecast unchanged",
+    "wrong day and not-due outcomes rejected",
+    "Apply expiry rejects due instant, later and invalid dates; permits due minus1ms",
+    "Explicitly applied zero-order HOLD fully executed; unapplied or after-due HOLD not executed"
+  ],
+  "scope": "Explicit synthetic arithmetic controls, not historical market returns."
+}

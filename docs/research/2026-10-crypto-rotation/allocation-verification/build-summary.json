@@ -1,0 +1,27 @@
+{
+  "verifiedAt": "2026-10-13T16:32:50.417765-04:00",
+  "build": "PASS",
+  "command": "npm run build -- --webpack",
+  "postBuildTypeScript": "PASS",
+  "postBuildCommand": "npx tsc --noEmit --incremental false",
+  "isolatedDirectory": "/tmp/wolfpack-allocation-build-szbi46dn",
+  "sourceManifestSha256": "d10594a3e5710f3495004b4e8531a211b6169cda78a2ca3b946ff1400e632170",
+  "changedSinceSnapshot": [],
+  "warnings": [
+    "Existing optional MetaMask React Native async-storage module warning; compilation succeeded."
+  ],
+  "secretScan": {
+    "staticFiles": 162,
+    "secretValueMatches": 0
+  },
+  "migrationSha256": "5b7326cbbf2a7693b8e832c12134e5b82c3d88837e315ab02cdb5da0de6132e9",
+  "scope": "Paper rotation account; native exchange disconnected; no funded orders tested.",
+  "includes": [
+    "Atomic fill commit recovery fix",
+    "Projection portfolio/revision binding",
+    "Projection due-date Apply and advancement guard",
+    "Live market polling and immutable saved-projection display",
+    "Distinct accessible zero-weight handles",
+    "Explicit preserve-units HOLD through save/Apply/replay/check-in"
+  ]
+}
