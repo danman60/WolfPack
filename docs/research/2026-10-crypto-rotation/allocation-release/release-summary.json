@@ -1,0 +1,21 @@
+{
+  "releasedAt": "2026-10-13T17:01:14.792039-04:00",
+  "stableUrl": "https://wolf-pack-eight.vercel.app",
+  "candidateUrl": "https://wolf-pack-8mevbgx0k-danman60s-projects.vercel.app",
+  "deploymentId": "dpl_4mrKTbkHstowKYn8UHSBLrN4ffWk",
+  "state": "READY",
+  "target": "production",
+  "projectId": "prj_FAJItmAzRQEhtdLIcH6NywjKh9Of",
+  "gitSha": "079ccbfa06dea741bf771e6bd2d5402a3b062238",
+  "sourceManifestSha256": "a8985eb58d433ba33a15f0552ecc46bd680a8e0645edff6a5340c8c247950824",
+  "verification": [
+    "Alias set returned success for exact stable host and candidate",
+    "Fresh vercel inspect of stable host resolved exact production deployment ID",
+    "Independent read-only production candidate smoke passed before alias assignment"
+  ],
+  "stableReadOnlySmoke": "pending reviewer",
+  "notes": [
+    "Deployment built from clean detached exact-commit worktree with --prod --skip-domain before stable alias assignment.",
+    "No financial mutation performed by release operation."
+  ]
+}

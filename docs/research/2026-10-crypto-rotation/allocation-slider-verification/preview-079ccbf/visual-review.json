@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "gitSha": "079ccbfa06dea741bf771e6bd2d5402a3b062238",
+  "review": "Exact deployed390 and1440 screenshots inspected. Four visible range rails and colored knobs; full headings, readable saved forecast and cost comparison, one-word Reset, all6 real charts. No clipping or overlap. Custom owner draft differs visibly from model recommendation and retains negative advantage.",
+  "images": {
+    "sliders-1440.png": "043db53ed5e2f95d6c4688e37f4b0f89152c4da569a30f7464f44908fafa48b4",
+    "sliders-390.png": "d9eb4ec13818457794337d758b5e13f2cf8e686170c147221c837248203cdb32"
+  }
+}

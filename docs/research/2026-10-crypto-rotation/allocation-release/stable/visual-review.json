@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "url": "https://wolf-pack-eight.vercel.app/rotation",
+  "deploymentId": "dpl_4mrKTbkHstowKYn8UHSBLrN4ffWk",
+  "gitSha": "079ccbfa06dea741bf771e6bd2d5402a3b062238",
+  "review": "Exact stable390 and1440 composed pages inspected. Four real sliders with visible rails, linked pie, current HOLD estimate with costs, all6 charts. Full headers and controls readable; no overflow/clipping. No financial interaction.",
+  "candidateAndStableRecordHashesIdentical": true,
+  "images": {
+    "production-390.png": "6cbd3509f10d1f53fec829a3c6b8b26789c98e99e89c7a2da255d1518d31e882",
+    "production-1440.png": "1581b5e22f3a888645be9cd7705bb8cbce9a44b83877296a383987ee15435f83"
+  }
+}

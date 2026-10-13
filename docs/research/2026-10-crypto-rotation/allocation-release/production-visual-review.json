@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "sourceCommit": "079ccbfa06dea741bf771e6bd2d5402a3b062238",
+  "review": "Exact production candidate390 and1440 composed pages inspected. Four sliders and their rails visible, full headings, current HOLD preview, honest disabled unsaved Apply, all6 observed charts, no clipped or overlapping text. No financial controls moved or activated.",
+  "images": {
+    "production-390.png": "6a6459cb4c7a39631138e277bba1d5a479a2ff1f786fb74fdf0169a2cec5056b",
+    "production-1440.png": "6006552bde40bbf075a7863367fbb148fda15456f0b083617ea404a1c22d6612"
+  }
+}

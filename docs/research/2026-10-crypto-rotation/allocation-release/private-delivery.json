@@ -1,0 +1,17 @@
+{
+  "deliveredAtEastern": "2026-10-13T17:05:05.460448-04:00",
+  "method": "tg-dm helper confirmed private delivery after mechanical and root visual PASS",
+  "messages": [
+    {
+      "messageId": 21694,
+      "viewport": 1440
+    },
+    {
+      "messageId": 21695,
+      "viewport": 390
+    }
+  ],
+  "url": "https://wolf-pack-eight.vercel.app/rotation",
+  "sourceCommit": "079ccbfa06dea741bf771e6bd2d5402a3b062238",
+  "scope": "Actual stable production screenshots of an isolated paper account; no funded execution claimed."
+}

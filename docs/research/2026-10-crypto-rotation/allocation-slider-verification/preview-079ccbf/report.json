@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "target": {
+    "cliTarget": "preview",
+    "environment": "Preview",
+    "deploymentId": "dpl_2pNpha3z41RNh1StAutYsjsxKi9x",
+    "projectId": "prj_FAJItmAzRQEhtdLIcH6NywjKh9Of",
+    "url": "https://wolf-pack-lx7bmrygs-danman60s-projects.vercel.app/rotation",
+    "gitSha": "079ccbfa06dea741bf771e6bd2d5402a3b062238",
+    "apiTarget": null,
+    "readyState": "READY"
+  },
+  "checks": [
+    "CAD keyboard linked pie and weights; one save; HOLD cleared; ledger unchanged",
+    "BTC keyboard linked pie and weights; one save; HOLD cleared; ledger unchanged",
+    "ETH keyboard linked pie and weights; one save; HOLD cleared; ledger unchanged",
+    "LINK keyboard linked pie and weights; one save; HOLD cleared; ledger unchanged",
+    "mouse live linked values before release, no premature save, release saves without ledger changes",
+    "touch live linked values before release, no premature save, release saves without ledger changes"
+  ]
+}

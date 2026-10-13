@@ -1,0 +1,25 @@
+{
+  "reviewedAt": "2026-10-13T16:53:38.688695-04:00",
+  "verdict": "PASS",
+  "screenshots": [
+    {
+      "path": "/home/danman60/.claude/shots/pending/wolfpack-linked-sliders-final-390-20261013T205306.png",
+      "sha256": "8f7021f906663eab16dc64e03f1ac5e9db5edd7e6a2ac4e2ce97629a5a791819"
+    },
+    {
+      "path": "/home/danman60/.claude/shots/pending/wolfpack-linked-sliders-final-1440-20261013T205306.png",
+      "sha256": "0ccf78a255b2a737c3dcb64afd563f5f49b0a621467195f31efc1c4c39acaedf"
+    }
+  ],
+  "checks": [
+    "Four visible rails and assetcoloredthumbs with percentages/heldunits remain readable at390/1440.",
+    "Reset label remains unbroken after targetednowrap fix.",
+    "Fullheader, pie, recommendation, allsixcharts, costs and paperlabel preserved.",
+    "No overflow, clippedtext, brokenimages or measuredcontrastfailures."
+  ],
+  "interactionEvidence": "Independent QA reports all4keyboard plusmouse/touch PASS: live linked drafts before release, save once oncommit, no ledger mutation, exactweights sum1.",
+  "sourceHashes": {
+    "app/src/components/rotation/AllocationWorkspace.tsx": "224102985660fad03a89cccb73cff46e24168e69e1ad81f78edba4e9448af3e4",
+    "app/src/components/rotation/AllocationWorkspace.module.css": "113873046b577998808a7b19945afcc8023d7c39d8af9237c963619c43226e7b"
+  }
+}

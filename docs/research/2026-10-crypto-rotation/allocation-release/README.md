@@ -1,0 +1,7 @@
+Production candidate dpl_4mrKTbkHstowKYn8UHSBLrN4ffWk from079ccbfa06dea741bf771e6bd2d5402a3b062238 passed read-only release verification. Exact project, production target, READY status and Git SHA were checked through live Vercel REST and CLI before browser access.
+
+Normal typed login used the reserved isolation paper member. Four sliders, six charts, public market/readiness/session and authenticated portfolio/allocation/analysis reads passed. Reload preserved exact portfolio, old trials and projection/batch/outcome collections. A request guard rejected financial POSTs if attempted; none were attempted. Only normal session sign-in wrote. Both390/1440 composed screenshots passed measured and visual review. This member shows an unsaved allocation preview; existing saved allocation restoration was verified on Preview rather than created in production.
+
+144 actual app scripts were checked against the known rotation service credential and demo password without logging values; neither matched. The pre-existing legacy credential still matches the identical documented chunk. This release does not mitigate that exposure. An initial unprotected scan reached Vercel protection content; it was discarded as app evidence and repeated through an exact-origin deployment-protection header without application authentication.
+
+No funded orders, private exchange connection, or production paper financial changes were performed. Stable alias promotion is recorded separately by the release owner.

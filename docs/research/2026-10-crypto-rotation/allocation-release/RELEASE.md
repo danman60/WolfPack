@@ -1,0 +1,15 @@
+# Live allocation workspace
+
+Verified 2026-10-13T17:05:05.460448-04:00 Eastern. Stable URL: https://wolf-pack-eight.vercel.app/rotation.
+
+Deployed source:079ccbfa06dea741bf771e6bd2d5402a3b062238. Production artifact:dpl_4mrKTbkHstowKYn8UHSBLrN4ffWk; immutable URL https://wolf-pack-8mevbgx0k-danman60s-projects.vercel.app/rotation. Final app source manifest:a8985eb58d433ba33a15f0552ecc46bd680a8e0645edff6a5340c8c247950824. Clean isolated deployment compared100app files with zero mismatches; deployed as Production with --skip-domain, then assigned exact stable alias after verification.
+
+Four visible sliders, draggable pie, exact-percent fields and after-cost projection share one state. Mouse, touch and keyboard update immediately; only release/commit saves an immutable prediction. .1/0.1BTC entry works. Real six-pair close charts, explainable technical zones and linked dated headline sentiment are visible. Exact-unit HOLD creates no orders, fees or ledger changes even after quotes move. Arbitrary owner targets retain fixed-weight semantics. Saved predictions remain fixed before and after Apply; quotes25seconds, analysis/forecast5minutes.
+
+Baseline ad5911c true Git Preview passed fresh customer setup, complete3-order paper batch, reload, owner isolation, retry/CAS/idempotency, partial cancellation and explicit HOLD. Slider079ccbf true Git Preview passed all4keyboard controls plus mouse/touch, linked values/profit during movement, no premature/duplicate saves, HOLD clearing and no ledger mutation. Local numeric/causal/outcome verification is documented in allocation-verification/VERIFICATION.md.
+
+Production candidate and stable verification used ordinary reserved-member sign-in and read-only GETs. Four sliders/six charts rendered; portfolio and all saved trial/projection/batch/outcome hashes matched before/after reload. No financial mutations or funded orders. Final390/1440 screenshots passed measured/visual review and were privately delivered Telegram21694/21695.
+
+Limits: Apply currently executes paper fills against real Ndax books. Native signed account integration remains unimplemented pending the owner's provider/account choice; async question and PA decisions entry remain pending. A matured prospective weekly check-in has not yet occurred; its due-date/cashflow/actual-versus-hypothetical math was independently checked. The corrected declared36cycle historical diagnostic endsCAD9090.98 versus unchangedCAD9779.63 and cashCAD10000.00; no profitable or validated forecast claim. Current sentiment is headline language/context, not a calibrated return uplift; historic sentiment excluded without point-in-time archive.
+
+Private rotation credentials did not appear in144actual app scripts. The previously documented legacy intelligence key remains in its same known public chunk; this release did not mitigate/revoke/change it. No secret values recorded. Prior owner live-release authorization was used for this scoped app release. Old wallets, original dirty work and running processes preserved.
