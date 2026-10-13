@@ -4,6 +4,8 @@ import { useCallback, useEffect, useRef, useState, type FormEvent } from "react"
 import { ActivityList } from "@/components/rotation/ActivityList";
 import { HoldingsTable } from "@/components/rotation/HoldingsTable";
 import { MetricCard } from "@/components/rotation/MetricCard";
+import { StrategyPanel } from "@/components/rotation/StrategyPanel";
+import type { StrategyPlanState, StrategyTrial } from "@/lib/rotation/strategy-api-contract";
 import { ResearchPanel } from "@/components/rotation/ResearchPanel";
 import { ASSETS, cad, eastern, ROTATION_STYLE, type Amounts, type Asset, type Cadence, type MarketSnapshot, type Portfolio, type ShiftPreview } from "@/lib/rotation/contract";
 import { holdingRows, performance } from "@/lib/rotation/engine";
@@ -20,6 +22,8 @@ async function api<T>(path: string, body?: unknown): Promise<T> {
 export default function RotationPage() {
   const [session, setSession] = useState<Session | null>(null);
   const [portfolio, setPortfolio] = useState<Portfolio | null>(null);
+  const [planState, setPlanState] = useState<StrategyPlanState>({ activePlanId: null, planRevision: 0, study: null });
+  const quoteBox = useRef<HTMLElement>(null);
   const [market, setMarket] = useState<MarketSnapshot | null>(null);
   const [marketError, setMarketError] = useState("");
   const [error, setError] = useState("");
@@ -48,7 +52,7 @@ export default function RotationPage() {
     catch (e) { setMarketError(e instanceof Error ? e.message : "Market data unavailable."); }
   }, []);
   const reloadPortfolio = useCallback(async () => {
-    const result = await api<{ portfolio: Portfolio | null }>("portfolio"); setPortfolio(result.portfolio); setPreview(null);
+    const result = await api<{ portfolio: Portfolio | null; planState?: StrategyPlanState }>("portfolio"); setPortfolio(result.portfolio); setPlanState(result.planState ?? { activePlanId: null, planRevision: 0, study: null }); setPreview(null);
   }, []);
   useEffect(() => {
     let live = true;
@@ -71,7 +75,7 @@ export default function RotationPage() {
   async function login(action: "demo" | "login" | "logout") {
     await work(async () => {
       const result = await api<Session>("session", { action, email, password });
-      setSession(result); setPassword(""); setPortfolio(null); setPreview(null);
+      setSession(result); setPassword(""); setPortfolio(null); setPreview(null); setPlanState({ activePlanId: null, planRevision: 0, study: null });
       if (result.authenticated) await reloadPortfolio();
     });
   }
@@ -96,6 +100,21 @@ export default function RotationPage() {
       setPortfolio(result.portfolio); setPreview(null);
       setNotice(kind === "approve" ? "Paper shift recorded. No real order was sent." : kind === "hold" ? "HOLD recorded. All units unchanged." : "CAD cash flow applied equally to your portfolio and HOLD baseline.");
       if (kind === "deposit" || kind === "withdrawal") setFlowAmount("");
+    });
+  }
+
+  async function strategyAction(recommendation: Extract<StrategyTrial, { kind: "development" }>, kind: "quote" | "hold") {
+    await work(async () => {
+      if (kind === "quote") {
+        setPreview(null);
+        const result = await api<{ preview: ShiftPreview; market: MarketSnapshot }>("preview", { recommendationId: recommendation.id, expectedRevision: portfolio?.revision, expectedPlanRevision: planState.planRevision });
+        setFrom(result.preview.from); setTo(result.preview.to); setAmount(result.preview.amount);
+        setPreview(result.preview); setMarket(result.market);
+        requestAnimationFrame(() => quoteBox.current?.focus());
+      } else {
+        const result = await api<{ portfolio: Portfolio }>("action", { kind: "hold", recommendationId: recommendation.id, expectedRevision: portfolio?.revision, expectedPlanRevision: planState.planRevision });
+        setPortfolio(result.portfolio); setPreview(null); setNotice("Recommended HOLD recorded. All units unchanged.");
+      }
     });
   }
 
@@ -139,8 +158,8 @@ export default function RotationPage() {
       </>}
     </section> : <>
       <nav aria-label="Rotation views" className="flex gap-2 border-b border-white/10 pb-4">
-        <button className={tab === "workspace" ? "rotation-primary" : "rotation-secondary"} aria-pressed={tab === "workspace"} onClick={() => setTab("workspace")}>Workspace</button>
-        <button className={tab === "research" ? "rotation-primary" : "rotation-secondary"} aria-pressed={tab === "research"} onClick={() => setTab("research")}>Backtest & forecast</button>
+        <button className={tab === "workspace" ? "rotation-primary" : "rotation-secondary"} aria-pressed={tab === "workspace"} onClick={() => setTab("workspace")}>My plan</button>
+        <button className={tab === "research" ? "rotation-primary" : "rotation-secondary"} aria-pressed={tab === "research"} onClick={() => setTab("research")}>Advanced research</button>
       </nav>
       <div hidden={tab !== "workspace"} className="space-y-6">
       {!portfolio ? <section className={ROTATION_STYLE.panel}>
@@ -153,6 +172,7 @@ export default function RotationPage() {
         </form>
       </section> : <>
         <div className="flex flex-wrap justify-between items-center gap-3"><div><h2 className="text-xl font-semibold">{portfolio.name}</h2><p className="text-sm text-slate-300 mt-1 capitalize">{portfolio.cadence} review · {portfolio.feeBps} bps per leg · Revision {portfolio.revision}</p></div><div className="flex flex-wrap gap-2"><button className="rotation-secondary" disabled={busy} onClick={() => void work(reloadPortfolio)}>Refresh ledger</button><button className="rotation-secondary" disabled={busy} onClick={() => void exportLedger()}>Export ledger</button></div></div>
+        <StrategyPanel key={portfolio.id} portfolio={portfolio} holdings={rows} planState={planState} now={clock} disabled={busy} request={api} onState={result => { setPortfolio(result.portfolio); setPlanState(result.planState); setPreview(null); }} onQuote={recommendation => strategyAction(recommendation, "quote")} onHold={recommendation => strategyAction(recommendation, "hold")} />
         <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
           <MetricCard label="Portfolio value" value={value ? cad(value.actualCad) : "—"} note="CAD cash plus current crypto value." testId="portfolio-value" />
           <MetricCard label="No-action HOLD" value={value ? cad(value.holdCad) : "—"} note="Original units, with the same cash flows." testId="hold-value" />
@@ -161,7 +181,7 @@ export default function RotationPage() {
         </div>
         <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-300"><span>Realized {value ? cad(value.realizedCad) : "—"}</span><span>Unrealized {value ? cad(value.unrealizedCad) : "—"}</span><span>Fees paid {cad(portfolio.feesCad)}</span><span>Net cash flows {cad(portfolio.netFlowsCad)}</span></div>
         <div className="rotation-grid"><HoldingsTable rows={rows} market={market} />
-          <section className={ROTATION_STYLE.panel}><h2 className={ROTATION_STYLE.title}>Review a paper shift</h2><p className="text-sm text-slate-300 mt-2 mb-5">Review the exact units and costs before approving. Crypto-to-crypto shifts use two CAD legs.</p>
+          <section ref={quoteBox} tabIndex={-1} className={ROTATION_STYLE.panel}><h2 className={ROTATION_STYLE.title}>Review a paper shift</h2><p className="text-sm text-slate-300 mt-2 mb-5">Review the exact units and costs before approving. Crypto-to-crypto shifts use two CAD legs.</p>
             <form onSubmit={quote} className="space-y-4"><div className="grid grid-cols-2 gap-3"><label>From<select className={field} value={from} onChange={e => { setFrom(e.target.value as Asset); setPreview(null); }}>{ASSETS.map(a => <option key={a}>{a}</option>)}</select></label><label>To<select className={field} value={to} onChange={e => { setTo(e.target.value as Asset); setPreview(null); }}>{ASSETS.map(a => <option key={a}>{a}</option>)}</select></label></div>
               <label>Amount<input className={field} inputMode="decimal" required value={amount} onChange={e => { setAmount(e.target.value); setPreview(null); }} /><span className="block text-xs text-slate-300 mt-2">Units of {from}. CAD buy amounts include fees.</span></label>
               <div className="flex flex-wrap gap-3"><button className="rotation-primary" disabled={busy || from === to}>Preview shift</button><button type="button" className="rotation-secondary" disabled={busy} onClick={() => void action("hold")}>Record HOLD</button></div>

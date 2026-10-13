@@ -1,0 +1,926 @@
+{
+  "fetch_page": {
+    "ok": true,
+    "exit_code": 0,
+    "data": null,
+    "raw": "<!DOCTYPE html><!--8HRXaMLeBG94Ddb0drAxr--><html lang=\"en\" class=\"dark\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"preload\" href=\"/_next/static/media/797e433ab948586e-s.p.29207c2f.woff2\" as=\"font\" crossorigin=\"\" type=\"font/woff2\"/><link rel=\"preload\" href=\"/_next/static/media/caa3a2e1cccd8315-s.p.3b6cae6d.woff2\" as=\"font\" crossorigin=\"\" type=\"font/woff2\"/><link rel=\"stylesheet\" href=\"/_next/static/chunks/7d49e2acbb8eb5f6.css?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\" data-precedence=\"next\"/><link rel=\"stylesheet\" href=\"/_next/static/chunks/220d352c66456c52.css?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\" data-precedence=\"next\"/><link rel=\"preload\" as=\"script\" fetchPriority=\"low\" href=\"/_next/static/chunks/ff88e226db690480.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\"/><script src=\"/_next/static/chunks/574daa46632bb6b7.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\" async=\"\"></script><script src=\"/_next/static/chunks/d8e90adbca162cb0.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\" async=\"\"></script><script src=\"/_next/static/chunks/d4462745d6e26cea.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\" async=\"\"></script><script src=\"/_next/static/chunks/turbopack-fed8fa832ce420d3.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\" async=\"\"></script><script src=\"/_next/static/chunks/8f6621f764c9df47.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\" async=\"\"></script><script src=\"/_next/static/chunks/80c371bd10693fad.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\" async=\"\"></script><script src=\"/_next/static/chunks/1d5539ed860e52b5.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\" async=\"\"></script><script src=\"/_next/static/chunks/8b70b36a572b51ff.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\" async=\"\"></script><script src=\"/_next/static/chunks/9932b3ec64f131ef.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\" async=\"\"></script><script src=\"/_next/static/chunks/c60c3a4807dc7ba2.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\" async=\"\"></script><script src=\"/_next/static/chunks/ea1375d155f38d4a.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\" async=\"\"></script><script src=\"/_next/static/chunks/61b4b0f1827adda0.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\" async=\"\"></script><script src=\"/_next/static/chunks/b1e77a01cb3fbeaa.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\" async=\"\"></script><script src=\"/_next/static/chunks/577a3737cc7b3894.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\" async=\"\"></script><script src=\"/_next/static/chunks/07f57814df81973e.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\" async=\"\"></script><meta name=\"next-size-adjust\" content=\"\"/><title>Rotation | WolfPack</title><meta name=\"description\" content=\"Compare CAD, BTC, ETH and LINK paper decisions against holding. Review costs, performance and experimental research before making a shift.\"/><meta name=\"robots\" content=\"noindex, nofollow\"/><link rel=\"icon\" href=\"/rotation/icon.svg?icon.1c42dded.svg\" sizes=\"any\" type=\"image/svg+xml\"/><script src=\"/_next/static/chunks/a6dad97d9634a72d.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\" noModule=\"\"></script></head><body class=\"geist_a71539c9-module__T19VSG__variable geist_mono_8d43a2aa-module__8Li5zG__variable antialiased\"><div hidden=\"\"><!--$--><!--/$--></div><header class=\"rotation-nav sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--background)]/80 backdrop-blur-xl backdrop-saturate-150\"><nav class=\"max-w-7xl mx-auto px-4 md:px-5 py-3.5 flex items-center justify-between\"><div class=\"flex items-center gap-10\"><a class=\"flex items-center gap-2.5 group\" href=\"/\"><div class=\"w-8 h-8 rounded-lg bg-[var(--wolf-emerald)]/10 border border-[var(--wolf-emerald)]/20 flex items-center justify-center group-hover:bg-[var(--wolf-emerald)]/15 group-hover:border-[var(--wolf-emerald)]/30 transition-all\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"var(--wolf-emerald)\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 2L2 7l10 5 10-5-10-5z\"></path><path d=\"M2 17l10 5 10-5\"></path><path d=\"M2 12l10 5 10-5\"></path></svg></div><span class=\"font-bold text-[15px] tracking-tight text-white flex items-center gap-1.5\">WolfPack</span></a><div class=\"hidden xl:flex items-center gap-0.5\"><a class=\"nav-link nav-link-active\" href=\"/rotation\">Rotation</a><a class=\"nav-link \" href=\"/\">Dashboard</a><a class=\"nav-link \" href=\"/intelligence\">Intelligence</a><a class=\"nav-link \" href=\"/trading\">Trading</a><a class=\"nav-link \" href=\"/portfolio\">Portfolio</a><a class=\"nav-link \" href=\"/backtest\">Backtest</a><a class=\"nav-link \" href=\"/auto-bot\">Auto-Bot</a><a class=\"nav-link \" href=\"/evolution\">Evolution</a><a class=\"nav-link \" href=\"/pools\">LP Pools</a><a class=\"nav-link \" href=\"/settings\">Settings</a></div></div><div class=\"flex items-center gap-3\"><button class=\"xl:hidden p-2.5 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg hover:bg-white/5 active:bg-white/10 transition\" aria-label=\"Toggle menu\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"><line x1=\"3\" y1=\"6\" x2=\"21\" y2=\"6\"></line><line x1=\"3\" y1=\"12\" x2=\"21\" y2=\"12\"></line><line x1=\"3\" y1=\"18\" x2=\"21\" y2=\"18\"></line></svg></button></div></nav></header><main class=\"max-w-7xl mx-auto px-4 py-5 md:px-5 md:py-8\"><div class=\"rotation-workspace space-y-6\"><header class=\"flex flex-wrap items-start justify-between gap-5 border-b border-white/10 pb-6\"><div><p class=\"text-xs uppercase tracking-[.18em] text-emerald-300 mb-3\">CAD / BTC / ETH / LINK</p><h1 class=\"text-3xl md:text-4xl font-semibold tracking-tight\">Make the shift count.</h1><p class=\"text-slate-300 mt-3 max-w-2xl leading-relaxed\">Weekly or monthly decisions. Every move measured against doing nothing.</p></div><div class=\"flex flex-col items-start sm:items-end gap-3\"><span class=\"rounded-full border border-emerald-400/40 bg-emerald-400/10 px-3 py-1.5 text-xs text-emerald-200\">PAPER WORKSPACE</span></div></header><div class=\"rotation-note\">Practice with real market prices and paper balances. Funding and live execution are gated. Research is experimental; a positive backtest does not establish a reliable forecast.</div><section class=\"wolf-card p-5 md:p-6 min-w-0 max-w-xl\"><h2 class=\"text-xl font-semibold\">Open your workspace</h2><p class=\"text-sm text-slate-300 mt-2 mb-5\">Sign in to keep your ledger and research together across devices. Workshop accounts contain paper data.</p><p role=\"status\">Checking session\u2026</p></section><footer class=\"border-t border-white/10 pt-5 text-xs text-slate-300 leading-relaxed space-y-2\"><p>Loading real CAD market data\u2026<!-- --> <button class=\"underline underline-offset-4 px-2\">Refresh prices</button></p><p>Workshop paper data \u00b7 Native BTC, ETH and LINK \u00b7 Actual CAD denomination \u00b7 <a class=\"underline underline-offset-4\" href=\"/rotation/about\">Data and research notes</a> \u00b7 <a class=\"underline underline-offset-4\" href=\"/api/rotation/readiness\" target=\"_blank\" rel=\"noreferrer\">Service readiness</a></p></footer></div><!--$--><!--/$--></main><section aria-label=\"Notifications alt+T\" tabindex=\"-1\" aria-live=\"polite\" aria-relevant=\"additions text\" aria-atomic=\"false\"></section><script src=\"/_next/static/chunks/ff88e226db690480.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\" id=\"_R_\" async=\"\"></script><script>(self.__next_f=self.__next_f||[]).push([0])</script><script>self.__next_f.push([1,\"1:\\\"$Sreact.fragment\\\"\\n2:I[744073,[\\\"/_next/static/chunks/8f6621f764c9df47.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"/_next/static/chunks/80c371bd10693fad.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\"],\\\"AppProviders\\\"]\\n3:I[676105,[\\\"/_next/static/chunks/8f6621f764c9df47.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"/_next/static/chunks/80c371bd10693fad.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\"],\\\"Nav\\\"]\\n4:I[383706,[\\\"/_next/static/chunks/1d5539ed860e52b5.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"/_next/static/chunks/8b70b36a572b51ff.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\"],\\\"default\\\"]\\n5:I[127372,[\\\"/_next/static/chunks/8f6621f764c9df47.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"/_next/static/chunks/80c371bd10693fad.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"/_next/static/chunks/9932b3ec64f131ef.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\"],\\\"default\\\"]\\n6:I[879404,[\\\"/_next/static/chunks/1d5539ed860e52b5.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"/_next/static/chunks/8b70b36a572b51ff.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\"],\\\"default\\\"]\\n7:I[147243,[\\\"/_next/static/chunks/8f6621f764c9df47.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"/_next/static/chunks/80c371bd10693fad.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\"],\\\"Toaster\\\"]\\n8:I[747029,[\\\"/_next/static/chunks/8f6621f764c9df47.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"/_next/static/chunks/80c371bd10693fad.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"/_next/static/chunks/c60c3a4807dc7ba2.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\"],\\\"default\\\"]\\n9:I[336064,[\\\"/_next/static/chunks/1d5539ed860e52b5.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"/_next/static/chunks/8b70b36a572b51ff.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\"],\\\"ClientPageRoot\\\"]\\na:I[117043,[\\\"/_next/static/chunks/8f6621f764c9df47.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"/_next/static/chunks/80c371bd10693fad.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"/_next/static/chunks/ea1375d155f38d4a.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"/_next/static/chunks/61b4b0f1827adda0.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"/_next/static/chunks/b1e77a01cb3fbeaa.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"/_next/static/chunks/577a3737cc7b3894.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"/_next/static/chunks/07f57814df81973e.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\"],\\\"default\\\"]\\nd:I[36222,[\\\"/_next/static/chunks/1d5539ed860e52b5.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"/_next/static/chunks/8b70b36a572b51ff.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\"],\\\"OutletBoundary\\\"]\\ne:\\\"$Sreact.suspense\\\"\\n10:I[36222,[\\\"/_next/static/chunks/1d5539ed860e52b5.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"/_next/static/chunks/8b70b36a572b51ff.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\"],\\\"ViewportBoundary\\\"]\\n12:I[36222,[\\\"/_next/static/chunks/1d5539ed860e52b5.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"/_next/static/chunks/8b70b36a572b51ff.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\"],\\\"MetadataBoundary\\\"]\\n14:I[969545,[],\\\"default\\\"]\\n:HL[\\\"/_next/static/chunks/7d49e2acbb8eb5f6.css?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"style\\\"]\\n:HL[\\\"/_next/static/media/797e433ab948586e-s.p.29207c2f.woff2\\\",\\\"font\\\",{\\\"crossOrigin\\\":\\\"\\\",\\\"type\\\":\\\"font/woff2\\\"}]\\n:HL[\\\"/_next/static/media/caa3a2e1cccd8315-s.p.3b6cae6d.woff2\\\",\\\"font\\\",{\\\"crossOrigin\\\":\\\"\\\",\\\"type\\\":\\\"font/woff2\\\"}]\\n:HL[\\\"/_next/static/chunks/220d352c66456c52.css?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"style\\\"]\\n\"])</script><script>self.__next_f.push([1,\"0:{\\\"P\\\":null,\\\"b\\\":\\\"8HRXaMLeBG94Ddb0drAxr\\\",\\\"c\\\":[\\\"\\\",\\\"rotation\\\"],\\\"q\\\":\\\"\\\",\\\"i\\\":false,\\\"f\\\":[[[\\\"\\\",{\\\"children\\\":[\\\"rotation\\\",{\\\"children\\\":[\\\"__PAGE__\\\",{}]}]},\\\"$undefined\\\",\\\"$undefined\\\",true],[[\\\"$\\\",\\\"$1\\\",\\\"c\\\",{\\\"children\\\":[[[\\\"$\\\",\\\"link\\\",\\\"0\\\",{\\\"rel\\\":\\\"stylesheet\\\",\\\"href\\\":\\\"/_next/static/chunks/7d49e2acbb8eb5f6.css?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"precedence\\\":\\\"next\\\",\\\"crossOrigin\\\":\\\"$undefined\\\",\\\"nonce\\\":\\\"$undefined\\\"}],[\\\"$\\\",\\\"script\\\",\\\"script-0\\\",{\\\"src\\\":\\\"/_next/static/chunks/8f6621f764c9df47.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"async\\\":true,\\\"nonce\\\":\\\"$undefined\\\"}],[\\\"$\\\",\\\"script\\\",\\\"script-1\\\",{\\\"src\\\":\\\"/_next/static/chunks/80c371bd10693fad.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"async\\\":true,\\\"nonce\\\":\\\"$undefined\\\"}]],[\\\"$\\\",\\\"html\\\",null,{\\\"lang\\\":\\\"en\\\",\\\"className\\\":\\\"dark\\\",\\\"children\\\":[\\\"$\\\",\\\"body\\\",null,{\\\"className\\\":\\\"geist_a71539c9-module__T19VSG__variable geist_mono_8d43a2aa-module__8Li5zG__variable antialiased\\\",\\\"children\\\":[\\\"$\\\",\\\"$L2\\\",null,{\\\"children\\\":[[\\\"$\\\",\\\"$L3\\\",null,{}],[\\\"$\\\",\\\"main\\\",null,{\\\"className\\\":\\\"max-w-7xl mx-auto px-4 py-5 md:px-5 md:py-8\\\",\\\"children\\\":[\\\"$\\\",\\\"$L4\\\",null,{\\\"parallelRouterKey\\\":\\\"children\\\",\\\"error\\\":\\\"$5\\\",\\\"errorStyles\\\":[],\\\"errorScripts\\\":[[\\\"$\\\",\\\"script\\\",\\\"script-0\\\",{\\\"src\\\":\\\"/_next/static/chunks/9932b3ec64f131ef.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"async\\\":true}]],\\\"template\\\":[\\\"$\\\",\\\"$L6\\\",null,{}],\\\"templateStyles\\\":\\\"$undefined\\\",\\\"templateScripts\\\":\\\"$undefined\\\",\\\"notFound\\\":[[[\\\"$\\\",\\\"title\\\",null,{\\\"children\\\":\\\"404: This page could not be found.\\\"}],[\\\"$\\\",\\\"div\\\",null,{\\\"style\\\":{\\\"fontFamily\\\":\\\"system-ui,\\\\\\\"Segoe UI\\\\\\\",Roboto,Helvetica,Arial,sans-serif,\\\\\\\"Apple Color Emoji\\\\\\\",\\\\\\\"Segoe UI Emoji\\\\\\\"\\\",\\\"height\\\":\\\"100vh\\\",\\\"textAlign\\\":\\\"center\\\",\\\"display\\\":\\\"flex\\\",\\\"flexDirection\\\":\\\"column\\\",\\\"alignItems\\\":\\\"center\\\",\\\"justifyContent\\\":\\\"center\\\"},\\\"children\\\":[\\\"$\\\",\\\"div\\\",null,{\\\"children\\\":[[\\\"$\\\",\\\"style\\\",null,{\\\"dangerouslySetInnerHTML\\\":{\\\"__html\\\":\\\"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}\\\"}}],[\\\"$\\\",\\\"h1\\\",null,{\\\"className\\\":\\\"next-error-h1\\\",\\\"style\\\":{\\\"display\\\":\\\"inline-block\\\",\\\"margin\\\":\\\"0 20px 0 0\\\",\\\"padding\\\":\\\"0 23px 0 0\\\",\\\"fontSize\\\":24,\\\"fontWeight\\\":500,\\\"verticalAlign\\\":\\\"top\\\",\\\"lineHeight\\\":\\\"49px\\\"},\\\"children\\\":404}],[\\\"$\\\",\\\"div\\\",null,{\\\"style\\\":{\\\"display\\\":\\\"inline-block\\\"},\\\"children\\\":[\\\"$\\\",\\\"h2\\\",null,{\\\"style\\\":{\\\"fontSize\\\":14,\\\"fontWeight\\\":400,\\\"lineHeight\\\":\\\"49px\\\",\\\"margin\\\":0},\\\"children\\\":\\\"This page could not be found.\\\"}]}]]}]}]],[]],\\\"forbidden\\\":\\\"$undefined\\\",\\\"unauthorized\\\":\\\"$undefined\\\"}]}],[\\\"$\\\",\\\"$L7\\\",null,{\\\"theme\\\":\\\"dark\\\",\\\"position\\\":\\\"bottom-right\\\",\\\"toastOptions\\\":{\\\"style\\\":{\\\"background\\\":\\\"var(--surface)\\\",\\\"border\\\":\\\"1px solid var(--border)\\\",\\\"color\\\":\\\"#e5e7eb\\\",\\\"fontSize\\\":\\\"13px\\\"}}}]]}]}]}]]}],{\\\"children\\\":[[\\\"$\\\",\\\"$1\\\",\\\"c\\\",{\\\"children\\\":[null,[\\\"$\\\",\\\"$L4\\\",null,{\\\"parallelRouterKey\\\":\\\"children\\\",\\\"error\\\":\\\"$8\\\",\\\"errorStyles\\\":[],\\\"errorScripts\\\":[[\\\"$\\\",\\\"script\\\",\\\"script-0\\\",{\\\"src\\\":\\\"/_next/static/chunks/c60c3a4807dc7ba2.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"async\\\":true}]],\\\"template\\\":[\\\"$\\\",\\\"$L6\\\",null,{}],\\\"templateStyles\\\":\\\"$undefined\\\",\\\"templateScripts\\\":\\\"$undefined\\\",\\\"notFound\\\":\\\"$undefined\\\",\\\"forbidden\\\":\\\"$undefined\\\",\\\"unauthorized\\\":\\\"$undefined\\\"}]]}],{\\\"children\\\":[[\\\"$\\\",\\\"$1\\\",\\\"c\\\",{\\\"children\\\":[[\\\"$\\\",\\\"$L9\\\",null,{\\\"Component\\\":\\\"$a\\\",\\\"serverProvidedParams\\\":{\\\"searchParams\\\":{},\\\"params\\\":{},\\\"promises\\\":[\\\"$@b\\\",\\\"$@c\\\"]}}],[[\\\"$\\\",\\\"link\\\",\\\"0\\\",{\\\"rel\\\":\\\"stylesheet\\\",\\\"href\\\":\\\"/_next/static/chunks/220d352c66456c52.css?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"precedence\\\":\\\"next\\\",\\\"crossOrigin\\\":\\\"$undefined\\\",\\\"nonce\\\":\\\"$undefined\\\"}],[\\\"$\\\",\\\"script\\\",\\\"script-0\\\",{\\\"src\\\":\\\"/_next/static/chunks/ea1375d155f38d4a.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"async\\\":true,\\\"nonce\\\":\\\"$undefined\\\"}],[\\\"$\\\",\\\"script\\\",\\\"script-1\\\",{\\\"src\\\":\\\"/_next/static/chunks/61b4b0f1827adda0.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"async\\\":true,\\\"nonce\\\":\\\"$undefined\\\"}],[\\\"$\\\",\\\"script\\\",\\\"script-2\\\",{\\\"src\\\":\\\"/_next/static/chunks/b1e77a01cb3fbeaa.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"async\\\":true,\\\"nonce\\\":\\\"$undefined\\\"}],[\\\"$\\\",\\\"script\\\",\\\"script-3\\\",{\\\"src\\\":\\\"/_next/static/chunks/577a3737cc7b3894.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"async\\\":true,\\\"nonce\\\":\\\"$undefined\\\"}],[\\\"$\\\",\\\"script\\\",\\\"script-4\\\",{\\\"src\\\":\\\"/_next/static/chunks/07f57814df81973e.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"async\\\":true,\\\"nonce\\\":\\\"$undefined\\\"}]],[\\\"$\\\",\\\"$Ld\\\",null,{\\\"children\\\":[\\\"$\\\",\\\"$e\\\",null,{\\\"name\\\":\\\"Next.MetadataOutlet\\\",\\\"children\\\":\\\"$@f\\\"}]}]]}],{},null,false,false]},null,false,false]},null,false,false],[\\\"$\\\",\\\"$1\\\",\\\"h\\\",{\\\"children\\\":[null,[\\\"$\\\",\\\"$L10\\\",null,{\\\"children\\\":\\\"$L11\\\"}],[\\\"$\\\",\\\"div\\\",null,{\\\"hidden\\\":true,\\\"children\\\":[\\\"$\\\",\\\"$L12\\\",null,{\\\"children\\\":[\\\"$\\\",\\\"$e\\\",null,{\\\"name\\\":\\\"Next.Metadata\\\",\\\"children\\\":\\\"$L13\\\"}]}]}],[\\\"$\\\",\\\"meta\\\",null,{\\\"name\\\":\\\"next-size-adjust\\\",\\\"content\\\":\\\"\\\"}]]}],false]],\\\"m\\\":\\\"$undefined\\\",\\\"G\\\":[\\\"$14\\\",[]],\\\"S\\\":true}\\n\"])</script><script>self.__next_f.push([1,\"b:{}\\nc:\\\"$0:f:0:1:1:children:1:children:0:props:children:0:props:serverProvidedParams:params\\\"\\n\"])</script><script>self.__next_f.push([1,\"11:[[\\\"$\\\",\\\"meta\\\",\\\"0\\\",{\\\"charSet\\\":\\\"utf-8\\\"}],[\\\"$\\\",\\\"meta\\\",\\\"1\\\",{\\\"name\\\":\\\"viewport\\\",\\\"content\\\":\\\"width=device-width, initial-scale=1\\\"}]]\\n\"])</script><script>self.__next_f.push([1,\"15:I[352089,[\\\"/_next/static/chunks/1d5539ed860e52b5.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\",\\\"/_next/static/chunks/8b70b36a572b51ff.js?dpl=dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu\\\"],\\\"IconMark\\\"]\\nf:null\\n13:[[\\\"$\\\",\\\"title\\\",\\\"0\\\",{\\\"children\\\":\\\"Rotation | WolfPack\\\"}],[\\\"$\\\",\\\"meta\\\",\\\"1\\\",{\\\"name\\\":\\\"description\\\",\\\"content\\\":\\\"Compare CAD, BTC, ETH and LINK paper decisions against holding. Review costs, performance and experimental research before making a shift.\\\"}],[\\\"$\\\",\\\"meta\\\",\\\"2\\\",{\\\"name\\\":\\\"robots\\\",\\\"content\\\":\\\"noindex, nofollow\\\"}],[\\\"$\\\",\\\"link\\\",\\\"3\\\",{\\\"rel\\\":\\\"icon\\\",\\\"href\\\":\\\"/rotation/icon.svg?icon.1c42dded.svg\\\",\\\"sizes\\\":\\\"any\\\",\\\"type\\\":\\\"image/svg+xml\\\"}],[\\\"$\\\",\\\"$L15\\\",\\\"4\\\",{}]]\\n\"])</script></body></html>",
+    "error": "URL: https://wolf-pack-eight.vercel.app/rotation\nStatus: 200"
+  },
+  "robots_checker": {
+    "ok": true,
+    "exit_code": 0,
+    "data": {
+      "url": "https://wolf-pack-eight.vercel.app/robots.txt",
+      "status": 404,
+      "user_agents": {},
+      "sitemaps": [],
+      "crawl_delays": {},
+      "ai_crawler_status": {
+        "GPTBot": "allowed (no robots.txt)",
+        "ChatGPT-User": "allowed (no robots.txt)",
+        "ClaudeBot": "allowed (no robots.txt)",
+        "PerplexityBot": "allowed (no robots.txt)",
+        "Google-Extended": "allowed (no robots.txt)",
+        "Applebot-Extended": "allowed (no robots.txt)",
+        "Bytespider": "allowed (no robots.txt)",
+        "CCBot": "allowed (no robots.txt)",
+        "anthropic-ai": "allowed (no robots.txt)",
+        "FacebookBot": "allowed (no robots.txt)",
+        "Amazonbot": "allowed (no robots.txt)"
+      },
+      "issues": [
+        "\ud83d\udd34 No robots.txt found \u2014 all crawlers allowed by default"
+      ],
+      "error": null
+    },
+    "raw": null,
+    "error": null
+  },
+  "redirect_checker": {
+    "ok": true,
+    "exit_code": 0,
+    "data": {
+      "url": "https://wolf-pack-eight.vercel.app/rotation",
+      "final_url": "https://wolf-pack-eight.vercel.app/rotation",
+      "chain": [
+        {
+          "step": 1,
+          "url": "https://wolf-pack-eight.vercel.app/rotation",
+          "status": 200,
+          "time_ms": 114,
+          "final": true
+        }
+      ],
+      "total_hops": 0,
+      "total_time_ms": 114,
+      "has_loop": false,
+      "has_mixed_protocol": false,
+      "issues": [],
+      "error": null
+    },
+    "raw": null,
+    "error": null
+  },
+  "broken_links": {
+    "ok": true,
+    "exit_code": 0,
+    "data": {
+      "page_url": "https://wolf-pack-eight.vercel.app/rotation",
+      "total_links": 12,
+      "checked": 12,
+      "broken": [
+        {
+          "url": "https://wolf-pack-eight.vercel.app/api/rotation/readiness",
+          "anchor_text": "Service readiness",
+          "is_internal": true,
+          "status": 401,
+          "error": null,
+          "redirect": null,
+          "response_time_ms": 157
+        }
+      ],
+      "redirected": [],
+      "timeout": [],
+      "healthy": 11,
+      "summary": {
+        "total": 12,
+        "healthy": 11,
+        "broken": 1,
+        "redirected": 0,
+        "timeout": 0
+      },
+      "issues": [
+        "\ud83d\udd34 1 broken link(s) found"
+      ],
+      "error": null
+    },
+    "raw": null,
+    "error": "/usr/lib/python3/dist-packages/urllib3/connectionpool.py:1112: InsecureRequestWarning: Unverified HTTPS request is being made to host 'wolf-pack-eight.vercel.app'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings\n  warnings.warn(\n/usr/lib/python3/dist-packages/urllib3/connectionpool.py:1112: InsecureRequestWarning: Unverified HTTPS request is being made to host 'wolf-pack-eight.vercel.app'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings\n  warnings.warn(\n/usr/lib/python3/dist-packages/urllib3/connectionpool.py:1112: InsecureRequestWarning: Unverified HTTPS request is being made to host 'wolf-pack-eight.vercel.app'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings\n  warnings.warn(\n/usr/lib/python3/dist-packages/urllib3/connectionpool.py:1112: InsecureRequestWarning: Unverified HTTPS request is being made to host 'wolf-pack-eight.vercel.app'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings\n  warnings.warn(\n/usr/lib/python3/dist-packages/urllib3/connectionpool.py:1112: InsecureRequestWarning: Unverified HTTPS request is being made to host 'wolf-pack-eight.vercel.app'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings\n  warnings.warn(\n/usr/lib/python3/dist-packages/urllib3/connectionpool.py:1112: InsecureRequestWarning: Unverified HTTPS request is being made to host 'wolf-pack-eight.vercel.app'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings\n  warnings.warn(\n/usr/lib/python3/dist-packages/urllib3/connectionpool.py:1112: InsecureRequestWarning: Unverified HTTPS request is being made to host 'wolf-pack-eight.vercel.app'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings\n  warnings.warn(\n/usr/lib/python3/dist-packages/urllib3/connectionpool.py:1112: InsecureRequestWarning: Unverified HTTPS request is being made to host 'wolf-pack-eight.vercel.app'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings\n  warnings.warn(\n/usr/lib/python3/dist-packages/urllib3/connectionpool.py:1112: InsecureRequestWarning: Unverified HTTPS request is being made to host 'wolf-pack-eight.vercel.app'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings\n  warnings.warn(\n/usr/lib/python3/dist-packages/urllib3/connectionpool.py:1112: InsecureRequestWarning: Unverified HTTPS request is being made to host 'wolf-pack-eight.vercel.app'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings\n  warnings.warn(\n/usr/lib/python3/dist-packages/urllib3/connectionpool.py:1112: InsecureRequestWarning: Unverified HTTPS request is being made to host 'wolf-pack-eight.vercel.app'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings\n  warnings.warn(\n/usr/lib/python3/dist-packages/urllib3/connectionpool.py:1112: InsecureRequestWarning: Unverified HTTPS request is being made to host 'wolf-pack-eight.vercel.app'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings\n  warnings.warn("
+  },
+  "internal_links": {
+    "ok": true,
+    "exit_code": 0,
+    "data": {
+      "start_url": "https://wolf-pack-eight.vercel.app/rotation",
+      "domain": "wolf-pack-eight.vercel.app",
+      "pages_crawled": 12,
+      "total_internal_links": 112,
+      "unique_pages_found": 12,
+      "max_depth_reached": 1,
+      "pages": {
+        "https://wolf-pack-eight.vercel.app/evolution": {
+          "outgoing_links": 10,
+          "incoming_links": 11
+        },
+        "https://wolf-pack-eight.vercel.app/trading": {
+          "outgoing_links": 10,
+          "incoming_links": 11
+        },
+        "https://wolf-pack-eight.vercel.app/intelligence": {
+          "outgoing_links": 10,
+          "incoming_links": 11
+        },
+        "https://wolf-pack-eight.vercel.app/backtest": {
+          "outgoing_links": 10,
+          "incoming_links": 11
+        },
+        "https://wolf-pack-eight.vercel.app/settings": {
+          "outgoing_links": 10,
+          "incoming_links": 11
+        },
+        "https://wolf-pack-eight.vercel.app/rotation": {
+          "outgoing_links": 12,
+          "incoming_links": 11
+        },
+        "https://wolf-pack-eight.vercel.app/api/rotation/readiness": {
+          "outgoing_links": 0,
+          "incoming_links": 1
+        },
+        "https://wolf-pack-eight.vercel.app/portfolio": {
+          "outgoing_links": 10,
+          "incoming_links": 11
+        },
+        "https://wolf-pack-eight.vercel.app/pools": {
+          "outgoing_links": 10,
+          "incoming_links": 11
+        },
+        "https://wolf-pack-eight.vercel.app/rotation/about": {
+          "outgoing_links": 10,
+          "incoming_links": 1
+        },
+        "https://wolf-pack-eight.vercel.app/": {
+          "outgoing_links": 10,
+          "incoming_links": 11
+        },
+        "https://wolf-pack-eight.vercel.app/auto-bot": {
+          "outgoing_links": 10,
+          "incoming_links": 11
+        }
+      },
+      "anchor_texts": {
+        "WolfPack": 11,
+        "Rotation": 11,
+        "Intelligence": 11,
+        "Trading": 11,
+        "Portfolio": 11,
+        "Backtest": 11,
+        "Auto-Bot": 11,
+        "Evolution": 11,
+        "LP Pools": 11,
+        "Settings": 11,
+        "Data and research notes": 1,
+        "Service readiness": 1
+      },
+      "link_distribution": {
+        "min": 10,
+        "max": 12,
+        "avg": 10.2
+      },
+      "orphan_candidates": [
+        {
+          "url": "https://wolf-pack-eight.vercel.app/rotation/about",
+          "incoming_links": 1
+        },
+        {
+          "url": "https://wolf-pack-eight.vercel.app/api/rotation/readiness",
+          "incoming_links": 1
+        }
+      ],
+      "nofollow_links": [],
+      "issues": [
+        "\u26a0\ufe0f 2 potential orphan page(s) (\u22641 internal link pointing to them)"
+      ],
+      "recommendations": [
+        "Add internal links pointing to orphan pages from related content"
+      ],
+      "error": null
+    },
+    "raw": null,
+    "error": null
+  },
+  "link_profile": {
+    "ok": true,
+    "exit_code": 0,
+    "data": {
+      "pages_crawled": 1,
+      "total_internal_links": 13,
+      "total_external_links": 0,
+      "unique_internal_targets": 12,
+      "unique_external_domains": 0,
+      "avg_internal_links_per_page": 13.0,
+      "orphan_pages": {
+        "count": 0,
+        "urls": []
+      },
+      "dead_end_pages": {
+        "count": 0,
+        "urls": []
+      },
+      "top_linked_pages": [
+        {
+          "url": "https://wolf-pack-eight.vercel.app/",
+          "inbound_links": 2
+        },
+        {
+          "url": "https://wolf-pack-eight.vercel.app/rotation",
+          "inbound_links": 1
+        },
+        {
+          "url": "https://wolf-pack-eight.vercel.app/intelligence",
+          "inbound_links": 1
+        },
+        {
+          "url": "https://wolf-pack-eight.vercel.app/trading",
+          "inbound_links": 1
+        },
+        {
+          "url": "https://wolf-pack-eight.vercel.app/portfolio",
+          "inbound_links": 1
+        },
+        {
+          "url": "https://wolf-pack-eight.vercel.app/backtest",
+          "inbound_links": 1
+        },
+        {
+          "url": "https://wolf-pack-eight.vercel.app/auto-bot",
+          "inbound_links": 1
+        },
+        {
+          "url": "https://wolf-pack-eight.vercel.app/evolution",
+          "inbound_links": 1
+        },
+        {
+          "url": "https://wolf-pack-eight.vercel.app/pools",
+          "inbound_links": 1
+        },
+        {
+          "url": "https://wolf-pack-eight.vercel.app/settings",
+          "inbound_links": 1
+        },
+        {
+          "url": "https://wolf-pack-eight.vercel.app/rotation/about",
+          "inbound_links": 1
+        },
+        {
+          "url": "https://wolf-pack-eight.vercel.app/api/rotation/readiness",
+          "inbound_links": 1
+        }
+      ],
+      "top_external_domains": [],
+      "issues": [],
+      "site_url": "https://wolf-pack-eight.vercel.app/rotation"
+    },
+    "raw": null,
+    "error": "Crawling https://wolf-pack-eight.vercel.app/rotation...\nAnalyzing link profile..."
+  },
+  "social_meta": {
+    "ok": true,
+    "exit_code": 0,
+    "data": {
+      "url": "https://wolf-pack-eight.vercel.app/rotation",
+      "score": 0,
+      "og_tags": {},
+      "twitter_tags": {},
+      "og_present": [],
+      "og_missing": [
+        "og:title",
+        "og:description",
+        "og:image",
+        "og:url",
+        "og:type"
+      ],
+      "twitter_present": [],
+      "twitter_missing": [
+        "twitter:card"
+      ],
+      "issues": [
+        "\ud83d\udd34 Missing required: og:title",
+        "\ud83d\udd34 Missing required: og:description",
+        "\ud83d\udd34 Missing required: og:image",
+        "\ud83d\udd34 Missing required: og:url",
+        "\ud83d\udd34 Missing required: og:type",
+        "\u26a0\ufe0f Missing: twitter:card"
+      ],
+      "recommendations": [
+        "Add Open Graph tags for rich social media previews on Facebook, LinkedIn, etc.",
+        "Add Twitter Card tags for rich previews on X (Twitter)"
+      ],
+      "preview": {
+        "title": "Rotation | WolfPack",
+        "description": null,
+        "image": null,
+        "site_name": ""
+      },
+      "error": null
+    },
+    "raw": null,
+    "error": null
+  },
+  "hreflang_checker": {
+    "ok": true,
+    "exit_code": 0,
+    "data": {
+      "url": "https://wolf-pack-eight.vercel.app/rotation",
+      "implementation_method": "none",
+      "hreflang_tags_found": 0,
+      "tags": [],
+      "sitemap": {
+        "found": false,
+        "url": "https://wolf-pack-eight.vercel.app/sitemap.xml"
+      },
+      "checks": {
+        "hreflang_present": {
+          "passed": false,
+          "severity": "Info",
+          "finding": "No hreflang tags found (HTML, HTTP headers, or sitemap).",
+          "fix": "If this is a single-language site, hreflang is not needed. For multi-language sites, implement hreflang via HTML link tags or sitemap."
+        }
+      },
+      "language_code_issues": [],
+      "return_tag_checks": [],
+      "summary": {
+        "critical": 0,
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "passed": 0
+      }
+    },
+    "raw": null,
+    "error": null
+  },
+  "security_headers": {
+    "ok": true,
+    "exit_code": 0,
+    "data": {
+      "url": "https://wolf-pack-eight.vercel.app/rotation",
+      "score": 100,
+      "https": true,
+      "headers_present": {
+        "HSTS (Strict-Transport-Security)": "max-age=31536000",
+        "Content-Security-Policy (CSP)": "frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'",
+        "X-Frame-Options": "DENY",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=()"
+      },
+      "headers_missing": {},
+      "header_values": {
+        "strict-transport-security": "max-age=31536000",
+        "content-security-policy": "frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'",
+        "x-frame-options": "DENY",
+        "x-content-type-options": "nosniff",
+        "referrer-policy": "strict-origin-when-cross-origin",
+        "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=()"
+      },
+      "issues": [
+        "\u26a0\ufe0f HSTS missing includeSubDomains directive"
+      ],
+      "recommendations": [],
+      "error": null
+    },
+    "raw": null,
+    "error": null
+  },
+  "readability": {
+    "ok": true,
+    "exit_code": 0,
+    "data": {
+      "word_count": 49,
+      "sentence_count": 5,
+      "paragraph_count": 1,
+      "syllable_count": 92,
+      "avg_sentence_length": 9.8,
+      "avg_paragraph_length": 5.0,
+      "avg_syllables_per_word": 1.88,
+      "flesch_reading_ease": 38.0,
+      "flesch_kincaid_grade": 10.4,
+      "reading_level": "Very Difficult (college)",
+      "estimated_reading_time_min": 0.2,
+      "complex_words": 9,
+      "complex_word_pct": 18.4,
+      "issues": [
+        "\u26a0\ufe0f Content is difficult to read (Flesch: 38.0) \u2014 may reduce engagement",
+        "\u26a0\ufe0f Thin content (49 words) \u2014 may rank poorly"
+      ],
+      "recommendations": [
+        "Simplify vocabulary and shorten sentences",
+        "Rewrite the flagged long sentences below using the suggested replacements."
+      ],
+      "sentence_rewrites": [
+        {
+          "current": "Homepage hero intro block is broad and hard to scan.",
+          "suggested": "Use a 2-3 sentence hero: who you help, what users can do here, and where to start. Example: \"Learn practical ethical hacking with step-by-step guides. Start with Wi-Fi security, Active Directory, or malware analysis using the tracks below.\"",
+          "current_word_count": "template",
+          "target_word_count": "40-60 total (split into 2-3 sentences)"
+        },
+        {
+          "current": "Section descriptions mix too many topics in one long paragraph.",
+          "suggested": "Replace with short blurbs per section (1 sentence each) and add a clear CTA link: \"Start Wi-Fi Security\", \"Explore AD Attack Paths\", \"View Red-Team Cheat Sheets\".",
+          "current_word_count": "template",
+          "target_word_count": "12-20 words per blurb"
+        }
+      ]
+    },
+    "raw": null,
+    "error": null
+  },
+  "duplicate_content": {
+    "ok": true,
+    "exit_code": 0,
+    "data": {
+      "pages_analyzed": 11,
+      "exact_duplicates": [],
+      "near_duplicates": [],
+      "thin_content": [
+        {
+          "type": "thin_content",
+          "severity": "Critical",
+          "url": "https://wolf-pack-eight.vercel.app/rotation",
+          "word_count": 47,
+          "threshold": 300,
+          "finding": "Only 47 words (minimum: 300).",
+          "fix": "Expand content to at least 300 words of substantive, unique content, or noindex if low-value."
+        },
+        {
+          "type": "thin_content",
+          "severity": "Warning",
+          "url": "https://wolf-pack-eight.vercel.app/rotation/about",
+          "word_count": 297,
+          "threshold": 300,
+          "finding": "Only 297 words (minimum: 300).",
+          "fix": "Expand content to at least 300 words of substantive, unique content, or noindex if low-value."
+        },
+        {
+          "type": "thin_content",
+          "severity": "Warning",
+          "url": "https://wolf-pack-eight.vercel.app/auto-bot",
+          "word_count": 177,
+          "threshold": 300,
+          "finding": "Only 177 words (minimum: 300).",
+          "fix": "Expand content to at least 300 words of substantive, unique content, or noindex if low-value."
+        },
+        {
+          "type": "thin_content",
+          "severity": "Warning",
+          "url": "https://wolf-pack-eight.vercel.app/intelligence",
+          "word_count": 147,
+          "threshold": 300,
+          "finding": "Only 147 words (minimum: 300).",
+          "fix": "Expand content to at least 300 words of substantive, unique content, or noindex if low-value."
+        },
+        {
+          "type": "thin_content",
+          "severity": "Critical",
+          "url": "https://wolf-pack-eight.vercel.app",
+          "word_count": 51,
+          "threshold": 300,
+          "finding": "Only 51 words (minimum: 300).",
+          "fix": "Expand content to at least 300 words of substantive, unique content, or noindex if low-value."
+        },
+        {
+          "type": "thin_content",
+          "severity": "Critical",
+          "url": "https://wolf-pack-eight.vercel.app/backtest",
+          "word_count": 67,
+          "threshold": 300,
+          "finding": "Only 67 words (minimum: 300).",
+          "fix": "Expand content to at least 300 words of substantive, unique content, or noindex if low-value."
+        },
+        {
+          "type": "thin_content",
+          "severity": "Critical",
+          "url": "https://wolf-pack-eight.vercel.app/evolution",
+          "word_count": 33,
+          "threshold": 300,
+          "finding": "Only 33 words (minimum: 300).",
+          "fix": "Expand content to at least 300 words of substantive, unique content, or noindex if low-value."
+        },
+        {
+          "type": "thin_content",
+          "severity": "Warning",
+          "url": "https://wolf-pack-eight.vercel.app/settings",
+          "word_count": 159,
+          "threshold": 300,
+          "finding": "Only 159 words (minimum: 300).",
+          "fix": "Expand content to at least 300 words of substantive, unique content, or noindex if low-value."
+        },
+        {
+          "type": "thin_content",
+          "severity": "Critical",
+          "url": "https://wolf-pack-eight.vercel.app/trading",
+          "word_count": 88,
+          "threshold": 300,
+          "finding": "Only 88 words (minimum: 300).",
+          "fix": "Expand content to at least 300 words of substantive, unique content, or noindex if low-value."
+        },
+        {
+          "type": "thin_content",
+          "severity": "Critical",
+          "url": "https://wolf-pack-eight.vercel.app/portfolio",
+          "word_count": 54,
+          "threshold": 300,
+          "finding": "Only 54 words (minimum: 300).",
+          "fix": "Expand content to at least 300 words of substantive, unique content, or noindex if low-value."
+        },
+        {
+          "type": "thin_content",
+          "severity": "Critical",
+          "url": "https://wolf-pack-eight.vercel.app/pools",
+          "word_count": 51,
+          "threshold": 300,
+          "finding": "Only 51 words (minimum: 300).",
+          "fix": "Expand content to at least 300 words of substantive, unique content, or noindex if low-value."
+        }
+      ],
+      "summary": {
+        "exact_duplicate_groups": 0,
+        "near_duplicate_pairs": 0,
+        "thin_pages": 11,
+        "avg_word_count": 106
+      }
+    },
+    "raw": null,
+    "error": "Crawling https://wolf-pack-eight.vercel.app/rotation (depth=2, max=50)...\nCrawled 11 pages. Analyzing..."
+  },
+  "entity_checker": {
+    "ok": true,
+    "exit_code": 0,
+    "data": {
+      "url": "https://wolf-pack-eight.vercel.app/rotation",
+      "entity_name": "Rotation",
+      "entities_in_schema": [],
+      "sameas_analysis": {
+        "found": {},
+        "missing": {
+          "Wikipedia": {
+            "domain": "wikipedia.org",
+            "priority": "Critical",
+            "kg_signal": "Primary"
+          },
+          "Wikidata": {
+            "domain": "wikidata.org",
+            "priority": "Critical",
+            "kg_signal": "Primary"
+          },
+          "LinkedIn": {
+            "domain": "linkedin.com",
+            "priority": "High",
+            "kg_signal": "Strong"
+          },
+          "Twitter/X": {
+            "domain": "x.com",
+            "priority": "High",
+            "kg_signal": "Strong"
+          }
+        },
+        "issues": [],
+        "total_found": 0,
+        "total_missing_critical": 4
+      },
+      "wikidata": {
+        "found": true,
+        "qid": "Q107617",
+        "label": "rotation",
+        "description": "circular movement of an object around a center or axis of rotation",
+        "url": "https://www.wikidata.org/wiki/Q107617",
+        "confidence": "High"
+      },
+      "wikipedia": {
+        "found": true,
+        "title": "Rotation",
+        "url": "https://en.wikipedia.org/wiki/Rotation"
+      },
+      "nap_issues": [],
+      "issues": [
+        {
+          "severity": "Critical",
+          "area": "Schema",
+          "finding": "No Organization/Person entity found in JSON-LD.",
+          "fix": "Add Organization or Person schema with name, url, logo, and sameAs properties."
+        },
+        {
+          "severity": "Warning",
+          "area": "sameAs",
+          "finding": "Missing sameAs link to Wikipedia (Primary KG signal).",
+          "fix": "Add 'wikipedia.org' profile URL to sameAs array in your entity schema."
+        },
+        {
+          "severity": "Warning",
+          "area": "sameAs",
+          "finding": "Missing sameAs link to Wikidata (Primary KG signal).",
+          "fix": "Add 'wikidata.org' profile URL to sameAs array in your entity schema."
+        },
+        {
+          "severity": "Info",
+          "area": "sameAs",
+          "finding": "Missing sameAs link to LinkedIn (Strong KG signal).",
+          "fix": "Add 'linkedin.com' profile URL to sameAs array in your entity schema."
+        },
+        {
+          "severity": "Info",
+          "area": "sameAs",
+          "finding": "Missing sameAs link to Twitter/X (Strong KG signal).",
+          "fix": "Add 'x.com' profile URL to sameAs array in your entity schema."
+        }
+      ],
+      "summary": {
+        "entities_found": 0,
+        "sameas_count": 0,
+        "sameas_missing_critical": 4,
+        "wikidata_found": true,
+        "wikipedia_found": true,
+        "total_issues": 5
+      }
+    },
+    "raw": null,
+    "error": null
+  },
+  "llms_txt_checker": {
+    "ok": true,
+    "exit_code": 0,
+    "data": {
+      "url": "https://wolf-pack-eight.vercel.app/llms.txt",
+      "full_url": "https://wolf-pack-eight.vercel.app/llms-full.txt",
+      "exists": false,
+      "full_exists": false,
+      "status": 404,
+      "full_status": 404,
+      "parsed": {
+        "title": null,
+        "description": null,
+        "sections": [],
+        "links": []
+      },
+      "quality": {
+        "score": 0,
+        "issues": [
+          "\ud83d\udd34 No llms.txt found"
+        ],
+        "suggestions": [
+          "Create /llms.txt with site name, description, and key page links"
+        ]
+      },
+      "error": null
+    },
+    "raw": null,
+    "error": null
+  },
+  "onpage_checker": {
+    "ok": true,
+    "exit_code": 0,
+    "data": {
+      "url": "https://wolf-pack-eight.vercel.app/rotation",
+      "status_code": 200,
+      "indexability": {
+        "meta_robots": "noindex, nofollow",
+        "x_robots_tag": null,
+        "noindex": true
+      },
+      "canonical": {
+        "href": null,
+        "count": 0,
+        "self_referencing": false
+      },
+      "title": {
+        "text": "Rotation | WolfPack",
+        "length": 19
+      },
+      "meta_description": {
+        "text": "Compare CAD, BTC, ETH and LINK paper decisions against holding. Review costs, performance and experimental research before making a shift.",
+        "length": 138
+      },
+      "h1": {
+        "count": 1,
+        "texts": [
+          "Make the shift count."
+        ]
+      },
+      "heading_hierarchy": {
+        "sequence": [
+          1,
+          2
+        ],
+        "skips": []
+      },
+      "images": {
+        "total": 0,
+        "missing_alt": 0,
+        "empty_alt": 0,
+        "missing_alt_srcs": []
+      },
+      "schema": {
+        "jsonld_blocks": 0,
+        "types": [],
+        "parse_errors": 0,
+        "microdata": false
+      },
+      "mobile": {
+        "viewport": "width=device-width, initial-scale=1",
+        "has_width_device_width": true
+      },
+      "slugs": {
+        "checked": 12,
+        "unclean": []
+      },
+      "search_console": {
+        "meta_token_present": false,
+        "dns_checked": true,
+        "dns_txt_present": true,
+        "owner_action": null
+      },
+      "issues": [
+        "\ud83d\udd34 noindex present \u2014 page will be dropped from Google (meta: noindex, nofollow)",
+        "\u26a0\ufe0f No canonical tag",
+        "\u26a0\ufe0f No schema markup (JSON-LD or microdata)"
+      ],
+      "error": null
+    },
+    "raw": null,
+    "error": null
+  },
+  "sitemap_checker": {
+    "ok": true,
+    "exit_code": 0,
+    "data": {
+      "url": "https://wolf-pack-eight.vercel.app/rotation",
+      "robots_sitemaps": [],
+      "candidates_checked": [
+        {
+          "url": "https://wolf-pack-eight.vercel.app/sitemap.xml",
+          "status": 404
+        },
+        {
+          "url": "https://wolf-pack-eight.vercel.app/sitemap_index.xml",
+          "status": 404
+        }
+      ],
+      "found": false,
+      "sitemap_url": null,
+      "is_index": false,
+      "url_count": 0,
+      "sample_checked": 0,
+      "sample_non_200": [],
+      "off_host_urls": 0,
+      "parse_error": null,
+      "issues": [
+        "No sitemap found (checked robots.txt Sitemap directives, /sitemap.xml, /sitemap_index.xml)"
+      ],
+      "error": null
+    },
+    "raw": null,
+    "error": null
+  },
+  "image_weight": {
+    "ok": true,
+    "exit_code": 0,
+    "data": {
+      "url": "https://wolf-pack-eight.vercel.app/rotation",
+      "images_checked": 0,
+      "total_bytes": 0,
+      "images": [],
+      "oversized": [],
+      "legacy_format": [],
+      "og_image": {
+        "url": null,
+        "status": null,
+        "bytes": null
+      },
+      "issues": [
+        "og:image missing"
+      ],
+      "error": null
+    },
+    "raw": null,
+    "error": null
+  },
+  "https_checker": {
+    "ok": true,
+    "exit_code": 0,
+    "data": {
+      "url": "https://wolf-pack-eight.vercel.app/rotation",
+      "host": "wolf-pack-eight.vercel.app",
+      "http_url": "http://wolf-pack-eight.vercel.app/rotation",
+      "http_status": 308,
+      "redirect_status": 308,
+      "redirects_to_https": true,
+      "final_url": "https://wolf-pack-eight.vercel.app/rotation",
+      "https_ok": true,
+      "hsts": "max-age=31536000",
+      "mixed_content": [],
+      "issues": [],
+      "error": null
+    },
+    "raw": null,
+    "error": null
+  },
+  "cwv_lighthouse": {
+    "ok": true,
+    "exit_code": 0,
+    "data": {
+      "url": "https://wolf-pack-eight.vercel.app/rotation",
+      "strategy": "mobile",
+      "source": "lighthouse-local",
+      "chrome_path": "/home/danman60/.cache/ms-playwright/chromium-1248/chrome-linux64/chrome",
+      "performance_score": 97,
+      "metrics": {
+        "lcp_ms": 2111,
+        "cls": 0.039,
+        "tbt_ms": 144,
+        "fcp_ms": 911,
+        "si_ms": 911
+      },
+      "ratings": {
+        "lcp": "good",
+        "cls": "good",
+        "tbt": "good"
+      },
+      "issues": [],
+      "error": null
+    },
+    "raw": null,
+    "error": null
+  },
+  "_checklist": {
+    "01 sitemap.xml": {
+      "source": "sitemap_checker",
+      "status": "CHECKED"
+    },
+    "02 robots.txt": {
+      "source": "robots_checker",
+      "status": "CHECKED"
+    },
+    "03 no noindex": {
+      "source": "onpage_checker.indexability",
+      "status": "CHECKED"
+    },
+    "04 canonical": {
+      "source": "onpage_checker.canonical",
+      "status": "CHECKED"
+    },
+    "05 meta title": {
+      "source": "onpage_checker.title",
+      "status": "CHECKED"
+    },
+    "06 meta description": {
+      "source": "onpage_checker.meta_description",
+      "status": "CHECKED"
+    },
+    "07 one H1": {
+      "source": "onpage_checker.h1",
+      "status": "CHECKED"
+    },
+    "08 header hierarchy": {
+      "source": "onpage_checker.heading_hierarchy",
+      "status": "CHECKED"
+    },
+    "09 image alt": {
+      "source": "onpage_checker.images",
+      "status": "CHECKED"
+    },
+    "10 schema": {
+      "source": "onpage_checker.schema",
+      "status": "CHECKED"
+    },
+    "11 internal links": {
+      "source": "internal_links",
+      "status": "CHECKED"
+    },
+    "12 broken links": {
+      "source": "broken_links",
+      "status": "CHECKED"
+    },
+    "13 compressed images": {
+      "source": "image_weight",
+      "status": "CHECKED"
+    },
+    "14 Core Web Vitals": {
+      "source": "cwv_lighthouse",
+      "status": "CHECKED"
+    },
+    "15 mobile": {
+      "source": "onpage_checker.mobile",
+      "status": "CHECKED"
+    },
+    "16 HTTPS enforced": {
+      "source": "https_checker",
+      "status": "CHECKED"
+    },
+    "17 clean slugs": {
+      "source": "onpage_checker.slugs",
+      "status": "CHECKED"
+    },
+    "18 llms.txt": {
+      "source": "llms_txt_checker",
+      "status": "CHECKED"
+    },
+    "19 OG image": {
+      "source": "image_weight.og_image",
+      "status": "CHECKED"
+    },
+    "20 Search Console": {
+      "source": "onpage_checker.search_console",
+      "status": "CHECKED"
+    }
+  }
+}

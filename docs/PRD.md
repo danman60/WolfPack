@@ -1,6 +1,6 @@
 # WolfPack CAD spot rotation
 
-Status: active extension of the existing application; implementation and acceptance are in progress. This document does not certify live trading or predictive performance.
+Status: paper-workshop implementation deployed and preview browser acceptance passed. Private exchange authentication and live execution remain unbuilt; this document does not certify predictive performance.
 
 ## Purpose
 

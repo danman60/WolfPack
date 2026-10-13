@@ -4,6 +4,7 @@ import { CRYPTO_ASSETS, type HistoryDataset, type ResearchConfig } from "@/lib/r
 import { RESEARCH_VERSION, type ResearchProtocol, type ResearchScenario, type ResearchTrial, type ResearchTrialSummary } from "@/lib/rotation/research-contract";
 import { ApiError, apiError, dbRequest, freshMarket, getPortfolio, protectedRoute, rateLimit, readBody, requireSameOrigin, response } from "@/lib/rotation/server";
 import { calendarDay, evaluateHoldout, evaluatorFingerprintSource, runValidation, shiftDay, shiftMonth } from "@/lib/rotation/validation";
+import { createStrategyTrial, loadStrategyTrial } from '@/lib/rotation/strategy-server';
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -41,12 +42,18 @@ async function history(): Promise<HistoryDataset> {
 export const GET = protectedRoute(async (request, user) => {
   try {
     const id = new URL(request.url).searchParams.get("id");
+    const strategy = new URL(request.url).searchParams.get('strategy') === '1';
+    if (strategy) {
+      if (id) return response({trial: await loadStrategyTrial(user, id)});
+      const trials = await dbRequest(`wpr_trials?owner_id=eq.${user.id}&data->>namespace=eq.strategy&select=id,created_at,kind,purpose:data->>purpose,protocolId:data->>protocolId&order=created_at.desc&limit=50`, {}, user.accessToken);
+      return response({trials});
+    }
     if (id) {
-      const rows = await dbRequest<ResearchTrial[]>(`wpr_trials?owner_id=eq.${user.id}&id=eq.${uuid(id)}&select=id,created_at,kind,data`, {}, user.accessToken);
+      const rows = await dbRequest<ResearchTrial[]>(`wpr_trials?owner_id=eq.${user.id}&id=eq.${uuid(id)}&data->>namespace=is.null&select=id,created_at,kind,data`, {}, user.accessToken);
       if (rows.length !== 1) throw new ApiError("Trial not found in this workspace.", 404);
       return response({ trial: rows[0] });
     }
-    const trials = await dbRequest<ResearchTrialSummary[]>(`wpr_trials?owner_id=eq.${user.id}&select=id,created_at,kind,protocolId:data->>protocolId,forwardHoldoutStart:data->>forwardHoldoutStart,forwardHoldoutEnd:data->>forwardHoldoutEnd&order=created_at.desc&limit=50`, {}, user.accessToken);
+    const trials = await dbRequest<ResearchTrialSummary[]>(`wpr_trials?owner_id=eq.${user.id}&data->>namespace=is.null&select=id,created_at,kind,protocolId:data->>protocolId,forwardHoldoutStart:data->>forwardHoldoutStart,forwardHoldoutEnd:data->>forwardHoldoutEnd&order=created_at.desc&limit=50`, {}, user.accessToken);
     return response({ trials });
   } catch (error) { return apiError(error); }
 });
@@ -58,6 +65,7 @@ export const POST = protectedRoute(async (request, user) => {
     const body = await readBody(request, 256_000);
     const id = uuid(body.id);
     const input = record(body.data);
+    if (input.namespace === 'strategy') return response({trial: await createStrategyTrial(user, body)}, 201);
     const kind = body.kind;
     let data: ResearchTrial["data"];
     if (kind === "protocol") {
@@ -85,7 +93,7 @@ export const POST = protectedRoute(async (request, user) => {
       } satisfies ResearchProtocol;
     } else if (kind === "development" || kind === "holdout") {
       const protocolId = uuid(input.protocolId);
-      const rows = await dbRequest<ResearchTrial[]>(`wpr_trials?owner_id=eq.${user.id}&id=eq.${protocolId}&kind=eq.protocol&select=id,created_at,kind,data`, {}, user.accessToken);
+      const rows = await dbRequest<ResearchTrial[]>(`wpr_trials?owner_id=eq.${user.id}&id=eq.${protocolId}&kind=eq.protocol&data->>namespace=is.null&select=id,created_at,kind,data`, {}, user.accessToken);
       if (rows.length !== 1 || !("protocolVersion" in rows[0].data)) throw new ApiError("Registered protocol not found in this workspace.", 404);
       const protocol = rows[0].data as ResearchProtocol;
       if (protocol.protocolVersion !== RESEARCH_VERSION) throw new ApiError("This protocol requires its original evaluator version.", 409);

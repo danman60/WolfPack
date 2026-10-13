@@ -1,0 +1,6 @@
+{
+  "files": 146,
+  "serverSecretValues": 3,
+  "matches": [],
+  "secretScanScope": "Only three WPR workshop key/password values. Separate legacy Intel credential exposure is documented in legacy-intel-key-exposure.json."
+}

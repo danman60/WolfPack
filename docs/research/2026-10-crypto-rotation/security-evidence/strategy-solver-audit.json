@@ -1,0 +1,168 @@
+{
+  "scope": "Pure CPU solver audit. Hypothetical paper holdings/targets, genuine fresh public books. No strategy trial/recommendation/portfolio persisted; no claim of an end-to-end recommended SHIFT.",
+  "source": "Ndax public CAD spot order books",
+  "marketId": "6a1f277a-f3aa-439c-9fe4-847230c6d380",
+  "marketFetchedAt": "2026-10-13T14:24:21.954Z",
+  "results": [
+    {
+      "scenario": "cash-to-BTC-half",
+      "hypothetical": true,
+      "status": "complete",
+      "executedSteps": 1,
+      "feeCad": "10.00087158",
+      "steps": [
+        {
+          "from": "CAD",
+          "to": "BTC",
+          "amount": "5010.43665687",
+          "feeCad": "10.00087158",
+          "complete": true
+        }
+      ],
+      "finalBalances": {
+        "CAD": "4989.56334313",
+        "BTC": "0.04194722",
+        "ETH": "0",
+        "LINK": "0"
+      }
+    },
+    {
+      "scenario": "off-target-sales-then-BTC",
+      "hypothetical": true,
+      "status": "complete",
+      "executedSteps": 3,
+      "feeCad": "15.54395353",
+      "steps": [
+        {
+          "from": "ETH",
+          "to": "CAD",
+          "amount": "1",
+          "feeCad": "7.13209011",
+          "complete": false
+        },
+        {
+          "from": "LINK",
+          "to": "CAD",
+          "amount": "50",
+          "feeCad": "1.841",
+          "complete": false
+        },
+        {
+          "from": "CAD",
+          "to": "BTC",
+          "amount": "3292.00257172",
+          "feeCad": "6.57086342",
+          "complete": true
+        }
+      ],
+      "finalBalances": {
+        "CAD": "2185.56939025",
+        "BTC": "0.02756109",
+        "ETH": "0",
+        "LINK": "0"
+      }
+    },
+    {
+      "scenario": "BTC-trim-to-quarter",
+      "hypothetical": true,
+      "status": "complete",
+      "executedSteps": 1,
+      "feeCad": "17.77239092",
+      "steps": [
+        {
+          "from": "BTC",
+          "to": "CAD",
+          "amount": "0.07486751",
+          "feeCad": "17.77239092",
+          "complete": true
+        }
+      ],
+      "finalBalances": {
+        "CAD": "8968.4230689",
+        "BTC": "0.02513249",
+        "ETH": "0",
+        "LINK": "0"
+      }
+    },
+    {
+      "scenario": "three-asset-CAD-exit",
+      "hypothetical": true,
+      "status": "complete",
+      "executedSteps": 3,
+      "feeCad": "3.45531260",
+      "steps": [
+        {
+          "from": "BTC",
+          "to": "CAD",
+          "amount": "0.01",
+          "feeCad": "2.3738456",
+          "complete": false
+        },
+        {
+          "from": "ETH",
+          "to": "CAD",
+          "amount": "0.1",
+          "feeCad": "0.713267",
+          "complete": false
+        },
+        {
+          "from": "LINK",
+          "to": "CAD",
+          "amount": "10",
+          "feeCad": "0.3682",
+          "complete": true
+        }
+      ],
+      "finalBalances": {
+        "CAD": "1824.2009874",
+        "BTC": "0",
+        "ETH": "0",
+        "LINK": "0"
+      }
+    },
+    {
+      "scenario": "below-venue-minimum-cash",
+      "hypothetical": true,
+      "status": "hold",
+      "executedSteps": 0,
+      "feeCad": "0.00000000",
+      "steps": [
+        {
+          "decision": "hold",
+          "note": "Target reached at venue precision. Record HOLD to finish this reviewed rebalance. Remaining BTC adjustment cannot reach minimum 0.00001000 with available owned funds."
+        }
+      ],
+      "finalBalances": {
+        "CAD": "0.01",
+        "BTC": "0",
+        "ETH": "0",
+        "LINK": "0"
+      }
+    },
+    {
+      "scenario": "already-CAD-no-order",
+      "hypothetical": true,
+      "status": "hold",
+      "executedSteps": 0,
+      "feeCad": "0.00000000",
+      "steps": [
+        {
+          "decision": "hold",
+          "note": "Target reached at venue precision. Record HOLD to finish this reviewed rebalance. "
+        }
+      ],
+      "finalBalances": {
+        "CAD": "10000",
+        "BTC": "0",
+        "ETH": "0",
+        "LINK": "0"
+      }
+    },
+    {
+      "scenario": "genuine-top-level-only-depth-limit",
+      "hypothetical": true,
+      "status": "blocked",
+      "note": "Current book depth cannot reach the target allocation."
+    }
+  ]
+}

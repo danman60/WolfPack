@@ -1,6 +1,6 @@
 # Rotation architecture
 
-Status: integrated within the WolfPack monorepo. Real local browser/server acceptance and isolated production build passed; deployment evidence is tracked separately.
+Status: integrated within the WolfPack monorepo. Real local browser/server acceptance and isolated production build passed; deployed paper application and read-only production smoke passed; exact scope is tracked in release evidence.
 
 ## Existing architecture preserved
 
@@ -18,6 +18,8 @@ The root layout supplies Geist fonts, providers and `Nav`. `/intel/*` rewrites t
 | `app/src/lib/rotation/server.ts` | Real GoTrue sessions, membership checks, origin/input/rate limits, scoped workshop access and transactional commits |
 | `app/src/lib/rotation/validation.ts` | Experimental paired horizon outcomes and chronological fold evaluation |
 | `app/src/lib/rotation/research-contract.ts` | Immutable protocol/trial records, source hashes and future holdout contract |
+| `app/src/lib/rotation/strategy-study.ts` | Frozen five-window adaptive selector, continuous chronological comparison and disclosed HOLD gates |
+| `app/src/lib/rotation/strategy-server.ts` | Saved strategy adoption, cumulative history, current recommendation and bounded costed paper steps |
 | `app/src/app/api/rotation/market/route.ts` | Genuine public CAD books and instrument rules |
 | `app/src/app/api/rotation/history/route.ts` | Genuine completed historical observations with source/coverage |
 | `app/src/app/rotation/` | Composed owner workspace and route-scoped design |
@@ -35,7 +37,7 @@ Public market data → validated snapshot → fixed-precision preview → exact 
 
 Historical source → coverage validation → chronology/cost-aware experimental replay → explicitly limited research result.
 
-The client never supplies trusted identity, fees already charged, arbitrary final balances or an executable preview without server validation. Secrets stay server-side. Failed persistence never becomes UI success. Concurrent approval uses database revision/uniqueness protection rather than browser-only locks.
+The client never supplies trusted identity, fees already charged, arbitrary final balances or an executable preview without server validation. Rotation credentials stay server-side; the separate legacy public Intel key exposure remains an unresolved release finding. Failed persistence never becomes UI success. Concurrent approval uses database revision/uniqueness protection rather than browser-only locks.
 
 ## Accounting invariants
 
@@ -54,13 +56,21 @@ The current experimental method uses joint historical horizon returns. A 365-day
 
 Each real run persists an immutable protocol with source SHA-256 before evaluation. A future 12-calendar-month prospective evaluation is registered; server eligibility checks refuse scoring until all required future observations exist. Later protocols can expose overlapping data, so this is not guaranteed account-wide untouched evaluation. This design provides reproducible research, not proof of useful predictive performance or permission to trade.
 
+## Integrated strategy and recommendation plan
+
+`StrategyPanel` makes programmatic study → explicit adoption → current recommendation the primary workspace journey. Advanced research remains available. Strategy records reuse `wpr_trials` with `namespace=strategy`; old research queries exclude that namespace. Migration005 adds only an active study pointer and separate plan revision to portfolios, plus service-only transactional adoption/decision functions.
+
+The adopted procedure compares five fixed momentum windows using earlier data for each 60-day selection block. Trading reviews remain weekly or calendar-monthly. Historical test portfolios use a disclosed equal-basket starting scenario; current paired recommendations use actual saved holdings. The genuine-data QA study fails its evidence gates and returns HOLD. All history remains retrospective and exposed.
+
+Recommendation refresh appends to the latest verified cumulative archive without moving its original calendar anchor or changing its configuration. Source/evaluator hashes, owner, holdings and plan/portfolio revisions bind the result. Fresh public books determine each paper step. The owner approves at most three conversions per reviewed target; venue dust remains owned, inadequate depth blocks, and completed unchanged targets retain drifting units. An unfinished target expires at the next Eastern review, including correct daylight-saving boundaries. Both recommended HOLD and quote consumption are recorded atomically with financial revision checks. See `STRATEGY-WORKFLOW-VERIFICATION.md` for final acceptance and deployment status.
+
 ## Hosting and dependency reachability
 
-Existing project link is Vercel `wolf-pack`; live read-only inspection on this session returned production deployment `dpl_Fvw68FPVJs32XgLYd27ap2sucbzA`, READY, created August 28, 2026 at 09:54 Eastern, with alias `wolf-pack-eight.vercel.app`. This is evidence about the old deployment, not deployment of the new rotation code.
+Existing project link is Vercel `wolf-pack`, rootDirectory `app`; deploy from the repository root. Production route is `https://wolf-pack-eight.vercel.app/rotation`, artifact `dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu`, sourced from commit `9e7b566` and QA-tested preview `dpl_BCzx3sFkbNRqxsM1sD5ovVkBkPa3`. Vercel CLI promotes a true Preview by creating a new Production build. Therefore preview E2E and production read-only smoke are separate evidence; binary identity was not established.
 
 Owner selected the existing Netcup workshop tenant. Tailnet gateway is `http://100.89.183.64:8100`; existing public gateway is `https://djatb.fyi/sb/workshop`. Both unauthenticated `/auth/v1/health` probes returned the gateway's API-key-required response. Subsequent authenticated local readiness and real browser persistence verified workshop database/auth usability. The public route already exists; no new public Traefik router or tenant is needed or authorized.
 
-Local developer workspace is `http://127.0.0.1:3218/rotation` on SPYBALLOON, which has tailnet access. Existing Tailscale Serve routes proxy unrelated services and must not be repointed. Preserve Vercel hosting; do not move app hosting onto Netcup. Before a later deployment, prove the chosen application host can authenticate to the selected workshop gateway and verify assigned domain/session configuration.
+Local developer workspace is `http://127.0.0.1:3218/rotation` on SPYBALLOON, which has tailnet access. Existing Tailscale Serve routes proxy unrelated services and must not be repointed. Preserve Vercel hosting; do not move app hosting onto Netcup. Authenticated preview and production GET readiness verified Vercel can use this workshop gateway; production ledger/trial reads matched the preview session.
 
 ## Readiness boundaries
 

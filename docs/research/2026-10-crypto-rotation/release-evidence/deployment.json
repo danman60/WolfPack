@@ -1,0 +1,22 @@
+{
+  "recordedAtEastern": "2026-10-12T23:34:14.664063-04:00",
+  "deploymentId": "dpl_BCzx3sFkbNRqxsM1sD5ovVkBkPa3",
+  "previewUrl": "https://wolf-pack-n8aij5nb4-danman60s-projects.vercel.app/rotation",
+  "sourceCommit": "9e7b566c7c9843d4ccdd18b6cf67cf94a137856a",
+  "sourceBranch": "feat/cad-rotation-workshop",
+  "applicationSourceDiffFromCommit": [],
+  "environment": "production",
+  "project": "wolf-pack",
+  "rootDirectory": "app",
+  "build": "PASS",
+  "typecheck": "PASS",
+  "productionPromotion": "completed by Vercel CLI production rebuild, not identical-artifact alias assignment",
+  "scope": "paper-workshop; no exchange connection or live execution implemented",
+  "credentials": "omitted; no cookies, tokens, passwords or environment values in evidence",
+  "productionDeploymentId": "dpl_422mzLkVN5MR3aQQMG2sn6LLJjyu",
+  "productionImmutableUrl": "https://wolf-pack-ipdosg59p-danman60s-projects.vercel.app/rotation",
+  "productionUrl": "https://wolf-pack-eight.vercel.app/rotation",
+  "previewTests": "9/9 workflow plus5/5 separate pair checks",
+  "productionVerification": "GET-only page/session/readiness/portfolio/trials, rendered390/1440 screenshots,116 actual browser JavaScript files exact-secret scan",
+  "deviation": "vercel promote --yes rebuilds a true Preview as Production. CLI source and deployment originalDeploymentId verified. Cancellation was attempted while verifying but build completed; no rollback or further deployment mutation occurred."
+}

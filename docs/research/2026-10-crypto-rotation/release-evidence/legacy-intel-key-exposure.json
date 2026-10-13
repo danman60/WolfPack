@@ -1,0 +1,56 @@
+{
+  "recordedAtEastern": "2026-10-12T23:42:28.170573-04:00",
+  "status": "CONFIRMED_EXPOSED_LEGACY_CREDENTIAL",
+  "scope": "Bounded verification only; no key rotation, environment mutation, backend action or wallet change performed.",
+  "configuration": {
+    "project": "wolf-pack",
+    "allEnvironmentRows": 14,
+    "exactKeyRows": 1,
+    "productionExactKeyRows": 1,
+    "matchingMetadata": [
+      {
+        "key": "NEXT_PUBLIC_INTEL_API_KEY",
+        "target": [
+          "production"
+        ],
+        "type": "encrypted",
+        "valueFieldPresent": true
+      }
+    ]
+  },
+  "bundleScan": {
+    "scannedBundles": 116,
+    "matches": [
+      {
+        "path": "/_next/static/chunks/80c371bd10693fad.js",
+        "matches": {
+          "decoded": 1,
+          "trimmed": 1
+        },
+        "intelVariableName": false,
+        "bearerLiteral": true
+      }
+    ],
+    "variableNameFiles": [],
+    "bearerLiteralFiles": [
+      "/_next/static/chunks/3aafe3ad810191e3.js",
+      "/_next/static/chunks/80c371bd10693fad.js"
+    ]
+  },
+  "anonymousProof": {
+    "url": "https://wolf-pack-eight.vercel.app/_next/static/chunks/80c371bd10693fad.js",
+    "anonymousStatus": 200,
+    "noCookiesOrAuthorizationSent": true,
+    "configuredDecodedKeyOccurrences": 1,
+    "trimmedKeyOccurrences": 1,
+    "requestMethod": "GET"
+  },
+  "sourceContract": {
+    "client": "app/src/lib/intel.ts:6-16 reads NEXT_PUBLIC_INTEL_API_KEY and sets Authorization Bearer.",
+    "server": "intel/wolfpack/api.py:148-156 requires equality to settings.api_secret_key; unset returns403.",
+    "privilegeScope": "38 current-source protected handlers, including strategy mode, wallet configuration, approval and live execute/cancel.",
+    "runtimeAcceptance": "Unverified. Configured backend HTTP health, SSH and independent TCP8000 probes timed out. No credential sent. Local intel/.env API_SECRET_KEY does not match the production browser key; local config is not the remote runtime."
+  },
+  "methodCorrection": "Initial shlex parsing preserved a literal escaped newline and produced a false exact-match zero. Decoding the quoted dotenv string correctly found one exact occurrence; trimmed comparison and independent anonymous retrieval confirmed it.",
+  "secrets": "Actual values, secret fingerprints, session cookies and environment payloads omitted."
+}

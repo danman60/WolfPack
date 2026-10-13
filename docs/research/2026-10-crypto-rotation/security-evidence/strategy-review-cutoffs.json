@@ -1,0 +1,33 @@
+{
+  "scope": "CPU execution of actual source cutoff block; calendar boundary cases, no persisted recommendations.",
+  "rows": [
+    {
+      "reviewDate": "2026-11-01",
+      "actual": "2026-11-01T04:00:00.000Z",
+      "expected": "2026-11-01T04:00:00.000Z",
+      "eastern": "2026-11-01, 12:00:00 a.m. EDT",
+      "pass": true
+    },
+    {
+      "reviewDate": "2027-03-14",
+      "actual": "2027-03-14T05:00:00.000Z",
+      "expected": "2027-03-14T05:00:00.000Z",
+      "eastern": "2027-03-14, 12:00:00 a.m. EST",
+      "pass": true
+    },
+    {
+      "reviewDate": "2026-03-08",
+      "actual": "2026-03-08T05:00:00.000Z",
+      "expected": "2026-03-08T05:00:00.000Z",
+      "eastern": "2026-03-08, 12:00:00 a.m. EST",
+      "pass": true
+    },
+    {
+      "reviewDate": "2026-10-20",
+      "actual": "2026-10-20T04:00:00.000Z",
+      "expected": "2026-10-20T04:00:00.000Z",
+      "eastern": "2026-10-20, 12:00:00 a.m. EDT",
+      "pass": true
+    }
+  ]
+}

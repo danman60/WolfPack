@@ -1,0 +1,12 @@
+{
+  "checkedEastern": "2026-10-13T10:32:37.769290-04:00",
+  "scope": "isolated local final production build static JavaScript; actual configured WPR values and previously exposed legacy value",
+  "files": 146,
+  "matches": {
+    "WPR_SUPABASE_ANON_KEY": 0,
+    "WPR_SUPABASE_SERVICE_ROLE_KEY": 0,
+    "WPR_DEMO_PASSWORD": 0,
+    "legacy_exposed_key": 0
+  },
+  "status": "PASS"
+}

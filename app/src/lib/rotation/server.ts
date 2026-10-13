@@ -177,9 +177,9 @@ export async function requirePortfolio(user: RotationUser, expectedRevision: unk
   if (portfolio.revision !== expectedRevision) throw new ApiError('Portfolio changed. Reload before continuing.', 409);
   return portfolio;
 }
-export async function commitPortfolio(user: RotationUser, next: Portfolio, expected: number | null, previewId: string | null = null): Promise<Portfolio> {
+export async function commitPortfolio(user: RotationUser, next: Portfolio, expected: number | null, previewId: string | null = null, recommendationId: string | null = null, expectedPlan: number | null = null): Promise<Portfolio> {
   validatePortfolio(next);
-  const saved = await dbRequest<unknown>('rpc/wpr_commit_portfolio', { method: 'POST', body: JSON.stringify({ p_owner: user.id, p_next: next, p_expected: expected, p_preview: previewId }) });
+  const saved = await dbRequest<unknown>('rpc/wpr_commit_decision', { method: 'POST', body: JSON.stringify({ p_owner: user.id, p_next: next, p_expected: expected, p_preview: previewId, p_recommendation: recommendationId, p_plan_expected: expectedPlan }) });
   return validatePortfolio(saved);
 }
 export async function freshMarket(): Promise<MarketSnapshot> {

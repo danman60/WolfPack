@@ -1,0 +1,40 @@
+{
+  "sourcedAtEastern": "2026-10-12T23:20:26-04:00",
+  "scope": "Public official Ndax documentation and repositories only; no private exchange request.",
+  "organization": {
+    "url": "https://api.github.com/users/NDAXlO/repos?per_page=100",
+    "publicRepositories": 43,
+    "nonForkRepositories": [
+      "ndax-api-documentation"
+    ]
+  },
+  "sources": [
+    {
+      "url": "https://raw.githubusercontent.com/NDAXlO/ndax-api-documentation/234d7aa7dd23ea0f8369d8a71ee1053c5f90a8c0/README.md",
+      "commit": "234d7aa7dd23ea0f8369d8a71ee1053c5f90a8c0",
+      "files": 1,
+      "sha256": "cbf939ff59f66945ea0771b5d877c4f7252a3821d714a16e7e828a77a29b1545",
+      "hmacMentions": 0,
+      "sha256Mentions": 0,
+      "signatureCharacters": 64,
+      "secretFieldInAuthExample": false
+    },
+    {
+      "url": "https://github.com/NDAXlO/API/tree/0688861a62d995a40c1472214b3e611c04fbf8e6",
+      "files": 18,
+      "forkOf": "ayhammoud/API",
+      "finding": "Static API documentation repeats the literal Signature and parameter descriptions; no HMAC/SHA256 derivation found in inspected text assets."
+    },
+    {
+      "url": "https://github.com/NDAXlO/apex-web-tools/tree/d86e25cd793adde0a373c06d78359cbc7e24ac78",
+      "files": 141,
+      "forkOf": "alphapoint/apex-web-tools",
+      "finding": "Frontend build assets; not established as an official Ndax API signing SDK."
+    },
+    {
+      "url": "https://apidoc.ndax.io/#authenticateuser",
+      "finding": "Describes APIKey, Signature, UserId and Nonce. Signing input order, secret encoding and digest encoding not established."
+    }
+  ],
+  "result": "Unverified exact signing derivation. Published literal signature cannot serve as a reproducible signing fixture because its secret and derivation are not supplied. Third-party snippets excluded from authoritative conclusion."
+}

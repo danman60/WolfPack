@@ -14,6 +14,7 @@ Applied individually and transactionally:
 2. `202610130002_rotation_owner_reads_audit.sql`: JWT owner-read previews and append-only audit table.
 3. `202610130003_rotation_transactional_audit.sql`: portfolio writes insert actor/revision/event audit in the same transaction.
 4. `202610130004_rotation_holdout_uniqueness.sql`: unique first holdout per owner/protocol.
+5. `202610130005_rotation_strategy_plan.sql`: separate adopted-plan revision, service-only adoption/guarded decision RPCs, and transactional recommendation provenance audit. Applied after schema/grant review; readback in `security-evidence/strategy-migration.txt`.
 
 Read actual migration state from `public.wpr_schema_migrations` before applying anything. These files are forward-only migrations, not rerunnable setup scripts. Each notifies PostgREST to reload its schema.
 
@@ -48,3 +49,11 @@ Disable new demo provisioning by setting `WPR_DEMO_ENABLED=false` and redeployin
 NETCUP platform backup jobs are documented in DEVOPS. This task has not rehearsed a rotation-specific restore; the readiness response reports that limit. For suspected ledger corruption, keep the original row and append evidence; do not replace it with browser data. Restrict the affected workspace, export the current row/audit through an approved administrator, and follow the NETCUP restore procedure into a separate recovery target before any replacement. Actual restore and security-key rotation require their own explicit scope.
 
 No live funding, exchange keys, custody choice, risk limits, legal entity or consumer password-recovery service has been approved by this paper integration. Those remain separate gates before real-money use.
+
+## Adopted paper strategy
+
+Strategy protocol/development records reuse `wpr_trials` with namespace/version tags. Existing research restores only unnamespaced records; exports retain both. Adoption changes only active plan and plan revision, never financial units/revision. Current recommendations bind owner, plan/portfolio revisions, holdings hash, archived source and evaluator fingerprint. Public history appends to the latest verified cumulative adopted archive while keeping its original calendar anchor and configuration.
+
+A recommendation lasts at most fifteen minutes; a quote lasts at most thirty seconds. Quote sizing uses current full public books, sells off-target assets first, then solves the post-fee target allocation with fixed-point accounting. Maximum three individually approved shifts. Venue dust remains owned; depth failures block. Quote consumption and recommended HOLD append immutable decision audit in the financial transaction. A completed unchanged target retains units and natural drift. An unfinished target can continue only until the next scheduled Eastern review; recommendation expiry is capped there and checked atomically by SQL. Expired partial targets are superseded without pretending completion. Manual actions invalidate stale revisions; subsequent steps use actual current balances and the still-valid frozen target.
+
+Verification artifacts separate real owner-isolation/HOLD browser paths from hypothetical CPU sizing against genuine public books. A favorable SHIFT recommendation has not been manufactured or persisted for a test.

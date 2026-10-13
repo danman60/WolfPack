@@ -1,0 +1,11 @@
+Verified 2026-10-13T10:09:56-04:00 Eastern
+202610130001_rotation_workshop
+202610130002_rotation_owner_reads_audit
+202610130003_rotation_transactional_audit
+202610130004_rotation_holdout_uniqueness
+202610130005_rotation_strategy_plan
+active_plan_id|uuid||YES
+plan_revision|integer|0|NO
+wpr_adopt_plan|f|{"search_path=public, pg_temp"}|f|f|t
+wpr_commit_decision|f|{"search_path=public, pg_temp"}|f|f|t
+4|4

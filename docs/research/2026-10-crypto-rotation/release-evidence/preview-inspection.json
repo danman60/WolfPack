@@ -1,0 +1,79 @@
+{
+  "serverPortfolioReload": {
+    "id": "cde04b9d-3de8-4d6d-9949-95a27ca64c4c",
+    "revision": 3
+  },
+  "readiness": {
+    "mode": "paper-workshop",
+    "database": "operational",
+    "auth": "operational",
+    "demo": "enabled-isolated-synthetic-accounts",
+    "persistence": "server-ledger-with-atomic-revision-check",
+    "liveTrading": "disabled",
+    "passwordRecovery": "not-enabled-seeded-workshop-accounts-only",
+    "backups": "platform-managed; rotation-specific restore not rehearsed",
+    "ownerDecisions": [
+      "actual funding",
+      "custody/provider",
+      "risk and concentration limits"
+    ]
+  },
+  "retainedTrials": 2,
+  "futureHoldoutRefused": [
+    "Forward holdout remains sealed through 2027-10-12. No future-period performance has been calculated."
+  ],
+  "fullExport": {
+    "trials": 2,
+    "audit": 8
+  },
+  "viewports": [
+    {
+      "width": 1440,
+      "client": 1440,
+      "scroll": 1440
+    },
+    {
+      "width": 390,
+      "client": 390,
+      "scroll": 390
+    },
+    {
+      "width": 360,
+      "client": 360,
+      "scroll": 360
+    },
+    {
+      "width": 320,
+      "client": 320,
+      "scroll": 320
+    }
+  ],
+  "measuredScreenshots": [
+    {
+      "url": "https://wolf-pack-n8aij5nb4-danman60s-projects.vercel.app/rotation",
+      "width": 1440,
+      "png": "/home/danman60/.claude/shots/sent/wolfpack-rotation-research-preview-1440-20261012T232322.png",
+      "captured": "2026-10-12T23:23:22.575924-04:00",
+      "pass": true,
+      "fail": [],
+      "warn": []
+    },
+    {
+      "url": "https://wolf-pack-n8aij5nb4-danman60s-projects.vercel.app/rotation",
+      "width": 390,
+      "png": "/home/danman60/.claude/shots/pending/wolfpack-rotation-research-preview-390-20261012T232324.png",
+      "captured": "2026-10-12T23:23:24.206766-04:00",
+      "pass": true,
+      "fail": [],
+      "warn": []
+    }
+  ],
+  "console": [
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 409 ()",
+      "url": "https://wolf-pack-n8aij5nb4-danman60s-projects.vercel.app/rotation"
+    }
+  ],
+  "status": "PASS"
+}

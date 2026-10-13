@@ -1,0 +1,188 @@
+{
+  "target": "https://wolf-pack-eight.vercel.app/rotation",
+  "final_url": "https://wolf-pack-eight.vercel.app/rotation",
+  "http_status": 200,
+  "repo": "/home/danman60/projects/WolfPack",
+  "counts": {
+    "fail": 9,
+    "review": 1,
+    "unknown": 0,
+    "pass": 11
+  },
+  "launch_blockers": 3,
+  "findings": [
+    {
+      "item": "client env vars",
+      "severity": "BLOCKER",
+      "status": "fail",
+      "evidence": "app/.env.example:18:NEXT_PUBLIC_INTEL_API_KEY=\napp/src/lib/intel.ts:3: * Injects the bearer token from NEXT_PUBLIC_INTEL_API_KEY if set.\napp/src/lib/intel.ts:6:const API_KEY = process.env.NEXT_PUBLIC_INTEL_API_KEY || \"\";\ndocs/research/2026-10-crypto-rotation/BOOTSTRAP-VERIFICATION.md:52:- Source scan flagged existing `NEXT_PUBLIC_INTEL_API_KEY` references and an empty example value. This is not evidence of a newly leaked secret; the source reference alone cannot establish the value or its privileges.",
+      "fix": "A NEXT_PUBLIC_/VITE_ prefix means 'inlined into the browser bundle'. Any of these named SECRET/TOKEN/SERVICE_ROLE is public. Rotate, then move the call behind a server route.",
+      "owner": "go-live"
+    },
+    {
+      "item": "privacy policy page",
+      "severity": "BLOCKER",
+      "status": "fail",
+      "evidence": "no link matching it anywhere on the homepage",
+      "fix": "Write the page, then link it from the global footer. See references/legal-pages.md \u2014 do NOT generate one from invented company facts.",
+      "owner": "go-live"
+    },
+    {
+      "item": "terms and conditions page",
+      "severity": "BLOCKER",
+      "status": "fail",
+      "evidence": "no link matching it anywhere on the homepage",
+      "fix": "Write the page, then link it from the global footer. See references/legal-pages.md \u2014 do NOT generate one from invented company facts.",
+      "owner": "go-live"
+    },
+    {
+      "item": "custom 404 page",
+      "severity": "BROKEN",
+      "status": "fail",
+      "evidence": "404 body is 15330 bytes, markers=['This page could not be found'] \u2014 looks like the framework/server default",
+      "fix": "Add a branded 404 with nav back into the site.",
+      "owner": "go-live"
+    },
+    {
+      "item": "social preview image",
+      "severity": "INVISIBLE",
+      "status": "fail",
+      "evidence": "no og:image",
+      "fix": "Every share of this link renders as a grey box.",
+      "owner": "seo-suite"
+    },
+    {
+      "item": "robots.txt",
+      "severity": "INVISIBLE",
+      "status": "fail",
+      "evidence": "returned 404",
+      "fix": "",
+      "owner": "seo-suite"
+    },
+    {
+      "item": "sitemap",
+      "severity": "INVISIBLE",
+      "status": "fail",
+      "evidence": "/sitemap.xml returned 404",
+      "fix": "",
+      "owner": "seo-suite"
+    },
+    {
+      "item": "analytics",
+      "severity": "INVISIBLE",
+      "status": "fail",
+      "evidence": "no analytics library detected",
+      "fix": "Without it you cannot tell a launch from a non-event. A cookieless tool avoids adding a consent obligation.",
+      "owner": "go-live"
+    },
+    {
+      "item": "one clear call to action",
+      "severity": "CONVERSION",
+      "status": "fail",
+      "evidence": "no action-verb link or button found",
+      "fix": "A page with nothing to do is a brochure. Name the one thing you want a visitor to do and make it the loudest element.",
+      "owner": "go-live"
+    },
+    {
+      "item": "cookie consent banner",
+      "severity": "BLOCKER",
+      "status": "review",
+      "evidence": "no consent UI found, and no third-party trackers detected either",
+      "fix": "If nothing sets a non-essential cookie you may not need a banner. Verify against the actual cookie jar, not the markup.",
+      "owner": "go-live"
+    },
+    {
+      "item": "force HTTPS",
+      "severity": "BLOCKER",
+      "status": "pass",
+      "evidence": "http:// -> 308 -> https://wolf-pack-eight.vercel.app/rotation",
+      "fix": "",
+      "owner": "go-live"
+    },
+    {
+      "item": "HSTS header",
+      "severity": "BLOCKER",
+      "status": "pass",
+      "evidence": "max-age=31536000",
+      "fix": "",
+      "owner": "go-live"
+    },
+    {
+      "item": "secrets off the front end",
+      "severity": "BLOCKER",
+      "status": "pass",
+      "evidence": "scanned 24 first-party bundle(s), no privileged key patterns",
+      "fix": "",
+      "owner": "go-live"
+    },
+    {
+      "item": "spam protection",
+      "severity": "BLOCKER",
+      "status": "pass",
+      "evidence": "no <form> on this page",
+      "fix": "",
+      "owner": "go-live"
+    },
+    {
+      "item": "form validation",
+      "severity": "BROKEN",
+      "status": "pass",
+      "evidence": "no <form> on this page",
+      "fix": "",
+      "owner": "go-live"
+    },
+    {
+      "item": "mobile friendly",
+      "severity": "BROKEN",
+      "status": "pass",
+      "evidence": "viewport: width=device-width, initial-scale=1",
+      "fix": "",
+      "owner": "go-live"
+    },
+    {
+      "item": "favicon",
+      "severity": "INVISIBLE",
+      "status": "pass",
+      "evidence": "https://wolf-pack-eight.vercel.app/rotation/icon.svg?icon.1c42dded.svg (334 bytes, image/svg+xml)",
+      "fix": "",
+      "owner": "go-live"
+    },
+    {
+      "item": "meta title",
+      "severity": "INVISIBLE",
+      "status": "pass",
+      "evidence": "'Rotation | WolfPack'",
+      "fix": "",
+      "owner": "seo-suite"
+    },
+    {
+      "item": "meta description",
+      "severity": "INVISIBLE",
+      "status": "pass",
+      "evidence": "138 chars",
+      "fix": "",
+      "owner": "seo-suite"
+    },
+    {
+      "item": "alt text on images",
+      "severity": "SLOW",
+      "status": "pass",
+      "evidence": "no <img> tags",
+      "fix": "",
+      "owner": "go-live"
+    },
+    {
+      "item": "compress your images",
+      "severity": "SLOW",
+      "status": "pass",
+      "evidence": "no images",
+      "fix": "",
+      "owner": "go-live"
+    }
+  ],
+  "not_covered_here": [
+    "page load speed (needs a real run: seo-suite pagespeed, or Lighthouse)",
+    "colour contrast (needs a rendered page: run contrast via playwright)",
+    "broken links sitewide (seo-suite broken_links crawls; this checks one page)"
+  ]
+}

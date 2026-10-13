@@ -23,3 +23,5 @@
 .rotation-workspace .rotation-chart { height:280px; min-width:0; }
 @media(max-width:850px) { .rotation-workspace .rotation-grid { grid-template-columns:minmax(0,1fr); } }
 @media(prefers-reduced-motion:reduce) { .rotation-workspace * { scroll-behavior:auto; animation:none!important; transition:none!important; } }
+
+.rotation-workspace .rotation-strategy-panel { border-color:#34d39966; background:linear-gradient(120deg,#12232b,#111a2c 64%); }

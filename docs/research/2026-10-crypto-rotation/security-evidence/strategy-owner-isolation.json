@@ -1,0 +1,18 @@
+{
+  "checkedAtEastern": "2026-10-13T10:22:44-04:00",
+  "target": "http://127.0.0.1:3218",
+  "checks": {
+    "demo_login": true,
+    "isolation_login": true,
+    "distinct_owner_portfolios": true,
+    "other_owner_strategy_read_404": true,
+    "other_owner_adoption_404": true,
+    "old_research_rejects_strategy_id_404": true,
+    "old_research_list_excludes_strategy_ids": true,
+    "stale_plan_adoption_409": true,
+    "rejected_adoption_preserves_financial_json": true,
+    "rejected_adoption_preserves_plan_revision": true,
+    "demo_logout": true,
+    "isolation_logout": true
+  }
+}

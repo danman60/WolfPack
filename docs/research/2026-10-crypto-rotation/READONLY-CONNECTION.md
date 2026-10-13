@@ -1,6 +1,6 @@
 # Read-only exchange connection: verified contract and remaining gate
 
-Sourced: 2026-10-12T23:08:12-04:00 Eastern. Research only: no private exchange request, credential import, funding action or order was executed. Provider choice remains with the owner. This document is a concrete next implementation slice, not a claim that an exchange account is connected.
+Sourced: 2026-10-12T23:20:26-04:00 Eastern. Research only: no private exchange request, credential import, funding action or order was executed. Provider choice remains with the owner. This document is a concrete next implementation slice, not a claim that an exchange account is connected.
 
 ## Existing implementation, verified locally
 
@@ -13,6 +13,12 @@ Credential-name inventory of `~/.env.keys`, `app/.env.local`, `intel/.env`, and 
 The exchange documents API-key creation with selectable permissions and a separately revealed secret. Its authenticated WebSocket endpoint is `wss://api.ndax.io/WSGateway/`; `AuthenticateUser` takes APIKey, Signature, UserId and Nonce, with UserId/Nonce strings. The official reference explicitly says that this authentication call is not an HTTP login. [Ndax key setup](https://ndax.io/en/support/api_access_and_developer_tools/find-credentials-ndax-trading-api), [authentication reference](https://apidoc.ndax.io/#authenticateuser).
 
 Read-only account discovery/balances use `GetUserAccountInfos` and `GetAccountPositions`; both permit `AccountReadOnly`. Positions distinguish amount, hold and pending deposits/withdrawals. Account/OMS identity must come from the authenticated account response. The official repository authentication example supplies a literal Signature but does not show its derivation. The API reference describes a signature with APIKey and Nonce; the reviewed reference and repository do not establish the exact signing algorithm, input concatenation and encoding. Signature derivation and a definitive key-permission introspection method remain unverified before a connection can be called ready. [Account API](https://apidoc.ndax.io/#getaccountpositions), [official WebSocket message examples](https://github.com/NDAXlO/ndax-api-documentation).
+
+### Signature evidence follow-up
+
+The live GitHub API lists 43 public repositories under `NDAXlO`: 42 forks and one original documentation repository. That original repository contains only `README.md` at commit `234d7aa7dd23ea0f8369d8a71ee1053c5f90a8c0`; the authentication example supplies APIKey, Signature, UserId and Nonce but no reproducible secret/signing fixture. The separate `API` repository is a static documentation fork; its text repeats the parameter descriptions. Searches of those source texts found no HMAC/SHA256 derivation. This is a scoped evidence result, not a claim that Ndax has no other documentation. [Official repository inventory](https://api.github.com/users/NDAXlO/repos?per_page=100), [pinned authentication example](https://github.com/NDAXlO/ndax-api-documentation/blob/234d7aa7dd23ea0f8369d8a71ee1053c5f90a8c0/README.md#authentication), [documentation fork](https://github.com/NDAXlO/API/tree/0688861a62d995a40c1472214b3e611c04fbf8e6).
+
+No exact algorithm, concatenation order, secret decoding or signature encoding is promoted to a verified Ndax contract. A complete exchange-published signing example/fixture or a read-only acceptance check with an owner-authorized key is needed to close that gap. Provider selection and authorization are still pending; no key or private request was used. Third-party adapters returned by search were excluded from this official-source conclusion. [Captured evidence](security-evidence/ndax-signature-research.json).
 
 ## Kraken
 

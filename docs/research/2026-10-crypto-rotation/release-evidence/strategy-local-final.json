@@ -1,0 +1,140 @@
+{
+  "url": "http://127.0.0.1:3218/rotation",
+  "checks": [
+    {
+      "check": "real seeded isolated paper session; no live execution",
+      "status": "PASS",
+      "detail": {
+        "portfolioRevision": 8
+      }
+    },
+    {
+      "check": "five-window programmatic study with unchanged ledger",
+      "status": "PASS",
+      "detail": {
+        "studyId": "ce70a7b1-31b3-4964-883d-a772b6cd21d8",
+        "outer": {
+          "trades": 25,
+          "cashCad": 10100.473366129509,
+          "feesCad": 178.90235006956019,
+          "holdCad": 8286.717084819666,
+          "finalCad": 6182.368997860903,
+          "turnoverCad": 89451.17503478007,
+          "excessCashCad": -3918.104368268606,
+          "excessHoldCad": -2104.348086958763,
+          "completedReviews": 50,
+          "maxDrawdownPercent": 43.41930922001218
+        },
+        "decision": "hold"
+      }
+    },
+    {
+      "check": "explicit adoption; recommendation anchored to current ledger and plan",
+      "status": "PASS",
+      "detail": {
+        "planRevision": 3,
+        "decision": "hold",
+        "paired": {
+          "hold": {
+            "meanCad": 0.21928034167486532,
+            "upper90Cad": 58.619135509698935,
+            "downside10Cad": -48.06072613156357
+          },
+          "shift": {
+            "meanCad": -5.624217283153678,
+            "upper90Cad": 17.302015364059116,
+            "downside10Cad": -26.65727838528437
+          },
+          "target": "CAD",
+          "advantage": {
+            "meanCad": -5.843497624828543,
+            "upper90Cad": 30.660285277521325,
+            "downside10Cad": -57.06039559833607
+          },
+          "observations": 76
+        }
+      }
+    },
+    {
+      "check": "recommended HOLD records once and preserves all units/costs",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "check": "reused recommended HOLD rejected against current financial revision",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "check": "financial revision invalidates stale action; refresh recomputes current plan",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "check": "recommendation quote rejects client economics overrides",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "check": "advanced research and strategy trial namespaces remain separate",
+      "status": "PASS",
+      "detail": {
+        "advanced": 0,
+        "strategy": 20
+      }
+    },
+    {
+      "check": "reload restores strategy/recommendation and export retains immutable evidence",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "check": "existing advanced research remains accessible",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "screenshots": [
+    {
+      "url": "http://127.0.0.1:3218/rotation",
+      "width": 1440,
+      "png": "/home/danman60/.claude/shots/pending/wolfpack-strategy-computed-plan-1440-20261013T103343.png",
+      "captured": "2026-10-13T10:33:43.828714-04:00",
+      "pass": true,
+      "fail": [],
+      "warn": []
+    },
+    {
+      "url": "http://127.0.0.1:3218/rotation",
+      "width": 390,
+      "png": "/home/danman60/.claude/shots/pending/wolfpack-strategy-computed-plan-390-20261013T103345.png",
+      "captured": "2026-10-13T10:33:45.024938-04:00",
+      "pass": true,
+      "fail": [],
+      "warn": []
+    },
+    {
+      "url": "http://127.0.0.1:3218/rotation",
+      "width": 1440,
+      "png": "/home/danman60/.claude/shots/pending/wolfpack-strategy-restored-plan-1440-20261013T103358.png",
+      "captured": "2026-10-13T10:33:58.144815-04:00",
+      "pass": true,
+      "fail": [],
+      "warn": []
+    },
+    {
+      "url": "http://127.0.0.1:3218/rotation",
+      "width": 390,
+      "png": "/home/danman60/.claude/shots/pending/wolfpack-strategy-restored-plan-390-20261013T103359.png",
+      "captured": "2026-10-13T10:33:59.344965-04:00",
+      "pass": true,
+      "fail": [],
+      "warn": []
+    }
+  ],
+  "startedEastern": "2026-10-13T10:33:30.702529-04:00",
+  "consoleErrors": [],
+  "status": "PASS",
+  "scope": "Final source local real HOLD browser journey; recommended SHIFT positive execution remains unexercised.",
+  "retryContext": "First final attempt failed safely with Real historical prices are unavailable after history fetch10seconds; one bounded retry succeeded without code/data changes."
+}

@@ -22,10 +22,10 @@ Read-only snapshot during integration, October 12 Eastern:
 
 - HEAD `60cccd72cb5ed623ab37bb9d25d457fa1b3cb871`; `main` is one commit ahead of `origin/main`.
 - 9 existing routed pages; 2 new rotation API routes (`market`, `history`) at inventory time; rotation page/auth/server routes still being integrated.
-- 15 existing SQL migration files, plus Python FastAPI `intel/` subsystem. Existing production wallet schema remains unresolved; new workshop integration uses a distinct namespace.
+- 15 existing SQL migration files, plus Python FastAPI `intel/` subsystem. Initial wallet access was unresolved at inventory time; subsequent backend live query verified seven existing wallets. New workshop integration uses a distinct namespace and changes no old wallet configuration.
 - Installed Next 16.1.6, React 19.1.0, TypeScript 5.9.3, Tailwind 4.2.1. npm lockfile matched manifest; `npm ci` installed 868 packages without changing either.
 - Baseline `npx tsc --noEmit` passed before new files were integrated; output `/tmp/wolfpack-rotation-baseline-tsc.txt`.
-- Live new dev server: 127.0.0.1:3218, owned exec session30368; no pre-existing process restarted. Static design server: 127.0.0.1:3328.
+- Live new dev server: 127.0.0.1:3218, owned exec session 30368; no pre-existing process restarted. Static design server: 127.0.0.1:3328.
 - Graph rebuilt by local CPU AST tooling. `Nav()` impact: root layout import; existing root providers preserved.
 - Vercel linked project `wolf-pack`; production alias `wolf-pack-eight.vercel.app`; inspected deployment `dpl_Fvw68FPVJs32XgLYd27ap2sucbzA` READY, created August 28 at 09:54 Eastern. This does not establish the new code is deployed.
 - Workshop has both tailnet gateway `100.89.183.64:8100` and an existing public gateway `https://djatb.fyi/sb/workshop`; live unauthenticated health requests returned matching API-key-required responses. Authenticated host-to-DB proof remains a deployment acceptance check.
@@ -33,26 +33,26 @@ Read-only snapshot during integration, October 12 Eastern:
 
 ## Requirement coverage matrix
 
-Statuses updated from real local browser/server acceptance and isolated production build. Deployment evidence follows after preview verification.
+Statuses updated from real local browser/server acceptance and isolated production build. Deployment evidence is retained in the release-evidence directory.
 
 | ID | Requirement | Status | Primary evidence and remaining acceptance |
 |---|---|---|---|
 | R1 | Exactly CAD/BTC/ETH/LINK spot | Paper verified | Exact contract keys and four-asset composed workspace |
 | R2 | Weekly/monthly review and real HOLD | Paper verified | Explicit cadence saved; HOLD preserved all units and fees in real browser/server path |
-| R3 | Any pair in/out via simple clicks | Paper implemented | Canonical CAD-mediated pair engine; CAD→BTC browser preview/approval passed; live execution not connected |
+| R3 | Any pair in/out via simple clicks | Paper implemented | Canonical CAD-mediated pair engine; CAD→BTC and BTC→ETH→LINK→CAD browser preview/approval passed; live execution not connected |
 | R4 | CAD value and realized/unrealized P/L after costs | Paper verified | Independent decimal valuation and exact quote/charged-fee assertions passed |
 | R5 | Permanent identical-start no-action comparison | Paper verified | Opening/baseline unchanged after approved shift; flows matched |
 | R6 | Deposits/withdrawals separated from performance | Paper verified | CAD100 matched deposit added no P/L; oversized withdrawal refused without ledger change |
 | R7 | Predictive ranking/allocation | Experimental | Disclosed momentum ranking; validated predictive value and owner risk limits remain open |
 | R8 | Forward shift/HOLD outcomes, horizon and loss calibration | Experimental | Joint historical means, paired advantage and p10/p90 rendered; observed fold coverage is diagnostic, not calibrated confidence |
-| R9 | Genuine backtests, costs, no leakage, fair HOLD | Research implemented | Genuine719day data, chronological report and frozen registry saved; causal-prefix checks documented separately |
-| R10 | Walk-forward, untouched period, regime/trial discipline | Partial |365day prefix/60day folds and immutable records verified; last180days already exposed. Future12month scoring sealed per protocol, but other trials can expose overlapping data; no account-wide untouched-test claim |
+| R9 | Genuine backtests, costs, no leakage, fair HOLD | Research implemented | Genuine 719-day data, chronological report and frozen registry saved; causal-prefix checks documented separately |
+| R10 | Walk-forward, untouched period, regime/trial discipline | Partial |365-day prefix/60-day folds and immutable records verified; last 180 days already exposed. Future 12-month scoring sealed per protocol, but other trials can expose overlapping data; no account-wide untouched-test claim |
 | R11 | Ontario/CAD access and custody choice | Partial | Public CAD books genuine; provider/account-specific fees and custody remain owner choices |
 | R12 | Wallets/account-backed management | Paper verified | Real isolated workshop identity and server ledger; no funded/private exchange account connected |
-| R13 | Durable server persistence and ownership | Verified locally | Real GoTrue/RLS/CAS probes plus browser reload; deployment-host proof pending |
+| R13 | Durable server persistence and ownership | Verified locally | Real GoTrue/RLS/CAS probes plus browser reload; Vercel preview and stable-production authenticated reads passed |
 | R14 | Export and decision audit | Verified locally | Real downloaded portfolio/trials/audit/consumed-quote export; final fresh-preview audit-ID assertion included |
 | R15 | Existing app extension and old-wallet isolation | Verified bounded scope | Separate rotation domain, original providers retained elsewhere; rotation browser made no legacy intel calls; no old trading logic edits |
-| R16 | Complete reviewed application, authorized deploy | Local acceptance passed | Real9-check flow, responsive measurements, build and TypeScript passed; immutable preview and production smoke pending |
+| R16 | Complete reviewed application, authorized deploy | Paper deployed | Preview9-check flow plus5-check pair coverage passed; production build/TypeScript and separate read-only production smoke passed |
 
 ## Conflicts and superseded requirements
 
@@ -113,4 +113,4 @@ Existing perp/LP wallets, trading policies, Python service startup, applied migr
 - PASS: mock 390/1440 mechanical checks and visual review; screenshots held.
 - PASS: existing Vercel deployment and both workshop gateway responses read without mutation.
 - PASS: integrated application production build/TypeScript, real browser money/research workflow, authenticated server reload/export, final 320–1440px overflow checks. Evidence: `docs/research/2026-10-crypto-rotation/BOOTSTRAP-VERIFICATION.md`.
-- PENDING: immutable preview release/browser QA, promotion and read-only production smoke.
+- PASS: immutable preview9/9 and pair 5/5 browser QA, root visual review, production release and read-only smoke. Vercel promotion rebuilt the source; production artifact differs from preview and is documented explicitly.

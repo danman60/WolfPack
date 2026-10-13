@@ -9,6 +9,9 @@ import json
 import re
 import sys
 import time
+import shutil
+from datetime import datetime
+from zoneinfo import ZoneInfo
 from decimal import Decimal
 from pathlib import Path
 from urllib.parse import urlparse
@@ -234,7 +237,7 @@ def run(url, report_dir, account_file=None, resume_opening=False, workshop_previ
         assert len(filled) == 1 and filled[0]["data"]["preview"]["after"] == shifted["balances"], "Export must reconcile approved event to its exact stored quote"
         record("exported artifact matches actual persisted ledger")
 
-        click(["Backtest & forecast"])
+        click(["Advanced research"])
         (report_dir / "before-research.aria.txt").write_text(browser.snapshot())
         # Exact research field labels are intentionally explicit and checked against
         # the composed page, rather than inferred from an internal implementation.
@@ -287,7 +290,7 @@ def inspect_saved(url, report_dir, state_file, workshop_preview=False):
         browser.context.add_cookies(json.loads(state_file.read_text())["cookies"])
         assert browser.navigate(url)
         deadline = time.monotonic() + 30
-        while "Backtest & forecast" not in browser.snapshot() and time.monotonic() < deadline:
+        while "Advanced research" not in browser.snapshot() and time.monotonic() < deadline:
             time.sleep(0.2)
         read = lambda path: browser.context.request.get(origin + "/api/rotation/" + path)
         portfolio_response = read("portfolio")
@@ -306,7 +309,7 @@ def inspect_saved(url, report_dir, state_file, workshop_preview=False):
         trials = trials_response.json()["trials"]
         assert {"protocol", "development"}.issubset({trial["kind"] for trial in trials})
         findings["retainedTrials"] = len(trials)
-        assert browser.click("button", "Backtest & forecast")[0]
+        assert browser.click("button", "Advanced research")[0]
         deadline = time.monotonic() + 30
         while "Chronological evaluation" not in browser.snapshot() and time.monotonic() < deadline:
             time.sleep(0.2)
@@ -329,6 +332,16 @@ def inspect_saved(url, report_dir, state_file, workshop_preview=False):
         assert exported["audit"], "Full export omitted audit history"
         (report_dir / "complete-export.json").write_text(json.dumps(exported, indent=2))
         findings["fullExport"] = {"trials": len(exported["trials"]), "audit": len(exported["audit"])}
+        # Capture the ordinary saved-result screen after the intentional refusal check.
+        assert browser.navigate(url)
+        deadline = time.monotonic() + 30
+        while "Advanced research" not in browser.snapshot() and time.monotonic() < deadline:
+            time.sleep(0.2)
+        assert browser.click("button", "Advanced research")[0]
+        deadline = time.monotonic() + 30
+        while "Chronological evaluation" not in browser.snapshot() and time.monotonic() < deadline:
+            time.sleep(0.2)
+        assert "Chronological evaluation" in browser.snapshot()
         findings["viewports"] = []
         for width in (1440, 390, 360, 320):
             browser.set_viewport(width, 1000 if width == 1440 else 844)
@@ -344,7 +357,24 @@ def inspect_saved(url, report_dir, state_file, workshop_preview=False):
                 browser.set_viewport(width, full_height)
                 browser.page.evaluate("window.scrollTo(0,0)")
                 time.sleep(0.3)
-                browser.screenshot(str(report_dir / f"research-{width}.png"))
+                screenshot = report_dir / f"research-{width}.png"
+                browser.screenshot(str(screenshot))
+                shot_source = (Path.home() / ".local/bin/shot").read_text()
+                dom_function = shot_source.split("const domChecks = ", 1)[1].split(";\n\nconst browser", 1)[0]
+                measured = browser.page.evaluate(dom_function)
+                browser.page.add_script_tag(content=(Path.home() / ".claude/tools/shot/node_modules/axe-core/axe.min.js").read_text())
+                contrast = browser.page.evaluate("async () => (await window.axe.run(document,{runOnly:['color-contrast']})).violations")
+                for violation in contrast:
+                    for node in violation["nodes"]:
+                        measured["fail"].append({"check": "contrast", "el": " ".join(node["target"]), "detail": violation["help"]})
+                stamp = datetime.now(ZoneInfo("America/New_York")).strftime("%Y%m%dT%H%M%S")
+                held = Path.home() / f".claude/shots/pending/wolfpack-rotation-research-{'preview' if workshop_preview else 'local'}-{width}-{stamp}.png"
+                shutil.copyfile(screenshot, held)
+                review = {"url": url, "width": width, "png": str(held), "captured": datetime.now(ZoneInfo("America/New_York")).isoformat(), "pass": not measured["fail"], **measured}
+                Path(str(held) + ".review.json").write_text(json.dumps(review, indent=2))
+                findings.setdefault("measuredScreenshots", []).append(review)
+                assert review["pass"], f"Research mechanical screenshot check failed: {measured['fail']}"
+
         (report_dir / "research.aria.txt").write_text(browser.snapshot())
         findings["console"] = browser.get_console_errors(False)
         findings["status"] = "PASS"

@@ -1,0 +1,70 @@
+{
+  "/rotation": {
+    "status": 200,
+    "headers": {
+      "Content-Security-Policy": "frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'",
+      "Strict-Transport-Security": "max-age=31536000",
+      "X-Frame-Options": "DENY",
+      "X-Content-Type-Options": "nosniff",
+      "Referrer-Policy": "strict-origin-when-cross-origin",
+      "Cache-Control": "public, max-age=0, must-revalidate"
+    }
+  },
+  "/rotation/about": {
+    "status": 200,
+    "headers": {
+      "Content-Security-Policy": "frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'",
+      "Strict-Transport-Security": "max-age=31536000",
+      "X-Frame-Options": "DENY",
+      "X-Content-Type-Options": "nosniff",
+      "Referrer-Policy": "strict-origin-when-cross-origin",
+      "Cache-Control": "public, max-age=0, must-revalidate"
+    }
+  },
+  "/api/rotation/readiness": {
+    "status": 200,
+    "headers": {
+      "Content-Security-Policy": "frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'",
+      "Strict-Transport-Security": "max-age=31536000",
+      "X-Frame-Options": "DENY",
+      "X-Content-Type-Options": "nosniff",
+      "Referrer-Policy": "strict-origin-when-cross-origin",
+      "Cache-Control": "no-store"
+    },
+    "body": {
+      "mode": "paper-workshop",
+      "database": "operational",
+      "auth": "operational",
+      "demo": "enabled-isolated-synthetic-accounts",
+      "persistence": "server-ledger-with-atomic-revision-check",
+      "liveTrading": "disabled",
+      "passwordRecovery": "not-enabled-seeded-workshop-accounts-only",
+      "backups": "platform-managed; rotation-specific restore not rehearsed",
+      "ownerDecisions": [
+        "actual funding",
+        "custody/provider",
+        "risk and concentration limits"
+      ]
+    }
+  },
+  "/api/rotation/session": {
+    "status": 200,
+    "headers": {
+      "Content-Security-Policy": "frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'",
+      "Strict-Transport-Security": "max-age=31536000",
+      "X-Frame-Options": "DENY",
+      "X-Content-Type-Options": "nosniff",
+      "Referrer-Policy": "strict-origin-when-cross-origin",
+      "Cache-Control": "no-store"
+    },
+    "authenticated": true
+  },
+  "deployedBundleSecretScan": {
+    "browserRequestedJS": 42,
+    "ssrScriptTags": 17,
+    "firstPartyJavascriptFiles": 43,
+    "serverSecretValues": 3,
+    "matches": []
+  },
+  "secretScanScope": "Only three WPR workshop key/password values. Separate legacy Intel credential exposure is documented in legacy-intel-key-exposure.json."
+}

@@ -1,0 +1,140 @@
+{
+  "url": "http://127.0.0.1:3218/rotation",
+  "checks": [
+    {
+      "check": "real seeded isolated paper session; no live execution",
+      "status": "PASS",
+      "detail": {
+        "portfolioRevision": 7
+      }
+    },
+    {
+      "check": "five-window programmatic study with unchanged ledger",
+      "status": "PASS",
+      "detail": {
+        "studyId": "09254e0d-46ad-4184-9da9-ba1ecb4e33d1",
+        "outer": {
+          "trades": 25,
+          "cashCad": 10101.8565986313,
+          "feesCad": 178.9268502624019,
+          "holdCad": 8287.851928305643,
+          "finalCad": 6183.215656569453,
+          "turnoverCad": 89463.42513120096,
+          "excessCashCad": -3918.6409420618475,
+          "excessHoldCad": -2104.63627173619,
+          "completedReviews": 50,
+          "maxDrawdownPercent": 43.419309220012174
+        },
+        "decision": "hold"
+      }
+    },
+    {
+      "check": "explicit adoption; recommendation anchored to current ledger and plan",
+      "status": "PASS",
+      "detail": {
+        "planRevision": 2,
+        "decision": "hold",
+        "paired": {
+          "hold": {
+            "meanCad": 0.21965288949705036,
+            "upper90Cad": 58.71872688695112,
+            "downside10Cad": -48.14237922769826
+          },
+          "shift": {
+            "meanCad": -5.633772585194421,
+            "upper90Cad": 17.331410740233878,
+            "downside10Cad": -26.702567948923388
+          },
+          "target": "CAD",
+          "advantage": {
+            "meanCad": -5.853425474691471,
+            "upper90Cad": 30.712375776829504,
+            "downside10Cad": -57.15733874386024
+          },
+          "observations": 76
+        }
+      }
+    },
+    {
+      "check": "recommended HOLD records once and preserves all units/costs",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "check": "reused recommended HOLD rejected against current financial revision",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "check": "financial revision invalidates stale action; refresh recomputes current plan",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "check": "recommendation quote rejects client economics overrides",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "check": "advanced research and strategy trial namespaces remain separate",
+      "status": "PASS",
+      "detail": {
+        "advanced": 0,
+        "strategy": 14
+      }
+    },
+    {
+      "check": "reload restores strategy/recommendation and export retains immutable evidence",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "check": "existing advanced research remains accessible",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "screenshots": [
+    {
+      "url": "http://127.0.0.1:3218/rotation",
+      "width": 1440,
+      "png": "/home/danman60/.claude/shots/pending/wolfpack-strategy-computed-plan-1440-20261013T101554.png",
+      "captured": "2026-10-13T10:15:54.677683-04:00",
+      "pass": true,
+      "fail": [],
+      "warn": []
+    },
+    {
+      "url": "http://127.0.0.1:3218/rotation",
+      "width": 390,
+      "png": "/home/danman60/.claude/shots/pending/wolfpack-strategy-computed-plan-390-20261013T101555.png",
+      "captured": "2026-10-13T10:15:55.894051-04:00",
+      "pass": true,
+      "fail": [],
+      "warn": []
+    },
+    {
+      "url": "http://127.0.0.1:3218/rotation",
+      "width": 1440,
+      "png": "/home/danman60/.claude/shots/pending/wolfpack-strategy-restored-plan-1440-20261013T101607.png",
+      "captured": "2026-10-13T10:16:07.615715-04:00",
+      "pass": true,
+      "fail": [],
+      "warn": []
+    },
+    {
+      "url": "http://127.0.0.1:3218/rotation",
+      "width": 390,
+      "png": "/home/danman60/.claude/shots/pending/wolfpack-strategy-restored-plan-390-20261013T101608.png",
+      "captured": "2026-10-13T10:16:08.784419-04:00",
+      "pass": true,
+      "fail": [],
+      "warn": []
+    }
+  ],
+  "startedEastern": "2026-10-13T10:15:44.930673-04:00",
+  "consoleErrors": [],
+  "status": "PASS",
+  "scope": "Intermediate local integration before final backend target-persistence corrections. Real HOLD path exercised; positive recommendation SHIFT execution not exercised.",
+  "artifactVersion": "strategy-local-intermediate-v1"
+}

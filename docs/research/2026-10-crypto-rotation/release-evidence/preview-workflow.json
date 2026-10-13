@@ -1,0 +1,49 @@
+[
+  {
+    "check": "anonymous access refused and real workshop session established",
+    "status": "PASS",
+    "detail": null
+  },
+  {
+    "check": "opening balances and untouched HOLD",
+    "status": "PASS",
+    "detail": null
+  },
+  {
+    "check": "single approved paper fill and duplicate-action protection",
+    "status": "PASS",
+    "detail": {
+      "spentCad": "999.99931102"
+    }
+  },
+  {
+    "check": "HOLD preserves units and reload preserves ledger",
+    "status": "PASS",
+    "detail": null
+  },
+  {
+    "check": "matched CAD deposit has zero profit effect under identical marks",
+    "status": "PASS",
+    "detail": null
+  },
+  {
+    "check": "insufficient withdrawal rejected without state changes",
+    "status": "PASS",
+    "detail": null
+  },
+  {
+    "check": "exported artifact matches actual persisted ledger",
+    "status": "PASS",
+    "detail": null
+  },
+  {
+    "check": "genuine-data research result rendered and persisted",
+    "status": "PASS",
+    "detail": null
+  },
+  {
+    "check": "rotation did not contact legacy /intel endpoints",
+    "status": "PASS",
+    "detail": null
+  }
+]

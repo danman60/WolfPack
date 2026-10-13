@@ -1,0 +1,82 @@
+{
+  "recordedAtEastern": "2026-10-12T23:29:50.803241-04:00",
+  "origin": "https://wolf-pack-eight.vercel.app",
+  "scope": "GET-only page/session/readiness/portfolio/trials. No export, cash flow, research run, preview or approval mutation.",
+  "/rotation": {
+    "status": 200,
+    "headers": {
+      "Strict-Transport-Security": "max-age=31536000",
+      "X-Frame-Options": "DENY",
+      "X-Content-Type-Options": "nosniff",
+      "Cache-Control": "public, max-age=0, must-revalidate"
+    },
+    "robots": [
+      "noindex, nofollow"
+    ]
+  },
+  "/rotation/about": {
+    "status": 200,
+    "headers": {
+      "Strict-Transport-Security": "max-age=31536000",
+      "X-Frame-Options": "DENY",
+      "X-Content-Type-Options": "nosniff",
+      "Cache-Control": "public, max-age=0, must-revalidate"
+    }
+  },
+  "/api/rotation/session": {
+    "status": 200,
+    "headers": {
+      "Strict-Transport-Security": "max-age=31536000",
+      "X-Frame-Options": "DENY",
+      "X-Content-Type-Options": "nosniff",
+      "Cache-Control": "no-store"
+    },
+    "authenticated": true
+  },
+  "/api/rotation/readiness": {
+    "status": 200,
+    "headers": {
+      "Strict-Transport-Security": "max-age=31536000",
+      "X-Frame-Options": "DENY",
+      "X-Content-Type-Options": "nosniff",
+      "Cache-Control": "no-store"
+    },
+    "body": {
+      "mode": "paper-workshop",
+      "database": "operational",
+      "auth": "operational",
+      "demo": "enabled-isolated-synthetic-accounts",
+      "persistence": "server-ledger-with-atomic-revision-check",
+      "liveTrading": "disabled",
+      "passwordRecovery": "not-enabled-seeded-workshop-accounts-only",
+      "backups": "platform-managed; rotation-specific restore not rehearsed",
+      "ownerDecisions": [
+        "actual funding",
+        "custody/provider",
+        "risk and concentration limits"
+      ]
+    }
+  },
+  "/api/rotation/portfolio": {
+    "status": 200,
+    "headers": {
+      "Strict-Transport-Security": "max-age=31536000",
+      "X-Frame-Options": "DENY",
+      "X-Content-Type-Options": "nosniff",
+      "Cache-Control": "no-store"
+    },
+    "portfolioId": "cde04b9d-3de8-4d6d-9949-95a27ca64c4c",
+    "revision": 3
+  },
+  "/api/rotation/trials": {
+    "status": 200,
+    "headers": {
+      "Strict-Transport-Security": "max-age=31536000",
+      "X-Frame-Options": "DENY",
+      "X-Content-Type-Options": "nosniff",
+      "Cache-Control": "no-store"
+    },
+    "records": 2
+  },
+  "status": "PASS"
+}

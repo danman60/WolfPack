@@ -1,0 +1,9 @@
+{
+  "builtEastern": "2026-10-13T10:34:11.428241-04:00",
+  "build": "PASS",
+  "postBuildTypeScript": "PASS",
+  "sourceMatchesWorkspace": true,
+  "verifiedSourceFiles": 83,
+  "sourceManifestSha256": "651f340b6b3736ad8044289bfc8d62f6f6819946d59f277984369911b2defcc2",
+  "notes": "Isolated .next; no production deployment. Public history timeout caused initial final browser attempt503; bounded retry recorded separately."
+}
