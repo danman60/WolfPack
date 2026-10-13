@@ -1,7 +1,7 @@
-import { apiError, ApiError, demoEnabled, demoSignIn, publicUser, rateLimit, readBody, requireSameOrigin, requireUser, response, signIn, signOut } from '@/lib/rotation/server';
+import { apiError, ApiError, demoEnabled, demoSignIn, hasPreviousWorkspace, returnPreviousWorkspace, publicUser, rateLimit, readBody, requireSameOrigin, requireUser, response, signIn, signOut } from '@/lib/rotation/server';
 export const dynamic = 'force-dynamic';
 export async function GET() {
-  try { return response({ authenticated: true, user: publicUser(await requireUser()), demoEnabled: demoEnabled() }); }
+  try { return response({ authenticated: true, user: publicUser(await requireUser()), demoEnabled: demoEnabled(), hasPreviousWorkspace: await hasPreviousWorkspace() }); }
   catch (error) { if (error instanceof ApiError && error.status === 401) return response({ authenticated: false, user: null, demoEnabled: demoEnabled() }); return apiError(error); }
 }
 export async function POST(request: Request) {
@@ -10,9 +10,9 @@ export async function POST(request: Request) {
     const body = await readBody(request);
     if (body.action === 'logout') { await signOut(); return response({ authenticated: false, user: null, demoEnabled: demoEnabled() }); }
     let email: string; let password: string;
-    if (body.action === 'demo') {
-      const user = await demoSignIn(request);
-      return response({ authenticated: true, user: publicUser(user), demoEnabled: demoEnabled() });
+    if (body.action === 'demo' || body.action === 'demo-example' || body.action === 'demo-return') {
+      const workspace = body.action === 'demo-return' ? await returnPreviousWorkspace() : await demoSignIn(request, body.action === 'demo-example');
+      return response({ ...workspace, authenticated: true, user: publicUser(workspace.user), demoEnabled: demoEnabled(), hasPreviousWorkspace: await hasPreviousWorkspace() });
     } else if (body.action === 'login' && typeof body.email === 'string' && typeof body.password === 'string') {
       email = body.email; password = body.password;
     } else throw new ApiError('Choose demo or workspace sign-in.');

@@ -12,7 +12,7 @@ import { ASSETS, cad, eastern, ROTATION_STYLE, type Amounts, type Asset, type Ca
 import { holdingRows, performance } from "@/lib/rotation/engine";
 import "./rotation.css";
 
-type Session = { authenticated: boolean; user: { id: string; email: string; demo: boolean } | null; demoEnabled: boolean };
+type Session = { authenticated: boolean; user: { id: string; email: string; demo: boolean } | null; demoEnabled: boolean; hasPreviousWorkspace?: boolean; portfolio?: Portfolio | null; market?: MarketSnapshot; planState?: StrategyPlanState | null };
 async function api<T>(path: string, body?: unknown): Promise<T> {
   const response = await fetch(`/api/rotation/${path}`, { method: body === undefined ? "GET" : "POST", headers: body === undefined ? undefined : { "Content-Type": "application/json" }, body: body === undefined ? undefined : JSON.stringify(body), cache: "no-store" });
   const payload = await response.json();
@@ -26,6 +26,8 @@ export default function RotationPage() {
   const [planState, setPlanState] = useState<StrategyPlanState>({ activePlanId: null, planRevision: 0, study: null });
   const quoteBox = useRef<HTMLElement>(null);
   const legacyBox = useRef<HTMLDetailsElement>(null);
+  const authLock = useRef(false);
+  const activePortfolioId = useRef<string | null>(null);
   const [market, setMarket] = useState<MarketSnapshot | null>(null);
   const [marketError, setMarketError] = useState("");
   const [error, setError] = useState("");
@@ -54,7 +56,7 @@ export default function RotationPage() {
     catch (e) { setMarketError(e instanceof Error ? e.message : "Market data unavailable."); }
   }, []);
   const reloadPortfolio = useCallback(async () => {
-    const result = await api<{ portfolio: Portfolio | null; planState?: StrategyPlanState }>("portfolio"); setPortfolio(result.portfolio); setPlanState(result.planState ?? { activePlanId: null, planRevision: 0, study: null }); setPreview(null);
+    const result = await api<{ portfolio: Portfolio | null; planState?: StrategyPlanState }>("portfolio"); activePortfolioId.current = result.portfolio?.id ?? null; setPortfolio(result.portfolio); setPlanState(result.planState ?? { activePlanId: null, planRevision: 0, study: null }); setPreview(null);
   }, []);
   useEffect(() => {
     let live = true;
@@ -74,18 +76,27 @@ export default function RotationPage() {
     try { await action(); } catch (e) { setError(e instanceof Error ? e.message : "Request failed."); }
     finally { setBusy(false); }
   }
-  async function login(action: "demo" | "login" | "logout") {
-    await work(async () => {
+  async function login(action: "demo" | "demo-example" | "demo-return" | "login" | "logout") {
+    if (authLock.current) return;
+    authLock.current = true;
+    try { await work(async () => {
       const result = await api<Session>("session", { action, email, password });
-      setSession(result); setPassword(""); setPortfolio(null); setPreview(null); setPlanState({ activePlanId: null, planRevision: 0, study: null });
-      if (result.authenticated) await reloadPortfolio();
-    });
+      const saved = result.authenticated ? ("portfolio" in result ? result : await api<{portfolio: Portfolio | null; planState?: StrategyPlanState}>("portfolio")) : null;
+      const nextPortfolio = saved?.portfolio ?? null;
+      activePortfolioId.current = nextPortfolio?.id ?? null;
+      setSession(result); setPassword(""); setPortfolio(nextPortfolio); setPreview(null);
+      setPlanState(saved?.planState ?? { activePlanId: null, planRevision: 0, study: null });
+      if (result.market) { setMarket(result.market); setMarketError(""); }
+      setTab("workspace");
+      if (action === "demo" || action === "demo-example") setNotice("Paper example opened. New examples start at $10,000 using captured market prices, with editable defaults: weekly review, 20 bps fee, 10 bps slippage and 80% crypto budget. Existing saved balances are kept; value moves with prices.");
+      if (action === "demo-return") setNotice("Previous workspace restored. Its saved portfolio and ledger are preserved.");
+    }); } finally { authLock.current = false; }
   }
   function create(event: FormEvent) {
     event.preventDefault();
     void work(async () => {
       const result = await api<{ portfolio: Portfolio; market: MarketSnapshot }>("portfolio", { name, opening: Object.fromEntries(ASSETS.map(asset => [asset, opening[asset].trim().replace(/^\./, "0.")])), cadence, feeBps: Number(fee) });
-      setPortfolio(result.portfolio); setMarket(result.market); setNotice("Paper portfolio saved. Your unchanged-unit HOLD baseline starts here.");
+      activePortfolioId.current = result.portfolio.id; setPortfolio(result.portfolio); setMarket(result.market); setNotice("Paper portfolio saved. Your unchanged-unit HOLD baseline starts here.");
     });
   }
   function quote(event: FormEvent) {
@@ -155,7 +166,7 @@ export default function RotationPage() {
   return <div className="rotation-workspace space-y-6">
     <header className="flex flex-wrap items-start justify-between gap-5 border-b border-white/10 pb-6">
       <div><p className="text-xs uppercase tracking-[.18em] text-emerald-300 mb-3">CAD / BTC / ETH / LINK</p><h1 className="text-3xl md:text-4xl font-semibold tracking-tight">A clearer next move.</h1><p className="text-slate-300 mt-3 max-w-2xl leading-relaxed">One portfolio. Every pair connected. Forecast, apply, and check the result.</p></div>
-      <div className="flex flex-col items-start sm:items-end gap-3"><span className="rounded-full border border-emerald-400/40 bg-emerald-400/10 px-3 py-1.5 text-xs text-emerald-200">PAPER WORKSPACE</span>{session?.authenticated && <button className="rotation-secondary" disabled={busy} onClick={() => void login("logout")}>Sign out</button>}</div>
+      <div className="flex flex-col items-start sm:items-end gap-3"><span className="rounded-full border border-emerald-400/40 bg-emerald-400/10 px-3 py-1.5 text-xs text-emerald-200">{session?.user?.demo ? "EXAMPLE · PAPER" : "PAPER WORKSPACE"}</span>{session?.authenticated && <><div className="flex flex-wrap justify-start sm:justify-end gap-2">{session.demoEnabled && <button className="rotation-primary" disabled={busy} onClick={() => void login("demo-example")}>Open $10,000 example</button>}<button className="rotation-secondary" disabled={busy} onClick={() => void login("logout")}>Sign out</button></div>{session.hasPreviousWorkspace && <button className="rotation-secondary" disabled={busy} onClick={() => void login("demo-return")}>Return to previous workspace</button>}</>}</div>
     </header>
 
     {error && <div ref={errorBox} tabIndex={-1} className="rotation-error" role="alert">{error}<button className="rotation-secondary block mt-3" onClick={() => void work(async () => { const result = await api<Session>("session"); setSession(result); if (result.authenticated) await reloadPortfolio(); })}>Reload saved state</button></div>}
@@ -164,7 +175,7 @@ export default function RotationPage() {
     {!session?.authenticated ? <section className={`${ROTATION_STYLE.panel} max-w-xl`}>
       <h2 className="text-xl font-semibold">Open your workspace</h2><p className="text-sm text-slate-300 mt-2 mb-5">Sign in to keep your ledger and research together across devices. Workshop accounts contain paper data.</p>
       {session === null && !error ? <p role="status">Checking session…</p> : <>
-        {session?.demoEnabled && <button className="rotation-primary w-full mb-5" disabled={busy} onClick={() => void login("demo")}>{busy ? "Opening workspace…" : "Enter paper demo"}</button>}
+        {session?.demoEnabled && <button className="rotation-primary w-full mb-5" disabled={busy} onClick={() => void login("demo")}>{busy ? "Opening example…" : "Open $10,000 demo"}</button>}
         <form onSubmit={event => { event.preventDefault(); void login("login"); }} className="space-y-4">
           <label>Email<input className={field} type="email" autoComplete="username" required value={email} onChange={e => setEmail(e.target.value)} /></label>
           <label>Password<input className={field} type="password" autoComplete="current-password" required value={password} onChange={e => setPassword(e.target.value)} /></label>
@@ -184,7 +195,7 @@ export default function RotationPage() {
         </form>
       </section> : <>
 
-        <AllocationWorkspace key={portfolio.id} portfolio={portfolio} market={market} now={clock} request={api} onPortfolio={p => { setPortfolio(p); setPreview(null); }} onManage={() => { setTab("workspace"); if (legacyBox.current) legacyBox.current.open = true; requestAnimationFrame(() => quoteBox.current?.scrollIntoView({ behavior: "smooth", block: "start" })); }} />
+        <div inert={busy}><AllocationWorkspace key={portfolio.id} portfolio={portfolio} market={market} now={clock} request={api} onPortfolio={p => { if (p.id !== activePortfolioId.current) return; setPortfolio(p); setPreview(null); }} onManage={() => { setTab("workspace"); if (legacyBox.current) legacyBox.current.open = true; requestAnimationFrame(() => quoteBox.current?.scrollIntoView({ behavior: "smooth", block: "start" })); }} /></div>
         <details ref={legacyBox} className="rounded-xl border border-white/10 p-5"><summary className="cursor-pointer text-slate-300">Holdings, manual controls & previous studies</summary><div className="space-y-6 mt-5">
     <div className="rotation-note">Practice with real market prices and paper balances. Funding and live execution are gated. Research is experimental; a positive backtest does not establish a reliable forecast.</div>
         <div className="flex flex-wrap justify-between items-center gap-3"><div><h2 className="text-xl font-semibold">{portfolio.name}</h2><p className="text-sm text-slate-300 mt-1 capitalize">{portfolio.cadence} review · {portfolio.feeBps} bps per leg · Revision {portfolio.revision}</p></div><div className="flex flex-wrap gap-2"><button className="rotation-secondary" disabled={busy} onClick={() => void work(reloadPortfolio)}>Refresh ledger</button><button className="rotation-secondary" disabled={busy} onClick={() => void exportLedger()}>Export ledger</button></div></div>
@@ -193,7 +204,7 @@ export default function RotationPage() {
         <button className={tab === "research" ? "rotation-primary" : "rotation-secondary"} aria-pressed={tab === "research"} onClick={() => setTab("research")}>Advanced research</button>
       </nav>
 <div hidden={tab !== "workspace"} className="space-y-6">
-        <StrategyPanel key={portfolio.id} portfolio={portfolio} holdings={rows} planState={planState} now={clock} disabled={busy} request={api} onState={result => { setPortfolio(result.portfolio); setPlanState(result.planState); setPreview(null); }} onQuote={recommendation => strategyAction(recommendation, "quote")} onHold={recommendation => strategyAction(recommendation, "hold")} onForecastQuote={forecastQuote} onForecastHold={() => action("hold")} />
+        <StrategyPanel key={portfolio.id} portfolio={portfolio} holdings={rows} planState={planState} now={clock} disabled={busy} request={api} onState={result => { if (result.portfolio.id !== activePortfolioId.current) return; setPortfolio(result.portfolio); setPlanState(result.planState); setPreview(null); }} onQuote={recommendation => strategyAction(recommendation, "quote")} onHold={recommendation => strategyAction(recommendation, "hold")} onForecastQuote={forecastQuote} onForecastHold={() => action("hold")} />
         <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
           <MetricCard label="Portfolio value" value={value ? cad(value.actualCad) : "—"} note="CAD cash plus current crypto value." testId="portfolio-value" />
           <MetricCard label="No-action HOLD" value={value ? cad(value.holdCad) : "—"} note="Original units, with the same cash flows." testId="hold-value" />

@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "review": "Exact390 and1440 composed screenshots inspected. Populated mixed portfolio, four sliders/pie, 10k example notice and return control readable. All6 charts visible. No overflow/clipping. Screenshot value10000.02 reflects subsequent real price movement; immutable captured opening reconciles exactly10000.",
+  "images": {
+    "example-1440.png": "438f537472727ec3e5ca865d2db8a5e38a3d92eaa5174314573214eea237f82f",
+    "example-390.png": "505eeb2a539f735b141fceb03c4da39b0e078d3eecb3940583ee4110afe98e74"
+  }
+}

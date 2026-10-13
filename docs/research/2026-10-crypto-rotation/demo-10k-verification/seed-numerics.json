@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "sourceMarketId": "fb7d65d2-5792-4802-91b6-dae719d9d5e5",
+  "initialValueCad": "10000",
+  "opening": {
+    "CAD": "2000.00365184",
+    "BTC": "0.03381534",
+    "ETH": "0.561536",
+    "LINK": "108.8731"
+  },
+  "markedCryptoCad": {
+    "BTC": "3999.99999908",
+    "ETH": "1999.99750208",
+    "LINK": "1999.99884700"
+  },
+  "cashResidualCad": "2000.00365184",
+  "checks": [
+    "Genuine captured public book prices",
+    "Independent Decimal budget/increment calculation matches all units",
+    "8-decimal marked values plus residual cash equal exactly CAD10000",
+    "Four positive holdings",
+    "Weekly review and20bps fee defaults"
+  ],
+  "scope": "Opening accounting only. Illustrative allocation; not profitability evidence."
+}

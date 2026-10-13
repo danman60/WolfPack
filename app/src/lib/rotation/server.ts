@@ -3,9 +3,14 @@ import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import type { Portfolio, MarketSnapshot } from './contract';
 import { RotationValidationError, validatePortfolio } from './engine';
+import { createExamplePortfolio } from './demo-example';
+import type { StrategyPlanState } from './strategy-api-contract';
 
 const ACCESS = 'wpr_access';
 const REFRESH = 'wpr_refresh';
+const PREVIOUS_ACCESS = 'wpr_previous_access';
+const PREVIOUS_REFRESH = 'wpr_previous_refresh';
+const cookieOptions = () => ({ httpOnly: true, sameSite: 'strict' as const, secure: process.env.NODE_ENV === 'production', path: '/api/rotation' });
 export type RotationUser = { id: string; email: string; demo: boolean; accessToken: string };
 export class ApiError extends Error { constructor(message: string, public status = 400) { super(message); } }
 export function config() {
@@ -122,23 +127,74 @@ export async function rateLimit(request: Request, scope: string, maximum = 15, s
   const allowed = await dbRequest<boolean>('rpc/wpr_take_rate_limit', { method: 'POST', body: JSON.stringify({ p_key: hash, p_limit: maximum, p_seconds: seconds }) });
   if (!allowed) throw new ApiError('Too many requests. Wait a minute and try again.', 429);
 }
-export async function signIn(email: string, password: string): Promise<RotationUser> {
+export async function signIn(email: string, password: string, beforeSession?: (user: RotationUser) => Promise<void>): Promise<RotationUser> {
   if (!email || email.length > 254 || !password || password.length > 1024) throw new ApiError('Enter a valid email and password.');
   const result = await authRequest('token?grant_type=password', { method: 'POST', body: JSON.stringify({ email, password }) });
   if (!result.ok) throw new ApiError('Sign-in failed. Check your workspace credentials.', 401);
   const session = await result.json();
   const rows = await dbRequest<{ user_id: string; is_demo: boolean }[]>(`wpr_members?user_id=eq.${encodeURIComponent(session.user.id)}&select=user_id,is_demo`, {}, session.access_token);
   if (rows.length !== 1) throw new ApiError('This account does not have rotation workspace access.', 403);
-  await storeSession(session);
+  const signedIn = { id: session.user.id, email: session.user.email, demo: rows[0].is_demo, accessToken: session.access_token };
+  if (beforeSession) await beforeSession(signedIn);
   await audit(session.user.id, 'signin');
-  return { id: session.user.id, email: session.user.email, demo: rows[0].is_demo, accessToken: session.access_token };
+  await storeSession(session);
+  if (!beforeSession) {
+    const jar = await cookies();
+    for (const name of [PREVIOUS_ACCESS, PREVIOUS_REFRESH]) jar.set(name, '', { ...cookieOptions(), maxAge: 0 });
+  }
+  return signedIn;
 }
 export async function audit(ownerId: string, kind: string, detail: Record<string, unknown> = {}): Promise<void> {
   await dbRequest('wpr_audit', { method: 'POST', body: JSON.stringify({ owner_id: ownerId, kind, detail }) });
 }
-export async function demoSignIn(request: Request): Promise<RotationUser> {
+type DemoWorkspace = { user: RotationUser; portfolio: Portfolio | null; market: MarketSnapshot; planState: StrategyPlanState };
+export async function hasPreviousWorkspace(): Promise<boolean> {
+  const jar = await cookies();
+  return Boolean(jar.get(PREVIOUS_ACCESS)?.value && jar.get(PREVIOUS_REFRESH)?.value);
+}
+async function prepareDemoWorkspace(user: RotationUser): Promise<DemoWorkspace> {
+  let portfolio = await getPortfolio(user);
+  const market = await freshMarket();
+  if (user.demo && !portfolio) {
+    let next = createExamplePortfolio(market);
+    const digest = createHash('sha256').update(`demo-example-v1:${user.id}`).digest('hex');
+    const seedId = `${digest.slice(0,8)}-${digest.slice(8,12)}-4${digest.slice(13,16)}-8${digest.slice(17,20)}-${digest.slice(20,32)}`;
+    next.id = seedId;
+    // Persist the opening reference before CAS: a retry can identify the winning
+    // portfolio's immutable books even if the response was interrupted.
+    try { await dbRequest('wpr_trials', { method: 'POST', body: JSON.stringify({ id: next.id, owner_id: user.id, kind: 'protocol', data: {
+      namespace: 'demo-example', version: 1, portfolioId: next.id, portfolio: next, market, opening: next.opening,
+      initialValueCad: next.initialValueCad, illustrativeWeights: { CAD: 0.2, BTC: 0.4, ETH: 0.2, LINK: 0.2 },
+      note: 'Illustrative paper opening at captured public midpoint prices. Rounding residual stays in CAD; no orders were placed.',
+    } }) }); } catch (error) {
+      if (!(error instanceof ApiError) || error.status !== 409) throw error;
+      const prior = await dbRequest<{data:{portfolio:unknown;market:MarketSnapshot}}[]>(`wpr_trials?owner_id=eq.${user.id}&id=eq.${seedId}&data->>namespace=eq.demo-example&select=data`, {}, user.accessToken);
+      if (prior.length !== 1) throw error;
+      next = validatePortfolio(prior[0].data.portfolio);
+      // Original reference is preserved in the trial; the response retains a fresh
+      // market for display, and commit does not reprice an existing seed intention.
+    }
+    try { portfolio = await commitPortfolio(user, next, null); }
+    catch (error) {
+      if (!(error instanceof ApiError) || error.status !== 409) throw error;
+      portfolio = await getPortfolio(user);
+      if (!portfolio) throw error;
+    }
+  }
+  if (user.demo && portfolio) {
+    const { saveAllocationSettings } = await import('./allocation-server');
+    await saveAllocationSettings(user, { riskPercent: 80, slippageBps: 10 }, { skipWorkspace: true, onlyIfMissing: true });
+  }
+  const { getPlanState } = await import('./strategy-server');
+  return { user, portfolio, market, planState: await getPlanState(user) };
+}
+export async function demoSignIn(request: Request, fresh = false): Promise<DemoWorkspace> {
   if (!demoEnabled()) throw new ApiError('Demo sign-in is disabled.', 404);
-  try { return await requireUser(); } catch (error) { if (!(error instanceof ApiError) || error.status !== 401) throw error; }
+  let current: RotationUser | null = null;
+  try { current = await requireUser(); } catch (error) { if (!(error instanceof ApiError) || error.status !== 401) throw error; }
+  if (current && !fresh) return prepareDemoWorkspace(current);
+  // Fail before creating an identity or changing cookies when public quotes fail.
+  await freshMarket();
   // Existing seeded accounts remain available for controlled QA. Public visitors get
   // separate real GoTrue identities, so one visitor cannot overwrite another ledger.
   await rateLimit(request, 'demo-create', 3, 3600);
@@ -151,7 +207,52 @@ export async function demoSignIn(request: Request): Promise<RotationUser> {
   if (!result.ok) throw new ApiError('Demo account could not be created. Try again later.', 503);
   const user = await result.json();
   await dbRequest('wpr_members', { method: 'POST', body: JSON.stringify({ user_id: user.id, is_demo: true }) });
-  return signIn(email, password);
+  let prepared: DemoWorkspace | null = null;
+  await signIn(email, password, async next => {
+    prepared = await prepareDemoWorkspace(next);
+    if (current) {
+      const jar = await cookies();
+      // Retain the original workspace across successive example switches.
+      if (!jar.get(PREVIOUS_REFRESH)?.value) {
+        const access = jar.get(ACCESS)?.value, refresh = jar.get(REFRESH)?.value;
+        if (!access || !refresh) throw new ApiError('Previous workspace session is unavailable. Sign in again before opening an example.', 409);
+        jar.set(PREVIOUS_ACCESS, access, { ...cookieOptions(), maxAge: 7 * 86400 });
+        jar.set(PREVIOUS_REFRESH, refresh, { ...cookieOptions(), maxAge: 7 * 86400 });
+      }
+    }
+  });
+  if (!prepared) throw new ApiError('Example preparation failed.', 503);
+  return prepared;
+}
+export async function returnPreviousWorkspace(): Promise<DemoWorkspace> {
+  const jar = await cookies();
+  let access = jar.get(PREVIOUS_ACCESS)?.value;
+  let refresh = jar.get(PREVIOUS_REFRESH)?.value;
+  if (!access || !refresh) throw new ApiError('No previous workspace is saved in this browser.', 409);
+  let result = await authRequest('user', {}, access);
+  let expires = 3600;
+  if (!result.ok) {
+    const renewed = await authRequest('token?grant_type=refresh_token', { method: 'POST', body: JSON.stringify({ refresh_token: refresh }) });
+    if (!renewed.ok) throw new ApiError('Previous session expired. Sign in to that workspace again.', 401);
+    const session = await renewed.json(); access = session.access_token; refresh = session.refresh_token; expires = session.expires_in;
+    result = await authRequest('user', {}, access);
+  }
+  if (!result.ok || !access || !refresh) throw new ApiError('Previous workspace authentication failed.', 401);
+  const identity = await result.json();
+  if (typeof identity.id !== 'string' || typeof identity.email !== 'string') throw new ApiError('Invalid previous workspace identity.', 401);
+  const rows = await dbRequest<{ is_demo: boolean }[]>(`wpr_members?user_id=eq.${encodeURIComponent(identity.id)}&select=is_demo`, {}, access);
+  if (rows.length !== 1) throw new ApiError('Previous account does not have rotation access.', 403);
+  // Keep a rotated backup refresh token usable if a subsequent public-data read
+  // fails. The active workspace is still unchanged until the complete payload.
+  jar.set(PREVIOUS_ACCESS, access, { ...cookieOptions(), maxAge: 7 * 86400 });
+  jar.set(PREVIOUS_REFRESH, refresh, { ...cookieOptions(), maxAge: 7 * 86400 });
+  const user = { id: identity.id, email: identity.email, demo: rows[0].is_demo, accessToken: access };
+  // Returning never seeds or changes the prior account's financial records.
+  const { getPlanState } = await import('./strategy-server');
+  const [portfolio, market, planState] = await Promise.all([getPortfolio(user), freshMarket(), getPlanState(user)]);
+  await storeSession({ access_token: access, refresh_token: refresh, expires_in: expires });
+  for (const name of [PREVIOUS_ACCESS, PREVIOUS_REFRESH]) jar.set(name, '', { ...cookieOptions(), maxAge: 0 });
+  return { user, portfolio, market, planState };
 }
 export async function signOut(): Promise<void> {
   const jar = await cookies();
@@ -163,7 +264,7 @@ export async function signOut(): Promise<void> {
     const revoked = await authRequest('logout?scope=local', { method: 'POST' }, token);
     if (!revoked.ok && revoked.status !== 401 && revoked.status !== 403) throw new ApiError('Session revocation failed. Retry signing out.', 503);
   }
-  for (const name of [ACCESS, REFRESH]) jar.set(name, '', { httpOnly: true, sameSite: 'strict', secure: process.env.NODE_ENV === 'production', path: '/api/rotation', maxAge: 0 });
+  for (const name of [ACCESS, REFRESH, PREVIOUS_ACCESS, PREVIOUS_REFRESH]) jar.set(name, '', { ...cookieOptions(), maxAge: 0 });
 }
 export async function getPortfolio(user: RotationUser): Promise<Portfolio | null> {
   const rows = await dbRequest<{ data: unknown }[]>(`wpr_portfolios?owner_id=eq.${encodeURIComponent(user.id)}&select=data`, {}, user.accessToken);

@@ -1,0 +1,14 @@
+{
+  "verifiedAt": "2026-10-13T17:41:39.983510-04:00",
+  "build": "PASS",
+  "command": "npm run build -- --webpack",
+  "postBuildTypeScript": "PASS",
+  "postBuildCommand": "npx tsc --noEmit --incremental false",
+  "sourceManifestSha256": "bcd480df3c6945087147658dcde24fbb4318a50445876c70350481902aa2a002",
+  "changedSinceSnapshot": [],
+  "sourceFiles": 122,
+  "warnings": [
+    "Existing optional MetaMask React Native async-storage warning; compilation succeeded."
+  ],
+  "scope": "Isolated CAD10000 example, editable preferences, previous-workspace return; no trading-engine or SQL changes."
+}

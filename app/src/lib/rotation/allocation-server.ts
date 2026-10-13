@@ -36,10 +36,14 @@ async function allocationSettings(user:RotationUser):Promise<{riskPercent:number
  if(rows[0])return rows[0].data.config;
  const previous=await latestForecastAdvice(user);return previous?previous.data.config:null;
 }
-export async function saveAllocationSettings(user:RotationUser,body:Record<string,unknown>):Promise<AllocationWorkspace>{
+export async function saveAllocationSettings(user:RotationUser,body:Record<string,unknown>,options:{skipWorkspace?:boolean;onlyIfMissing?:boolean}={}):Promise<AllocationWorkspace|null>{
+ if(options.onlyIfMissing&&await allocationSettings(user))return null;
  const risk=body.riskPercent,slip=validSlip(body.slippageBps);
  if(typeof risk!=='number'||!Number.isFinite(risk)||risk<0||risk>100)throw new ApiError('Crypto budget must be from 0 to 100%.');
- await dbRequest('wpr_trials',{method:'POST',body:JSON.stringify({id:crypto.randomUUID(),owner_id:user.id,kind:'protocol',data:{namespace:'allocation-settings',config:{riskPercent:risk,slippageBps:slip}}})});return allocationWorkspace(user);
+ const digest=hash(`demo-example-settings-v1:${user.id}`),id=options.onlyIfMissing?`${digest.slice(0,8)}-${digest.slice(8,12)}-4${digest.slice(13,16)}-8${digest.slice(17,20)}-${digest.slice(20,32)}`:crypto.randomUUID();
+ try{await dbRequest('wpr_trials',{method:'POST',body:JSON.stringify({id,owner_id:user.id,kind:'protocol',data:{namespace:'allocation-settings',config:{riskPercent:risk,slippageBps:slip}}})});}
+ catch(error){if(!options.onlyIfMissing||!(error instanceof ApiError)||error.status!==409||!await allocationSettings(user))throw error;}
+ return options.skipWorkspace?null:allocationWorkspace(user);
 }
 export async function allocationWorkspace(user:RotationUser):Promise<AllocationWorkspace>{
  const portfolio=await getPortfolio(user);if(!portfolio)throw new ApiError('Create your portfolio first.',404);

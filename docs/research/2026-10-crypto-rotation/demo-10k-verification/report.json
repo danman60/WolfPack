@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "target": {
+    "environment": "local",
+    "url": "http://127.0.0.1:3218/rotation"
+  },
+  "checks": [
+    "signedout: exact CAD10000 captured-mark accounting, four positive holdings, defaults and six charts/four sliders without setup",
+    "Reload preserves exact opening units and ledger",
+    "Rejected cross-origin fresh-example request preserves current identity and ledger",
+    "Repeated same-user seed reuses one portfolio and one immutable seed",
+    "Sliders immediately save forecasts without moving holdings",
+    "signedin: exact CAD10000 captured-mark accounting, four positive holdings, defaults and six charts/four sliders without setup",
+    "Actual double-click creates one fresh example; prior session stays in HttpOnly cookies",
+    "Return restores original identity and exact ledger; second owner data remains isolated"
+  ],
+  "sessionActions": [
+    "demo",
+    "demo-example",
+    "demo-return"
+  ],
+  "scope": "Local/Preview isolated paper only. No funded execution. External quote failure ordering source-reviewed; no fake outage induced."
+}
