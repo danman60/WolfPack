@@ -1,0 +1,37 @@
+{
+  "url": "https://wolf-pack-eight.vercel.app",
+  "checkedEastern": "2026-10-13T14:31:03.425631-04:00",
+  "scope": "Anonymous GET only. Compare previously documented legacy exposed credential privately; no protected handler calls or credential mitigation.",
+  "pages": {
+    "/rotation": 200,
+    "/rotation/about": 200,
+    "/": 200,
+    "/trading": 200,
+    "/intelligence": 200,
+    "/backtest": 200,
+    "/portfolio": 200,
+    "/pools": 200,
+    "/auto-bot": 200,
+    "/evolution": 200,
+    "/settings": 200
+  },
+  "headers": {
+    "content-security-policy": "frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'",
+    "strict-transport-security": "max-age=31536000",
+    "x-frame-options": "DENY",
+    "x-content-type-options": "nosniff"
+  },
+  "scriptsRead": 144,
+  "unread": [],
+  "legacyCredentialMatches": 1,
+  "matchingArtifacts": {
+    "/_next/static/chunks/80c371bd10693fad.js": {
+      "status": 200,
+      "sha256": "9ae772064c3a8ce82bdd5f0ab27cc5d091e2650b41f3ae296d8f510581a08cc0",
+      "knownCredentialMatches": 1
+    }
+  },
+  "legacyCredentialMitigated": false,
+  "observation": "Documented legacy exposure remains",
+  "headerVerification": "Independent anonymous GET, case-normalized header names. Initial dict lookup used lower-case against original-cased names and was corrected."
+}

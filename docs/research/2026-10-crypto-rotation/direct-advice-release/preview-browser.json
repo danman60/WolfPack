@@ -1,0 +1,84 @@
+{
+  "url": "https://wolf-pack-gl66bt9as-danman60s-projects.vercel.app/rotation",
+  "checks": [
+    {
+      "check": "real isolated paper sign-in; live trading disabled",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "check": "one direct request saves advice without financial mutation or old-record replacement",
+      "status": "PASS",
+      "detail": {
+        "trialId": "8d528c0f-1da3-4c82-9e80-2ffb86ac4f3b",
+        "decision": "hold"
+      }
+    },
+    {
+      "check": "changed preferences disable prior advice actions until recomputed",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "check": "genuine cost-aware HOLD preserves all units and costs; live SHIFT unobserved",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "check": "saved advice restores; changed holdings require refresh; saved preferences reused",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "check": "legacy study UI and immutable records remain accessible",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "check": "advanced research remains accessible",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "screenshots": [
+    {
+      "url": "https://wolf-pack-gl66bt9as-danman60s-projects.vercel.app/rotation",
+      "width": 1440,
+      "png": "/home/danman60/.claude/shots/pending/wolfpack-strategy-direct-advice-1440-20261013T142818.png",
+      "captured": "2026-10-13T14:28:18.224786-04:00",
+      "pass": true,
+      "fail": [],
+      "warn": []
+    },
+    {
+      "url": "https://wolf-pack-gl66bt9as-danman60s-projects.vercel.app/rotation",
+      "width": 390,
+      "png": "/home/danman60/.claude/shots/pending/wolfpack-strategy-direct-advice-390-20261013T142819.png",
+      "captured": "2026-10-13T14:28:19.427780-04:00",
+      "pass": true,
+      "fail": [],
+      "warn": []
+    },
+    {
+      "url": "https://wolf-pack-gl66bt9as-danman60s-projects.vercel.app/rotation",
+      "width": 1440,
+      "png": "/home/danman60/.claude/shots/pending/wolfpack-strategy-restored-advice-1440-20261013T142826.png",
+      "captured": "2026-10-13T14:28:26.243681-04:00",
+      "pass": true,
+      "fail": [],
+      "warn": []
+    },
+    {
+      "url": "https://wolf-pack-gl66bt9as-danman60s-projects.vercel.app/rotation",
+      "width": 390,
+      "png": "/home/danman60/.claude/shots/pending/wolfpack-strategy-restored-advice-390-20261013T142827.png",
+      "captured": "2026-10-13T14:28:27.454393-04:00",
+      "pass": true,
+      "fail": [],
+      "warn": []
+    }
+  ],
+  "startedEastern": "2026-10-13T14:28:08.470539-04:00",
+  "consoleErrors": [],
+  "status": "PASS"
+}

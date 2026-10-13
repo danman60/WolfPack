@@ -1,0 +1,14 @@
+{
+  "id": "dpl_12gZ5MUWKQS5xMJFUDiWgKjxw3VS",
+  "url": "wolf-pack-gl66bt9as-danman60s-projects.vercel.app",
+  "target": null,
+  "readyState": "READY",
+  "gitSource": {
+    "ref": "feat/cad-rotation-workshop",
+    "repoId": 1170995482,
+    "sha": "ee9296a0243e335ca6254f6134b5d4fc3ec67dce",
+    "type": "github",
+    "prId": null
+  },
+  "commit": "ee9296a0243e335ca6254f6134b5d4fc3ec67dce"
+}

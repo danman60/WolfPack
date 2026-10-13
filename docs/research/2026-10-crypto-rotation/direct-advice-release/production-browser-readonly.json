@@ -1,0 +1,109 @@
+{
+  "url": "https://wolf-pack-eight.vercel.app/rotation",
+  "checks": [
+    {
+      "check": "production authenticated GET retrieves current advice and paper holdings",
+      "status": "PASS",
+      "detail": {
+        "revision": 14,
+        "adviceId": "95ef5766-5cfd-4764-83b1-95279b6f0860",
+        "decision": "hold"
+      }
+    },
+    {
+      "check": "reload preserves exact ledger and saved advice; no production data mutation calls",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "check": "genuine public CAD market snapshot available",
+      "status": "PASS",
+      "detail": {
+        "source": "Ndax public CAD spot order books"
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "url": "https://wolf-pack-eight.vercel.app/rotation",
+      "width": 1440,
+      "png": "/home/danman60/.claude/shots/pending/wolfpack-strategy-production-advice-1440-20261013T143107.png",
+      "captured": "2026-10-13T14:31:07.774299-04:00",
+      "pass": true,
+      "fail": [],
+      "warn": []
+    },
+    {
+      "url": "https://wolf-pack-eight.vercel.app/rotation",
+      "width": 390,
+      "png": "/home/danman60/.claude/shots/pending/wolfpack-strategy-production-advice-390-20261013T143108.png",
+      "captured": "2026-10-13T14:31:08.978786-04:00",
+      "pass": true,
+      "fail": [],
+      "warn": []
+    }
+  ],
+  "startedEastern": "2026-10-13T14:31:02.294761-04:00",
+  "readiness": {
+    "mode": "paper-workshop",
+    "database": "operational",
+    "auth": "operational",
+    "demo": "enabled-isolated-synthetic-accounts",
+    "persistence": "server-ledger-with-atomic-revision-check",
+    "liveTrading": "disabled",
+    "passwordRecovery": "not-enabled-seeded-workshop-accounts-only",
+    "backups": "platform-managed; rotation-specific restore not rehearsed",
+    "ownerDecisions": [
+      "actual funding",
+      "custody/provider",
+      "risk and concentration limits"
+    ]
+  },
+  "status": "PASS",
+  "calls": [
+    {
+      "method": "GET",
+      "url": "https://wolf-pack-eight.vercel.app/api/rotation/session"
+    },
+    {
+      "method": "GET",
+      "url": "https://wolf-pack-eight.vercel.app/api/rotation/market"
+    },
+    {
+      "method": "POST",
+      "url": "https://wolf-pack-eight.vercel.app/api/rotation/session"
+    },
+    {
+      "method": "GET",
+      "url": "https://wolf-pack-eight.vercel.app/api/rotation/portfolio"
+    },
+    {
+      "method": "GET",
+      "url": "https://wolf-pack-eight.vercel.app/api/rotation/trials"
+    },
+    {
+      "method": "GET",
+      "url": "https://wolf-pack-eight.vercel.app/api/rotation/trials?forecast=1"
+    },
+    {
+      "method": "GET",
+      "url": "https://wolf-pack-eight.vercel.app/api/rotation/session"
+    },
+    {
+      "method": "GET",
+      "url": "https://wolf-pack-eight.vercel.app/api/rotation/market"
+    },
+    {
+      "method": "GET",
+      "url": "https://wolf-pack-eight.vercel.app/api/rotation/portfolio"
+    },
+    {
+      "method": "GET",
+      "url": "https://wolf-pack-eight.vercel.app/api/rotation/trials"
+    },
+    {
+      "method": "GET",
+      "url": "https://wolf-pack-eight.vercel.app/api/rotation/trials?forecast=1"
+    }
+  ]
+}

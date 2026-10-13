@@ -1,0 +1,143 @@
+Retrieving project…
+Deploying danman60s-projects/wolf-pack
+Uploading [--------------------] (0.0B/2.8MB)
+Uploading [=====---------------] (709.2KB/2.8MB)
+Uploading [==========----------] (1.4MB/2.8MB)
+Uploading [===============-----] (2.1MB/2.8MB)
+Uploading [====================] (2.8MB/2.8MB)
+Inspect: https://vercel.com/danman60s-projects/wolf-pack/4N8XVfrZL1QnPo5PBsThVUH4Rz47 [8s]
+Production: https://wolf-pack-6klwvtaul-danman60s-projects.vercel.app [8s]
+https://wolf-pack-6klwvtaul-danman60s-projects.vercel.appBuilding...
+Building...
+Building: Running build in Cleveland, USA (East) – cle1
+Building: Build machine configuration: 4 cores, 8 GB
+Building: Retrieving list of deployment files...
+Building: Downloading 989 deployment files...
+Building: Restored build cache from previous deployment (422mzLkVN5MR3aQQMG2sn6LLJjyu)
+Building: Running "vercel build"
+Building: Vercel CLI 62.7.0
+Building: Installing dependencies...
+Building: npm warn ERESOLVE overriding peer dependency
+Building: npm warn While resolving: use-sync-external-store@1.2.0
+Building: npm warn Found: react@19.1.0
+Building: npm warn node_modules/react
+Building: npm warn   react@"19.1.0" from the root project
+Building: npm warn   17 more (@reduxjs/toolkit, @tanstack/react-query, porto, zustand, ...)
+Building: npm warn
+Building: npm warn Could not resolve dependency:
+Building: npm warn peer react@"^16.8.0 || ^17.0.0 || ^18.0.0" from use-sync-external-store@1.2.0
+Building: npm warn node_modules/valtio/node_modules/use-sync-external-store
+Building: npm warn   use-sync-external-store@"1.2.0" from valtio@1.13.2
+Building: npm warn   node_modules/valtio
+Building: npm warn
+Building: npm warn Conflicting peer dependency: react@18.3.1
+Building: npm warn node_modules/react
+Building: npm warn   peer react@"^16.8.0 || ^17.0.0 || ^18.0.0" from use-sync-external-store@1.2.0
+Building: npm warn   node_modules/valtio/node_modules/use-sync-external-store
+Building: npm warn     use-sync-external-store@"1.2.0" from valtio@1.13.2
+Building: npm warn     node_modules/valtio
+Building: npm warn deprecated @paulmillr/qr@0.2.1: The package is now available as "qr": npm install qr
+Building: npm warn deprecated @walletconnect/sign-client@2.21.1: Reliability and performance improvements. See: https://github.com/WalletConnect/walletconnect-monorepo/releases
+Building: npm warn deprecated @walletconnect/universal-provider@2.21.1: Reliability and performance improvements. See: https://github.com/WalletConnect/walletconnect-monorepo/releases
+Building: npm warn deprecated @walletconnect/sign-client@2.21.0: Reliability and performance improvements. See: https://github.com/WalletConnect/walletconnect-monorepo/releases
+Building: npm warn deprecated @walletconnect/sign-client@2.21.0: Reliability and performance improvements. See: https://github.com/WalletConnect/walletconnect-monorepo/releases
+Building: npm warn deprecated @walletconnect/ethereum-provider@2.21.1: Reliability and performance improvements. See: https://github.com/WalletConnect/walletconnect-monorepo/releases
+Building: npm warn deprecated @walletconnect/sign-client@2.21.0: Reliability and performance improvements. See: https://github.com/WalletConnect/walletconnect-monorepo/releases
+Building: npm warn deprecated @walletconnect/universal-provider@2.21.0: Reliability and performance improvements. See: https://github.com/WalletConnect/walletconnect-monorepo/releases
+Building: npm warn deprecated @walletconnect/universal-provider@2.21.0: Reliability and performance improvements. See: https://github.com/WalletConnect/walletconnect-monorepo/releases
+Building: npm warn deprecated @walletconnect/universal-provider@2.21.0: Reliability and performance improvements. See: https://github.com/WalletConnect/walletconnect-monorepo/releases
+Building: added 863 packages in 21s
+Building: 208 packages are looking for funding
+Building: run `npm fund` for details
+Building: npm warn install-scripts 6 packages have install scripts not yet covered by allowScripts:
+Building: npm warn install-scripts   bufferutil@4.1.0 (install: node-gyp-build)
+Building: npm warn install-scripts   keccak@3.0.4 (install: node-gyp-build || exit 0)
+Building: npm warn install-scripts   utf-8-validate@6.0.6 (install: node-gyp-build)
+Building: npm warn install-scripts   sharp@0.34.5 (install: node install/check.js || npm run build)
+Building: npm warn install-scripts   unrs-resolver@1.11.1 (postinstall: napi-postinstall unrs-resolver 1.11.1 check)
+Building: npm warn install-scripts   utf-8-validate@5.0.10 (install: node-gyp-build)
+Building: npm warn install-scripts
+Building: npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+Building: Detected Next.js version: 16.1.6
+Building: Running "npm run build"
+Building: > wolfpack@0.1.0 build
+Building: > next build
+Building: Attention: Next.js now collects completely anonymous telemetry regarding usage.
+Building: This information is used to shape Next.js' roadmap and prioritize features.
+Building: You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+Building: https://nextjs.org/telemetry
+Building: ▲ Next.js 16.1.6 (Turbopack)
+Building: Creating an optimized production build ...
+Building: ✓ Compiled successfully in 12.4s
+Building: Running TypeScript ...
+Building: Collecting page data using 3 workers ...
+Building: Generating static pages using 3 workers (0/14) ...
+Building: Generating static pages using 3 workers (3/14)
+Building: Generating static pages using 3 workers (6/14)
+Building: [Reown Config] Failed to fetch remote project configuration. Using local/default values. Error: HTTP status code: 403
+Building: at e (.next/server/chunks/ssr/9a875_f45dba49._.js:1:24491)
+Building: at async f.get (.next/server/chunks/ssr/9a875_f45dba49._.js:1:24700)
+Building: at async Object.fetchProjectConfig (.next/server/chunks/ssr/9a875_f45dba49._.js:2:10819)
+Building: at async Object.fetchRemoteFeatures (.next/server/chunks/ssr/9a875_@reown_appkit_dist_esm_exports_core_984068d6.js:10:222000)
+Building: at async kH.initialize (.next/server/chunks/ssr/9a875_@reown_appkit_dist_esm_exports_core_984068d6.js:10:227623) {
+Building: [cause]: Response {
+Building: status: 403,
+Building: statusText: 'Forbidden',
+Building: headers: Headers {
+Building: date: 'Tue, 13 Oct 2026 18:30:00 GMT',
+Building: 'content-type': 'text/plain; charset=UTF-8',
+Building: 'content-length': '9',
+Building: connection: 'keep-alive',
+Building: 'access-control-allow-origin': '*',
+Building: 'cache-control': 'public, max-age=300, s-maxage=300',
+Building: server: 'cloudflare',
+Building: 'cf-ray': 'a4a069ba9f3bb23b-CMH',
+Building: 'alt-svc': 'h3=":443"; ma=86400'
+Building: },
+Building: body: undefined,
+Building: bodyUsed: false,
+Building: ok: false,
+Building: redirected: false,
+Building: type: 'default',
+Building: url: 'https://api.web3modal.org/appkit/v1/config?projectId=demo&st=appkit&sv=html-core-1.7.8'
+Building: }
+Building: }
+Building: Generating static pages using 3 workers (10/14)
+Building: ✓ Generating static pages using 3 workers (14/14) in 683.1ms
+Building: Finalizing page optimization ...
+Building: Route (app)
+Building: ┌ ○ /
+Building: ├ ○ /_not-found
+Building: ├ ƒ /api/rotation/action
+Building: ├ ƒ /api/rotation/history
+Building: ├ ƒ /api/rotation/market
+Building: ├ ƒ /api/rotation/portfolio
+Building: ├ ƒ /api/rotation/preview
+Building: ├ ƒ /api/rotation/readiness
+Building: ├ ƒ /api/rotation/session
+Building: ├ ƒ /api/rotation/trials
+Building: ├ ○ /auto-bot
+Building: ├ ○ /backtest
+Building: ├ ○ /evolution
+Building: ├ ○ /intelligence
+Building: ├ ○ /pools
+Building: ├ ○ /portfolio
+Building: ├ ○ /rotation
+Building: ├ ○ /rotation/about
+Building: ├ ○ /rotation/icon.svg
+Building: ├ ○ /settings
+Building: └ ○ /trading
+Building: ○  (Static)   prerendered as static content
+Building: ƒ  (Dynamic)  server-rendered on demand
+Building: Traced Next.js server files in: 39.36ms
+Building: Created all serverless functions in: 617.479ms
+Building: Collected static files (public/, static/, .next/static): 5.47ms
+Building: Build Completed in /vercel/output [46s]
+Building: Deploying outputs...
+[2K[1A[2K[GProduction: https://wolf-pack-6klwvtaul-danman60s-projects.vercel.app [1m]
+Completing...
+Aliased: https://wolf-pack-danman60s-projects.vercel.app [1m]
+
+Common next commands:
+- `vercel inspect wolf-pack-6klwvtaul-danman60s-projects.vercel.app --logs`
+- `vercel redeploy wolf-pack-6klwvtaul-danman60s-projects.vercel.app`

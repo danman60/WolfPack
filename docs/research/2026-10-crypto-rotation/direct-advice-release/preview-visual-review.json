@@ -1,0 +1,40 @@
+{
+  "status": "PASS",
+  "reviewedAtEastern": "2026-10-13T14:29:53.953005-04:00",
+  "sourceCommit": "ee9296a0243e335ca6254f6134b5d4fc3ec67dce",
+  "environment": "immutable Preview",
+  "reviewer": "spot_history",
+  "screenshots": [
+    {
+      "path": "/tmp/wolfpack-advice-qa-preview/direct-advice-390.png",
+      "sha256": "4dc517428e26ee6e34d423f9d83ec536dbc2983f6f5c7d16a3e8459680c26ff5"
+    },
+    {
+      "path": "/tmp/wolfpack-advice-qa-preview/direct-advice-1440.png",
+      "sha256": "2fdb07a0df828a1a9bb9fb5ebe96729cb543318681233ff803bf2551f5a3534d"
+    },
+    {
+      "path": "/tmp/wolfpack-advice-qa-preview/restored-advice-390.png",
+      "sha256": "fc1d560d5270087fb3f2d6e2f4316d48d97380d59077455a9a2bf1dc4586b768"
+    },
+    {
+      "path": "/tmp/wolfpack-advice-qa-preview/restored-advice-1440.png",
+      "sha256": "9bd64d51c4c55d396ff8f622943f1a75f3d630ab01158908a72cd662db54573d"
+    }
+  ],
+  "visualChecks": [
+    "Genuine HOLD recommendation, rationale and action readable",
+    "Forecast values, target CAD amounts, fees and next review readable",
+    "Phone cards stack without visible clipping or horizontal overflow",
+    "Desktop spacing and alignment consistent across advice and ledger",
+    "Text and button colors consistent with existing application",
+    "Saved advice restores with same layout; legacy evidence remains collapsed"
+  ],
+  "limitations": [
+    "Genuine HOLD displayed; this visual review does not verify a live SHIFT state.",
+    "Preview hosting toolbar visible at right edge; it does not obscure recommendation content."
+  ],
+  "implementationChanges": false,
+  "externalMessagesSent": false,
+  "mechanicalEvidence": "/tmp/wolfpack-advice-qa-preview/checks.json"
+}

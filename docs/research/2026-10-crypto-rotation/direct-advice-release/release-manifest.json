@@ -1,0 +1,40 @@
+{
+  "releaseCommit": "ee9296a0243e335ca6254f6134b5d4fc3ec67dce",
+  "sourceHashes": {
+    "app/src/lib/rotation/forecast-advice.ts": "eb793f2086f0dd9b63af0a5692e2b7bdf583b792eb31757912797134568bded1",
+    "app/src/lib/rotation/strategy-server.ts": "24a02c5fed953bf3d25fb8b0140992909d77dcd2e56da967147bbb2b09ad6f62",
+    "app/src/lib/rotation/strategy-api-contract.ts": "da770a295ab8e8abf596bfdeae7c7c6862e74cae889e3c73db632825cd59fe9d",
+    "app/src/app/api/rotation/trials/route.ts": "3dd6fa5e698d62a1cc72add84f6d8756d25145759f3756387cf6b26abc0994e8",
+    "app/src/components/rotation/StrategyPanel.tsx": "9619c21c9ba63e21bc7aa5e7d61d3db9e745e89c8d5b926ca78a794eb80a7d1e",
+    "app/src/app/rotation/page.tsx": "512df32635caea328a275db700dc8fa01648db85f81f67e8924ab12639d6e471",
+    "tests/agent/rotation-advice-numerics.py": "8d11680a8b3ac1ccfb81d151a512ad0a7057b04e47ad468af2f54fcbd4cd3e2a",
+    "tests/agent/rotation-advice-accounting.cjs": "409c4eec6baface2128837952ceed954dcb220afa612095bff0b9959e3984cf4",
+    "tests/agent/rotation-advice-qa.py": "3df97b699b40b8b6fc083bbf4597677fa6582fb25f16f18e80dc243b9da54cae",
+    "tests/agent/flow-rotation-advice.md": "558fadd5fc6fcf866ca9d37ca14843cf40367650d927adac706a2c577b07b87d"
+  },
+  "previewId": "dpl_12gZ5MUWKQS5xMJFUDiWgKjxw3VS",
+  "productionId": "dpl_4N8XVfrZL1QnPo5PBsThVUH4Rz47",
+  "productionUrl": "https://wolf-pack-eight.vercel.app/rotation",
+  "productionMutationPolicy": "Real sign-in followed by GETs only; no recommendation save, financial record or private exchange call.",
+  "artifacts": {
+    "preview-restored-advice-390.png": "fc1d560d5270087fb3f2d6e2f4316d48d97380d59077455a9a2bf1dc4586b768",
+    "RELEASE.md": "a41815d7da98a1c50149a7a3c910e1209e4f53baebea51204afe84327eb79cda",
+    "production-alias.log": "dcb5323a2435d332d8da5c221ede2c0a05990822b7977159e5134ecda59ba190",
+    "production-visual-review.json": "45c338d2f82b451a27538840a98a209e3f90d552525573b74f3184572074de0c",
+    "production-alias.json": "0e14d49dce86e07d4ef107f2b8778f748ad4d64767f8ce79a0ddba1aaa2237ae",
+    "production-advice-1440.png": "3139d94c4d5ff5bc6a232851ebb794ef1e7d1097371036e0d5f657ddcdbe7eb0",
+    "preview-direct-advice-390.png": "4dc517428e26ee6e34d423f9d83ec536dbc2983f6f5c7d16a3e8459680c26ff5",
+    "production-deployment.json": "0e14d49dce86e07d4ef107f2b8778f748ad4d64767f8ce79a0ddba1aaa2237ae",
+    "preview-restored-advice-1440.png": "9bd64d51c4c55d396ff8f622943f1a75f3d630ab01158908a72cd662db54573d",
+    "preview-browser.json": "7a6e4967cb45d4ace6fa74570c8613ea6b6c659bede6a90bf9f7791ad6e14849",
+    "production-artifact-smoke.json": "171143b7208cd06a3fac76a94adb3157854eca329db382ad1bc0d4baaf1bcf06",
+    "preview-deployment.json": "ba83c34e614a3deb3823cc77c2086ba85cc7da1fe3a5b1327644668fbea1c1d4",
+    "preview-provenance.json": "9aea6fbba7a4d5b51a3c6375f576e539c79a162968e432383b33f3694ece5df6",
+    "production-browser-readonly.json": "95e7dfc4960b9f0f9c590ec842ce27cafaee659228d275066c53c73efa00468a",
+    "production-build.log": "8cd645890e217f62f1bc3708fcb6e797a9bd9455f88f5e8bf1d15c49778c07c1",
+    "production-advice-390.png": "f69326bf8c032635f413dde76db22c4ad9b2e57770940d433f0927d62d0163df",
+    "preview-direct-advice-1440.png": "2fdb07a0df828a1a9bb9fb5ebe96729cb543318681233ff803bf2551f5a3534d",
+    "preview-visual-review.json": "5462310834919f2dbae9d43082f2192fc2bc953f76503b47a9da866c729d1fa4",
+    "production-public-scan.json": "e6fefca52ee6229f1dd26cd0fc3aebbfb73e36102c3002f228e62517ac43798f"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "id": "dpl_4N8XVfrZL1QnPo5PBsThVUH4Rz47",
+  "url": "wolf-pack-6klwvtaul-danman60s-projects.vercel.app",
+  "target": "production",
+  "readyState": "READY",
+  "commitMetadata": {
+    "releaseCommit": "ee9296a0243e335ca6254f6134b5d4fc3ec67dce",
+    "githubCommitSha": null,
+    "githubCommitRef": null
+  },
+  "checks": {
+    "/rotation": 200,
+    "/api/rotation/session": 200,
+    "/api/rotation/market": 200
+  }
+}

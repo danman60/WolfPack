@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "reviewedAtEastern": "2026-10-13T14:32:08.370414-04:00",
+  "reviewer": "spot_history",
+  "environment": "production",
+  "url": "https://wolf-pack-eight.vercel.app/rotation",
+  "sourceCommit": "ee9296a",
+  "deploymentId": "dpl_4N8XVfrZL1QnPo5PBsThVUH4Rz47",
+  "screenshots": [
+    {
+      "path": "docs/research/2026-10-crypto-rotation/direct-advice-release/production-advice-390.png",
+      "width": 390,
+      "sha256": "f69326bf8c032635f413dde76db22c4ad9b2e57770940d433f0927d62d0163df"
+    },
+    {
+      "path": "docs/research/2026-10-crypto-rotation/direct-advice-release/production-advice-1440.png",
+      "width": 1440,
+      "sha256": "3139d94c4d5ff5bc6a232851ebb794ef1e7d1097371036e0d5f657ddcdbe7eb0"
+    }
+  ],
+  "visualChecks": [
+    "Restored genuine HOLD and rationale clearly visible",
+    "Target CAD values, percentages, forecasts, costs and next review readable",
+    "Phone content stacks within viewport without visible clipping",
+    "Desktop panels aligned with consistent spacing and color",
+    "Low-confidence caveat visible; legacy studies collapsed",
+    "Manual action controls remain distinct from recommendation refresh"
+  ],
+  "scope": "Read-only screenshot inspection of reserved QA account; no production data mutation or external messages by reviewer. Genuine HOLD inspected, not live SHIFT.",
+  "implementationChanges": false
+}
