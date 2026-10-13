@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { ExchangeToggle } from "./ExchangeToggle";
 
 const NAV_LINKS = [
+  { href: "/rotation", label: "Rotation" },
   { href: "/", label: "Dashboard" },
   { href: "/intelligence", label: "Intelligence" },
   { href: "/trading", label: "Trading" },
@@ -19,10 +20,12 @@ const NAV_LINKS = [
 
 export function Nav() {
   const pathname = usePathname();
+  const isRotation = pathname.startsWith("/rotation");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [cbState, setCbState] = useState<string>("unknown");
 
   useEffect(() => {
+    if (isRotation) return;
     const fetchCB = async () => {
       try {
         const res = await fetch("/intel/circuit-breaker");
@@ -40,7 +43,7 @@ export function Nav() {
     fetchCB();
     const interval = setInterval(fetchCB, 30000); // every 30s
     return () => clearInterval(interval);
-  }, []);
+  }, [isRotation]);
 
   const cbColor = cbState === "ACTIVE" ? "bg-green-500" :
                   cbState === "SUSPENDED" ? "bg-amber-500" :
@@ -52,7 +55,7 @@ export function Nav() {
                   "Circuit Breaker: Unknown";
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--background)]/80 backdrop-blur-xl backdrop-saturate-150">
+    <header className={`${isRotation ? "rotation-nav " : ""}sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--background)]/80 backdrop-blur-xl backdrop-saturate-150`}>
       <nav className="max-w-7xl mx-auto px-4 md:px-5 py-3.5 flex items-center justify-between">
         <div className="flex items-center gap-10">
           <Link
@@ -68,14 +71,14 @@ export function Nav() {
             </div>
             <span className="font-bold text-[15px] tracking-tight text-white flex items-center gap-1.5">
               WolfPack
-              <span
+              {!isRotation && <span
                 className={`${cbColor} rounded-full w-2 h-2 inline-block`}
                 title={cbLabel}
-              />
+              />}
             </span>
           </Link>
           {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-0.5">
+          <div className="hidden xl:flex items-center gap-0.5">
             {NAV_LINKS.map((link) => {
               const isActive =
                 link.href === "/"
@@ -95,13 +98,13 @@ export function Nav() {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <div className="hidden md:block">
+          {!isRotation && <div className="hidden xl:block">
             <ExchangeToggle />
-          </div>
+          </div>}
           {/* Mobile hamburger */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2.5 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg hover:bg-white/5 active:bg-white/10 transition"
+            className="xl:hidden p-2.5 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg hover:bg-white/5 active:bg-white/10 transition"
             aria-label="Toggle menu"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -123,7 +126,7 @@ export function Nav() {
       </nav>
       {/* Mobile dropdown */}
       {mobileOpen && (
-        <div className="md:hidden border-t border-[var(--border)] bg-[var(--background)]/95 backdrop-blur-xl px-4 py-3 space-y-1 mobile-nav-enter">
+        <div className="xl:hidden border-t border-[var(--border)] bg-[var(--background)]/95 backdrop-blur-xl px-4 py-3 space-y-1 mobile-nav-enter">
           {NAV_LINKS.map((link) => {
             const isActive =
               link.href === "/"
@@ -145,9 +148,9 @@ export function Nav() {
               </Link>
             );
           })}
-          <div className="pt-2 border-t border-[var(--border)] mt-2">
+          {!isRotation && <div className="pt-2 border-t border-[var(--border)] mt-2">
             <ExchangeToggle />
-          </div>
+          </div>}
         </div>
       )}
     </header>

@@ -1,5 +1,54 @@
 # Current Work — WolfPack
 
+## Active session: rotation application bootstrap extension
+
+### Active Task
+Complete the CAD/BTC/ETH/LINK rotation application using the existing-project bootstrap workflow. Owner explicitly chose full Astra/no local models, Netcup workshop persistence, and subsequently authorized deployment: "You can deploy I'll mind the funding gate". No real financial action or exchange credentials are authorized.
+
+### Recent Changes
+- Current plan: `docs/plans/2026-10-13-rotation-bootstrap-rebaseline.md`; initial browser-local/broker plan superseded.
+- Added core `docs/PRD.md`, `docs/DESIGN.md`, `docs/ARCHITECTURE.md` with requirement coverage and honest forecast/live-trading boundaries.
+- Rotation contracts, fixed-precision accounting, genuine market/history, auth, server ledger, immutable research registry and composed UI integrated. Real-browser workflow passed 9/9 checks; final saved-result/export/future-evaluation refusal and 320–1440px overflow checks passed.
+- Dependencies installed with unchanged lockfile; baseline TypeScript passed before integration. New localhost Next server at `127.0.0.1:3218`, exec session 30368 (Next automatically reloads its child PID after config edits). Next log: `app/.next/dev/logs/next-development.log`.
+- Low-fi layout served at `127.0.0.1:3328`; 390/1440 screenshots mechanically passed and visually reviewed, held without sending. This is not final application QA.
+- Deterministic QA Agent WebExecutor uses real authenticated server API as its oracle. Explicit localhost or immutable authorized preview only; stable production test targets rejected. No local inference.
+- Existing Vercel `wolf-pack` deployment inspected READY at `wolf-pack-eight.vercel.app`; new rotation code has not yet been deployed. Existing public workshop gateway `https://djatb.fyi/sb/workshop` and tailnet `100.89.183.64:8100` returned API-key-required responses. No new tenant/router needed.
+
+### Blockers
+Integrated auth/DB/UI acceptance passed. Isolated production build and post-build TypeScript passed; production bundle exact-value scan found zero server secret matches across 146 JavaScript files. Validated predictive forecasts and live exchange execution are not established. Owner financial/provider preferences remain open and must be entered explicitly rather than invented.
+
+### Next Steps
+Deploy authorized immutable Vercel preview using the six encrypted WPR keys now configured for preview and production. Run preview browser money workflow, promote the verified artifact, then read-only production smoke. Keep funding/live orders separate.
+
+### Context for Next Session
+Follow the rebaseline matrix, not prior browser-local/broker notes. Preserve old perp/LP workflows, other tenant data, running processes and unrelated research/transcript changes. No local model inference. Full baseline diagnostics: `/tmp/wolfpack-rotation-baseline-tsc.txt`. Vercel inspection artifact: `/tmp/wolfpack-rotation-vercel-deployment.json`.
+
+---
+
+## Session 2026-10-12: CAD/BTC/ETH/LINK rotation investigation and design
+
+### Active Task
+Owner requested a new spot rotation system: weekly/monthly recommendations, HOLD, owner-click execution, CAD P/L and matched no-action comparisons. Investigation/design deliverable completed; provider and portfolio preferences remain open. This does not resume the historical futures/carry work below.
+
+### Recent Changes
+- Added `docs/research/2026-10-crypto-rotation/DESIGN.md`, `PROVIDER-EVIDENCE.md`, `REUSE-EVIDENCE.md` and selected public API evidence.
+- Plan: `docs/plans/2026-10-12-crypto-rotation-investigation.md`.
+- Verified current OSC entries/amendments, CAD rails, fee documents and public Ndax/Kraken instrument metadata. Ndax has all three direct CAD spot markets; final provider choice requires account-specific fees and fresh size-matched quotes.
+- Inspected both repos. Existing Kraken code includes futures/paper assumptions; WolfHunt data loader has a synthetic fallback. Reuse boundaries documented.
+- No trading code, wallet policies, DB data, model training, backtest execution, processes or live financial actions changed. No deployment or build.
+
+### Blockers
+- Owner choices: custody/provider, capital/opening holdings, loss tolerance/allocation limits and review cadence. Questions presented; values not assumed.
+- Live old-wallet state unverified: configured Supabase DNS failure, other configured projects' table/catalog mismatch, local API timeout. Do not call hardcoded fallback registry entries current wallets. Exact attempts in REUSE-EVIDENCE.md.
+
+### Next Steps
+Resolve owner preferences; verify selected account capabilities only after connection authorization; freeze data coverage, chronological splits, costs, trial budget and acceptance thresholds before backtesting. Implementation and live financial actions have not been launched.
+
+### Context for Next Session
+Use new design and owner handoff `/tmp/crypto-rotation-astra-20261012-214732.md`. Current findings have source provenance; historical carry-return claims below are not evidence for spot rotation. Research documents remain local for review; no push/deployment performed.
+
+---
+
 ## Session 2026-08-27/28: Alpha reset — carry edge found, specified, and sized
 
 **Summary:** "Crack the fruitless search for alpha" session. Root-caused 12 months of null

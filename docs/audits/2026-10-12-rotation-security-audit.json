@@ -1,0 +1,965 @@
+[
+  {
+    "id": "FC-ENTITY-01",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "Personal paper experiment has no sales, checkout or economic-nexus calculation.",
+    "severity": "high",
+    "family": "entity_legal",
+    "assertion": "Customer locations are evaluated against each jurisdiction's economic-nexus thresholds, and every jurisdiction where the business has crossed one is recorded with its filing dates."
+  },
+  {
+    "id": "FC-ENTITY-02",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "No sale or tax collection; CAD deposits are simulated ledger entries.",
+    "severity": "high",
+    "family": "entity_legal",
+    "assertion": "Sales tax is calculated and collected at checkout by an automated tax engine for every taxable jurisdiction."
+  },
+  {
+    "id": "FC-ENTITY-03",
+    "verdict": "UNVERIFIED",
+    "evidence": "Audit scope: working tree rooted at git60cccd72 and livewpr workshop only; deployed rotation release was not available at snapshot.",
+    "note": "Settle with: Grep the signup path for a country/region allowlist or geo-IP check; attempt a signup from a disallowed region with a VPN or spoofed geo header and confirm refusal. If the product serves everywhere, confirm that is a recorded decision in config or docs, with the matching regional obligations (GDPR, AI disclosure) wired up.",
+    "severity": "medium",
+    "family": "entity_legal",
+    "assertion": "The set of countries and regions the product accepts customers from is an explicit, enforced configuration value rather than an unset default."
+  },
+  {
+    "id": "FC-POLICY-01",
+    "verdict": "FAIL",
+    "evidence": "app/src/app/rotation/about/page.tsx; filesystem page inventory found0 terms/privacy/security pages",
+    "note": "About page explicitly says public customer terms remain future work; it is not published customer terms with legal entity, law and liability cap.",
+    "severity": "high",
+    "family": "policies_contracts",
+    "assertion": "A published terms of service defines permitted use, the liability cap and governing law, and is linked from signup and checkout."
+  },
+  {
+    "id": "FC-POLICY-02",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "No payment or refund flow in scoped rotation routes.",
+    "severity": "high",
+    "family": "policies_contracts",
+    "assertion": "A refund policy written for this business is linked from the checkout page and visible before payment, and its stated terms match what the billing code actually does."
+  },
+  {
+    "id": "FC-POLICY-03",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "No B2B or enterprise customer contract in this personal workshop scope.",
+    "severity": "medium",
+    "family": "policies_contracts",
+    "assertion": "A data processing agreement and a master service agreement covering support, SLA and uptime commitments are available to business customers."
+  },
+  {
+    "id": "FC-POLICY-04",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "No PHI processed in rotation schema or forms.",
+    "severity": "critical",
+    "family": "policies_contracts",
+    "assertion": "A signed business associate agreement is on file for every vendor that stores or processes protected health information, and each such vendor appears on its provider's BAA-covered service list."
+  },
+  {
+    "id": "FC-POLICY-05",
+    "verdict": "FAIL",
+    "evidence": "app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "Factual research/data note and internal runbook exist, but no public disclosure contact or complete security posture page.",
+    "severity": "medium",
+    "family": "policies_contracts",
+    "assertion": "A public security page states the encryption, audit and vulnerability-reporting posture with a disclosure contact, and any attestation it names can actually be produced on request."
+  },
+  {
+    "id": "FC-POLICY-06",
+    "verdict": "FAIL",
+    "evidence": "docs/operations/rotation-workshop.md; app/src/app/rotation/about/page.tsx",
+    "note": "Consumer retention policy explicitly remains unestablished; pervisitor synthetic identities and rows currently have no defined expiry schedule.",
+    "severity": "high",
+    "family": "policies_contracts",
+    "assertion": "A written retention schedule maps each record type to the legal obligation that sets its retention period."
+  },
+  {
+    "id": "FC-POLICY-07",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "Private first-party UI API, not a published third-party integration API.",
+    "severity": "medium",
+    "family": "policies_contracts",
+    "assertion": "Every public API endpoint is served under an explicit version prefix, deprecated versions return Sunset and Deprecation headers with a retirement date and migration link, and breaking changes are published in a changelog."
+  },
+  {
+    "id": "FC-PRIV-01",
+    "verdict": "FAIL",
+    "evidence": "GET /legal/privacy returned404; filesystem policy/recovery page inventory[]; app/src/app/rotation/about/page.tsx",
+    "note": "Data note discloses workshop storage, but a complete published privacy policy is not supplied. Must resolve actual entity/contact/retention facts before customer use.",
+    "severity": "high",
+    "family": "privacy_compliance",
+    "assertion": "The published privacy policy enumerates every category of personal data the system actually collects and every third party it is disclosed to, verified against the schema and the outbound calls in code."
+  },
+  {
+    "id": "FC-PRIV-02",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "No analytics/ad/model provider receives rotation user data in the scoped routes; market fetches request public books only.",
+    "severity": "high",
+    "family": "privacy_compliance",
+    "assertion": "Consent is captured in plain language before any personal data is sent to a third party or a model provider, with no pre-checked boxes."
+  },
+  {
+    "id": "FC-PRIV-03",
+    "verdict": "FAIL",
+    "evidence": "app/src/app/api/rotation/portfolio/route.ts:8; security-evidence/server-verification.json",
+    "note": "Ledger/trial/audit export works, but it is not a complete personal-data export of GoTrue identity/session/provider records.",
+    "severity": "high",
+    "family": "privacy_compliance",
+    "assertion": "A user can obtain a complete, structured export of their personal data within the statutory response window."
+  },
+  {
+    "id": "FC-PRIV-04",
+    "verdict": "FAIL",
+    "evidence": "docs/operations/rotation-workshop.md Incident and recovery; app/src/app/rotation/about/page.tsx Your records",
+    "note": "Account lifecycle and deletion across GoTrue, primary data, backups and logs are explicitly not implemented for consumer use.",
+    "severity": "critical",
+    "family": "privacy_compliance",
+    "assertion": "Account deletion removes the user's data from the primary database, backups, logs, analytics and every third-party processor on a defined schedule."
+  },
+  {
+    "id": "FC-PRIV-05",
+    "verdict": "FAIL",
+    "evidence": "supabase/migrations/202610130001_rotation_workshop.sql; docs/operations/rotation-workshop.md",
+    "note": "Schema has no deletion/expiry lifecycle columns or scheduled purge writer; immutable paper data currently persists indefinitely.",
+    "severity": "high",
+    "family": "privacy_compliance",
+    "assertion": "Deleted records are held for a defined soft-delete window and then hard-deleted by a scheduled job, and each record type expires or is anonymised according to the retention policy."
+  },
+  {
+    "id": "FC-PRIV-06",
+    "verdict": "PASS",
+    "evidence": "app/src/lib/rotation/server.ts:100; app/src/app/api/rotation/portfolio/route.ts:7; security-evidence/rls-verification.json",
+    "note": "UUID identifiers; session response excludes tokens; database reads scoped to authenticated owner.",
+    "severity": "high",
+    "family": "privacy_compliance",
+    "assertion": "API responses return only the fields the caller is entitled to, and externally visible record identifiers are opaque rather than sequential."
+  },
+  {
+    "id": "FC-PRIV-07",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "Research output is deterministic numerical replay, not model-generated prose.",
+    "severity": "medium",
+    "family": "privacy_compliance",
+    "assertion": "Every AI-generated output shown to a user carries a visible disclosure that it was machine generated."
+  },
+  {
+    "id": "FC-TENANT-01",
+    "verdict": "PASS",
+    "evidence": "security-evidence/db-security.txt; security-evidence/rls-verification.json",
+    "note": "All7 wpr tables have RLS. Anon has no table access. Authenticated owners SELECT only; no INSERT/UPDATE/DELETE or RPC execute. Owner mismatch returns200[].",
+    "severity": "critical",
+    "family": "tenant_isolation",
+    "assertion": "Row-level security is enabled on every table holding tenant or user data, with policies covering select, insert, update and delete against an owner column."
+  },
+  {
+    "id": "FC-TENANT-02",
+    "verdict": "FAIL",
+    "evidence": "app/src/lib/rotation/server.ts:54,163; app/src/app/api/rotation/trials/route.ts:112",
+    "note": "Reads use userJWT and RLS, but trusted request mutations use the workshop-wide service key. This deliberately prevents direct PostgREST financial minting but fails the strict background-only-admin-key control; narrower writer authority is required before sensitive/customer data.",
+    "severity": "critical",
+    "family": "tenant_isolation",
+    "assertion": "Request paths acting on behalf of a user connect with that user's credentials; the service-role or admin key is used only in trusted background jobs."
+  },
+  {
+    "id": "FC-TENANT-03",
+    "verdict": "PASS",
+    "evidence": "app/src/lib/rotation/server.ts:80,151; app/src/app/api/rotation/action/route.ts:13; app/src/app/api/rotation/trials/route.ts:43",
+    "note": "Owner IDs derive from GoTrue verified session and membership; request body cannot override owner.",
+    "severity": "critical",
+    "family": "tenant_isolation",
+    "assertion": "Every server-side query filters on a tenant identifier taken from the verified session context, never from the request payload."
+  },
+  {
+    "id": "FC-TENANT-04",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "No rotation realtime, websocket or SSE channels.",
+    "severity": "critical",
+    "family": "tenant_isolation",
+    "assertion": "Realtime subscriptions and streaming channels are scoped to the authenticated user's rows before any data leaves the server."
+  },
+  {
+    "id": "FC-TENANT-05",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "Private portfolio/trial reads are no-store; public-market metadata cache has no user records.",
+    "severity": "critical",
+    "family": "tenant_isolation",
+    "assertion": "Every cache key includes the tenant identifier."
+  },
+  {
+    "id": "FC-TENANT-06",
+    "verdict": "UNVERIFIED",
+    "evidence": "Audit scope: working tree rooted at git60cccd72 and livewpr workshop only; deployed rotation release was not available at snapshot.",
+    "note": "Settle with: For each shared service inspect the document, message or object schema for a tenant field and the query path for a tenant filter; search the index as tenant A for a term present only in tenant B's data, and list object-storage prefixes for tenant separation.",
+    "severity": "high",
+    "family": "tenant_isolation",
+    "assertion": "Shared infrastructure \u2014 search indexes, job queues, object storage paths and log pipelines \u2014 carries tenant context on every record."
+  },
+  {
+    "id": "FC-TENANT-07",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "No vector search or RAG in rotation.",
+    "severity": "critical",
+    "family": "tenant_isolation",
+    "assertion": "Retrieval-augmented generation tags each document with its owner at embed time, filters retrieval by the requester's permissions, and re-checks every returned chunk before the answer is served."
+  },
+  {
+    "id": "FC-TENANT-08",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "No model agent reads rotation user data.",
+    "severity": "critical",
+    "family": "tenant_isolation",
+    "assertion": "Model and agent access to data goes through an authorization layer that restricts records to the session user regardless of what the prompt asks for."
+  },
+  {
+    "id": "FC-TENANT-09",
+    "verdict": "UNVERIFIED",
+    "evidence": "Audit scope: working tree rooted at git60cccd72 and livewpr workshop only; deployed rotation release was not available at snapshot.",
+    "note": "Settle with: Confirm a monitor over query or audit logs for requests where the session tenant differs from the row tenant, wired to a real alert channel; fire a synthetic cross-tenant read and confirm the alert arrives.",
+    "severity": "high",
+    "family": "tenant_isolation",
+    "assertion": "Cross-tenant access attempts are detected and alerted on in real time."
+  },
+  {
+    "id": "FC-AUTH-01",
+    "verdict": "PASS",
+    "evidence": "app/src/lib/rotation/server.ts:35; security-evidence/protected-route-inventory.json; security-evidence/post-review-verification.json",
+    "note": "All seven private exported handlers use protectedRoute, which verifies GoTrue identity and app membership before handler logic. Public exceptions are enumerated: session authentication boundary, public market and public history. Unauthenticated protected request returns401 with correlationID. Source inventory and local runtime verified; deployment verification remains separate.",
+    "severity": "critical",
+    "family": "authn_sessions",
+    "assertion": "Every route is authenticated by default: handlers are built from a protected base, and public routes are an explicit, enumerated exception."
+  },
+  {
+    "id": "FC-AUTH-02",
+    "verdict": "PASS",
+    "evidence": "app/src/app/api/rotation/action/route.ts:13; app/src/app/api/rotation/trials/route.ts:46; security-evidence/rls-verification.json",
+    "note": "Preview and trial IDs are combined with session-owner filters and RLS; cross-owner query returns no records.",
+    "severity": "critical",
+    "family": "authn_sessions",
+    "assertion": "Every endpoint accepting a resource identifier verifies the authenticated principal is entitled to that specific resource before reading or writing it."
+  },
+  {
+    "id": "FC-AUTH-03",
+    "verdict": "PASS",
+    "evidence": "app/src/lib/rotation/server.ts:122; supabase/migrations/202610130001_rotation_workshop.sql",
+    "note": "No public admin-control API. Demo provisioning assigns fixed synthetic metadata and member record; client cannot choose a role or existing identity.",
+    "severity": "critical",
+    "family": "authn_sessions",
+    "assertion": "Administrative functions live on separate routes requiring both authentication and an elevated role check, and user-facing endpoints cannot set role or plan fields."
+  },
+  {
+    "id": "FC-AUTH-04",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "One workspace-member permission tier; demo marks synthetic account lifecycle, not an elevated user role.",
+    "severity": "high",
+    "family": "authn_sessions",
+    "assertion": "Authorization is enforced server-side from a permission model stored as data, with permissions expressed as discrete actions rather than hard-coded role branches."
+  },
+  {
+    "id": "FC-AUTH-05",
+    "verdict": "PASS",
+    "evidence": "app/src/lib/rotation/server.ts:73; security-evidence/server-verification.json",
+    "note": "HttpOnly, SameSiteStrict, host-only path/api/rotation; Secure enabled in production source. Local cookie flags read directly. Production cookie still requires deployment verification.",
+    "severity": "critical",
+    "family": "authn_sessions",
+    "assertion": "Session tokens live in HttpOnly, Secure, SameSite cookies scoped to the exact application host \u2014 and on mobile in the platform keystore \u2014 never in localStorage or shared preferences."
+  },
+  {
+    "id": "FC-AUTH-06",
+    "verdict": "FAIL",
+    "evidence": "app/src/lib/rotation/server.ts:73,80,139; GoTrue container GOTRUE_JWT_EXP=3600",
+    "note": "One-hour access and seven-day renewable refresh cookies plus local logout exist; no absolute/idle session policy or user session-list/all-session revoke surface proven.",
+    "severity": "high",
+    "family": "authn_sessions",
+    "assertion": "Sessions carry both an idle timeout and an absolute expiry, and a user can see and revoke their active sessions."
+  },
+  {
+    "id": "FC-AUTH-07",
+    "verdict": "UNVERIFIED",
+    "evidence": "Audit scope: working tree rooted at git60cccd72 and livewpr workshop only; deployed rotation release was not available at snapshot.",
+    "note": "Settle with: Sign in on two clients, change the password on one and replay the other's token, expecting rejection; in code confirm a per-user token version or revocation list is bumped on those events.",
+    "severity": "critical",
+    "family": "authn_sessions",
+    "assertion": "A password change, credential reset or compromise report immediately invalidates every existing session and refresh token for that user."
+  },
+  {
+    "id": "FC-AUTH-08",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "GoTrue issues tokens; app does not implement its own token issuer.",
+    "severity": "high",
+    "family": "authn_sessions",
+    "assertion": "Access tokens are short-lived and refresh tokens rotate on every use, with reuse of a rotated token invalidating the whole token family."
+  },
+  {
+    "id": "FC-AUTH-09",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "GoTrue verifies tokens via server /auth/v1/user; app does not decode/verify JWTs itself.",
+    "severity": "critical",
+    "family": "authn_sessions",
+    "assertion": "JWT verification pins the expected algorithm, rejects the `none` algorithm, and requires a valid exp claim."
+  },
+  {
+    "id": "FC-AUTH-10",
+    "verdict": "PASS",
+    "evidence": "app/src/lib/rotation/server.ts:80; security-evidence/server-verification.json",
+    "note": "Every private request resolves bearer token through trusted GoTrue user endpoint before reading identity and applies membership check.",
+    "severity": "critical",
+    "family": "authn_sessions",
+    "assertion": "Tokens issued by an external identity provider are verified with that provider's server SDK \u2014 signature, expiry and issuer \u2014 before any claim in them is read."
+  },
+  {
+    "id": "FC-AUTH-11",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "No OAuth/social-login or private exchange authorization flow.",
+    "severity": "high",
+    "family": "authn_sessions",
+    "assertion": "OAuth flows generate a cryptographically random state per request and reject mismatching callbacks, use PKCE with a server-held verifier, restrict redirect URIs to exact registered values, and request the minimum scopes."
+  },
+  {
+    "id": "FC-AUTH-12",
+    "verdict": "UNVERIFIED",
+    "evidence": "Audit scope: working tree rooted at git60cccd72 and livewpr workshop only; deployed rotation release was not available at snapshot.",
+    "note": "Settle with: Inspect service-to-service calls for user session cookies or a single shared API key; confirm each caller holds its own credential with an expiry and a narrow scope, and that agent identities are separately enumerable in IAM or config so their actions can be attributed.",
+    "severity": "high",
+    "family": "authn_sessions",
+    "assertion": "Machine callers \u2014 internal services and AI agents \u2014 authenticate with their own scoped, short-lived credentials rather than user sessions or one shared key, and each agent has a distinct identity."
+  },
+  {
+    "id": "FC-AUTH-13",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "Personal paper workshop does not sell enterprise SSO.",
+    "severity": "medium",
+    "family": "authn_sessions",
+    "assertion": "Enterprise tenants can authenticate through SAML 2.0 or OIDC against their own identity provider, configured per tenant."
+  },
+  {
+    "id": "FC-INPUT-01",
+    "verdict": "PASS",
+    "evidence": "app/src/lib/rotation/server.ts:33; app/src/lib/rotation/engine.ts; app/src/app/api/rotation/trials/route.ts; security-evidence/server-verification.json",
+    "note": "Bounded streaming JSON body, type/range validation for financial inputs and revisions; negative deposit refused400.",
+    "severity": "critical",
+    "family": "input_output_attacks",
+    "assertion": "Every route validates its body, query and path parameters against a server-side schema before any business logic runs, rejecting wrong types, missing fields and out-of-range lengths."
+  },
+  {
+    "id": "FC-INPUT-02",
+    "verdict": "PASS",
+    "evidence": "app/src/app/api/rotation/action/route.ts:16; security-evidence/approval-verification.json",
+    "note": "Explicit action fields; server rebuilds preview economics. Injected after/fee fields ignored; exact trusted balances and fees persisted.",
+    "severity": "critical",
+    "family": "input_output_attacks",
+    "assertion": "Writes apply an explicit field allowlist so unknown and privileged fields are rejected or stripped, and a client cannot set role, plan, balance or ownership columns."
+  },
+  {
+    "id": "FC-INPUT-03",
+    "verdict": "PASS",
+    "evidence": "app/src/lib/rotation/server.ts:54; supabase/migrations/202610130001_rotation_workshop.sql",
+    "note": "PostgREST structured bodies and fixed-name SQL functions with typed parameters; no user SQL concatenation.",
+    "severity": "critical",
+    "family": "input_output_attacks",
+    "assertion": "All database access is parameterized; raw SQL never interpolates user input."
+  },
+  {
+    "id": "FC-INPUT-04",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "Rotation sends no email.",
+    "severity": "critical",
+    "family": "input_output_attacks",
+    "assertion": "User-supplied content in emails is escaped or rendered as plain text, with a test per template asserting injected markup renders as inert text."
+  },
+  {
+    "id": "FC-INPUT-05",
+    "verdict": "PASS",
+    "evidence": "app/src/app/rotation/page.tsx; app/src/components/rotation/ActivityList.tsx",
+    "note": "User names/descriptions render as React text expressions; scoped UI does not feed them into an HTML sink.",
+    "severity": "high",
+    "family": "input_output_attacks",
+    "assertion": "User-supplied content rendered into HTML is escaped or sanitized through an allowlist, and raw-HTML sinks are never fed untrusted data."
+  },
+  {
+    "id": "FC-INPUT-06",
+    "verdict": "PASS",
+    "evidence": "app/src/lib/rotation/server.ts:24; local curl sameOrigin200 versus attackerOrigin403 observed2026-10-12 Eastern",
+    "note": "Origin must equal protocol plus browser-controlled HTTPHost; missing Origin/cross-site rejected; Strict cookies. Fixed Next bind-host normalization mismatch.",
+    "severity": "high",
+    "family": "input_output_attacks",
+    "assertion": "Cross-origin access is limited to an explicit origin allowlist with only the methods and headers the frontend needs, and state-changing requests are protected by SameSite cookies plus an origin or token check."
+  },
+  {
+    "id": "FC-INPUT-07",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "Rotation exposes no LLM output.",
+    "severity": "high",
+    "family": "input_output_attacks",
+    "assertion": "Model output is screened before it reaches a user, removing internal system detail and anything outside the requester's data scope."
+  },
+  {
+    "id": "FC-INPUT-08",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "Rotation has no model ingestion pipeline.",
+    "severity": "critical",
+    "family": "input_output_attacks",
+    "assertion": "Content from untrusted sources \u2014 uploaded documents, issue and pull-request text, fetched web pages \u2014 reaches models as data rather than instructions, and is scanned for injection patterns before ingestion."
+  },
+  {
+    "id": "FC-INPUT-09",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "Rotation exposes no upload endpoint; bounded JSON requests are covered under INPUT-01.",
+    "severity": "medium",
+    "family": "input_output_attacks",
+    "assertion": "File uploads are constrained by type and size at the server, and requests exceeding the platform's payload limit fail with an explicit error rather than silently."
+  },
+  {
+    "id": "FC-PAY-01",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "No rotation webhook endpoints.",
+    "severity": "critical",
+    "family": "payments_webhooks",
+    "assertion": "Webhook handlers verify the provider's signature against the raw, unparsed request body before the payload is deserialized, and the endpoint is unguessable or restricted to the provider's published address ranges."
+  },
+  {
+    "id": "FC-PAY-02",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "No rotation webhook deliveries; paper duplicate approvals tested separately.",
+    "severity": "critical",
+    "family": "payments_webhooks",
+    "assertion": "Webhook processing is idempotent and replay-resistant: the provider's event id is persisted under a unique constraint before the handler runs, repeat deliveries return 2xx without re-executing side effects, and events older than a bounded freshness window are rejected."
+  },
+  {
+    "id": "FC-PAY-03",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "No rotation webhook business logic.",
+    "severity": "critical",
+    "family": "payments_webhooks",
+    "assertion": "A webhook whose business logic fails signals that failure \u2014 returning a non-2xx so the provider retries, or writing the event to a dead-letter store with an alert \u2014 rather than acknowledging success."
+  },
+  {
+    "id": "FC-PAY-04",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "No checkout or real charges.",
+    "severity": "critical",
+    "family": "payments_webhooks",
+    "assertion": "Checkout sessions are created server-side from a price or product identifier resolved in the database or the processor; the client never supplies an amount."
+  },
+  {
+    "id": "FC-PAY-05",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "No paid entitlement or plan flow.",
+    "severity": "critical",
+    "family": "payments_webhooks",
+    "assertion": "Entitlements, downloads and plan upgrades are granted only after a verified payment event from the processor, never from a client-side success callback."
+  },
+  {
+    "id": "FC-PAY-06",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "No scheduled rotation HTTP task endpoint.",
+    "severity": "critical",
+    "family": "payments_webhooks",
+    "assertion": "Scheduled-job and cron endpoints require a secret credential and refuse repeat execution inside their own interval."
+  },
+  {
+    "id": "FC-PAY-07",
+    "verdict": "FAIL",
+    "evidence": "app/src/lib/rotation/server.ts:54,69",
+    "note": "Internal database/auth mutations use bearer authentication over TLS, not per-body HMAC. No claim of this stricter service-to-service control.",
+    "severity": "high",
+    "family": "payments_webhooks",
+    "assertion": "Mutating service-to-service requests carry an HMAC signature of the body, verified before the request is processed."
+  },
+  {
+    "id": "FC-PAY-08",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "No paid subscription.",
+    "severity": "high",
+    "family": "payments_webhooks",
+    "assertion": "Failed subscription payments are retried on a staggered schedule with a customer notification sequence and a defined grace period before access is revoked."
+  },
+  {
+    "id": "FC-PAY-09",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "No card payments or disputes.",
+    "severity": "high",
+    "family": "payments_webhooks",
+    "assertion": "Dispute rate is monitored against the processor's threshold with an alert raised before it is breached, and each dispute is answered from a pre-assembled evidence pack."
+  },
+  {
+    "id": "FC-PAY-10",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "No completed monetary payments requiring receipts.",
+    "severity": "medium",
+    "family": "payments_webhooks",
+    "assertion": "Every completed payment has a matching confirmed receipt or confirmation record delivered to the customer."
+  },
+  {
+    "id": "FC-SECRET-01",
+    "verdict": "UNVERIFIED",
+    "evidence": "Audit scope: working tree rooted at git60cccd72 and livewpr workshop only; deployed rotation release was not available at snapshot.",
+    "note": "Settle with: Run the production build and grep the output for connection-string patterns, `sk_`, `service_role`, private hostnames and every value in the server `.env`; confirm a `server-only` (or equivalent) import guard exists in each server module and that importing one from a client component breaks the build.",
+    "severity": "critical",
+    "family": "secrets_supply_chain",
+    "assertion": "The production client bundle contains no secrets, and server-only modules cannot be imported into client code \u2014 the build fails if they are."
+  },
+  {
+    "id": "FC-SECRET-02",
+    "verdict": "PASS",
+    "evidence": "app/src/lib/rotation/server.ts:11; git check-ignore app/.env.local returned app/.env.local",
+    "note": "Credentials read from server-only WPR environment; env file mode600 and ignored; no literal credential values in new source.",
+    "severity": "critical",
+    "family": "secrets_supply_chain",
+    "assertion": "Secrets are read from environment variables or a secret manager at runtime, with no credential hard-coded in source."
+  },
+  {
+    "id": "FC-SECRET-03",
+    "verdict": "UNVERIFIED",
+    "evidence": "Audit scope: working tree rooted at git60cccd72 and livewpr workshop only; deployed rotation release was not available at snapshot.",
+    "note": "Settle with: Confirm `.env*` appears in .gitignore and that `git log --all -- .env` is empty; run `gitleaks detect --log-opts=--all` across the entire history; attempt a commit containing a fake key and confirm the hook rejects it.",
+    "severity": "critical",
+    "family": "secrets_supply_chain",
+    "assertion": "Environment files are gitignored, the full git history is free of committed credentials, and a pre-commit or CI scanner blocks new ones."
+  },
+  {
+    "id": "FC-SECRET-04",
+    "verdict": "UNVERIFIED",
+    "evidence": "Audit scope: working tree rooted at git60cccd72 and livewpr workshop only; deployed rotation release was not available at snapshot.",
+    "note": "Settle with: Check the secret manager's last-rotated timestamps against the stated interval; confirm a rotation runbook exists naming each credential, its owner and the steps to rotate and revoke it, including third-party integrations.",
+    "severity": "high",
+    "family": "secrets_supply_chain",
+    "assertion": "Credentials rotate on a documented schedule rather than only after an incident, and a written revocation procedure covers a compromised third-party key or resource."
+  },
+  {
+    "id": "FC-SECRET-05",
+    "verdict": "UNVERIFIED",
+    "evidence": "Audit scope: working tree rooted at git60cccd72 and livewpr workshop only; deployed rotation release was not available at snapshot.",
+    "note": "Settle with: Inspect deployment manifests and container definitions for a per-service env list instead of one blanket set; grep application code for passing `process.env` wholesale into modules, SDK clients or templates.",
+    "severity": "medium",
+    "family": "secrets_supply_chain",
+    "assertion": "Each process receives only the environment variables it needs rather than the whole environment."
+  },
+  {
+    "id": "FC-SECRET-06",
+    "verdict": "UNVERIFIED",
+    "evidence": "Audit scope: working tree rooted at git60cccd72 and livewpr workshop only; deployed rotation release was not available at snapshot.",
+    "note": "Settle with: Confirm CI runs `npm ci` / `pnpm install --frozen-lockfile` rather than `npm install`, and that a tampered lockfile hash fails the job; run the audit over the full dependency tree and review the flagged list; confirm install scripts are disabled by default or explicitly allowlisted.",
+    "severity": "high",
+    "family": "secrets_supply_chain",
+    "assertion": "CI installs from the lockfile with integrity verification and fails on a checksum mismatch, and the dependency audit covers transitive packages, flagging install scripts, very low download counts and recent maintainer changes."
+  },
+  {
+    "id": "FC-SECRET-07",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "Runtime rotation stack does not load external model artifacts, skills or MCP tools.",
+    "severity": "high",
+    "family": "secrets_supply_chain",
+    "assertion": "Third-party AI artifacts \u2014 prompts, agent skills, MCP servers and community tooling \u2014 are reviewed before production use and run without production credentials."
+  },
+  {
+    "id": "FC-CRYPTO-01",
+    "verdict": "UNVERIFIED",
+    "evidence": "Audit scope: working tree rooted at git60cccd72 and livewpr workshop only; deployed rotation release was not available at snapshot.",
+    "note": "Settle with: Check each storage provider's configuration for encryption at rest (RDS `StorageEncrypted`, bucket default encryption, disk encryption) and confirm backup and export destinations are covered as well as the primary volume.",
+    "severity": "high",
+    "family": "encryption_data",
+    "assertion": "Data is encrypted at rest across the database, backups, exports and object storage."
+  },
+  {
+    "id": "FC-CRYPTO-02",
+    "verdict": "UNVERIFIED",
+    "evidence": "Audit scope: working tree rooted at git60cccd72 and livewpr workshop only; deployed rotation release was not available at snapshot.",
+    "note": "Settle with: In the CDN dashboard or API confirm the SSL mode is Full (strict) or equivalent; from the proxy's network request the origin over plain HTTP and confirm it refuses or redirects; confirm the origin certificate is valid and not self-signed without pinning.",
+    "severity": "high",
+    "family": "encryption_data",
+    "assertion": "TLS is terminated end to end: the CDN or proxy validates the origin certificate rather than running in a flexible or unvalidated mode."
+  },
+  {
+    "id": "FC-CRYPTO-03",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "No PHI or regulated customer financial account data is stored; paper balances are synthetic.",
+    "severity": "critical",
+    "family": "encryption_data",
+    "assertion": "Fields holding regulated data are encrypted at the field level, including wherever they appear in logs, exports and backups."
+  },
+  {
+    "id": "FC-CRYPTO-04",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "No native mobile client in scope.",
+    "severity": "high",
+    "family": "encryption_data",
+    "assertion": "Mobile clients pin the expected server certificate or public key and reject connections presenting any other certificate."
+  },
+  {
+    "id": "FC-CRYPTO-05",
+    "verdict": "FAIL",
+    "evidence": "app/src/lib/rotation/server.ts:54,69",
+    "note": "Workshop requests use HTTPS plus bearer credentials; mutualTLS is not configured in the application fetch path.",
+    "severity": "medium",
+    "family": "encryption_data",
+    "assertion": "Service-to-service traffic is mutually authenticated with mTLS rather than a shared bearer secret alone."
+  },
+  {
+    "id": "FC-CRYPTO-06",
+    "verdict": "PASS",
+    "evidence": "app/src/lib/rotation/server.ts:57,69,73,108",
+    "note": "Tokens travel in Authorization headers and HttpOnly cookies. Password grant uses POSTbody. Client session response returns only id/email/demo.",
+    "severity": "high",
+    "family": "encryption_data",
+    "assertion": "Credentials, tokens and session identifiers stay out of URLs, query strings, referrer headers and logs."
+  },
+  {
+    "id": "FC-AUDIT-01",
+    "verdict": "FAIL",
+    "evidence": "supabase/migrations/202610130002_rotation_owner_reads_audit.sql; security-evidence/server-verification.json",
+    "note": "Append-only actor/time/action/revision trail works and transactional mutation audit is proven, but source-address fields and defined retention are not implemented.",
+    "severity": "critical",
+    "family": "audit_incident",
+    "assertion": "An append-only audit log records every privileged and sensitive action \u2014 sign-ins, role and permission changes, plan changes, email changes, exports and deletions \u2014 with actor, timestamp, source address and what changed, retained for a defined period."
+  },
+  {
+    "id": "FC-AUDIT-02",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "No PHI or comparable regulated records in this synthetic workshop.",
+    "severity": "critical",
+    "family": "audit_incident",
+    "assertion": "Access to regulated records is logged per record with who accessed it, when, from where and what they did."
+  },
+  {
+    "id": "FC-AUDIT-03",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "No runtime model generations or agent tool calls.",
+    "severity": "high",
+    "family": "audit_incident",
+    "assertion": "Every model generation and agent tool call is recorded in an append-only trail with the model, the input, the resulting action and the agent identity, partitioned so one agent session can be reconstructed."
+  },
+  {
+    "id": "FC-AUDIT-04",
+    "verdict": "FAIL",
+    "evidence": "docs/operations/rotation-workshop.md Incident and recovery boundaries",
+    "note": "Operational containment/recovery note exists; no complete severity/oncall/customer-notification/breach-clock runbook with owner-confirmed contacts.",
+    "severity": "high",
+    "family": "audit_incident",
+    "assertion": "A written incident-response runbook lives in the repository covering severity levels, on-call roles, communication steps, a traffic-flood playbook and the regulatory breach-notification clock with the contacts to notify."
+  },
+  {
+    "id": "FC-OBS-01",
+    "verdict": "PASS",
+    "evidence": "app/src/lib/rotation/server.ts:19; app/src/lib/rotation/engine.ts:18; security-evidence/post-review-verification.json",
+    "note": "Unexpected errors return a generic500/503 message and correlationID; server logs only safe type/status/correlation metadata. Only deliberate ApiError and typed RotationValidationError messages are exposed. Source boundary inspected; runtime proves safe typed400 and protected401 correlation. An injected unexpected500 was not exercised; deployed behavior still requires release verification.",
+    "severity": "critical",
+    "family": "observability_resilience",
+    "assertion": "Production error responses carry a generic message and a correlation id only \u2014 no stack traces, file paths, database names, connection strings or query text \u2014 and verbosity is gated on the deployed environment."
+  },
+  {
+    "id": "FC-OBS-02",
+    "verdict": "UNVERIFIED",
+    "evidence": "Audit scope: working tree rooted at git60cccd72 and livewpr workshop only; deployed rotation release was not available at snapshot.",
+    "note": "Settle with: Confirm an error tracker is initialised on both server and client with its DSN set in production; trigger an error and find the event with its stack and request context; open the issue list and confirm grouping with event and affected-user counts.",
+    "severity": "high",
+    "family": "observability_resilience",
+    "assertion": "Every unhandled error is captured centrally with full context \u2014 stack, route, session, input, timestamp \u2014 and grouped by frequency and user impact."
+  },
+  {
+    "id": "FC-OBS-03",
+    "verdict": "FAIL",
+    "evidence": "app/src/lib/rotation/server.ts:18,119; wpr_audit live schema",
+    "note": "Audit rows identify actor/actions, but request IDs do not propagate through responses/auth/database calls or structured telemetry.",
+    "severity": "medium",
+    "family": "observability_resilience",
+    "assertion": "Logs are structured records carrying timestamp, level, request id, user or tenant id and action, and a correlation id issued at the edge propagates through every downstream service, metric and trace."
+  },
+  {
+    "id": "FC-OBS-04",
+    "verdict": "UNVERIFIED",
+    "evidence": "Audit scope: working tree rooted at git60cccd72 and livewpr workshop only; deployed rotation release was not available at snapshot.",
+    "note": "Settle with: Confirm an external multi-region monitor targets a path that exercises the database rather than a static page, and that a /health endpoint exists and is consumed by the load balancer or scheduler; break a dependency in staging and confirm both react.",
+    "severity": "high",
+    "family": "observability_resilience",
+    "assertion": "Uptime is verified from outside the platform, from more than one region, against a real user-facing path, and an internal health endpoint drives instance rotation."
+  },
+  {
+    "id": "FC-OBS-05",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "No paying users; no production SLO claim.",
+    "severity": "high",
+    "family": "observability_resilience",
+    "assertion": "Service level objectives with error budgets are defined for the critical paths, and burn-rate alerts fire when a budget is being consumed too fast."
+  },
+  {
+    "id": "FC-OBS-06",
+    "verdict": "UNVERIFIED",
+    "evidence": "Audit scope: working tree rooted at git60cccd72 and livewpr workshop only; deployed rotation release was not available at snapshot.",
+    "note": "Settle with: Confirm hourly counters and alert rules exist for each metric; suppress a payment code path in staging and confirm the alert fires; query the metric store for the last 24 hours and confirm continuous data rather than gaps.",
+    "severity": "critical",
+    "family": "observability_resilience",
+    "assertion": "Business outcomes \u2014 payments, signups and checkout completions per hour \u2014 are tracked with alerts on abnormal drops, so failures that raise no exception are still caught."
+  },
+  {
+    "id": "FC-OBS-07",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "No revenue-critical customer flow; interactive paper QA evidence retained separately.",
+    "severity": "high",
+    "family": "observability_resilience",
+    "assertion": "A synthetic transaction exercises the full critical path \u2014 signup, cart, checkout, payment, confirmation \u2014 on a schedule and alerts on any failed step."
+  },
+  {
+    "id": "FC-OBS-08",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "No rotation background queue; public data calls have explicit request timeouts.",
+    "severity": "high",
+    "family": "observability_resilience",
+    "assertion": "Work that can outlive a request \u2014 emails, exports, third-party calls, long computations \u2014 runs in a queue or container with bounded retries, a dead-letter queue and alerting on failure spikes, sized against the platform's timeout, concurrency and payload ceilings."
+  },
+  {
+    "id": "FC-OBS-09",
+    "verdict": "UNVERIFIED",
+    "evidence": "Audit scope: working tree rooted at git60cccd72 and livewpr workshop only; deployed rotation release was not available at snapshot.",
+    "note": "Settle with: Run EXPLAIN on the queries behind the top endpoints and confirm index scans rather than sequential scans on large tables; confirm `pg_stat_statements` or the equivalent slow-query log is enabled and surfaced; list the slowest statements of the last week and confirm someone has looked at them.",
+    "severity": "high",
+    "family": "observability_resilience",
+    "assertion": "Hot-path queries are index-backed and select only the columns they use, and slow queries are logged and reviewed on a dashboard."
+  },
+  {
+    "id": "FC-OBS-10",
+    "verdict": "FAIL",
+    "evidence": "app/src/lib/rotation/server.ts:57,71; docs/operations/rotation-workshop.md",
+    "note": "Outbound15s timeouts are explicit; there is no per-dependency circuit breaker or aggregate request budget. PostgREST/host pool sizing was not changed or validated here.",
+    "severity": "high",
+    "family": "observability_resilience",
+    "assertion": "Database connections come from a bounded pool with separate pools per downstream dependency, and every outbound call has a timeout and a circuit breaker inside a cascading budget for the whole request."
+  },
+  {
+    "id": "FC-OBS-11",
+    "verdict": "UNVERIFIED",
+    "evidence": "Audit scope: working tree rooted at git60cccd72 and livewpr workshop only; deployed rotation release was not available at snapshot.",
+    "note": "Settle with: List cache keys and TTLs by data class; confirm price, inventory and permission keys are event-invalidated or under 60 seconds; confirm a lock or single-flight wraps the refresh path; change a price and re-read through the cache to confirm the new value appears within the stated bound.",
+    "severity": "critical",
+    "family": "observability_resilience",
+    "assertion": "Cache lifetimes are set per data class, with pricing, inventory, entitlements and permissions invalidated on write or held under a one-minute ceiling, and concurrent misses collapsed to prevent a stampede."
+  },
+  {
+    "id": "FC-OBS-12",
+    "verdict": "UNVERIFIED",
+    "evidence": "Audit scope: working tree rooted at git60cccd72 and livewpr workshop only; deployed rotation release was not available at snapshot.",
+    "note": "Settle with: Confirm the backup schedule and PITR setting for each datastore (`wal_level`, `archive_mode`, or the provider's PITR flag) and check the backup destination's account and region against the primary's; list the most recent successful backup timestamp for each.",
+    "severity": "critical",
+    "family": "observability_resilience",
+    "assertion": "Every datastore has automated backups with point-in-time recovery enabled, written to an account or region separate from the primary."
+  },
+  {
+    "id": "FC-OBS-13",
+    "verdict": "UNVERIFIED",
+    "evidence": "Audit scope: working tree rooted at git60cccd72 and livewpr workshop only; deployed rotation release was not available at snapshot.",
+    "note": "Settle with: Open the runbook and the restore-test log; confirm the last test falls within the quarter and records elapsed time plus a data-integrity check; confirm RTO and RPO values are documented and that the measured restore time meets the RTO.",
+    "severity": "critical",
+    "family": "observability_resilience",
+    "assertion": "A restore runbook exists and a timed restore into a fresh instance is executed and recorded at least quarterly against written RTO and RPO targets."
+  },
+  {
+    "id": "FC-OBS-14",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "No paying users or customer status-page commitment.",
+    "severity": "medium",
+    "family": "observability_resilience",
+    "assertion": "A status page hosted off the primary infrastructure publishes incident updates on a defined cadence and announces planned maintenance to affected users in advance."
+  },
+  {
+    "id": "FC-OBS-15",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "No application replica reads; PostgREST uses workshop primary.",
+    "severity": "medium",
+    "family": "observability_resilience",
+    "assertion": "Reads that follow a write are served from the primary for a defined window, and replica lag is monitored with automatic failover of reads to the primary beyond a threshold."
+  },
+  {
+    "id": "FC-EDGE-01",
+    "verdict": "PASS",
+    "evidence": "security-evidence/local-headers-updated.txt; app/next.config.ts",
+    "note": "Fresh local /rotation200 response carries HSTS, X-Frame-Options DENY, nosniff and Referrer-Policy. Scoped configuration covers /rotation and /api/rotation routes. Local HTTP HSTS is header evidence, not browser TLS enforcement; deployed HTTPS headers require separate verification.",
+    "severity": "high",
+    "family": "edge_infra",
+    "assertion": "Every response carries the baseline security headers: HSTS, frame-ancestors or X-Frame-Options, X-Content-Type-Options and a Referrer-Policy."
+  },
+  {
+    "id": "FC-EDGE-02",
+    "verdict": "FAIL",
+    "evidence": "security-evidence/local-headers-updated.txt; app/next.config.ts",
+    "note": "An enforced partial CSP now limits frame ancestors, objects, base URI and form actions. It does not restrict script sources, so the strict script-allowlist control remains FAIL. Production header verification remains separate.",
+    "severity": "high",
+    "family": "edge_infra",
+    "assertion": "A Content Security Policy allowlists script sources without unsafe-inline or unsafe-eval, third-party scripts are excluded from login, checkout and admin pages, and an inventory records every third-party script and the pages it loads on."
+  },
+  {
+    "id": "FC-EDGE-03",
+    "verdict": "UNVERIFIED",
+    "evidence": "Audit scope: working tree rooted at git60cccd72 and livewpr workshop only; deployed rotation release was not available at snapshot.",
+    "note": "Settle with: Confirm the WAF is enabled with managed OWASP rules plus custom rules for injection and traversal patterns; send a burst of requests to the login endpoint and confirm a 429 or challenge; confirm rate-limit counters are keyed by user and endpoint in middleware as well as at the edge.",
+    "severity": "high",
+    "family": "edge_infra",
+    "assertion": "A web application firewall with OWASP-style rules fronts the app, bot management protects high-value routes, and per-user per-endpoint rate limits return 429 \u2014 with stricter limits on login, registration and password reset."
+  },
+  {
+    "id": "FC-EDGE-04",
+    "verdict": "UNVERIFIED",
+    "evidence": "Audit scope: working tree rooted at git60cccd72 and livewpr workshop only; deployed rotation release was not available at snapshot.",
+    "note": "Settle with: From an arbitrary host connect directly to the origin IP on 80/443 and confirm refusal; check firewall and security-group rules against the CDN's published ranges; look the domain up in a passive-DNS service and inspect an outbound email's Received headers for the origin address.",
+    "severity": "critical",
+    "family": "edge_infra",
+    "assertion": "The origin accepts traffic only from the CDN or load-balancer address ranges, and the origin address stays undiscoverable through DNS history or outbound mail headers."
+  },
+  {
+    "id": "FC-EDGE-05",
+    "verdict": "UNVERIFIED",
+    "evidence": "Audit scope: working tree rooted at git60cccd72 and livewpr workshop only; deployed rotation release was not available at snapshot.",
+    "note": "Settle with: `sshd -T | grep -E 'passwordauthentication|permitrootlogin'`; `ufw status verbose` or `iptables -L` for a default DROP policy; `nmap -Pn -p <db port> <public ip>` from off-host; confirm unattended-upgrades is installed and enabled.",
+    "severity": "critical",
+    "family": "edge_infra",
+    "assertion": "Hosts are hardened: SSH accepts keys only with root login disabled, the firewall defaults to deny, database ports are unreachable from the internet, and security updates apply automatically."
+  },
+  {
+    "id": "FC-EDGE-06",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "Server fetch URLs are authored constants/config, never supplied by browser.",
+    "severity": "critical",
+    "family": "edge_infra",
+    "assertion": "Server-side fetchers and AI agents may only reach an allowlist of external destinations: private and link-local ranges are blocked, and each URL is resolved once and revalidated on every redirect."
+  },
+  {
+    "id": "FC-EDGE-07",
+    "verdict": "UNVERIFIED",
+    "evidence": "Audit scope: working tree rooted at git60cccd72 and livewpr workshop only; deployed rotation release was not available at snapshot.",
+    "note": "Settle with: Enumerate the zone's CNAME and A records, resolve each target and check whether the destination is still claimed by you; confirm a scheduled scan exists with a recent report; confirm the documented action is removal rather than parking.",
+    "severity": "critical",
+    "family": "edge_infra",
+    "assertion": "DNS records pointing at decommissioned third-party destinations are removed outright, and a recurring scan reports newly dangling records."
+  },
+  {
+    "id": "FC-EDGE-08",
+    "verdict": "UNVERIFIED",
+    "evidence": "Audit scope: working tree rooted at git60cccd72 and livewpr workshop only; deployed rotation release was not available at snapshot.",
+    "note": "Settle with: Compare connection strings and API keys across environment configurations and confirm no value is shared; from the staging environment attempt to connect to the production database and confirm network or credential refusal.",
+    "severity": "critical",
+    "family": "edge_infra",
+    "assertion": "Production runs on its own database, credentials and configuration, and no non-production environment can reach production data."
+  },
+  {
+    "id": "FC-EDGE-09",
+    "verdict": "N/A",
+    "evidence": "Scoped inventory: app/src/app/api/rotation; app/src/app/rotation/about/page.tsx; docs/operations/rotation-workshop.md",
+    "note": "Rotation does not send mail; seeded and synthetic users are confirmed through GoTrue admin.",
+    "severity": "medium",
+    "family": "edge_infra",
+    "assertion": "The sending domain publishes SPF, DKIM and DMARC records, transactional mail is sent from a domain separate from marketing mail, and inbox placement and complaint rates are monitored."
+  },
+  {
+    "id": "FC-TEST-01",
+    "verdict": "FAIL",
+    "evidence": "gh api repos/danman60/wolfpack/branches/main/protection returned404 Branch not protected",
+    "note": "Default branch permits direct pushes. Repository rule change requires explicit owner workflow decision.",
+    "severity": "high",
+    "family": "testing_release",
+    "assertion": "The default branch is protected: no direct pushes, at least one review, and required status checks that must pass before merge."
+  },
+  {
+    "id": "FC-TEST-02",
+    "verdict": "FAIL",
+    "evidence": "rg --files .github returned directory absent; pathlib .github/workflows.exists() false",
+    "note": "No repository CI workflow exists to enforce the specified test/lint/build/security gates. Local checks are not merge protection.",
+    "severity": "high",
+    "family": "testing_release",
+    "assertion": "Every pull request runs the test suite, lint, a build, a dependency and vulnerability scan and an automated security review, with critical findings blocking the merge."
+  },
+  {
+    "id": "FC-TEST-03",
+    "verdict": "FAIL",
+    "evidence": "tests/agent/flow-rotation-paper.md; tests/agent/rotation-paper-qa.py; .github/workflows exists false",
+    "note": "Feature browser QA exists, but no percommit enforced minimum coverage gate.",
+    "severity": "medium",
+    "family": "testing_release",
+    "assertion": "Tests are written with the feature in the same change, and a minimum coverage threshold is enforced on every commit."
+  },
+  {
+    "id": "FC-TEST-04",
+    "verdict": "FAIL",
+    "evidence": "tests/agent/rotation-paper-qa.py; docs/operations/rotation-workshop.md",
+    "note": "QA uses explicitly scoped disposable identities in real workshop, preserving evidence. It does not recreate an empty isolated database perCI run.",
+    "severity": "high",
+    "family": "testing_release",
+    "assertion": "Each CI run starts from a clean environment and an empty database, inheriting no state from previous runs."
+  },
+  {
+    "id": "FC-TEST-05",
+    "verdict": "UNVERIFIED",
+    "evidence": "Audit scope: working tree rooted at git60cccd72 and livewpr workshop only; deployed rotation release was not available at snapshot.",
+    "note": "Settle with: Locate the authorization tests; confirm cases exist per endpoint for wrong-user access (403/404), prohibited field writes (rejected or stripped) and a tenant-A-then-tenant-B leakage check; delete an ownership check locally and confirm the suite goes red.",
+    "severity": "high",
+    "family": "testing_release",
+    "assertion": "An automated negative-path suite proves that unauthorized access, prohibited fields and cross-tenant reads are rejected, including a test that signs in as one tenant and then another and asserts no data from the first is visible."
+  },
+  {
+    "id": "FC-TEST-06",
+    "verdict": "UNVERIFIED",
+    "evidence": "Audit scope: working tree rooted at git60cccd72 and livewpr workshop only; deployed rotation release was not available at snapshot.",
+    "note": "Settle with: Confirm the platform creates a per-PR preview URL with its own database or seeded data; read the pipeline for a staging gate before the production job; perform a rollback to the previous deployment and time it.",
+    "severity": "high",
+    "family": "testing_release",
+    "assertion": "Every pull request gets an isolated preview deployment, promotion to production is gated on tests passing against a staging environment, and a one-click rollback to the last good release exists."
+  },
+  {
+    "id": "FC-TEST-07",
+    "verdict": "FAIL",
+    "evidence": "supabase/migrations/202610130001_rotation_workshop.sql through004; security-evidence/db-security.txt",
+    "note": "Additive migrations applied transactionally and recorded; no migration rehearsal on a production copy or rollback script was part of this paper-workshop change.",
+    "severity": "high",
+    "family": "testing_release",
+    "assertion": "Schema migrations are expand-then-contract \u2014 add before remove \u2014 with a rollback script committed alongside and a rehearsal against a copy of production data."
+  },
+  {
+    "id": "FC-TEST-08",
+    "verdict": "UNVERIFIED",
+    "evidence": "Audit scope: working tree rooted at git60cccd72 and livewpr workshop only; deployed rotation release was not available at snapshot.",
+    "note": "Settle with: Confirm an axe or pa11y step in CI with a failing threshold and run it against the main flows; tab through signup and checkout without a mouse and confirm every control is reachable with a visible focus ring.",
+    "severity": "medium",
+    "family": "testing_release",
+    "assertion": "An automated accessibility check runs in CI and the interface meets WCAG 2.1 AA for keyboard operability, image alt text, accessible names on controls and 4.5:1 text contrast."
+  }
+]

@@ -1,0 +1,60 @@
+[
+  {
+    "check": "Member login",
+    "actual": 200,
+    "expected": 200,
+    "pass": true
+  },
+  {
+    "check": "Trusted fresh quote",
+    "actual": 200,
+    "expected": 200,
+    "pass": true
+  },
+  {
+    "check": "Concurrent duplicate approval",
+    "actual": [
+      200,
+      409
+    ],
+    "expected": [
+      200,
+      409
+    ],
+    "pass": true
+  },
+  {
+    "check": "Client mint fields ignored; exact preview balances",
+    "actual": {
+      "BTC": "0.0008421",
+      "CAD": "900.0006717",
+      "ETH": "0",
+      "LINK": "0"
+    },
+    "expected": {
+      "CAD": "900.0006717",
+      "BTC": "0.0008421",
+      "ETH": "0",
+      "LINK": "0"
+    },
+    "pass": true
+  },
+  {
+    "check": "Preview fee charged exactly once",
+    "actual": "0.24937489",
+    "expected": "0.24937489",
+    "pass": true
+  },
+  {
+    "check": "Replayed approval refused",
+    "actual": 409,
+    "expected": 409,
+    "pass": true
+  },
+  {
+    "check": "Logout",
+    "actual": 200,
+    "expected": 200,
+    "pass": true
+  }
+]

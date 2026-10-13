@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Web3Providers } from "@/lib/wagmi";
-import { ExchangeProvider } from "@/lib/exchange";
-import { WalletProvider } from "@/lib/wallet/context";
+import { AppProviders } from "@/components/AppProviders";
 import { Nav } from "@/components/Nav";
 import { Toaster } from "sonner";
 import "./globals.css";
@@ -19,9 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="dark">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Web3Providers>
-          <ExchangeProvider>
-            <WalletProvider>
+        <AppProviders>
               <Nav />
               <main className="max-w-7xl mx-auto px-4 py-5 md:px-5 md:py-8">{children}</main>
               <Toaster
@@ -36,9 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   },
                 }}
               />
-            </WalletProvider>
-          </ExchangeProvider>
-        </Web3Providers>
+        </AppProviders>
       </body>
     </html>
   );

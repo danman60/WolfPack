@@ -1,0 +1,19 @@
+wpr_audit|t|f|f|t|f|f|f
+wpr_members|t|f|f|t|f|f|f
+wpr_portfolios|t|f|f|t|f|f|f
+wpr_previews|t|f|f|t|f|f|f
+wpr_rate_limits|t|f|f|f|f|f|f
+wpr_schema_migrations|t|f|f|f|f|f|f
+wpr_trials|t|f|f|t|f|f|f
+wpr_audit_portfolio_write|f|f|f|t
+wpr_commit_portfolio|f|f|f|t
+wpr_take_rate_limit|f|f|f|t
+wpr_audit|wpr_audit_owner|SELECT|(owner_id = (((NULLIF(current_setting('request.jwt.claims'::text, true), ''::text))::jsonb ->> 'sub'::text))::uuid)
+wpr_members|wpr_member_self|SELECT|(user_id = (((NULLIF(current_setting('request.jwt.claims'::text, true), ''::text))::jsonb ->> 'sub'::text))::uuid)
+wpr_portfolios|wpr_portfolio_owner|SELECT|(owner_id = (((NULLIF(current_setting('request.jwt.claims'::text, true), ''::text))::jsonb ->> 'sub'::text))::uuid)
+wpr_previews|wpr_preview_owner|SELECT|(owner_id = (((NULLIF(current_setting('request.jwt.claims'::text, true), ''::text))::jsonb ->> 'sub'::text))::uuid)
+wpr_trials|wpr_trial_owner|SELECT|(owner_id = (((NULLIF(current_setting('request.jwt.claims'::text, true), ''::text))::jsonb ->> 'sub'::text))::uuid)
+202610130001_rotation_workshop
+202610130002_rotation_owner_reads_audit
+202610130003_rotation_transactional_audit
+202610130004_rotation_holdout_uniqueness

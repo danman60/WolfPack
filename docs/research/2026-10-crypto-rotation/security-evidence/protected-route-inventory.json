@@ -1,0 +1,38 @@
+{
+  "sourcedAtEastern": "2026-10-12T23:08:12-04:00",
+  "privateBase": "protectedRoute",
+  "publicExceptions": [
+    "session GET/POST authentication boundary",
+    "market GET public exchange data",
+    "history GET public archive data"
+  ],
+  "routes": {
+    "app/src/app/api/rotation/action/route.ts": [
+      "export const POST = protectedRoute(async (request, user) => {"
+    ],
+    "app/src/app/api/rotation/history/route.ts": [
+      "export async function GET() {"
+    ],
+    "app/src/app/api/rotation/market/route.ts": [
+      "export async function GET() {"
+    ],
+    "app/src/app/api/rotation/portfolio/route.ts": [
+      "export const GET = protectedRoute(async (request, user) => {",
+      "export const POST = protectedRoute(async (request, user) => {"
+    ],
+    "app/src/app/api/rotation/preview/route.ts": [
+      "export const POST = protectedRoute(async (request, user) => {"
+    ],
+    "app/src/app/api/rotation/readiness/route.ts": [
+      "export const GET = protectedRoute(async () => {"
+    ],
+    "app/src/app/api/rotation/session/route.ts": [
+      "export async function GET() {",
+      "export async function POST(request: Request) {"
+    ],
+    "app/src/app/api/rotation/trials/route.ts": [
+      "export const GET = protectedRoute(async (request, user) => {",
+      "export const POST = protectedRoute(async (request, user) => {"
+    ]
+  }
+}

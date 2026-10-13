@@ -1,0 +1,25 @@
+.rotation-workspace { --rotation-muted: #b8c4d8; }
+.rotation-nav .nav-link { color:#b8c4d8; }
+.rotation-nav .nav-link-active { color:#6ee7b7; }
+.rotation-workspace th { color:#cbd5e1; }
+.rotation-workspace .rotation-input { width:100%; min-width:0; min-height:44px; background:#0a0f1e; color:#e4e7eb; border:1px solid #526078; border-radius:6px; padding:10px 12px; font-size:14px; }
+.rotation-workspace .rotation-input:focus-visible { outline:2px solid #34d399; outline-offset:2px; }
+.rotation-workspace .rotation-input::placeholder { color:#94a3b8; }
+.rotation-workspace label { display:block; font-size:13px; color:#cbd5e1; }
+.rotation-workspace label > .rotation-input { margin-top:7px; }
+.rotation-workspace button { min-height:44px; }
+.rotation-workspace .rotation-primary { border-radius:6px; background:#34d399; color:#062015; padding:11px 16px; font-size:14px; font-weight:650; }
+.rotation-workspace .rotation-secondary { border-radius:6px; border:1px solid #526078; background:#111a2e; color:#e4e7eb; padding:10px 16px; font-size:14px; }
+.rotation-workspace button:disabled { background:#26354a; color:#cbd5e1; cursor:not-allowed; }
+.rotation-workspace button:focus-visible { outline:2px solid #34d399; outline-offset:3px; }
+.rotation-workspace button { transition:background-color 160ms ease, border-color 160ms ease, transform 160ms ease; }
+.rotation-workspace .rotation-primary:hover:not(:disabled) { background:#6ee7b7; }
+.rotation-workspace .rotation-secondary:hover:not(:disabled) { background:#21324b; border-color:#94a3b8; }
+.rotation-workspace button:active:not(:disabled) { transform:translateY(1px); }
+.rotation-workspace h1, .rotation-workspace h2 { text-wrap:balance; }
+.rotation-workspace .rotation-note { border-left:2px solid #34d399; background:#102524; padding:14px 16px; color:#c4d7d3; font-size:13px; line-height:1.65; }
+.rotation-workspace .rotation-error { border:1px solid #f87171; background:#301822; color:#fecaca; border-radius:8px; padding:14px 16px; font-size:14px; line-height:1.6; overflow-wrap:anywhere; }
+.rotation-workspace .rotation-grid { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); gap:20px; }
+.rotation-workspace .rotation-chart { height:280px; min-width:0; }
+@media(max-width:850px) { .rotation-workspace .rotation-grid { grid-template-columns:minmax(0,1fr); } }
+@media(prefers-reduced-motion:reduce) { .rotation-workspace * { scroll-behavior:auto; animation:none!important; transition:none!important; } }

@@ -1,0 +1,14 @@
+import Link from "next/link";
+
+export default function RotationAbout() {
+  return <article className="max-w-3xl space-y-6 text-slate-300 leading-relaxed">
+    <Link className="text-emerald-300 underline underline-offset-4" href="/rotation">Back to Rotation</Link>
+    <h1 className="text-3xl font-semibold text-white">About this paper workspace</h1>
+    <section><h2 className="text-xl text-white font-semibold mb-2">What is saved</h2><p>WolfPack saves paper opening balances, decisions, cash flows and research trials in the Netcup workshop database. Sign-in identifies which workspace you can access. Your browser holds an HTTP-only session cookie. Do not put wallet recovery phrases, exchange secrets or real customer data into this workshop.</p></section>
+    <section><h2 className="text-xl text-white font-semibold mb-2">Market data and costs</h2><p>Current CAD market depth comes from Ndax’s public API. Historical daily prices come from Kraken; historical LINK/CAD is derived from LINK/ETH and ETH/CAD. These sources are different venues. Historical daily closing prices cannot reproduce an executable intraday order book. Paper results use the cost assumptions shown in each experiment.</p></section>
+    <section><h2 className="text-xl text-white font-semibold mb-2">What the comparison means</h2><p>The permanent HOLD comparison begins with the exact same units as your paper portfolio. CAD deposits and withdrawals apply to both sides. They are excluded from profit. Paper opening crypto cost basis is its midpoint value when the experiment begins; this is not a tax cost-basis record.</p></section>
+    <section><h2 className="text-xl text-white font-semibold mb-2">Research limits</h2><p>Research uses historical observations to estimate possible shift and HOLD outcomes. Intervals describe those observations; they are not guarantees. Previously inspected historical data is identified as retrospective. A prospective holdout is recorded separately so future evaluation can be distinguished from past experimentation.</p></section>
+    <section><h2 className="text-xl text-white font-semibold mb-2">Funding gate</h2><p>This workspace records paper decisions only. It does not collect deposits, create custody wallets or submit exchange orders. Live trading requires a selected provider, owner-approved risk settings and a separately verified execution integration.</p></section>
+    <section><h2 className="text-xl text-white font-semibold mb-2">Your records</h2><p>Use Export ledger in your workspace to download the full paper decision history. Research records remain associated with your signed-in workshop account. This is a personal experimental tool, not a public customer service; public customer privacy terms, retention policy and account lifecycle must be established before that use.</p></section>
+  </article>;
+}

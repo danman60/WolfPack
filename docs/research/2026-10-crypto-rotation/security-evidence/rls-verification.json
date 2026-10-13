@@ -1,0 +1,44 @@
+[
+  {
+    "check": "demo auth",
+    "actual": 200,
+    "expected": 200,
+    "pass": true
+  },
+  {
+    "check": "isolation auth",
+    "actual": 200,
+    "expected": 200,
+    "pass": true
+  },
+  {
+    "check": "Owner reads only own rows",
+    "actual": true,
+    "expected": true,
+    "pass": true
+  },
+  {
+    "check": "Other owner forced ID returns no rows",
+    "actual": [
+      200,
+      []
+    ],
+    "expected": [
+      200,
+      []
+    ],
+    "pass": true
+  },
+  {
+    "check": "Anon cannot read portfolios",
+    "actual": true,
+    "expected": true,
+    "pass": true
+  },
+  {
+    "check": "Membership owner RLS",
+    "actual": true,
+    "expected": true,
+    "pass": true
+  }
+]

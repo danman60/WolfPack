@@ -1,0 +1,86 @@
+[
+  {
+    "check": "Unauthenticated portfolio denied",
+    "actual": 401,
+    "expected": 401,
+    "pass": true
+  },
+  {
+    "check": "Seeded member login",
+    "actual": 200,
+    "expected": 200,
+    "pass": true
+  },
+  {
+    "check": "HttpOnly cookie attributes",
+    "actual": true,
+    "expected": true,
+    "pass": true
+  },
+  {
+    "check": "Read initial portfolio",
+    "actual": 200,
+    "expected": 200,
+    "pass": true
+  },
+  {
+    "check": "Create with real public books",
+    "actual": 201,
+    "expected": 201,
+    "pass": true
+  },
+  {
+    "check": "Concurrent same-revision holds",
+    "actual": [
+      200,
+      409
+    ],
+    "expected": [
+      200,
+      409
+    ],
+    "pass": true
+  },
+  {
+    "check": "Exactly one committed revision",
+    "actual": 1,
+    "expected": 1,
+    "pass": true
+  },
+  {
+    "check": "Negative deposit refused",
+    "actual": 400,
+    "expected": 400,
+    "pass": true
+  },
+  {
+    "check": "Readiness DB operational",
+    "actual": "operational",
+    "expected": "operational",
+    "pass": true
+  },
+  {
+    "check": "Readiness auth operational",
+    "actual": "operational",
+    "expected": "operational",
+    "pass": true
+  },
+  {
+    "check": "Export ledger and audit",
+    "actual": true,
+    "expected": true,
+    "pass": true
+  },
+  {
+    "check": "Logout",
+    "actual": 200,
+    "expected": 200,
+    "pass": true
+  },
+  {
+    "check": "Private endpoint after logout",
+    "actual": 401,
+    "expected": 401,
+    "pass": true
+  }
+]

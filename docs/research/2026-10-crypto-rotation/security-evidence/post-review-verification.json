@@ -1,0 +1,6 @@
+{
+  "approved_preview_id_matches_ledger": true,
+  "consumed_preview_market_and_legs_exported": true,
+  "typed_validation_retains_safe_message_and_correlation": true,
+  "protected_wrapper_401_with_correlation": true
+}

@@ -1,0 +1,223 @@
+{
+  "assembled_at_et": "2026-10-12T21:58:03.744697-04:00",
+  "scope": "Selected public metadata and single quote snapshots; no account access or executable quotes. Selection from full raw responses retained in /tmp/crypto-rotation-primary. Quote timestamps differ; do not rank venue liquidity from these observations.",
+  "instruments": {
+    "ndax": [
+      {
+        "OMSId": 1,
+        "InstrumentId": 1,
+        "Symbol": "BTCCAD",
+        "Product1Symbol": "BTC",
+        "Product2Symbol": "CAD",
+        "SessionStatus": "Running",
+        "IsDisable": false,
+        "QuantityIncrement": 1e-08,
+        "PriceIncrement": 0.01,
+        "MinimumQuantity": 1e-05
+      },
+      {
+        "OMSId": 1,
+        "InstrumentId": 3,
+        "Symbol": "ETHCAD",
+        "Product1Symbol": "ETH",
+        "Product2Symbol": "CAD",
+        "SessionStatus": "Running",
+        "IsDisable": false,
+        "QuantityIncrement": 1e-06,
+        "PriceIncrement": 0.01,
+        "MinimumQuantity": 0.0001
+      },
+      {
+        "OMSId": 1,
+        "InstrumentId": 81,
+        "Symbol": "LINKCAD",
+        "Product1Symbol": "LINK",
+        "Product2Symbol": "CAD",
+        "SessionStatus": "Running",
+        "IsDisable": false,
+        "QuantityIncrement": 0.0001,
+        "PriceIncrement": 0.01,
+        "MinimumQuantity": 0.01
+      }
+    ],
+    "kraken": [
+      {
+        "pair_id": "LINKETH",
+        "wsname": "LINK/ETH",
+        "status": "online",
+        "ordermin": "0.55",
+        "costmin": "0.0002"
+      },
+      {
+        "pair_id": "LINKXBT",
+        "wsname": "LINK/XBT",
+        "status": "online",
+        "ordermin": "0.55",
+        "costmin": "0.00002"
+      },
+      {
+        "pair_id": "XETHXXBT",
+        "wsname": "ETH/XBT",
+        "status": "online",
+        "ordermin": "0.001",
+        "costmin": "0.00002"
+      },
+      {
+        "pair_id": "XETHZCAD",
+        "wsname": "ETH/CAD",
+        "status": "online",
+        "ordermin": "0.001",
+        "costmin": "1"
+      },
+      {
+        "pair_id": "XXBTZCAD",
+        "wsname": "XBT/CAD",
+        "status": "online",
+        "ordermin": "0.00005",
+        "costmin": "1"
+      }
+    ]
+  },
+  "quotes": [
+    {
+      "venue": "ndax",
+      "pair": "BTCCAD",
+      "retrieved_at_et": "2026-10-12T21:51:23.542470-04:00",
+      "response_timestamp_et": "2026-10-12T21:51:19.283000-04:00",
+      "url": "https://api.ndax.io:8443/AP/GetLevel1?OMSId=1&InstrumentId=1",
+      "bid": 117219.45,
+      "ask": 117734.74,
+      "bid_quantity": 0.02644022,
+      "ask_quantity": 0.08682098,
+      "full_spread_bps": 43.86301857396186
+    },
+    {
+      "venue": "ndax",
+      "pair": "ETHCAD",
+      "retrieved_at_et": "2026-10-12T21:51:23.518129-04:00",
+      "response_timestamp_et": "2026-10-12T21:47:41.540000-04:00",
+      "url": "https://api.ndax.io:8443/AP/GetLevel1?OMSId=1&InstrumentId=3",
+      "bid": 3497.94,
+      "ask": 3517.83,
+      "bid_quantity": 0.975,
+      "ask_quantity": 0.1925,
+      "full_spread_bps": 56.7008325529482
+    },
+    {
+      "venue": "ndax",
+      "pair": "LINKCAD",
+      "retrieved_at_et": "2026-10-12T21:51:23.519530-04:00",
+      "response_timestamp_et": "2026-10-12T21:40:45.081000-04:00",
+      "url": "https://api.ndax.io:8443/AP/GetLevel1?OMSId=1&InstrumentId=81",
+      "bid": 17.98,
+      "ask": 18.14,
+      "bid_quantity": 155.1255,
+      "ask_quantity": 38.5253,
+      "full_spread_bps": 88.59357696567005
+    },
+    {
+      "venue": "kraken",
+      "pair_id": "XETHZCAD",
+      "retrieved_at_et": "2026-10-12T21:51:23.596255-04:00",
+      "response_timestamp_et": null,
+      "url": "https://api.kraken.com/0/public/Ticker?pair=XBTCAD%2CETHCAD%2CLINKXBT%2CLINKETH%2CETHXBT",
+      "bid": 3510.69,
+      "ask": 3510.87,
+      "full_spread_bps": 0.5127065780249298
+    },
+    {
+      "venue": "kraken",
+      "pair_id": "XETHXXBT",
+      "retrieved_at_et": "2026-10-12T21:51:23.596255-04:00",
+      "response_timestamp_et": null,
+      "url": "https://api.kraken.com/0/public/Ticker?pair=XBTCAD%2CETHCAD%2CLINKXBT%2CLINKETH%2CETHXBT",
+      "bid": 0.029874,
+      "ask": 0.029877,
+      "full_spread_bps": 1.0041672942710687
+    },
+    {
+      "venue": "kraken",
+      "pair_id": "LINKETH",
+      "retrieved_at_et": "2026-10-12T21:51:23.596255-04:00",
+      "response_timestamp_et": null,
+      "url": "https://api.kraken.com/0/public/Ticker?pair=XBTCAD%2CETHCAD%2CLINKXBT%2CLINKETH%2CETHXBT",
+      "bid": 0.00515312,
+      "ask": 0.00515542,
+      "full_spread_bps": 4.462319591329555
+    },
+    {
+      "venue": "kraken",
+      "pair_id": "LINKXBT",
+      "retrieved_at_et": "2026-10-12T21:51:23.596255-04:00",
+      "response_timestamp_et": null,
+      "url": "https://api.kraken.com/0/public/Ticker?pair=XBTCAD%2CETHCAD%2CLINKXBT%2CLINKETH%2CETHXBT",
+      "bid": 0.00015396,
+      "ask": 0.00015405,
+      "full_spread_bps": 5.843966104997086
+    },
+    {
+      "venue": "kraken",
+      "pair_id": "XXBTZCAD",
+      "retrieved_at_et": "2026-10-12T21:51:23.596255-04:00",
+      "response_timestamp_et": null,
+      "url": "https://api.kraken.com/0/public/Ticker?pair=XBTCAD%2CETHCAD%2CLINKXBT%2CLINKETH%2CETHXBT",
+      "bid": 117501.7,
+      "ask": 117534.1,
+      "full_spread_bps": 2.7570268018751807
+    }
+  ],
+  "raw_source_hashes": [
+    {
+      "file": "osc-platforms.html",
+      "sha256": "be3c6287c0e0a78160b85139f8ee9f91f950940e08ab4b8a5b0fb679712c0f77"
+    },
+    {
+      "file": "ndax-BTCCAD.json",
+      "sha256": "4d055e219b7e6f92fb4b4f638aa58c468c8bfe1b6e7d2b8dabca91f297e2abad"
+    },
+    {
+      "file": "ndax-instruments.json",
+      "sha256": "d7c709ceba0d958a1bd9e31ec1343c97fd8d32e193fef8d4d57e3586606b15b7"
+    },
+    {
+      "file": "osc-kraken-decision.txt",
+      "sha256": "a18363f87ec61de4859bd097964d636b728ba6f8ff0dc65ab121c92f6522d35b"
+    },
+    {
+      "file": "ndax-ETHCAD.json",
+      "sha256": "4da64455e3a46895e329ebeeb44662c4f2813642ec137f6ac5a860937ecf8978"
+    },
+    {
+      "file": "kraken-ca-fees.html",
+      "sha256": "fef5f9a18fc1870e058528d0f06bb8562f720625bc98dcdb4d9ea11776a0f921"
+    },
+    {
+      "file": "kraken-quotes.json",
+      "sha256": "76e782656dd75b9c95dfdf02b90aed55d08329283f8c50156d8a957f0c5100c9"
+    },
+    {
+      "file": "osc-ndax-decision.txt",
+      "sha256": "9122162f7a71d456ddd4c8c1c789ac25027a04f722d1a876f2a0f496f3707493"
+    },
+    {
+      "file": "ndax-LINKCAD.json",
+      "sha256": "cf02eebee7ebc0843d650247ef53e2a9bb90ff7d447d43996b9b11745fe7b398"
+    },
+    {
+      "file": "ndax-api.txt",
+      "sha256": "04c58d1a58fc25348649e52b7402e26a10d98197a88bf993169f0b124505eccc"
+    },
+    {
+      "file": "ndax-limit.txt",
+      "sha256": "8645c3bfdd630fd1971c465913b3623d2aacbd0829db3c0cdf4c6008bb9c5232"
+    },
+    {
+      "file": "kraken-assetpairs.json",
+      "sha256": "a8e82e80bbc0d87c1f2745f2bf6b94378cc587dba6c97802bcbfe51897ffba75"
+    },
+    {
+      "file": "ndax-account.txt",
+      "sha256": "d4e20288999559a0554b1206adbcda9fb24988d65a4df3cbc88f47e041d671ce"
+    }
+  ]
+}
