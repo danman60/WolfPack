@@ -1,0 +1,25 @@
+{
+  "checkedEastern": "2026-10-13T10:40:28.100233-04:00",
+  "deploymentId": "dpl_6a3g9tmBbQxdCgxgjUwnhjdmY5vH",
+  "url": "https://wolf-pack-5fe1is84l-danman60s-projects.vercel.app/rotation",
+  "target": "preview",
+  "readyState": "READY",
+  "sourceCommit": "559ea6b4b26681798d8ddda71e2f04cfed67227b",
+  "sourceBranchMetadata": "HEAD",
+  "sourceMethod": "Clean detached worktree of reviewed commit; explicit Vercel CLI Preview deploy",
+  "access": "Vercel deployment protection retained; owner signs in to Vercel. Private automation bypass used only in QA and never shared.",
+  "productionChanged": false,
+  "environmentMutations": false,
+  "browserChecks": 10,
+  "browserConsoleErrors": 0,
+  "publicJSScanned": 144,
+  "exactSecretMatches": 0,
+  "limits": [
+    "Real current-data recommendation was HOLD; recommended SHIFT positive path not exercised end to end.",
+    "No independently qualified profitable strategy established.",
+    "Legacy Production credential exposure remains unresolved; Preview does not revoke historical artifacts.",
+    "No private exchange authentication or live execution added."
+  ],
+  "rawApiTarget": null,
+  "targetSource": "vercel inspect --json reports preview; raw v13 API target is null (non-production)"
+}

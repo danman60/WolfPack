@@ -27,7 +27,17 @@ Backend corrections are complete and independently reviewed. Unfinished steps re
 
 Final local browser rerun passed10/10 with zero console errors. The isolated production build and postbuild TypeScript passed; all83 source/config files matched the working source used for QA. The146-file client bundle scan found zero matches for three configured WPR credential values and the previously exposed legacy key value. Final source screenshots passed measured and visual review. One public-history acquisition returned503; a bounded retry succeeded against the real source without code or data substitution. This external dependency can fail visibly rather than producing fabricated results.
 
-Final evidence: `release-evidence/strategy-local-final.json`, `strategy-local-build.json`, and `strategy-local-build-scan.json`. Preview deployment and deployed verification are the remaining release checks; local acceptance does not prove the deployed artifact.
+Final local evidence: `release-evidence/strategy-local-final.json`, `strategy-local-build.json`, and `strategy-local-build-scan.json`.
+
+## Verified Preview release — October 13, 2026 at 10:40 Eastern
+
+Deployed reviewed commit `559ea6b4b26681798d8ddda71e2f04cfed67227b` from a clean detached worktree to artifact `dpl_6a3g9tmBbQxdCgxgjUwnhjdmY5vH`, READY Preview:
+
+https://wolf-pack-5fe1is84l-danman60s-projects.vercel.app/rotation
+
+Vercel deployment protection remains enabled; the owner signs in to Vercel. No automation bypass is shared. The exact deployed workflow passed10/10 with zero console errors, including real-data study/adoption, HOLD recording, stale reuse rejection, namespace separation, reload and export. Authenticated session/readiness/portfolio/strategy endpoints returned200 with operational workshop auth/database. Desktop and phone passed measured and visual review; the reviewed deployed desktop was delivered through `shot-approve`.
+
+The actual Preview scan read144 referenced JavaScript files with zero unread assets and zero exact matches for the configured WPR credentials or known legacy key value. Scoped security headers passed. Evidence: `release-evidence/strategy-preview-deployment.json`, `strategy-preview-qa.json`, and `strategy-preview-scan.json`. Production and environment settings were unchanged. This Preview does not revoke or repair the older exposed production artifact.
 
 ## Release boundaries
 

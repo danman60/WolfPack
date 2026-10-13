@@ -43,7 +43,7 @@ First complete and review the strategy workflow on the explicit local/isolated t
 - [x] Programmatic strategy study implemented and run against genuine history. Ten numerical verification groups passed; both QA schedules return HOLD. See `AUTOMATED-SELECTOR-EVIDENCE.md`. Current-recommendation cadence review remains in progress.
 - [x] Persistent strategy and recommendation-to-approval workflow implemented. Migration005 applied after review; backend source frozen after independent review, two-account checks and numerical step/cutoff verification.
 - [x] Composed local browser workflow, calculations, ownership and stale cases verified. Final10/10 browser checks,12/12 two-account API checks, isolated production build and postbuild TypeScript passed. Positive recommended-SHIFT browser coverage is not claimed; the current genuine-data recommendation is HOLD.
-- [ ] Final evidence, documentation and release status recorded without conflating paper and live execution.
+- [x] Final evidence, documentation and release status recorded without conflating paper and live execution. Source559ea6b deployed as Preview artifact `dpl_6a3g9tmBbQxdCgxgjUwnhjdmY5vH`; exact deployed browser10/10, auth/database/header checks and144-file bundle scan passed. Vercel sign-in required; Production unchanged. Private exchange auth/live execution remain unbuilt, and no profitable strategy or positive recommended-SHIFT browser path is claimed.
 
 
 ## Frozen backend contract — October13 09:59 Eastern

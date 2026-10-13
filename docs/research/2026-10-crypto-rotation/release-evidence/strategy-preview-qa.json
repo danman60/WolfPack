@@ -1,0 +1,140 @@
+{
+  "url": "https://wolf-pack-5fe1is84l-danman60s-projects.vercel.app/rotation",
+  "checks": [
+    {
+      "check": "real seeded isolated paper session; no live execution",
+      "status": "PASS",
+      "detail": {
+        "portfolioRevision": 9
+      }
+    },
+    {
+      "check": "five-window programmatic study with unchanged ledger",
+      "status": "PASS",
+      "detail": {
+        "studyId": "b0623105-b479-43f7-bcc0-3ad82e09ab8e",
+        "outer": {
+          "trades": 25,
+          "cashCad": 10099.818424251505,
+          "feesCad": 178.8907495596746,
+          "holdCad": 8286.17975178058,
+          "finalCad": 6181.968116415534,
+          "turnoverCad": 89445.37477983726,
+          "excessCashCad": -3917.8503078359718,
+          "excessHoldCad": -2104.211635365047,
+          "completedReviews": 50,
+          "maxDrawdownPercent": 43.419309220012146
+        },
+        "decision": "hold"
+      }
+    },
+    {
+      "check": "explicit adoption; recommendation anchored to current ledger and plan",
+      "status": "PASS",
+      "detail": {
+        "planRevision": 4,
+        "decision": "hold",
+        "paired": {
+          "hold": {
+            "meanCad": 0.21915547345308584,
+            "upper90Cad": 58.58575510155879,
+            "downside10Cad": -48.03335816306662
+          },
+          "shift": {
+            "meanCad": -5.621014597429285,
+            "upper90Cad": 17.292162807731984,
+            "downside10Cad": -26.64209851569467
+          },
+          "target": "CAD",
+          "advantage": {
+            "meanCad": -5.840170070882372,
+            "upper90Cad": 30.64282591331539,
+            "downside10Cad": -57.027902807762075
+          },
+          "observations": 76
+        }
+      }
+    },
+    {
+      "check": "recommended HOLD records once and preserves all units/costs",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "check": "reused recommended HOLD rejected against current financial revision",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "check": "financial revision invalidates stale action; refresh recomputes current plan",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "check": "recommendation quote rejects client economics overrides",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "check": "advanced research and strategy trial namespaces remain separate",
+      "status": "PASS",
+      "detail": {
+        "advanced": 0,
+        "strategy": 26
+      }
+    },
+    {
+      "check": "reload restores strategy/recommendation and export retains immutable evidence",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "check": "existing advanced research remains accessible",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "screenshots": [
+    {
+      "url": "https://wolf-pack-5fe1is84l-danman60s-projects.vercel.app/rotation",
+      "width": 1440,
+      "png": "/home/danman60/.claude/shots/pending/wolfpack-strategy-computed-plan-1440-20261013T103801.png",
+      "captured": "2026-10-13T10:38:01.320150-04:00",
+      "pass": true,
+      "fail": [],
+      "warn": []
+    },
+    {
+      "url": "https://wolf-pack-5fe1is84l-danman60s-projects.vercel.app/rotation",
+      "width": 390,
+      "png": "/home/danman60/.claude/shots/pending/wolfpack-strategy-computed-plan-390-20261013T103802.png",
+      "captured": "2026-10-13T10:38:02.690560-04:00",
+      "pass": true,
+      "fail": [],
+      "warn": []
+    },
+    {
+      "url": "https://wolf-pack-5fe1is84l-danman60s-projects.vercel.app/rotation",
+      "width": 1440,
+      "png": "/home/danman60/.claude/shots/sent/wolfpack-strategy-restored-plan-1440-20261013T103810.png",
+      "captured": "2026-10-13T10:38:10.876914-04:00",
+      "pass": true,
+      "fail": [],
+      "warn": [],
+      "delivery": "Reviewed and sent using shot-approve"
+    },
+    {
+      "url": "https://wolf-pack-5fe1is84l-danman60s-projects.vercel.app/rotation",
+      "width": 390,
+      "png": "/home/danman60/.claude/shots/pending/wolfpack-strategy-restored-plan-390-20261013T103812.png",
+      "captured": "2026-10-13T10:38:12.064297-04:00",
+      "pass": true,
+      "fail": [],
+      "warn": []
+    }
+  ],
+  "startedEastern": "2026-10-13T10:37:52.080783-04:00",
+  "consoleErrors": [],
+  "status": "PASS",
+  "scope": "Deployed Preview real-data HOLD integration. Positive recommended-SHIFT execution not exercised; no fabricated positive data."
+}

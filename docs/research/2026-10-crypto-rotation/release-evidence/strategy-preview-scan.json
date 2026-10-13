@@ -1,0 +1,41 @@
+{
+  "url": "https://wolf-pack-5fe1is84l-danman60s-projects.vercel.app",
+  "checkedEastern": "2026-10-13T10:38:55.338183-04:00",
+  "scope": "Read-only actual Preview HTML plus recursively referenced public JavaScript; configured WPR values and previously exposed legacy credential compared privately.",
+  "endpoints": {
+    "/api/rotation/session": 200,
+    "/api/rotation/readiness": 200,
+    "/api/rotation/portfolio": 200,
+    "/api/rotation/trials?strategy=1": 200
+  },
+  "readiness": {
+    "mode": "paper-workshop",
+    "database": "operational",
+    "auth": "operational",
+    "demo": "enabled-isolated-synthetic-accounts",
+    "persistence": "server-ledger-with-atomic-revision-check",
+    "liveTrading": "disabled",
+    "passwordRecovery": "not-enabled-seeded-workshop-accounts-only",
+    "backups": "platform-managed; rotation-specific restore not rehearsed",
+    "ownerDecisions": [
+      "actual funding",
+      "custody/provider",
+      "risk and concentration limits"
+    ]
+  },
+  "headers": {
+    "content-security-policy": "frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'",
+    "strict-transport-security": "max-age=31536000",
+    "x-frame-options": "DENY",
+    "x-content-type-options": "nosniff"
+  },
+  "jsFilesRead": 144,
+  "unread": [],
+  "matches": {
+    "WPR_SUPABASE_ANON_KEY": 0,
+    "WPR_SUPABASE_SERVICE_ROLE_KEY": 0,
+    "WPR_DEMO_PASSWORD": 0,
+    "legacy_exposed_key": 0
+  },
+  "status": "PASS"
+}
