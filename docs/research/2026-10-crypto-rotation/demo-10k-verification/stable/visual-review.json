@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "url": "https://wolf-pack-eight.vercel.app/rotation",
+  "gitSha": "0e35022e617c42de001185bff68e354951152a32",
+  "deploymentId": "dpl_7FC34GELiWMJPjtSRfwtnwoYs6t2",
+  "review": "Both exact stable screenshots were inspected. The existing example portfolio, four sliders, six charts and Open $10,000 example button are visible and readable. No clipping or overlap. Current market value moved to $10,002.01 while the saved forecast stayed fixed. The opening ledger remains exactly $10,000 at its captured prices. No financial controls were activated.",
+  "candidateAndStableRecordHashesIdentical": true,
+  "images": {
+    "production-390.png": "a65bf7f98a7a7d7cbec92600eb170165447ddfd8f132ef15d90f572587cf3e42",
+    "production-1440.png": "6ddf533dc9164665183efad0932d396320b593fe6ee1082c5941a94be568add1"
+  }
+}

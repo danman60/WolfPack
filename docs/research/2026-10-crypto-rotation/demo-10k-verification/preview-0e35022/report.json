@@ -1,0 +1,34 @@
+{
+  "status": "PASS",
+  "target": {
+    "cliTarget": "preview",
+    "environment": "Preview",
+    "deploymentId": "dpl_HvqVa34GghWQ7UQMQzJgWFTmAMkp",
+    "projectId": "prj_FAJItmAzRQEhtdLIcH6NywjKh9Of",
+    "url": "https://wolf-pack-7mv0ogt0n-danman60s-projects.vercel.app/rotation",
+    "gitSha": "0e35022e617c42de001185bff68e354951152a32",
+    "apiTarget": null,
+    "readyState": "READY"
+  },
+  "checks": [
+    "signedout: exact CAD10000 captured-mark accounting, four positive holdings, defaults and six charts/four sliders without setup",
+    "Reload preserves exact opening units and ledger",
+    "Rejected cross-origin fresh-example request preserves current identity and ledger",
+    "Repeated same-user seed reuses one portfolio and one immutable seed",
+    "Sliders immediately save forecasts without moving holdings",
+    "signedin: exact CAD10000 captured-mark accounting, four positive holdings, defaults and six charts/four sliders without setup",
+    "Actual double-click creates one fresh example; prior session stays in HttpOnly cookies",
+    "Return restores original identity and exact ledger; second owner data remains isolated",
+    "Actual logout clears active and previous HttpOnly session cookies",
+    "Normal typed login validates real reserved identity, clears retained previous cookies, preserves its portfolio"
+  ],
+  "sessionActions": [
+    "demo",
+    "demo-example",
+    "demo-return",
+    "logout",
+    "login",
+    "logout"
+  ],
+  "scope": "Local/Preview isolated paper only. No funded execution. External quote failure ordering source-reviewed; no fake outage induced."
+}

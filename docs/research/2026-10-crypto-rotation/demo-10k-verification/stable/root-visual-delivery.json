@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "reviewedAt": "2026-10-13T17:49:23.754940-04:00",
+  "review": "Root viewed composed390/1440 stable page images, checked readable text, chart and slider layout, preserved forecast, no overlaps or overflow; both mechanical sidecars passed. Starting10000 is immutable; displayed10002.01 reflects actual later quotes.",
+  "sourceSha": "0e35022e617c42de001185bff68e354951152a32",
+  "productionDeploymentId": "dpl_7FC34GELiWMJPjtSRfwtnwoYs6t2",
+  "privateTelegramMessages": {
+    "desktop": 21697,
+    "phone": 21698
+  },
+  "delivery": "Actual private getChat-verified tg-dm helper sent receipts; owner private-DM request persists. Existing shot-approve routes group Shots; reviewed private route used."
+}

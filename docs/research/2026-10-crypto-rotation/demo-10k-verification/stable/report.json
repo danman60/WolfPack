@@ -1,0 +1,96 @@
+{
+  "target": {
+    "url": "https://wolf-pack-eight.vercel.app/rotation",
+    "id": "dpl_7FC34GELiWMJPjtSRfwtnwoYs6t2",
+    "target": "production",
+    "gitSha": "0e35022e617c42de001185bff68e354951152a32",
+    "readyState": "READY"
+  },
+  "checks": [
+    "Existing genuine Preview-created demo session validated normally; example switch button, four sliders and sixcharts restored via GETs",
+    "Reload preserves exact portfolio, trials, projections, batches and outcomes",
+    "No POST or financial mutation requests"
+  ],
+  "recordHashes": {
+    "projections": "d7df8238fc9f82ba086b31fcd5f21773c137540082376341f1225b29b86a829b",
+    "batches": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "outcomes": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "portfolioHash": "f49087074cdf5f3d7817857dc801d98f18930329ffbb643b6acf7d41d90e8b6a",
+  "trialHash": "ca700617c902f4e827317c4bd5e4f58f8882c943c4559ab42bc40c28a7070ca5",
+  "status": "PASS",
+  "readiness": {
+    "mode": "paper-workshop",
+    "database": "operational",
+    "auth": "operational",
+    "demo": "enabled-isolated-synthetic-accounts",
+    "persistence": "server-ledger-with-atomic-revision-check",
+    "liveTrading": "disabled",
+    "passwordRecovery": "not-enabled-seeded-workshop-accounts-only",
+    "backups": "platform-managed; rotation-specific restore not rehearsed",
+    "ownerDecisions": [
+      "actual funding",
+      "custody/provider",
+      "risk and concentration limits"
+    ]
+  },
+  "calls": [
+    {
+      "method": "GET",
+      "path": "/api/rotation/session"
+    },
+    {
+      "method": "GET",
+      "path": "/api/rotation/market"
+    },
+    {
+      "method": "GET",
+      "path": "/api/rotation/portfolio"
+    },
+    {
+      "method": "GET",
+      "path": "/api/rotation/allocation"
+    },
+    {
+      "method": "GET",
+      "path": "/api/rotation/analysis"
+    },
+    {
+      "method": "GET",
+      "path": "/api/rotation/trials"
+    },
+    {
+      "method": "GET",
+      "path": "/api/rotation/trials"
+    },
+    {
+      "method": "GET",
+      "path": "/api/rotation/session"
+    },
+    {
+      "method": "GET",
+      "path": "/api/rotation/market"
+    },
+    {
+      "method": "GET",
+      "path": "/api/rotation/portfolio"
+    },
+    {
+      "method": "GET",
+      "path": "/api/rotation/allocation"
+    },
+    {
+      "method": "GET",
+      "path": "/api/rotation/analysis"
+    },
+    {
+      "method": "GET",
+      "path": "/api/rotation/trials"
+    },
+    {
+      "method": "GET",
+      "path": "/api/rotation/trials"
+    }
+  ],
+  "blocked": []
+}

@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "gitSha": "0e35022e617c42de001185bff68e354951152a32",
+  "review": "Exact390/1440 deployed pages inspected. CAD10000 populatedexample with four coin/cash allocations, visible sliders, sixcharts, oneclickfresh/returncontrols. No clipped or overlapping content.",
+  "cookies": "Four actual authentication cookies independently inspected: HttpOnly, Secure, SameSiteStrict, path/api/rotation. No values recorded.",
+  "images": {
+    "example-1440.png": "d3da7b1db583c9a24b857982b5aaae9cb74ea524febaddc6fc74637be7f8229e",
+    "example-390.png": "97847e5225cb2e25f5f8128ebe117ae9a7650d2174c5ea18bb99c1e1a19391e9"
+  }
+}

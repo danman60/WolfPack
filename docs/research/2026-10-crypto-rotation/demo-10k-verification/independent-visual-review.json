@@ -1,0 +1,20 @@
+{
+  "reviewedAt": "2026-10-13T17:42:57.069424-04:00",
+  "verdict": "PASS",
+  "reviewer": "spot_history independent visual review",
+  "screenshots": [
+    "example-390.png",
+    "example-1440.png"
+  ],
+  "checks": [
+    "Populated four-asset portfolio, linked sliders and donut visible without setup form.",
+    "Example designation, fresh-example action and Return to previous workspace readable at both widths.",
+    "Six real-data charts, recommendation and projection retain coherent spacing and contrast.",
+    "No observed clipped or overlapping text or horizontal overflow."
+  ],
+  "notes": [
+    "Displayed current value CAD10000.02 reflects live price movement; independent seed checks confirm opening value CAD10000.",
+    "Local development indicator appears in local captures; no implementation change required."
+  ],
+  "sourceChanged": false
+}

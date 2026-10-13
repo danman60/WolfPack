@@ -1,0 +1,27 @@
+{
+  "id": "dpl_7FC34GELiWMJPjtSRfwtnwoYs6t2",
+  "url": "wolf-pack-pfbanu3p2-danman60s-projects.vercel.app",
+  "readyState": "READY",
+  "target": "production",
+  "gitsha": "0e35022e617c42de001185bff68e354951152a32",
+  "sourceManifestSha256": "bcd480df3c6945087147658dcde24fbb4318a50445876c70350481902aa2a002",
+  "recordedAt": "2026-10-13T17:47:01.428916-04:00",
+  "projectId": "prj_FAJItmAzRQEhtdLIcH6NywjKh9Of",
+  "previewUrl": "https://wolf-pack-7mv0ogt0n-danman60s-projects.vercel.app",
+  "previewDeploymentId": "dpl_HvqVa34GghWQ7UQMQzJgWFTmAMkp",
+  "previewQa": "PASS: independent10checks and390/1440review",
+  "productionReadOnlyQa": "PASS: GET-only, no POST attempted, unchanged records,390/1440measured+visual",
+  "stableAliasAssigned": true,
+  "stableUrl": "https://wolf-pack-eight.vercel.app",
+  "stableInspectDeploymentId": "dpl_7FC34GELiWMJPjtSRfwtnwoYs6t2",
+  "aliasAssignedAt": "2026-10-13T17:47:36.015847-04:00",
+  "stableReadOnlyQa": "PASS: exact production deployment; GET-only reload preserved portfolio and all records;390/1440 measured, independent and root visual review passed",
+  "finalVerifiedAt": "2026-10-13T17:49:13.951417-04:00",
+  "stableEvidence": "../demo-10k-verification/stable/report.json",
+  "desktopPrivateDelivery": 21697,
+  "rootStableVisualReview": "PASS",
+  "privateTelegramMessages": {
+    "desktop": 21697,
+    "phone": 21698
+  }
+}

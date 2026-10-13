@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "review": "Exact production candidate390/1440 pages inspected. Existing real Preview-createdexample loads without financial writes, currentmarkedvalue9999.97 reflectsprice drift from exact10000 opening. Saved0.1percentagepointcustom BTC adjustment and immutableforecast restored. Headerexamplebutton,4sliders6charts readable; nooverlap/clipping.",
+  "images": {
+    "production-390.png": "f0e1e938d2af80fb2ef2a0044a3c83810c58b23ba40cc079e5a595bedfae6105",
+    "production-1440.png": "d8d6ec5d2ad3f19c66ba11dee573fa0c1d55d83f9bad40df487d47cd73273e4b"
+  }
+}
