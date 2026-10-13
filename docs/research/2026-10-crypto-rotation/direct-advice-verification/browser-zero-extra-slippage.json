@@ -1,0 +1,89 @@
+{
+  "url": "http://127.0.0.1:3218/rotation",
+  "checks": [
+    {
+      "check": "real isolated paper sign-in; live trading disabled",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "check": "one direct request saves advice without financial mutation or old-record replacement",
+      "status": "PASS",
+      "detail": {
+        "trialId": "db2c93d8-e708-47eb-8179-6a211f9e0f1f",
+        "decision": "hold"
+      }
+    },
+    {
+      "check": "changed preferences disable prior advice actions until recomputed",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "check": "genuine cost-aware HOLD preserves all units and costs; live SHIFT unobserved",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "check": "saved advice restores; changed holdings require refresh; saved preferences reused",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "check": "legacy study UI and immutable records remain accessible",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "check": "advanced research remains accessible",
+      "status": "PASS",
+      "detail": null
+    },
+    {
+      "check": "restored standard test slippage allowance without financial mutation",
+      "status": "PASS",
+      "detail": null
+    }
+  ],
+  "screenshots": [
+    {
+      "url": "http://127.0.0.1:3218/rotation",
+      "width": 1440,
+      "png": "/home/danman60/.claude/shots/pending/wolfpack-strategy-direct-advice-1440-20261013T140609.png",
+      "captured": "2026-10-13T14:06:09.337749-04:00",
+      "pass": true,
+      "fail": [],
+      "warn": []
+    },
+    {
+      "url": "http://127.0.0.1:3218/rotation",
+      "width": 390,
+      "png": "/home/danman60/.claude/shots/pending/wolfpack-strategy-direct-advice-390-20261013T140610.png",
+      "captured": "2026-10-13T14:06:10.481319-04:00",
+      "pass": true,
+      "fail": [],
+      "warn": []
+    },
+    {
+      "url": "http://127.0.0.1:3218/rotation",
+      "width": 1440,
+      "png": "/home/danman60/.claude/shots/pending/wolfpack-strategy-restored-advice-1440-20261013T140619.png",
+      "captured": "2026-10-13T14:06:19.355630-04:00",
+      "pass": true,
+      "fail": [],
+      "warn": []
+    },
+    {
+      "url": "http://127.0.0.1:3218/rotation",
+      "width": 390,
+      "png": "/home/danman60/.claude/shots/pending/wolfpack-strategy-restored-advice-390-20261013T140620.png",
+      "captured": "2026-10-13T14:06:20.493418-04:00",
+      "pass": true,
+      "fail": [],
+      "warn": []
+    }
+  ],
+  "startedEastern": "2026-10-13T14:06:01.305113-04:00",
+  "consoleErrors": [],
+  "status": "PASS"
+}

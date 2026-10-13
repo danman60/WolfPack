@@ -278,3 +278,96 @@ export async function requireRecommendation(user: RotationUser, id: unknown, por
   verifyProtocol(source.data);
   return trial;
 }
+
+/** Current advice has its own version and persistence namespace. Legacy study bytes stay unchanged. */
+export async function latestForecastAdvice(user: RotationUser): Promise<import('./strategy-api-contract').ForecastAdviceTrial | null> {
+  const rows = await dbRequest<import('./strategy-api-contract').ForecastAdviceTrial[]>(`wpr_trials?owner_id=eq.${user.id}&data->>namespace=eq.forecast-advice&select=id,created_at,kind,data&order=created_at.desc,id.desc&limit=1`, {}, user.accessToken);
+  if (rows[0] && rows[0].data.protocolVersion !== 'cad-forecast-advice-v1') throw new ApiError('Saved advice requires its original model version.', 409);
+  return rows[0] ?? null;
+}
+export async function buildForecastAdviceReport(portfolio: Portfolio, market: MarketSnapshot, dataset: HistoryDataset, riskPercent: number, slippageBps: number): Promise<import('./strategy-api-contract').ForecastAdviceReport> {
+  const {fitForecast, forecastHorizon} = await import('./forecast-advice');
+  const now = new Date();
+  const fit = fitForecast(dataset, portfolio.cadence, now);
+  const prices = marks(market);
+  const price = Object.fromEntries(ASSETS.map(asset => [asset, Number(prices[asset]) / Number(SCALE)])) as Record<(typeof ASSETS)[number], number>;
+  const values = (balances: Portfolio['balances']) => Object.fromEntries(ASSETS.map(asset => [asset, Number(balances[asset]) * price[asset]])) as Record<(typeof ASSETS)[number], number>;
+  const current = values(portfolio.balances); const capital = Object.values(current).reduce((a, b) => a + b, 0);
+  if (!Number.isFinite(capital) || capital <= 0 || capital > 1e12) throw new ApiError('A positive portfolio value at most CAD 1 trillion is required.');
+  const terminal = (balances: Portfolio['balances']) => ASSETS.reduce((sum, asset) => sum + Number(balances[asset]) * price[asset] * (asset === 'CAD' ? 1 : 1 + fit.forecastReturns[asset]), 0);
+  const hold = terminal(portfolio.balances);
+  const report: import('./strategy-api-contract').ForecastAdviceReport = {
+    decision: 'hold', asOf: market.fetchedAt, expiresAt: forecastHorizon(market.fetchedAt, portfolio.cadence), nextReviewAt: forecastHorizon(market.fetchedAt, portfolio.cadence),
+    forecastReturns: fit.forecastReturns, targetWeights: Object.fromEntries(ASSETS.map(asset => [asset, current[asset] / capital])) as Record<(typeof ASSETS)[number], number>,
+    targetValuesCad: {...current}, deltaCad: {CAD: 0, BTC: 0, ETH: 0, LINK: 0}, feesCad: 0, slippageCad: 0, expectedAdvantageCad: 0,
+    currentValueCad: capital, expectedHoldValueCad: hold, expectedTargetValueCad: hold, reasons: [], notes: [], confidence: 'low', trainingOrigins: fit.trainingOrigins, source: dataset.source, nextShift: null,
+    candidates: [{target: 'HOLD', feasible: true, feesCad: 0, slippageCad: 0, expectedValueCad: hold, balances: {...portfolio.balances}}],
+  };
+  const failures: string[] = [];
+  for (const target of ASSETS) {
+    let simulated = portfolio; let fees = 0; let turnover = 0; let first: typeof report.nextShift = null; let failed = false;
+    const weights = {CAD: target === 'CAD' ? 1 : 1 - riskPercent / 100, BTC: 0, ETH: 0, LINK: 0};
+    if (target !== 'CAD') weights[target] = riskPercent / 100;
+    for (let step = 0; step <= 3; step++) {
+      const decision = sizeStrategyStep(simulated, market, {id: crypto.randomUUID(), target, targetWeights: weights, reviewDate: now.toISOString().slice(0, 10), stepsCompleted: step, completesAfterNext: false, dust: []});
+      if (decision.decision === 'blocked') { failures.push(`${target}: ${decision.executionNote}`); failed = true; break; }
+      if (!decision.nextShift) break;
+      if (!first) first = decision.nextShift;
+      const shift = decision.nextShift;
+      const quote = previewShift(simulated, market, shift.from, shift.to, shift.amount);
+      fees += Number(quote.feeCad); turnover += quote.legs.reduce((sum, leg) => sum + Number(leg.grossCad), 0);
+      simulated = approveShift(simulated, quote);
+      if (decision.rebalance?.completesAfterNext) break;
+    }
+    if (failed) { report.candidates.push({target, feasible: false, feesCad: fees, slippageCad: turnover * slippageBps / 10_000, expectedValueCad: null, balances: {...simulated.balances}, reason: failures.at(-1)}); continue; }
+    const slippage = turnover * slippageBps / 10_000;
+    const expected = terminal(simulated.balances) - slippage;
+    report.candidates.push({target, feasible: true, feesCad: fees, slippageCad: slippage, expectedValueCad: expected, balances: {...simulated.balances}});
+    if (first && expected > report.expectedTargetValueCad + 0.01) {
+      const targetValues = values(simulated.balances);
+      Object.assign(report, {decision: 'shift', targetWeights: weights, targetValuesCad: targetValues,
+        deltaCad: Object.fromEntries(ASSETS.map(asset => [asset, targetValues[asset] - current[asset]])), feesCad: fees, slippageCad: slippage,
+        expectedAdvantageCad: expected - hold, expectedTargetValueCad: expected, nextShift: first});
+    }
+  }
+  if (failures.length) {
+    report.decision = 'unavailable'; report.nextShift = null;
+    report.reasons = ['Current order-book depth or venue limits prevent a complete allocation comparison. Refresh quotes before acting.', ...failures];
+  } else report.reasons = report.decision === 'shift'
+    ? [`This target has the highest estimated value after current order-book prices, fees and the extra slippage allowance; estimated advantage over keeping your units is CAD ${report.expectedAdvantageCad.toFixed(2)}.`, 'Review the fresh quote, approve one leg, then refresh advice using your updated holdings.']
+    : ['Keeping your current units has the highest estimated after-cost value, or no alternative improves it by more than one cent.'];
+  report.notes = [
+    'Low confidence. These are point estimates, not probabilities or guaranteed profits. Historical research did not establish reliable forecast superiority.',
+    'The model averages two causal ridge estimates (penalties 1 and 10). Current public Kraken history differs from the research source.',
+    `Features end at completed candle ${fit.signalAt}; every training outcome ends strictly before that close. ${fit.trainingOrigins} mature training dates.`,
+    'Training labels run from the next daily close to the following weekly/monthly horizon. A quote executes at current prices, so this is an approximate coming-period forecast, not a calibrated forecast of that exact fill.',
+    'Book spread and depth are already in simulated fills; fees use your saved fee rate. Extra slippage is deducted once as a turnover allowance from expected value, not charged again as spread.',
+    'Targets preserve venue-minimum dust. No funds move when advice is refreshed. Each approved leg requires a fresh quote; refresh afterward because the best estimate can change.',
+  ];
+  return report;
+}
+export async function createForecastAdvice(user: RotationUser, body: Record<string, unknown>): Promise<import('./strategy-api-contract').ForecastAdviceTrial> {
+  const input = object(body.data); const portfolio = await requirePortfolio(user, body.expectedRevision);
+  const previous = await latestForecastAdvice(user);
+  const risk = input.riskPercent ?? previous?.data.config.riskPercent;
+  const slippage = input.slippageBps ?? previous?.data.config.slippageBps;
+  if (typeof risk !== 'number' || !Number.isFinite(risk) || risk < 0 || risk > 100) throw new ApiError('Enter target crypto allocation from 0 to 100 percent.');
+  if (typeof slippage !== 'number' || !Number.isFinite(slippage) || slippage < 0 || slippage > 1000) throw new ApiError('Enter adverse slippage from 0 to 1000 basis points.');
+  const [dataset, market] = await Promise.all([history(), freshMarket()]);
+  let report: import('./strategy-api-contract').ForecastAdviceReport;
+  try { report = await buildForecastAdviceReport(portfolio, market, dataset, risk, slippage); }
+  catch (error) { throw new ApiError(error instanceof Error ? error.message : 'Forecast is unavailable with current inputs.', 503); }
+  // Reject a race with a concurrent approved trade before saving advice about obsolete holdings.
+  await requirePortfolio(user, portfolio.revision);
+  const {fitForecast, forecastFingerprintSource} = await import('./forecast-advice');
+  const fit = fitForecast(dataset, portfolio.cadence);
+  const data: import('./strategy-api-contract').ForecastAdviceTrial['data'] = {namespace: 'forecast-advice', protocolVersion: 'cad-forecast-advice-v1',
+    config: {riskPercent: risk, slippageBps: slippage, cadence: portfolio.cadence, feeBps: portfolio.feeBps},
+    portfolioId: portfolio.id, portfolioRevision: portfolio.revision, holdingsHash: strategyHash(portfolio.balances), sourceHash: strategyHash({source: dataset.source, points: dataset.points}),
+    dataset, market, startingBalances: {...portfolio.balances}, memberForecasts: fit.members,
+    modelHash: strategyHash([forecastFingerprintSource(), buildForecastAdviceReport.toString(), sizeStrategyStep.toString(), previewShift.toString(), approveShift.toString()]),
+    trainedThrough: fit.signalAt, latestTrainingEnd: fit.latestTrainingEnd, labelConvention: 'Completed origin D; simple return from D+1 to D+8 weekly or clamped calendar-month(D)+1 monthly; outcome ends strictly before signal close.', report};
+  const rows = await dbRequest<import('./strategy-api-contract').ForecastAdviceTrial[]>('wpr_trials', {method: 'POST', body: JSON.stringify({id: strategyId(body.id), owner_id: user.id, kind: 'development', data})});
+  if (rows.length !== 1) throw new ApiError('Advice was not confirmed saved.', 503);
+  return rows[0];
+}

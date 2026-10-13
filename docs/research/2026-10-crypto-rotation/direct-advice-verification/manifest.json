@@ -1,0 +1,17 @@
+{
+  "verifiedEastern": "2026-10-13T14:07:26.010734-04:00",
+  "source_sha256": {
+    "app/src/lib/rotation/forecast-advice.ts": "eb793f2086f0dd9b63af0a5692e2b7bdf583b792eb31757912797134568bded1",
+    "app/src/lib/rotation/strategy-server.ts": "24a02c5fed953bf3d25fb8b0140992909d77dcd2e56da967147bbb2b09ad6f62",
+    "app/src/lib/rotation/strategy-api-contract.ts": "da770a295ab8e8abf596bfdeae7c7c6862e74cae889e3c73db632825cd59fe9d",
+    "app/src/app/api/rotation/trials/route.ts": "3dd6fa5e698d62a1cc72add84f6d8756d25145759f3756387cf6b26abc0994e8",
+    "app/src/components/rotation/StrategyPanel.tsx": "9619c21c9ba63e21bc7aa5e7d61d3db9e745e89c8d5b926ca78a794eb80a7d1e",
+    "app/src/app/rotation/page.tsx": "512df32635caea328a275db700dc8fa01648db85f81f67e8924ab12639d6e471",
+    "tests/agent/rotation-advice-numerics.py": "8d11680a8b3ac1ccfb81d151a512ad0a7057b04e47ad468af2f54fcbd4cd3e2a",
+    "tests/agent/rotation-advice-accounting.cjs": "409c4eec6baface2128837952ceed954dcb220afa612095bff0b9959e3984cf4",
+    "tests/agent/rotation-advice-qa.py": "3df97b699b40b8b6fc083bbf4597677fa6582fb25f16f18e80dc243b9da54cae",
+    "tests/agent/flow-rotation-advice.md": "558fadd5fc6fcf866ca9d37ca14843cf40367650d927adac706a2c577b07b87d"
+  },
+  "build": "Isolated next build --webpack and subsequent tsc --noEmit --incremental false passed. app/src exactly matched built snapshot.",
+  "scope": "Local paper workflow only; genuine public data, dedicated isolation account. No deployment or funded-wallet actions."
+}

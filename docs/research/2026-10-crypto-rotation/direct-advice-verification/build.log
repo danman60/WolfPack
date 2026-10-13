@@ -1,0 +1,73 @@
+
+> wolfpack@0.1.0 build
+> next build --webpack
+
+▲ Next.js 16.1.6 (webpack)
+
+  Creating an optimized production build ...
+⚠ Compiled with warnings in 12.3s
+
+../../../home/danman60/projects/WolfPack/app/node_modules/@metamask/sdk/dist/browser/es/metamask-sdk.js
+Module not found: Can't resolve '@react-native-async-storage/async-storage' in '/home/danman60/projects/WolfPack/app/node_modules/@metamask/sdk/dist/browser/es'
+
+Import trace for requested module:
+../../../home/danman60/projects/WolfPack/app/node_modules/@metamask/sdk/dist/browser/es/metamask-sdk.js
+../../../home/danman60/projects/WolfPack/app/node_modules/@wagmi/connectors/dist/esm/metaMask.js
+../../../home/danman60/projects/WolfPack/app/node_modules/@wagmi/connectors/dist/esm/exports/index.js
+../../../home/danman60/projects/WolfPack/app/node_modules/wagmi/dist/esm/exports/connectors.js
+./src/lib/wagmi.tsx
+./src/components/LegacyProviders.tsx
+./src/components/AppProviders.tsx
+
+⚠ Compiled with warnings in 9.8s
+
+../../../home/danman60/projects/WolfPack/app/node_modules/@metamask/sdk/dist/browser/es/metamask-sdk.js
+Module not found: Can't resolve '@react-native-async-storage/async-storage' in '/home/danman60/projects/WolfPack/app/node_modules/@metamask/sdk/dist/browser/es'
+
+Import trace for requested module:
+../../../home/danman60/projects/WolfPack/app/node_modules/@metamask/sdk/dist/browser/es/metamask-sdk.js
+../../../home/danman60/projects/WolfPack/app/node_modules/@wagmi/connectors/dist/esm/metaMask.js
+../../../home/danman60/projects/WolfPack/app/node_modules/@wagmi/connectors/dist/esm/exports/index.js
+../../../home/danman60/projects/WolfPack/app/node_modules/wagmi/dist/esm/exports/connectors.js
+./src/lib/wagmi.tsx
+./src/components/LegacyProviders.tsx
+./src/components/AppProviders.tsx
+
+✓ Compiled successfully in 22.2s
+  Running TypeScript ...
+  Collecting page data using 15 workers ...
+  Generating static pages using 15 workers (0/14) ...
+  Generating static pages using 15 workers (3/14) 
+  Generating static pages using 15 workers (6/14) 
+  Generating static pages using 15 workers (10/14) 
+✓ Generating static pages using 15 workers (14/14) in 399.8ms
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /api/rotation/action
+├ ƒ /api/rotation/history
+├ ƒ /api/rotation/market
+├ ƒ /api/rotation/portfolio
+├ ƒ /api/rotation/preview
+├ ƒ /api/rotation/readiness
+├ ƒ /api/rotation/session
+├ ƒ /api/rotation/trials
+├ ○ /auto-bot
+├ ○ /backtest
+├ ○ /evolution
+├ ○ /intelligence
+├ ○ /pools
+├ ○ /portfolio
+├ ○ /rotation
+├ ○ /rotation/about
+├ ○ /rotation/icon.svg
+├ ○ /settings
+└ ○ /trading
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

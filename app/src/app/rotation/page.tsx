@@ -118,6 +118,18 @@ export default function RotationPage() {
     });
   }
 
+  async function forecastQuote(shift: { from: Asset; to: Asset; amount: string }) {
+    await work(async () => {
+      setPreview(null);
+      const result = await api<{ preview: ShiftPreview; market: MarketSnapshot }>("preview", {
+        ...shift, expectedRevision: portfolio?.revision,
+      });
+      setFrom(result.preview.from); setTo(result.preview.to); setAmount(result.preview.amount);
+      setPreview(result.preview); setMarket(result.market);
+      requestAnimationFrame(() => { quoteBox.current?.scrollIntoView({ block: "center", behavior: "smooth" }); quoteBox.current?.focus({ preventScroll: true }); });
+    });
+  }
+
   async function exportLedger() {
     await work(async () => {
       const response = await fetch("/api/rotation/portfolio?export=1", { cache: "no-store" });
@@ -172,7 +184,7 @@ export default function RotationPage() {
         </form>
       </section> : <>
         <div className="flex flex-wrap justify-between items-center gap-3"><div><h2 className="text-xl font-semibold">{portfolio.name}</h2><p className="text-sm text-slate-300 mt-1 capitalize">{portfolio.cadence} review · {portfolio.feeBps} bps per leg · Revision {portfolio.revision}</p></div><div className="flex flex-wrap gap-2"><button className="rotation-secondary" disabled={busy} onClick={() => void work(reloadPortfolio)}>Refresh ledger</button><button className="rotation-secondary" disabled={busy} onClick={() => void exportLedger()}>Export ledger</button></div></div>
-        <StrategyPanel key={portfolio.id} portfolio={portfolio} holdings={rows} planState={planState} now={clock} disabled={busy} request={api} onState={result => { setPortfolio(result.portfolio); setPlanState(result.planState); setPreview(null); }} onQuote={recommendation => strategyAction(recommendation, "quote")} onHold={recommendation => strategyAction(recommendation, "hold")} />
+        <StrategyPanel key={portfolio.id} portfolio={portfolio} holdings={rows} planState={planState} now={clock} disabled={busy} request={api} onState={result => { setPortfolio(result.portfolio); setPlanState(result.planState); setPreview(null); }} onQuote={recommendation => strategyAction(recommendation, "quote")} onHold={recommendation => strategyAction(recommendation, "hold")} onForecastQuote={forecastQuote} onForecastHold={() => action("hold")} />
         <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
           <MetricCard label="Portfolio value" value={value ? cad(value.actualCad) : "—"} note="CAD cash plus current crypto value." testId="portfolio-value" />
           <MetricCard label="No-action HOLD" value={value ? cad(value.holdCad) : "—"} note="Original units, with the same cash flows." testId="hold-value" />

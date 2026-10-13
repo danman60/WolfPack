@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "genuine_history_parity_cases": 8,
+  "invalid_or_future_cases_rejected": 7,
+  "maximum_prediction_error": 3.3306690738754696e-16,
+  "data_sha256": "b07ba2cc72df5f3644f1c77221f506cf98323f873fa0749d14f1a5a00b0b2b21",
+  "helper_sha256": "eb793f2086f0dd9b63af0a5692e2b7bdf583b792eb31757912797134568bded1",
+  "method": "Independent numpy augmented least squares; completed-close labels; pooled assets; all forecast members and ensemble checked.",
+  "scope": "Offline mathematical verification only. Invalid future inputs are rejected, not silently consumed. No forecast performance claim."
+}

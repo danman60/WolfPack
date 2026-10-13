@@ -4,7 +4,7 @@ import { CRYPTO_ASSETS, type HistoryDataset, type ResearchConfig } from "@/lib/r
 import { RESEARCH_VERSION, type ResearchProtocol, type ResearchScenario, type ResearchTrial, type ResearchTrialSummary } from "@/lib/rotation/research-contract";
 import { ApiError, apiError, dbRequest, freshMarket, getPortfolio, protectedRoute, rateLimit, readBody, requireSameOrigin, response } from "@/lib/rotation/server";
 import { calendarDay, evaluateHoldout, evaluatorFingerprintSource, runValidation, shiftDay, shiftMonth } from "@/lib/rotation/validation";
-import { createStrategyTrial, loadStrategyTrial } from '@/lib/rotation/strategy-server';
+import { createForecastAdvice, latestForecastAdvice, createStrategyTrial, loadStrategyTrial } from '@/lib/rotation/strategy-server';
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -42,6 +42,7 @@ async function history(): Promise<HistoryDataset> {
 export const GET = protectedRoute(async (request, user) => {
   try {
     const id = new URL(request.url).searchParams.get("id");
+    if (new URL(request.url).searchParams.get("forecast") === "1") return response({trial: await latestForecastAdvice(user)});
     const strategy = new URL(request.url).searchParams.get('strategy') === '1';
     if (strategy) {
       if (id) return response({trial: await loadStrategyTrial(user, id)});
@@ -65,6 +66,7 @@ export const POST = protectedRoute(async (request, user) => {
     const body = await readBody(request, 256_000);
     const id = uuid(body.id);
     const input = record(body.data);
+    if (input.namespace === 'forecast-advice') return response({trial: await createForecastAdvice(user, body)}, 201);
     if (input.namespace === 'strategy') return response({trial: await createStrategyTrial(user, body)}, 201);
     const kind = body.kind;
     let data: ResearchTrial["data"];

@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "checks": [
+    "Independent self-financing buy quantity, spread, fee, slippage and terminal value; original portfolio immutable",
+    "High costs select exact current holdings, with no artificial fee",
+    "Independent full sale proceeds, fees and slippage select CAD for negative forecasts",
+    "Insufficient depth is unavailable, never substituted with HOLD",
+    "Zero crypto allocation with current cash preserves owned funds"
+  ],
+  "scope": "Synthetic mathematical controls only; no live SHIFT or profitability evidence."
+}

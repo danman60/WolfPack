@@ -1,0 +1,33 @@
+{
+  "reviewedAtEastern": "2026-10-13T14:05:51.134082-04:00",
+  "reviewer": "spot_history",
+  "status": "PASS",
+  "screenshots": [
+    {
+      "path": "/tmp/wolfpack-advice-qa-v2/direct-advice-390.png",
+      "sha256": "171d3aca69f3e24a38d8e58a9218b0a97ea518a85f582461afd5b8f702de314b"
+    },
+    {
+      "path": "/tmp/wolfpack-advice-qa-v2/direct-advice-1440.png",
+      "sha256": "abda4e255a7ceea1573faa143a7c066e7feb49e6d1a8b1cae9954ee46120296a"
+    },
+    {
+      "path": "/tmp/wolfpack-advice-qa-v2/restored-advice-390.png",
+      "sha256": "1efe8dd7062b019ce4e9d76a92596f2e3aaa6f84f6b07abb557ee07215939087"
+    },
+    {
+      "path": "/tmp/wolfpack-advice-qa-v2/restored-advice-1440.png",
+      "sha256": "4ce21409c62df9952ca01bb5504f4a55eb5c0ba7f0e1d98ef6dd1d3e5df309d8"
+    }
+  ],
+  "checks": [
+    "Genuine HOLD with clearly visible rationale",
+    "Target CAD values and percentages legible",
+    "Forecasts, costs, modeled benefit, review date visible",
+    "Keep these holdings correctly describes unit HOLD",
+    "Saved advice restores into same coherent layout",
+    "No clipped, overlapping or off-page content",
+    "Matches existing ledger styles"
+  ],
+  "scope": "Local isolated account; no genuine SHIFT observed. No external screenshot delivery."
+}

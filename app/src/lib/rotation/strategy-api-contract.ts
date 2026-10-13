@@ -28,3 +28,28 @@ export type StrategyTrial = {
 } & ({ kind: 'protocol'; data: StrategyProtocolData } | { kind: 'development'; data: StrategyDevelopmentData });
 export type StrategyTrialSummary = { id: string; created_at: string; kind: 'protocol' | 'development'; purpose?: string; protocolId?: string };
 export type StrategyPlanState = { activePlanId: string | null; planRevision: number; study: Extract<StrategyTrial, {kind: 'development'}> | null };
+
+export const FORECAST_ADVICE_VERSION = 'cad-forecast-advice-v1' as const;
+export type ForecastAdviceReport = {
+  decision: 'hold' | 'shift' | 'unavailable';
+  asOf: string; expiresAt: string; nextReviewAt: string;
+  forecastReturns: Record<import('./contract').CryptoAsset, number>;
+  targetWeights: Record<Asset, number>; targetValuesCad: Record<Asset, number>; deltaCad: Record<Asset, number>;
+  feesCad: number; slippageCad: number; expectedAdvantageCad: number;
+  currentValueCad: number; expectedHoldValueCad: number; expectedTargetValueCad: number;
+  reasons: string[]; notes: string[]; confidence: 'low'; trainingOrigins: number; source: string;
+  nextShift: {from: Asset; to: Asset; amount: string} | null;
+  candidates: {target: Asset | 'HOLD'; feasible: boolean; feesCad: number; slippageCad: number; expectedValueCad: number | null; balances: import('./contract').Amounts; reason?: string}[];
+};
+export type ForecastAdviceTrial = {
+  id: string; created_at: string; kind: 'development';
+  data: {
+    namespace: 'forecast-advice'; protocolVersion: typeof FORECAST_ADVICE_VERSION;
+    config: {riskPercent: number; slippageBps: number; cadence: import('./contract').Cadence; feeBps: number};
+    portfolioId: string; portfolioRevision: number; holdingsHash: string; sourceHash: string;
+    dataset: HistoryDataset; market: import('./contract').MarketSnapshot; startingBalances: import('./contract').Amounts;
+    memberForecasts: Record<string, Record<import('./contract').CryptoAsset, number>>;
+    modelHash: string; trainedThrough: string; latestTrainingEnd: string; labelConvention: string;
+    report: ForecastAdviceReport;
+  };
+};

@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
-import { ASSETS, cad, eastern, ROTATION_STYLE, type HoldingRow, type Portfolio } from "@/lib/rotation/contract";
+import { ASSETS, cad, eastern, ROTATION_STYLE, type Asset, type HoldingRow, type Portfolio } from "@/lib/rotation/contract";
 import { STRATEGY_STUDY_VERSION, type StrategyChoice } from "@/lib/rotation/strategy-contract";
-import type { StrategyPlanState, StrategyTrial, StrategyTrialSummary } from "@/lib/rotation/strategy-api-contract";
+import type { ForecastAdviceTrial, StrategyPlanState, StrategyTrial, StrategyTrialSummary } from "@/lib/rotation/strategy-api-contract";
 
 type Development = Extract<StrategyTrial, { kind: "development" }>;
 type Props = {
@@ -30,7 +30,120 @@ const REASONS: Record<string, string> = {
   "engineering-evidence-gates-passed-still-unvalidated": "The configured evidence checks passed. The strategy remains experimental and has no independent validation.",
 };
 
-export function StrategyPanel({ portfolio, holdings, planState, now, disabled, request, onState, onQuote, onHold }: Props) {
+type ForecastProps = Props & {
+  onForecastQuote: (shift: { from: Asset; to: Asset; amount: string }) => Promise<void>;
+  onForecastHold: () => Promise<void>;
+};
+
+export function StrategyPanel(props: ForecastProps) {
+  const { portfolio, planState, now, disabled, request, onForecastQuote, onForecastHold } = props;
+  const [advice, setAdvice] = useState<ForecastAdviceTrial | null>(null);
+  const [allocation, setAllocation] = useState("");
+  const [slippage, setSlippage] = useState("");
+  const [loaded, setLoaded] = useState(false);
+  const [working, setWorking] = useState("");
+  const [error, setError] = useState("");
+  const [legacyOpen, setLegacyOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+
+  useEffect(() => {
+    let live = true;
+    async function restore() {
+      try {
+        const result = await request<{ trial: ForecastAdviceTrial | null }>("trials?forecast=1");
+        if (!live) return;
+        setAdvice(result.trial);
+        const saved = result.trial?.data.config ?? planState.study?.data.report.config;
+        if (saved) { setAllocation(String(saved.riskPercent)); setSlippage(String(saved.slippageBps)); }
+      } catch (reason) {
+        if (live) setError(reason instanceof Error ? reason.message : "Saved advice could not be loaded. Reload before continuing.");
+      } finally { if (live) setLoaded(true); }
+    }
+    void restore();
+    return () => { live = false; };
+  }, [portfolio.id, request, planState.study]);
+
+  async function perform(label: string, action: () => Promise<void>) {
+    setWorking(label); setError("");
+    try { await action(); }
+    catch (reason) { setError(reason instanceof Error ? reason.message : "Recommendation request failed."); }
+    finally { setWorking(""); }
+  }
+  function refresh(event: FormEvent) {
+    event.preventDefault();
+    void perform("Preparing your recommendation…", async () => {
+      if (!allocation.trim() || !slippage.trim()) throw new Error("Enter your target crypto allocation and slippage allowance.");
+      const result = await request<{ trial: ForecastAdviceTrial }>("trials", {
+        id: crypto.randomUUID(), kind: "development", expectedRevision: portfolio.revision,
+        data: { namespace: "forecast-advice", riskPercent: Number(allocation), slippageBps: Number(slippage) },
+      });
+      setAdvice(result.trial); setSettingsOpen(false);
+    });
+  }
+  const report = advice?.data.report;
+  const busy = disabled || Boolean(working);
+  const preferencesChanged = Boolean(advice && (Number(allocation) !== advice.data.config.riskPercent || Number(slippage) !== advice.data.config.slippageBps || !allocation.trim() || !slippage.trim()));
+  const stale = Boolean(advice && (preferencesChanged || advice.data.portfolioId !== portfolio.id || advice.data.portfolioRevision !== portfolio.revision ||
+    !report?.expiresAt || Date.parse(report.expiresAt) <= now ||
+    advice.data.config.cadence !== portfolio.cadence || advice.data.config.feeBps !== portfolio.feeBps));
+  const showSettings = !allocation || !slippage || settingsOpen;
+  const available = report && report.decision !== "unavailable";
+  const shift = report?.nextShift;
+  const title = !report ? "Your next move, based on your holdings" : report.decision === "unavailable" ? "Recommendation unavailable" : report.decision === "hold" ? "HOLD — keep your current units" : shift ? shift.from === "CAD" ? `BUY ${shift.to}` : `SELL ${shift.from}` : "Adjust your allocation";
+
+  return <section className="space-y-4" aria-labelledby="rotation-advice-title">
+    <div className={`${ROTATION_STYLE.panel} rotation-strategy-panel`}>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div><p className="text-xs tracking-widest uppercase text-emerald-300 mb-2">Your next {portfolio.cadence} decision</p><h2 id="rotation-advice-title" className="text-2xl font-semibold">{title}</h2></div>
+        <span className="rounded border border-amber-400/50 px-3 py-1 text-xs text-amber-200">Low confidence · experimental</span>
+      </div>
+      {!report && <p className={`${ROTATION_STYLE.muted} mt-3`}>Get a current chart-based estimate, compared with keeping your exact holdings. Trading costs count before a change is suggested.</p>}
+      {report && <ul className="mt-3 space-y-2 text-sm leading-relaxed text-slate-200">{report.reasons.map(reason => <li key={reason}>{reason}</li>)}</ul>}
+      {stale && <p role="status" className="rotation-note mt-4">{preferencesChanged ? "Preferences changed. Refresh recommendation to apply them before acting." : "Holdings changed or this estimate expired. Refresh recommendation before acting. Approved steps are already reflected in your ledger."}</p>}
+      <form onSubmit={refresh} className="mt-5 space-y-4">
+        {showSettings && <div className="grid sm:grid-cols-2 gap-4">
+          <label>Target crypto allocation (%)<input className="rotation-input" type="number" min="0" max="100" step="any" required value={allocation} onChange={event => setAllocation(event.target.value)} /><span className="block text-xs text-slate-300 mt-2">Allocation when shifting. HOLD keeps units unchanged. This is not a loss limit.</span></label>
+          <label>Adverse slippage (bps)<input className="rotation-input" type="number" min="0" max="1000" step="any" required value={slippage} onChange={event => setSlippage(event.target.value)} /><span className="block text-xs text-slate-300 mt-2">Extra cost allowance. Your saved fee is {portfolio.feeBps} bps per leg.</span></label>
+        </div>}
+        <div className="flex flex-wrap items-center gap-3">
+          <button className="rotation-primary" disabled={busy || !loaded}>{working || (advice ? "Refresh recommendation" : "Get my recommendation")}</button>
+          {allocation && slippage && <button type="button" className="rotation-secondary" disabled={busy} aria-expanded={settingsOpen} onClick={() => setSettingsOpen(!settingsOpen)}>{settingsOpen ? "Close settings" : "Change preferences"}</button>}
+        </div>
+        {!showSettings && <p className="text-xs text-slate-300">{preferencesChanged ? "Updated target" : "Saved target"} {allocation}% crypto · {slippage} bps slippage · {portfolio.feeBps} bps fee per leg. Refreshing never makes a trade.</p>}
+      </form>
+      {!loaded && <p role="status" className="mt-3 text-sm text-slate-300">Loading saved preferences…</p>}
+      {error && <p role="alert" className="rotation-error mt-4">{error}</p>}
+      {report && <>
+        {available && <>
+          <div className="mt-6 border-t border-white/10 pt-5">
+            <h3 className="font-semibold">{report.decision === "hold" ? "Keep these holdings" : "Indicative target allocation"}</h3>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-3">{ASSETS.map(asset => <article key={asset} className="rounded-lg border border-white/10 bg-black/15 p-3 sm:p-4">
+              <h4 className="text-sm font-semibold text-emerald-300">{asset} <span className="font-normal text-slate-300">{(report.targetWeights[asset] * 100).toFixed(1)}%</span></h4>
+              <p className="mt-2 font-semibold tabular-nums">{cad(report.targetValuesCad[asset])}</p>
+              <p className="mt-2 text-xs text-slate-300">{asset === "CAD" ? "Cash balance" : Math.abs(report.deltaCad[asset]) < .01 ? "Keep units" : `${report.deltaCad[asset] > 0 ? "Buy" : "Sell"} about ${cad(Math.abs(report.deltaCad[asset]))}`}</p>
+            </article>)}</div>
+            <p className="mt-3 text-xs leading-relaxed text-slate-300">Amounts are CAD estimates. A fresh quote checks current prices, available units, trading minimums and fees.</p>
+          </div>
+          <div className="mt-5 flex flex-wrap items-start justify-between gap-4 rounded-lg border border-emerald-300/30 p-4">
+            <div><h3 className="font-semibold">{report.decision === "hold" ? "No trade proposed" : "Next paper step"}</h3><p className="mt-2 text-sm text-slate-300">{report.decision === "hold" ? "Retain your holdings. No conversion costs." : shift ? `${shift.amount} ${shift.from} → ${shift.to}. Approve one quote, then refresh from your updated holdings.` : "A target is available, but no executable step is ready. Refresh after checking your holdings."}</p></div>
+            {report.decision === "hold" ? <button className="rotation-secondary" disabled={busy || stale} onClick={() => void perform("Recording HOLD…", onForecastHold)}>Record recommended HOLD</button> : shift && <button className="rotation-primary" disabled={busy || stale} onClick={() => void perform("Preparing a fresh quote…", () => onForecastQuote(shift))}>Review fresh quote</button>}
+          </div>
+          <div className="grid sm:grid-cols-3 gap-4 mt-6 text-sm">
+            <div><p className="text-slate-300">Estimated benefit over HOLD</p><p className="mt-1 text-xl font-semibold tabular-nums">{cad(report.expectedAdvantageCad)}</p></div>
+            <div><p className="text-slate-300">Modeled fees + slippage</p><p className="mt-1 text-xl font-semibold tabular-nums">{cad(report.feesCad + report.slippageCad)}</p></div>
+            <div><p className="text-slate-300">Next review · Eastern</p><p className="mt-1 font-semibold">{eastern(report.nextReviewAt)} ET</p></div>
+          </div>
+        </>}
+          <div className="mt-6 border-t border-white/10 pt-5"><h3 className="font-semibold">Chart-based return estimates</h3><p className="mt-2 text-sm text-slate-300">For the coming {portfolio.cadence === "weekly" ? "week" : "month"}. These are model estimates, not probabilities or promised returns.</p><div className="grid grid-cols-3 gap-3 mt-3">{(["BTC", "ETH", "LINK"] as const).map(asset => <div key={asset} className="rounded-lg border border-white/10 p-3"><p className="text-xs text-slate-300">{asset}</p><p className="mt-2 font-semibold tabular-nums">{report.forecastReturns[asset] > 0 ? "+" : ""}{(report.forecastReturns[asset] * 100).toFixed(2)}%</p></div>)}</div></div>
+        <p className="mt-5 text-sm leading-relaxed text-amber-200">Forecasting skill is weak. Historical profits do not establish that these predictions add value; losses can exceed the estimate.</p>
+        <details className="mt-5 border-t border-white/10 pt-4 text-sm"><summary className="cursor-pointer font-semibold">Model evidence and assumptions</summary><div className="mt-3 space-y-3 text-slate-300"><p>Two chart-based models are averaged for this estimate. This current combination has not been independently validated.</p>{report.notes.map(note => <p key={note}>{note}</p>)}<p>Source: {report.source}. {report.trainingOrigins} matured training observations.</p>{report.asOf && <p>Market prices as of {eastern(report.asOf)} ET. Saved {eastern(advice!.created_at)} ET.</p>}{advice?.data.trainedThrough && <p>Completed chart close: {eastern(advice.data.trainedThrough)} ET.</p>}{available && <p>Modeled horizon value: {cad(report.expectedTargetValueCad)} after the chosen action versus {cad(report.expectedHoldValueCad)} retaining current units. Fee allowance {cad(report.feesCad)}; slippage allowance {cad(report.slippageCad)}.</p>}</div></details>
+      </>}
+    </div>
+    <details className={`${ROTATION_STYLE.panel} text-sm`} onToggle={event => setLegacyOpen(event.currentTarget.open)}><summary className="cursor-pointer font-semibold">Saved momentum studies and previous plans</summary><p className="mt-3 mb-4 text-slate-300">Earlier studies use a different method. Their records and manual actions remain available here.</p>{legacyOpen && <LegacyStrategyPanel {...props} />}</details>
+  </section>;
+}
+
+function LegacyStrategyPanel({ portfolio, holdings, planState, now, disabled, request, onState, onQuote, onHold }: Props) {
   const [allocation, setAllocation] = useState("");
   const [slippage, setSlippage] = useState("");
   const [study, setStudy] = useState<Development | null>(null);
